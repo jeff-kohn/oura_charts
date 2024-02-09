@@ -1,0 +1,31 @@
+
+Checks: "*,\
+  -google-readability-todo,\
+  -altera-*,\
+  -objc-*, \
+  -osx-*, \
+  -fuchsia-*,\
+  -hicpp-*, \
+  -readability-*, \
+  -google-readability*, \
+  -bugprone-easily-swappable-parameters, \
+  -bugprone-exception-escape, \  
+  -bugprone-narrowing-conversions, \
+  -cppcoreguidelines-narrowing-conversions, \
+  -google-build-using-namespace, \
+  -google-runtime-int, \
+  -llvm-header-guard,\
+  -llvm-else-after-return, \
+  -llvm-include-order,\
+  -llvm-else-after-return, \
+  -llvmlibc-*,\
+  -modernize-use-trailing-return-type, \
+  -modernize-use-nodiscard,\
+  -misc-include-cleaner, \
+  -misc-const-correctness, \
+  -misc-non-private-member-variables-in-classes, \
+  -performance-avoid-endl"
+WarningsAsErrors: ''
+
+CheckOptions:
+  - { key: llvm-namespace-comment.ShortNamespaceLines,       value: 20 }

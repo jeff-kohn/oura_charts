@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "oura-charts",
+  "version": "1.0.0",
+  "vcpkg-configuration": {
+    "overlay-ports": [ 
+      "scripts/vcpkg_ports"
+    ]
+  },
+  "dependencies": [
+    "boost-algorithm",
+    "boost-fusion",
+    "cxxopts",
+    "spdlog",
+    "fmt",
+    "concurrencpp",
+    "catch2",
+    "restc-cpp"
+  ]
+}
