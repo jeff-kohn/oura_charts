@@ -9,10 +9,12 @@ add_library(${THIS_TARGET} STATIC
 	"../include/oura_charts/RestAuth.h"
 	"../include/oura_charts/UserProfile.h"
 	"../include/oura_charts/detail/rest_constants.h"
+	"../include/oura_charts/detail/rest_constants.h"
 	"bind_mappings.cpp"
- "RestAuth.cpp")
+	"RestAuth.cpp"
+)
 
-set_target_properties( ${THIS_TARGET} 
+set_target_properties( ${THIS_TARGET}
 	PROPERTIES
 		OUTPUT_NAME ${THIS_TARGET}
 		COMPILE_PDB_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}

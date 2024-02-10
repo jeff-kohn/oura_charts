@@ -36,6 +36,8 @@ if (TOP_LEVEL_PROJECT)
    if (BUILD_TESTING)
       enable_testing()
       find_package(Catch2 3 REQUIRED)
+      include(CTest)
+      include(Catch)
    endif()
 endif()
 
@@ -49,18 +51,19 @@ endif()
 # if desired in the future.
 set(PROJECT_CXX_STANDARD cxx_std_23)
 
-#
+
 # Set up platform-specific target options, by creating the vars that will be used to call target_compile_options/definitions
 # for each target. If any of these variables have already been defined by a preset, we will NOT override the preset values.
 #
 # This allows us to have centralized control over these settings and individual targets can still choose to override them 
 # if necessary. And we're following modern best practices of avoiding changing CMAKE_CXX_FLAGS or add_compile_options()
 #
-# We take care of setting the appropriate flags for debug/release/relwithdbginfo and windows/linux. If you override these settings with a preset 
-# you need to do the same. Also make sure your variable values end with a semi-colon so that additional values can be appended 
-# if needed.
+# We take care of setting the appropriate flags for debug/release/relwithdbginfo and windows/linux. If you override these settings
+# with a preset you need to do the same. Also make sure your variable values end with a semi-colon so that additional values can be
+# appended if needed.
 #
-# We only support MSCV on Windows and CLANG on Linux for now. 
+# We only support MSCV on Windows and CLANG on Linux for now. Support for other compilers can be added through presets that define
+# the appropriate flags.
 #
 if (WIN32)
     # By defualt cmake is using linux conventions (eg libname instead of name.lib) so override that for Windows builds.
@@ -82,11 +85,11 @@ if (WIN32)
                                 "$<$<CONFIG:RelWithDebInfo>:/O2;/GL;/Gw;/Gy;>"
                                 CACHE STRING "Default global compile options for oura_charts project")
 
-    set(PROJECT_LINK_OPTIONS CACHE "/DYNAMICBASE;/NXCOMPAT; /CGTHREADS:8"
-                                   "$<$<CONFIG:DEBUG>:/INCREMENTAL;/OPT:NOICF;>"
-                                   "$<$<CONFIG:Release>:/Gw;/Gy;/OPT:ICF;/OPT:REF;/LTCG:incremental;>"
-                                   "$<$<CONFIG:RelWithDebInfo>:/Gw;/Gy;/OPT:ICF;/OPT:REF;/LTCG:incremental;>"
-                                   CACHE STRING "Default global linker options for oura_charts project")
+    set(PROJECT_LINK_OPTIONS "/DYNAMICBASE;/NXCOMPAT;/CGTHREADS:8;"
+                             "$<$<CONFIG:DEBUG>:/INCREMENTAL;/OPT:NOICF;>"
+                             "$<$<CONFIG:Release>:/Gw;/Gy;/OPT:ICF;/OPT:REF;/LTCG:incremental;>"
+                             "$<$<CONFIG:RelWithDebInfo>:/Gw;/Gy;/OPT:ICF;/OPT:REF;/LTCG:incremental;>"
+                             CACHE STRING "Default global linker options for oura_charts project")
 elseif (LINUX)
 
 endif()
@@ -98,6 +101,8 @@ find_package(fmt CONFIG REQUIRED)
 find_package(cxxopts CONFIG REQUIRED)
 find_package(restc-cpp CONFIG REQUIRED)
 
+
+
 cmake_print_variables(PROJECT_CXX_STANDARD)
 cmake_print_variables(PROJECT_COMPILE_DEFINITIONS)
 cmake_print_variables(PROJECT_WARNING_FLAGS)
@@ -106,5 +111,9 @@ cmake_print_variables(PROJECT_LINK_OPTIONS)
 
 # Include sub-projects.
 add_subdirectory("src")
+
+if (BUILD_TESTING)
+   add_subdirectory("tests")
+endif()
 
 
