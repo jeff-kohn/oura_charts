@@ -4,11 +4,11 @@
 ###############################################################################
 set(THIS_TARGET "tests")
 add_executable(${THIS_TARGET}
-   test_UserProfile.cpp
+   "tests_UserProfile.cpp"
 )
 
 # we want to statically link everything
-set_property(TARGET ${THIS_TARGET} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+set_property(TARGET ${THIS_TARGET} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 set_target_properties(${THIS_TARGET}
 	PROPERTIES

@@ -20,11 +20,11 @@ namespace oura_charts::detail
    struct user_data
    {
       std::string id;
+      std::string email{};
       int age{};
       int weight_kg{};
       int height_cm{};
       std::string biological_sex{};
-      std::string email{};
    };
 }
 
@@ -78,7 +78,6 @@ namespace oura_charts
       else if constexpr (Idx == 2) { return user.age(); }
       else if constexpr (Idx == 3) { return user.weight_kg(); }
       else if constexpr (Idx == 4) { return user.height_cm(); }
-      else if constexpr (Idx == 5) { return user.biological_sex(); }
       else { return user.biological_sex(); }
    }
 }

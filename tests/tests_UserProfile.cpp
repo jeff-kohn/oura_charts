@@ -15,10 +15,10 @@ namespace oura_charts::test
    {
       using namespace oura_charts::detail;
 
-      user_data user{ ID, AGE, WEIGHT_KG, HEIGHT_CM, BIOLOGICAL_SEX, EMAIL };
+      user_data user{ ID, EMAIL, AGE, WEIGHT_KG, HEIGHT_CM, BIOLOGICAL_SEX };
 
       UserProfile profile{ std::move(user) };
-      auto [id, age, weight, height, sex, email] = profile;
+      auto& [id, email, age, weight, height, sex ] = profile;
 
       REQUIRE(id == ID);
       REQUIRE(age == AGE);
