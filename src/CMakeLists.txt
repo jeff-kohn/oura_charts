@@ -12,7 +12,7 @@ add_library(${THIS_TARGET} STATIC
 	"../include/oura_charts/detail/rest_constants.h"
 	"bind_mappings.cpp"
 	"RestAuth.cpp"
-)
+ "UserProfile.cpp")
 
 set_target_properties( ${THIS_TARGET}
 	PROPERTIES

@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
+#include "oura_charts/RestAuth.h"
 #include <string>
 #include <utility>
 
@@ -27,6 +28,15 @@ namespace oura_charts::detail
       std::string biological_sex{};
    };
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////
+///
+/// UserProfile.h
+///
+/// Declaration for UserProfile class.
+/// 
+/// Copyright (c) 2024 Jeff Kohn
+/// 
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 namespace oura_charts
@@ -46,21 +56,19 @@ namespace oura_charts
       UserProfile &operator=(const UserProfile &) = default;
       UserProfile &operator=(UserProfile &&) = default;
 
-      std::string id() const { return m_data.id; }
-      std::string email() const { return m_data.email; }
-      int age() const { return m_data.age; }
-      int weight_kg() const { return m_data.weight_kg; }
-      int height_cm() const { return m_data.height_cm; }
-      std::string biological_sex() const { return m_data.biological_sex; }
+      std::string id() const     { return m_data.id;        }
+      std::string email() const  { return m_data.email;     }
+      int age() const            { return m_data.age;       }
 
-      /// <summary>
-      /// retrieves the user profile for the specified personal access token.
-      /// </summary>
-      //template <typename Context>
-      //static std::expected<user_profile, rest_error> get_profile(std::string_view token, Context &context)
-      //{
-      //   return user_profile{};
-      //}
+      /// Weight in kg
+      int weight() const         { return m_data.weight_kg; }
+
+      /// Height in centimeters
+      int height() const         { return m_data.height_cm; }
+
+      std::string biologicalSex() const { return m_data.biological_sex; }
+
+      static UserProfile getProfile(IAuth *auth_ptr);
 
    private:
       detail::user_data m_data;
@@ -76,9 +84,9 @@ namespace oura_charts
       if constexpr (Idx == 0) { return user.id(); }
       else if constexpr (Idx == 1) { return user.email(); }
       else if constexpr (Idx == 2) { return user.age(); }
-      else if constexpr (Idx == 3) { return user.weight_kg(); }
-      else if constexpr (Idx == 4) { return user.height_cm(); }
-      else { return user.biological_sex(); }
+      else if constexpr (Idx == 3) { return user.weight(); }
+      else if constexpr (Idx == 4) { return user.height(); }
+      else { return user.biologicalSex(); }
    }
 }
 

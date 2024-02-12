@@ -1,0 +1,20 @@
+//////////////////////////////////////////////////////////////////////////////////////////////////
+///
+/// UserProfile.h
+///
+/// Defines the UserProfile class
+/// 
+/// Copyright (c) 2024 Jeff Kohn
+/// 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+#include "oura_charts/UserProfile.h"
+
+namespace oura_charts
+{
+   UserProfile UserProfile::getProfile(IAuth *auth_ptr)
+   {
+      return UserProfile{ { "id", "email", 43, 100, 125, "make"} };
+   }
+
+}

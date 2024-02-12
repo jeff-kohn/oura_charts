@@ -8,14 +8,12 @@
 /// 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 #include "oura_charts/RestAuth.h"
 #include "oura_charts/detail/rest_constants.h"
 #include <fmt/format.h>
 
 namespace oura_charts
 {
-
    void TokenAuth::setHeaders(restc_cpp::RequestBuilder &req) 
    {
       req.Header(constants::rest_headers::OURA_REST_HEADER_AUTH,
