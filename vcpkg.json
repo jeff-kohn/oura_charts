@@ -3,13 +3,15 @@
   "name": "oura-charts",
   "version": "1.0.0",
   "dependencies": [
-    "boost-algorithm",
-    "boost-fusion",
-    "cxxopts",
-    "spdlog",
-    "fmt",
-    "concurrencpp",
-    "catch2",
-    "restc-cpp"
+      "boost-algorithm",
+      "boost-fusion",
+      "cxxopts",
+      "spdlog",
+      "fmt",
+      "concurrencpp",
+      "catch2",
+      "openssl",
+      "zlib",
+      "restc-cpp"
   ]
 }

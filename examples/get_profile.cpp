@@ -58,44 +58,8 @@ int main(int argc, char* argv[])
          return 0;
       }
 
-
       // Create an instance of the rest client
       auto rest_client = RestClient::Create();
-
-      // Create and instantiate a Post from data received from the server.
-      Post my_post = rest_client->ProcessWithPromiseT<Post>([&] (Context& ctx)
-      {
-            // This is a co-routine, running in a worker-thread
-
-            // Instantiate a Post structure.
-            Post post;
-
-            // Serialize it asynchronously. The asynchronously part does not really matter
-            // here, but it may if you receive huge data structures.
-            SerializeFromJson(post,
-
-            // Construct a request to the server
-            RequestBuilder(ctx)
-            .Get("http://jsonplaceholder.typicode.com/posts/1")
-
-            // Add some headers for good taste
-            .Header("X-Client", "RESTC_CPP")
-            .Header("X-Client-Purpose", "Testing")
-
-            // Send the request
-            .Execute());
-
-            // Return the post instance trough a C++ future<>
-            return post;
-      })
-
-      // Get the Post instance from the future<>, or any C++ exception thrown
-      // within the lambda.
-         .get();
-
-     // Print the result for everyone to see.
-      cout << "Received post# " << my_post.id << ", title: " << my_post.title << endl;
-
       oura_charts::TokenAuth auth{ pat };
       auto profile = oura_charts::UserProfile::getProfile(auth);
 
