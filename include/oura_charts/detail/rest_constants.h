@@ -10,24 +10,17 @@
 
 #pragma once
 
-namespace oura_charts::constants::rest_urls
+namespace oura_charts::constants
 {
+   static constexpr const char* OURA_URL_PERSONAL_INFO = "https://api.ouraring.com/v2/usercollection/personal_info";
 
-   static constexpr const char*  OURA_URL_PERSONAL_INFO = "https://api.ouraring.com/v2/usercollection/personal_info";
-
-} //  oura_charts::rest_constants::urls
-
-namespace oura_charts::constants::rest_headers
-{
-   
    static constexpr const char* OURA_REST_HEADER_AUTH = "Authorization";
-
-} // namespace oura_cahrts::rest_constants::headers
-
-
-namespace oura_charts::constants::rest_params
-{
+   static constexpr const char* OURA_REST_HEADER_XCLIENT = "X-Client";
+   static constexpr const char* OURA_REST_HEADER_XCLIENT_VALUE = "restc-cpp";
 
    static constexpr const char* OURA_REST_PARAM_AUTH_TOKEN_PREFIX = "Bearer ";
 
-} // namespace oura_cahrts::rest_constants::headers
+   static constexpr int OURA_REST_DEFAULT_DATA_LIMIT{ 1024 * 1024 }; // 1MB
+   static constexpr int OURA_MAX_ENV_VAR_LENGTH = 1024;
+
+} // namespace oura_charts::constants

@@ -1,10 +1,9 @@
-
 ###############################################################################
-# Target test_UserProfile
+# Target get_profile
 ###############################################################################
-set(THIS_TARGET "tests")
+set(THIS_TARGET "get_profile")
 add_executable(${THIS_TARGET}
-   "tests_UserProfile.cpp"
+   "get_profile.cpp"
 )
 
 set_target_properties(${THIS_TARGET}
@@ -18,7 +17,7 @@ set_target_properties(${THIS_TARGET}
 target_link_libraries(${THIS_TARGET}
    PUBLIC
       oura_rest
-      Catch2::Catch2WithMain
+      restc-cpp
 )
 
 target_compile_features(${THIS_TARGET} PUBLIC ${OURACHARTS_CXX_STANDARD})
@@ -26,7 +25,3 @@ target_compile_definitions(${THIS_TARGET} PRIVATE ${OURACHARTS_COMPILE_DEFINITIO
 target_compile_options(${THIS_TARGET} PRIVATE ${OURACHARTS_COMPILE_OPTIONS})
 target_compile_options(${THIS_TARGET} PRIVATE ${OURACHARTS_WARNING_FLAGS})
 target_link_options(${THIS_TARGET} PRIVATE ${OURACHARTS_LINK_OPTIONS})
-
-# This needs to be in CMakeLists of the directory containing the test target, not project root.
-catch_discover_tests(tests)
-

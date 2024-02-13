@@ -2,7 +2,7 @@
 ///
 /// RestAuth.h
 ///
-/// Defines the IAuth interface and implementation(s) used for access the Oura REST API.
+/// Defines the RestAuth interface and implementation(s) used for access the Oura REST API.
 /// 
 /// Copyright (c) 2024 Jeff Kohn
 /// 
@@ -20,11 +20,11 @@ namespace oura_charts
    /// <summary>
    /// The interface we use for authenticating with the Oura REST API. 
    /// </summary>
-   class IAuth
+   class RestAuth
    {
    public:
-      IAuth() = default;
-      virtual ~IAuth() noexcept = default;
+      RestAuth() = default;
+      virtual ~RestAuth() noexcept = default;
 
       virtual void setHeaders(restc_cpp::RequestBuilder &req) = 0;
    };
@@ -40,7 +40,7 @@ namespace oura_charts
    /// for client apps. User must create a PAT on the OURA website to use with this
    /// authentication type.
    /// </remarks>
-   class TokenAuth final : public IAuth
+   class TokenAuth final : public RestAuth
    {
    public:
       explicit TokenAuth(std::string_view token) : m_token(token) {}

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 ///
-/// rest_constants.h
+/// helpers.h
 ///
 /// miscellaneous utility functions/classes/wrappers used throughout the project.
 ///
@@ -9,8 +9,10 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
+#include <string>
+#include <string_view>
 
-namespace our_charts::detail
+namespace oura_charts::helpers
 {
    /// <summary>
    /// 'overloaded' utility class. Allows you to inherit from multiple classes (or lambdas),
@@ -19,4 +21,16 @@ namespace our_charts::detail
    template<class... Ts> struct overload : Ts... { using Ts::operator()...; };
    template<class... Ts> overload(Ts...) -> overload<Ts...>;
 
+
+   /// <summary>
+   /// retrieve an environment variable. If the environment variable is not found, or an
+   /// error occurs, default_val will be returned. Otherwise the variable's value
+   /// (which could be an empty string) will be returned. Max value length returned
+   /// is OURA_MAX_ENV_VAR_LENGTH
+   /// </summary>
+   std::string getEnvironmentVariable(const char* var_name, std::string_view default_val = "");
+   inline std::string getEnvironmentVariable(const std::string& var_name, std::string_view default_val = "")
+   {
+      return getEnvironmentVariable(var_name.c_str(), default_val);
+   }
 }

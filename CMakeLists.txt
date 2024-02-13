@@ -49,7 +49,7 @@ endif()
 
 # Set the C++ standard. All our targets will use this, so we can easily change it
 # if desired in the future.
-set(PROJECT_CXX_STANDARD cxx_std_23)
+set(OURACHARTS_CXX_STANDARD cxx_std_23)
 
 
 # Set up platform-specific target options, by creating the vars that will be used to call target_compile_options/definitions
@@ -70,26 +70,29 @@ if (WIN32)
     set(CMAKE_FIND_LIBRARY_PREFIXES "")
     set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib" ".dll")
 
-    set(PROJECT_COMPILE_DEFINITIONS "_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;_WIN32_WINNT=_WIN32_WINNT_WIN7;WIN32_LEAN_AND_MEAN;"
+    set(OURACHARTS_COMPILE_DEFINITIONS "_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;_WIN32_WINNT=_WIN32_WINNT_WIN7;WIN32_LEAN_AND_MEAN;"
                                     "$<$<CONFIG:DEBUG>:_DEBUG;_ALLOW_RTCc_IN_STL>"
                                     "$<$<CONFIG:RelWithDebInfo>:NDEBUG;>"
                                     "$<$<CONFIG:Release>:NDEBUG;>"
                                     CACHE STRING "Default global preprocessor definitions for oura_charts project")
 
-    set(PROJECT_WARNING_FLAGS "/W4;/w14263;/w14265;/w14311;/w14555;/w14640;/w14928;/wd4100;/WX"
+    set(OURACHARTS_WARNING_FLAGS "/W4;/w14263;/w14265;/w14311;/w14555;/w14640;/w14928;/wd4100;/WX"
                               CACHE STRING "Default global compile options for oura_charts project")
 
-    set(PROJECT_COMPILE_OPTIONS "/MP;/cgthreads8;/sdl;/GS;/Zc:wchar_t;/Zc:inline;/permissive-;/utf-8;/EHsc;/Zf;/Zi;/Zc:__cplusplus;/Zc:strictStrings;/Zf;/Zc:templateScope;/Zc:throwingNew;"
+    set(OURACHARTS_COMPILE_OPTIONS "/MP;/cgthreads8;/sdl;/GS;/Zc:wchar_t;/Zc:inline;/permissive-;/utf-8;/EHsc;/Zf;/Zi;/Zc:__cplusplus;/Zc:strictStrings;/Zf;/Zc:templateScope;/Zc:throwingNew;"
                                 "$<$<CONFIG:Debug>:/Od;/EHr;/RTC1>"
                                 "$<$<CONFIG:Release>:/O2;/GL;/Gw;/Gy;>"
                                 "$<$<CONFIG:RelWithDebInfo>:/O2;/GL;/Gw;/Gy;>"
                                 CACHE STRING "Default global compile options for oura_charts project")
 
-    set(PROJECT_LINK_OPTIONS "/DYNAMICBASE;/NXCOMPAT;/CGTHREADS:8;"
+    set(OURACHARTS_LINK_OPTIONS "/DYNAMICBASE;/NXCOMPAT;/CGTHREADS:8;"
                              "$<$<CONFIG:DEBUG>:/INCREMENTAL;/OPT:NOICF;>"
                              "$<$<CONFIG:Release>:/Gw;/Gy;/OPT:ICF;/OPT:REF;/LTCG:incremental;>"
                              "$<$<CONFIG:RelWithDebInfo>:/Gw;/Gy;/OPT:ICF;/OPT:REF;/LTCG:incremental;>"
                              CACHE STRING "Default global linker options for oura_charts project")
+
+    set(OURACHARTS_MSVCRT_DEBUG "MultiThreadedDebug" CACHE STRING "MSVC runtime library version used for debug builds")
+    set(OURACHARTS_MSVCRT_RELEASE "MultiThreaded" CACHE STRING "MSVC runtime library version used for release builds")
 elseif (LINUX)
 
 endif()
@@ -111,7 +114,7 @@ cmake_print_variables(PROJECT_LINK_OPTIONS)
 
 # Include sub-projects.
 add_subdirectory("src")
-
+add_subdirectory("examples")
 if (BUILD_TESTING)
    add_subdirectory("tests")
 endif()

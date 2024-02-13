@@ -28,27 +28,19 @@ namespace oura_charts::detail
       std::string biological_sex{};
    };
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// UserProfile.h
-///
-/// Declaration for UserProfile class.
-/// 
-/// Copyright (c) 2024 Jeff Kohn
-/// 
-//////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 namespace oura_charts
 {
    /// <summary>
    /// This class represents the User Profile data from the Oura Cloud API.
    /// </summary>
+   /// <remarks>
+   /// The only public ctors are for copy/move, to create instance of this
+   /// class use the static factory method getProfile()
+   /// </remarks>
    class UserProfile : protected detail::user_data
    {
    public:
-      UserProfile(user_data &&data) : m_data{ data } {}
-      UserProfile() = delete;
       UserProfile(const UserProfile &) = default;
       UserProfile(UserProfile &&) = default;
       ~UserProfile() = default;
@@ -56,22 +48,23 @@ namespace oura_charts
       UserProfile &operator=(const UserProfile &) = default;
       UserProfile &operator=(UserProfile &&) = default;
 
-      std::string id() const     { return m_data.id;        }
-      std::string email() const  { return m_data.email;     }
-      int age() const            { return m_data.age;       }
+      static UserProfile getProfile(RestAuth& auth);
+
+      std::string id() const     { return user_data::id;    }
+      std::string email() const  { return user_data::email; }
+      int age() const            { return user_data::age;   }
 
       /// Weight in kg
-      int weight() const         { return m_data.weight_kg; }
+      int weight() const         { return user_data::weight_kg; }
 
       /// Height in centimeters
-      int height() const         { return m_data.height_cm; }
+      int height() const         { return user_data::height_cm; }
 
-      std::string biologicalSex() const { return m_data.biological_sex; }
-
-      static UserProfile getProfile(IAuth *auth_ptr);
+      std::string biologicalSex() const { return user_data::biological_sex; }
 
    private:
-      detail::user_data m_data;
+      UserProfile() {};
+      UserProfile(user_data&& data) : detail::user_data{ std::move(data) } {}
    };
 
    /// <summary>
