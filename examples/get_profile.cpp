@@ -3,35 +3,8 @@
 #include "oura_charts/helpers.h"
 #include <fmt/format.h>
 #include <cxxopts.hpp>
-#include <restc-cpp/restc-cpp.h>
-#include <restc-cpp/RequestBuilder.h>
-#include <boost/fusion/adapted.hpp>
 
-using namespace std;
-using namespace restc_cpp;
 
-// C++ structure that match the JSON entries received
-// from http://jsonplaceholder.typicode.com/posts/{id}
-struct Post
-{
-   int userId = 0;
-   int id = 0;
-   string title;
-   string body;
-};
-
-// Since C++ does not (yet) offer reflection, we need to tell the library how
-// to map json members to a type. We are doing this by declaring the
-// structs/classes with BOOST_FUSION_ADAPT_STRUCT from the boost libraries.
-// This allows us to convert the C++ classes to and from JSON.
-
-BOOST_FUSION_ADAPT_STRUCT(
-    Post,
-    (int, userId)
-    (int, id)
-    (string, title)
-    (string, body)
-)
 
 int main(int argc, char* argv[])
 {
@@ -59,7 +32,7 @@ int main(int argc, char* argv[])
       }
 
       // Create an instance of the rest client
-      auto rest_client = RestClient::Create();
+      auto rest_client = restc_cpp::RestClient::Create();
       oura_charts::TokenAuth auth{ pat };
       auto profile = oura_charts::UserProfile::getProfile(auth);
 
