@@ -10,8 +10,7 @@ add_library(${THIS_TARGET} STATIC
 	"../include/oura_charts/UserProfile.h"
 	"../include/oura_charts/detail/rest_constants.h"
 	"../include/oura_charts/helpers.h"
-	"bind_mappings.cpp"
-	"RestAuth.cpp"
+   "RestAuth.cpp"
    "UserProfile.cpp"
    "helpers.cpp"
 )
@@ -25,7 +24,8 @@ set_target_properties(${THIS_TARGET}
 )
 
 target_include_directories( ${THIS_TARGET}
-	PUBLIC 
+	PUBLIC
+      ${CPR_INCLUDE_DIRS}
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
 		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 	PRIVATE:
@@ -34,7 +34,7 @@ target_include_directories( ${THIS_TARGET}
 
 target_link_libraries(${THIS_TARGET}
    PUBLIC
-      restc-cpp
+      cpr::cpr
       fmt::fmt
 )
 

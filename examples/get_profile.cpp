@@ -5,7 +5,7 @@
 #include <cxxopts.hpp>
 
 
-
+// This example retrieves user-profile info from OURA_REST using Bearer authentication (PAT)
 int main(int argc, char* argv[])
 {
    try
@@ -18,6 +18,7 @@ int main(int argc, char* argv[])
          ("t,token", "Personal Access Token for your Oura cloud account", cxxopts::value<string>()->default_value(""))
          ("h, help", "show help", cxxopts::value<bool>());
 
+      // PAT token either needs to be supplied on the command line or in an environment variable.
       auto params = options.parse(argc, argv);
       string pat = params["token"].as<string>();
       if (pat.empty())
@@ -31,10 +32,7 @@ int main(int argc, char* argv[])
          return 0;
       }
 
-      // Create an instance of the rest client
-      auto rest_client = restc_cpp::RestClient::Create();
-      oura_charts::TokenAuth auth{ pat };
-      auto profile = oura_charts::UserProfile::getProfile(auth);
+      auto profile = UserProfile::getProfile(AuthWrapper{ TokenAuth{pat} });
 
    }
    catch (std::exception& e)

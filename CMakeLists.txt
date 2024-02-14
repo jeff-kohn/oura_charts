@@ -115,15 +115,13 @@ include(CMakePrintHelpers)
 find_package(Boost REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 find_package(cxxopts CONFIG REQUIRED)
-find_package(restc-cpp CONFIG REQUIRED)
+find_package(cpr CONFIG REQUIRED)
 
-
-
-cmake_print_variables(PROJECT_CXX_STANDARD)
-cmake_print_variables(PROJECT_COMPILE_DEFINITIONS)
-cmake_print_variables(PROJECT_WARNING_FLAGS)
-cmake_print_variables(PROJECT_COMPILE_OPTIONS)
-cmake_print_variables(PROJECT_LINK_OPTIONS)
+cmake_print_variables(OURACHARTS_CXX_STANDARD)
+cmake_print_variables(OURACHARTS_COMPILE_DEFINITIONS)
+cmake_print_variables(OURACHARTS_WARNING_FLAGS)
+cmake_print_variables(OURACHARTS_COMPILE_OPTIONS)
+cmake_print_variables(OURACHARTS_LINK_OPTIONS)
 
 # Include sub-projects.
 add_subdirectory("src")

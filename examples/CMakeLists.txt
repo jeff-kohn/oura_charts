@@ -17,7 +17,6 @@ set_target_properties(${THIS_TARGET}
 target_link_libraries(${THIS_TARGET}
    PUBLIC
       oura_rest
-      restc-cpp
 )
 
 target_compile_features(${THIS_TARGET} PUBLIC ${OURACHARTS_CXX_STANDARD})

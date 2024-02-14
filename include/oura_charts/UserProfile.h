@@ -10,8 +10,11 @@
 #pragma once
 
 #include "oura_charts/RestAuth.h"
+#include "oura_charts/detail/rest_constants.h"
+#include <cpr/cpr.h>
 #include <string>
 #include <utility>
+
 
 namespace oura_charts::detail
 {
@@ -24,7 +27,7 @@ namespace oura_charts::detail
       std::string email{};
       int age{};
       int weight_kg{};
-      int height_cm{};
+      int height_m{};
       std::string biological_sex{};
    };
 }
@@ -48,8 +51,6 @@ namespace oura_charts
       UserProfile &operator=(const UserProfile &) = default;
       UserProfile &operator=(UserProfile &&) = default;
 
-      static UserProfile getProfile(RestAuth& auth);
-
       std::string id() const     { return user_data::id;    }
       std::string email() const  { return user_data::email; }
       int age() const            { return user_data::age;   }
@@ -57,13 +58,25 @@ namespace oura_charts
       /// Weight in kg
       int weight() const         { return user_data::weight_kg; }
 
-      /// Height in centimeters
-      int height() const         { return user_data::height_cm; }
+      /// Height in meters
+      int height() const         { return user_data::height_m; }
 
       std::string biologicalSex() const { return user_data::biological_sex; }
 
+      template<typename AuthType>
+      static UserProfile getProfile(const AuthWrapper<AuthType>& auth)
+      {
+         cpr::Session session{};
+         session.SetOption(auth.getAuthorization() );
+         session.SetOption(cpr::Header{ {constants::OURA_REST_HEADER_XCLIENT, constants::OURA_REST_HEADER_XCLIENT_VALUE} });
+         session.SetOption(cpr::Url{ constants::OURA_REST_URL_PERSONAL_INFO} );
+
+         auto response = session.Get();
+         return UserProfile{};
+      }
+
    private:
-      UserProfile() {};
+      UserProfile() = default;
       UserProfile(user_data&& data) : detail::user_data{ std::move(data) } {}
    };
 

@@ -14,10 +14,9 @@
 
 namespace oura_charts
 {
-   void TokenAuth::setHeaders(restc_cpp::RequestBuilder &req) 
+   cpr::Bearer TokenAuth::getAuthorization() const
    {
-      req.Header(constants::OURA_REST_HEADER_AUTH,
-                 fmt::format("{}{}", constants::OURA_REST_PARAM_AUTH_TOKEN_PREFIX, m_token));
+      return cpr::Bearer{ m_token };
    }
 
 }

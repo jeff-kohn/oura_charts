@@ -1,6 +1,5 @@
 #include "oura_charts/UserProfile.h"
 #include "oura_charts/helpers.h"
-#include "oura_charts/RestAuth.h"
 #include <catch2/catch_test_macros.hpp>
 
 namespace oura_charts::test
@@ -12,9 +11,7 @@ namespace oura_charts::test
       if (pat.empty())
          SKIP("No PAT environment variable found for authenticating online tests");
 
-      TokenAuth auth{ pat };
-      REQUIRE_NOTHROW(UserProfile::getProfile(auth));
-
+      REQUIRE_NOTHROW(UserProfile::getProfile(AuthWrapper{ TokenAuth{pat} }));
    }
 
    TEST_CASE("Structured bindings for UserProfile", "UserProfile")

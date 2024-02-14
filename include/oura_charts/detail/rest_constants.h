@@ -12,9 +12,8 @@
 
 namespace oura_charts::constants
 {
-   static constexpr const char* OURA_URL_PERSONAL_INFO = "https://api.ouraring.com/v2/usercollection/personal_info";
+   static constexpr const char* OURA_REST_URL_PERSONAL_INFO = "https://api.ouraring.com/v2/usercollection/personal_info";
 
-   static constexpr const char* OURA_REST_HEADER_AUTH = "Authorization";
    static constexpr const char* OURA_REST_HEADER_XCLIENT = "X-Client";
    static constexpr const char* OURA_REST_HEADER_XCLIENT_VALUE = "restc-cpp";
 

@@ -10,58 +10,65 @@
 
 #pragma once
 
-#include <restc-cpp/RequestBuilder.h>
 #include <string>
-
+#include <cpr/bearer.h>
 
 namespace oura_charts
 {
 
    /// <summary>
-   /// The interface we use for authenticating with the Oura REST API. 
+   /// The wrapper object we use for authenticating with the Oura REST API. 
    /// </summary>
-   class RestAuth
+   /// <todo>
+   /// put some interface constraints on this class
+   /// </todo>
+   template <class Auth>
+   class AuthWrapper
    {
    public:
-      RestAuth() = default;
-      virtual ~RestAuth() noexcept = default;
+      AuthWrapper(Auth auth) : m_auth(std::move(auth)) {} // intentionally not explicit
 
-      virtual void setHeaders(restc_cpp::RequestBuilder &req) = 0;
+      auto getAuthorization() const
+      {
+         return m_auth.getAuthorization();
+      }
+   private:
+      Auth m_auth;
    };
 
 
    /// <summary>
-   /// Encapsulates a Personal Access Token (PAT) for connecing to the Oura REST API.
+   /// Encapsulates a Personal Access Token (PAT) for connecting to the Oura REST API.
    /// </summary>
-   /// 
    /// <remarks>
    /// Oura REST API supports two authentication methods: Personal Access Token (PAT)
    /// and OAUTH. The PAT allows pulling data from a single Oura account, and is suitable
    /// for client apps. User must create a PAT on the OURA website to use with this
    /// authentication type.
    /// </remarks>
-   class TokenAuth final : public RestAuth
+   class TokenAuth
    {
    public:
       explicit TokenAuth(std::string_view token) : m_token(token) {}
       explicit TokenAuth(std::string &&token) : m_token(std::move(token)) {}
       ~TokenAuth() = default;
-
       TokenAuth(const TokenAuth &other) = default;
       TokenAuth(TokenAuth &&other) = default;
-
       TokenAuth &operator=(TokenAuth &&other) = default;
       TokenAuth &operator=(const TokenAuth &other) = default;
 
       /// <summary>
       /// The PAT that the user generated on the Oura website.
       /// </summary>
-      std::string token() const { return m_token; }
+      std::string getToken() const          { return m_token;                    }
+      void setToken(std::string_view token) { m_token = std::string{ m_token };  }
+      void setToken(std::string&& token)    { m_token = std::move(token);        }
 
       /// <summary>
-      /// Adds the auth header(s) to the HTTP Request
+      /// This is called by AuthWrapper to get the Bearer token used for authenticating
+      /// with OURA REST
       /// </summary>
-      void setHeaders(restc_cpp::RequestBuilder &req) override;
+      cpr::Bearer getAuthorization() const;
 
    private:
       std::string m_token;
