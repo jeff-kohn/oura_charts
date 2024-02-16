@@ -3,9 +3,9 @@
 /// RestAuth.h
 ///
 /// Defines the RestAuth interface and implementation(s) used for access the Oura REST API.
-/// 
+///
 /// Copyright (c) 2024 Jeff Kohn
-/// 
+///
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
@@ -17,7 +17,7 @@ namespace oura_charts
 {
 
    /// <summary>
-   /// The wrapper object we use for authenticating with the Oura REST API. 
+   /// The wrapper object we use for authenticating with the Oura REST API.
    /// </summary>
    /// <todo>
    /// put some interface constraints on this class
@@ -61,7 +61,7 @@ namespace oura_charts
       /// The PAT that the user generated on the Oura website.
       /// </summary>
       std::string getToken() const          { return m_token;                    }
-      void setToken(std::string_view token) { m_token = std::string{ m_token };  }
+      void setToken(std::string_view token) { m_token = std::string{ token };    }
       void setToken(std::string&& token)    { m_token = std::move(token);        }
 
       /// <summary>

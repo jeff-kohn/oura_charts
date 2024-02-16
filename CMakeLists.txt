@@ -42,8 +42,8 @@ if (TOP_LEVEL_PROJECT)
 endif()
 
 
-if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR) 
-   message(FATAL_ERROR "In-source builds are not allowed") 
+if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
+   message(FATAL_ERROR "In-source builds are not allowed")
 endif()
 
 
@@ -55,7 +55,7 @@ set(OURACHARTS_CXX_STANDARD cxx_std_23)
 # Set up platform-specific target options, by creating the vars that will be used to call target_compile_options/definitions
 # for each target. If any of these variables have already been defined by a preset, we will NOT override the preset values.
 #
-# This allows us to have centralized control over these settings and individual targets can still choose to override them 
+# This allows us to have centralized control over these settings and individual targets can still choose to override them
 # if necessary. And we're following modern best practices of avoiding changing CMAKE_CXX_FLAGS or add_compile_options()
 #
 # We take care of setting the appropriate flags for debug/release/relwithdbginfo and windows/linux. If you override these settings
@@ -103,10 +103,11 @@ elseif (LINUX)
 
     set(OURACHARTS_COMPILE_OPTIONS "$<$<CONFIG:Debug>:-Og;>"
                                    "$<$<CONFIG:Release,RelWithDebInfo>:-O3>"
-                                   "-stdlib=libc++;-g;-fstack-clash-protection;-fstack-protector-strong;-fexceptions;-fpie;-grecord-gcc-switches;-fcf-protection;-pipe;-Werror=format-security;-Werror=implicit-function-declaration;"
+                                   "-g;-fstack-clash-protection;-fstack-protector-strong;-fexceptions;-fpie;-grecord-gcc-switches;-fcf-protection;-pipe;-Werror=format-security;-Werror=implicit-function-declaration;"
                                    CACHE STRING "Default global compile options for oura_charts project")
 
-    set(OURACHARTS_LINK_OPTIONS "-pie;-stdlib=libc++;-lc++abi" CACHE STRING "Default global linker options for oura_charts project")
+    set(OURACHARTS_LINK_OPTIONS "-pie;" CACHE STRING "Default global linker options for oura_charts project")
+   #  set(OURACHARTS_LINK_OPTIONS "-pie;-stdlib=libc++;-lc++abi" CACHE STRING "Default global linker options for oura_charts project")
 
 endif()
 

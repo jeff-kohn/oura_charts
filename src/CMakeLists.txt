@@ -26,6 +26,7 @@ set_target_properties(${THIS_TARGET}
 target_include_directories( ${THIS_TARGET}
 	PUBLIC
       ${CPR_INCLUDE_DIRS}
+      ${fmt_INCLUDE_DIRS}
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
 		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 	PRIVATE:

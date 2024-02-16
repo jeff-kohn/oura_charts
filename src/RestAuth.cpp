@@ -3,9 +3,9 @@
 /// RestAuth.cpp
 ///
 /// Provides implmementation for the auth classes used to access the Oura REST API.
-/// 
+///
 /// Copyright (c) 2024 Jeff Kohn
-/// 
+///
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "oura_charts/RestAuth.h"

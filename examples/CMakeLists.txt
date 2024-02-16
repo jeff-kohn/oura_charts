@@ -14,6 +14,14 @@ set_target_properties(${THIS_TARGET}
       MSVC_RUNTIME_LIBRARY "$<$<CONFIG:Debug>:${OURACHARTS_MSVCRT_DEBUG}>$<$<CONFIG:Release,RelWithDebInfo>:${OURACHARTS_MSVCRT_RELEASE}>"
 )
 
+target_include_directories( ${THIS_TARGET}
+	PUBLIC
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
+		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+	PRIVATE:
+		${Boost_INCLUDE_DIRS}
+)
+
 target_link_libraries(${THIS_TARGET}
    PUBLIC
       oura_rest
