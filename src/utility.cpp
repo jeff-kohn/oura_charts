@@ -1,6 +1,6 @@
 
-#include "oura_charts/helpers.h"
-#include "oura_charts/detail/rest_constants.h"
+#include "oura_charts/detail/utility.h"
+#include "oura_charts/detail/constants.h"
 
 #if defined(_WIN32_WINNT)
    #include <windows.h>
@@ -9,7 +9,7 @@
    #include <cstdlib>
 #endif
 
-namespace oura_charts::helpers
+namespace oura_charts::detail
 {
    std::string getEnvironmentVariable(const char* var_name, std::string_view default_val)
    {
@@ -18,7 +18,7 @@ namespace oura_charts::helpers
 
 #if defined(_WIN32_WINNT)
       // std::getenv() is problematic on Windows so use the WinAPI
-      char buf[constants::OURA_MAX_ENV_VAR_LENGTH] = {'\0'};
+      char buf[constants::OURACHARTS_MAX_ENV_VAR_LENGTH] = {'\0'};
       if (::GetEnvironmentVariableA(var_name, buf, sizeof(buf) - 1))
          return std::string{ buf };
       else
@@ -29,8 +29,8 @@ namespace oura_charts::helpers
          return std::string{ default_val };
 
       std::string_view sv{ val_ptr };
-      if (sv.length() > constants::OURA_MAX_ENV_VAR_LENGTH)
-         return std::string{ sv.substr(0, constants::OURA_MAX_ENV_VAR_LENGTH) };
+      if (sv.length() > constants::OURACHARTS_MAX_ENV_VAR_LENGTH)
+         return std::string{ sv.substr(0, constants::OURACHARTS_MAX_ENV_VAR_LENGTH) };
       else
          return std::string{ sv };
 #endif

@@ -2,11 +2,12 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "oura-charts",
   "version": "1.0.0",
-  "dependencies": [
+   "dependencies": [
       "boost-algorithm",
       "cxxopts",
       "fmt",
       "catch2",
+      "nlohmann-json",
       "cpr"
-  ]
+   ]
 }

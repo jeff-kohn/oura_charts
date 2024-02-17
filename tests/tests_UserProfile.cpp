@@ -1,5 +1,6 @@
 #include "oura_charts/UserProfile.h"
-#include "oura_charts/helpers.h"
+#include "oura_charts/detail/rest_helpers.h"
+#include "oura_charts/detail/utility.h"
 #include <catch2/catch_test_macros.hpp>
 
 namespace oura_charts::test
@@ -7,7 +8,7 @@ namespace oura_charts::test
 
    TEST_CASE("Online UserProfile Test", "Online")
    {
-      auto pat = helpers::getEnvironmentVariable("OURA_PAT");
+      auto pat = detail::getEnvironmentVariable("OURACHARTS_PAT");
       if (pat.empty())
          SKIP("No PAT environment variable found for authenticating online tests");
 

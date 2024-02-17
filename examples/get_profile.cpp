@@ -1,11 +1,11 @@
 #include "oura_charts/UserProfile.h"
 #include "oura_charts/RestAuth.h"
-#include "oura_charts/helpers.h"
+#include "oura_charts/detail/utility.h"
 #include <fmt/format.h>
 #include <cxxopts.hpp>
 
 
-// This example retrieves user-profile info from OURA_REST using Bearer authentication (PAT)
+// This example retrieves user-profile info from OURACHARTS_REST using Bearer authentication (PAT)
 int main(int argc, char* argv[])
 {
    try
@@ -22,9 +22,9 @@ int main(int argc, char* argv[])
       auto params = options.parse(argc, argv);
       string pat = params["token"].as<string>();
       if (pat.empty())
-         pat = helpers::getEnvironmentVariable("OURA_PAT");
+         pat = detail::getEnvironmentVariable("OURACHARTS_PAT");
       if (pat.empty())
-         throw std::runtime_error("Personal Access Token not specified. Use the --token parameter or set the OURA_TOKEN environment variable.");
+         throw std::runtime_error("Personal Access Token not specified. Use the --token parameter or set the OURACHARTS_TOKEN environment variable.");
 
       if (params.count("help"))
       {

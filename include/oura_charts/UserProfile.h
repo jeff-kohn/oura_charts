@@ -10,7 +10,7 @@
 #pragma once
 
 #include "oura_charts/RestAuth.h"
-#include "oura_charts/detail/rest_constants.h"
+#include "oura_charts/detail/constants.h"
 #include <cpr/cpr.h>
 #include <string>
 #include <utility>
@@ -68,8 +68,8 @@ namespace oura_charts
       {
          cpr::Session session{};
          session.SetOption(auth.getAuthorization() );
-         session.SetOption(cpr::Header{ {constants::OURA_REST_HEADER_XCLIENT, constants::OURA_REST_HEADER_XCLIENT_VALUE} });
-         session.SetOption(cpr::Url{ constants::OURA_REST_URL_PERSONAL_INFO} );
+         session.SetOption(cpr::Header{ {constants::OURACHARTS_REST_HEADER_XCLIENT, constants::OURACHARTS_REST_HEADER_XCLIENT_VALUE} });
+         session.SetOption(cpr::Url{ constants::OURACHARTS_REST_URL_PERSONAL_INFO} );
 
          auto response = session.Get();
          return UserProfile{};
