@@ -23,13 +23,13 @@ namespace oura_charts
       switch (ec)
       {
       case ErrorCategory::Generic:
-         return constants::OURACHARTS_ERROR_CATEGORY_GENERIC;
+         return constants::ERROR_CATEGORY_GENERIC;
       case ErrorCategory::Success:
-         return constants::OURACHARTS_ERROR_CATEGORY_SUCCESS;
+         return constants::ERROR_CATEGORY_SUCCESS;
       case ErrorCategory::REST:
-         return constants::OURACHARTS_ERROR_CATEGORY_REST;
+         return constants::ERROR_CATEGORY_REST;
       case ErrorCategory::JSON:
-         return constants::OURACHARTS_ERROR_CATEGORY_JSON;
+         return constants::ERROR_CATEGORY_JSON;
       }
    }
 

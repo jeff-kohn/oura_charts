@@ -18,10 +18,10 @@ namespace oura_charts
 {
 
    /// <summary>
-   /// The wrapper object we use for authenticating with the Oura REST API.
+   ///   The wrapper object we use for authenticating with the Oura REST API.
    /// </summary>
    /// <todo>
-   /// put some interface constraints on this class
+   ///   put some interface constraints on this class
    /// </todo>
    template <class Auth>
    class AuthWrapper
@@ -39,13 +39,13 @@ namespace oura_charts
 
 
    /// <summary>
-   /// Encapsulates a Personal Access Token (PAT) for connecting to the Oura REST API.
+   ///   Encapsulates a Personal Access Token (PAT) for connecting to the Oura REST API.
    /// </summary>
    /// <remarks>
-   /// Oura REST API supports two authentication methods: Personal Access Token (PAT)
-   /// and OAUTH. The PAT allows pulling data from a single Oura account, and is suitable
-   /// for client apps. User must create a PAT on the OURA website to use with this
-   /// authentication type.
+   ///   Oura REST API supports two authentication methods: Personal Access Token (PAT)
+   ///   and OAUTH. The PAT allows pulling data from a single Oura account, and is suitable
+   ///   for client apps. User must create a PAT on the OURA website to use with this
+   ///   authentication type.
    /// </remarks>
    class TokenAuth
    {
@@ -59,15 +59,15 @@ namespace oura_charts
       TokenAuth &operator=(const TokenAuth &other) = default;
 
       /// <summary>
-      /// The PAT that the user generated on the Oura website.
+      ///   The PAT that the user generated on the Oura website.
       /// </summary>
       std::string getToken() const          { return m_token;                    }
       void setToken(std::string_view token) { m_token = std::string{ token };    }
       void setToken(std::string&& token)    { m_token = std::move(token);        }
 
       /// <summary>
-      /// This is called by AuthWrapper to get the Bearer token used for authenticating
-      /// with OURA REST
+      ///   This is called by AuthWrapper to get the Bearer token used for authenticating
+      ///   with OURA REST
       /// </summary>
       cpr::Bearer getAuthorization() const;
 

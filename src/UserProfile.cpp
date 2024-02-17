@@ -18,6 +18,8 @@ namespace oura_charts::detail
 
 namespace oura_charts
 {
+   using namespace oura_charts::detail;
+   
    UserProfile::UserProfile(const detail::json& json_data)
    {
       try

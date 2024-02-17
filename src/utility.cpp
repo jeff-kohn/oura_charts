@@ -18,7 +18,7 @@ namespace oura_charts::detail
 
 #if defined(_WIN32_WINNT)
       // std::getenv() is problematic on Windows so use the WinAPI
-      char buf[constants::OURACHARTS_MAX_ENV_VAR_LENGTH] = {'\0'};
+      char buf[constants::MAX_ENV_VAR_LENGTH] = {'\0'};
       if (::GetEnvironmentVariableA(var_name, buf, sizeof(buf) - 1))
          return std::string{ buf };
       else
@@ -29,8 +29,8 @@ namespace oura_charts::detail
          return std::string{ default_val };
 
       std::string_view sv{ val_ptr };
-      if (sv.length() > constants::OURACHARTS_MAX_ENV_VAR_LENGTH)
-         return std::string{ sv.substr(0, constants::OURACHARTS_MAX_ENV_VAR_LENGTH) };
+      if (sv.length() > constants::MAX_ENV_VAR_LENGTH)
+         return std::string{ sv.substr(0, constants::MAX_ENV_VAR_LENGTH) };
       else
          return std::string{ sv };
 #endif

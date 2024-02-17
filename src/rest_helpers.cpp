@@ -15,7 +15,7 @@ namespace oura_charts::detail
             // all we have is just an HTTP status code. use response text as error message if we have it,
             // or generic HTTP status text if not.
             auto&& text = response.text.empty() ? HttpStatus::reasonPhrase(response.status_code)
-               : HttpStatus::reasonPhrase(response.status_code);
+                                                : HttpStatus::reasonPhrase(response.status_code);
 
             return std::unexpected{ oura_exception{ static_cast<int64_t>(response.status_code),
                                                     std::string{ text },

@@ -35,7 +35,6 @@ namespace oura_charts::detail
 
 namespace oura_charts
 {
-   using namespace detail;
 
    /// <summary>
    /// 
@@ -48,7 +47,7 @@ namespace oura_charts
    /// must be initialized by valid a JSON object.
    /// 
    /// </remarks>
-   class UserProfile : protected detail::user_data
+   class UserProfile : private detail::user_data
    {
    public:
       UserProfile(const detail::json& json_data);
@@ -69,10 +68,12 @@ namespace oura_charts
       template<typename AuthType>
       static UserProfile getProfile(const AuthWrapper<AuthType>& auth)
       {
+         using namespace detail;
+
          cpr::Session session{};
          session.SetOption(auth.getAuthorization());
-         session.SetOption(cpr::Header{ {constants::OURACHARTS_REST_HEADER_XCLIENT, constants::OURACHARTS_REST_HEADER_XCLIENT_VALUE} });
-         session.SetOption(cpr::Url{ constants::OURACHARTS_REST_URL_PERSONAL_INFO });
+         session.SetOption(cpr::Header{ {constants::REST_HEADER_XCLIENT, constants::REST_HEADER_XCLIENT_VALUE} });
+         session.SetOption(cpr::Url{ fmt::format("{}/{}", constants::REST_URL_BASE, constants::REST_PATH_PERSONAL_INFO) });
 
          return constructFromJson<UserProfile>( getJsonFromResponse(session.Get()) );
       }
