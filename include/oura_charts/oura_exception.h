@@ -1,12 +1,9 @@
 #pragma once
-
-#include "oura_charts/detail/constants.h"
-#include <string>
-#include <exception>
+#include "oura_charts/constants.h"
 #include <cpr/error.h>
 #include <cpr/status_codes.h>
 #include <fmt/format.h>
-#include <fmt/core.h>
+#include <string>
 
 namespace oura_charts
 {
@@ -90,18 +87,34 @@ namespace oura_charts
       }
    };
 
+   /// <summary>
+   /// custom formatter for our exception
+   /// </summary>
+   inline auto format_as(const oura_exception& err)
+   {
+      return fmt::format("'{}' error 0x{:X} occurred: {}",
+                         getGetogoryName(err.category),
+                         err.error_code,
+                         err.what());
+   }
+
 }
 
 
-/// <summary>
-/// custom formatter for our exception
-/// </summary>
+///// <summary>
+///// custom formatter for our exception
+///// </summary>
 //template <>
-//struct fmt::formatter<oura_charts::oura_exception> : formatter<string_view>
+//struct fmt::formatter<oura_charts::oura_exception> : fmt::formatter<std::string_view>
 //{
 //   auto format(const oura_charts::oura_exception& err, fmt::format_context& ctx) const
 //   {
-//      return fmt::formatter<string_view>::format(fmt::format("{} error {#x} occurred: {}", oura_charts::getGetogoryName(err.category), err.error_code, err.what()), ctx);
+//      std::string temp;
+//      fmt::format_to(std::back_inserter(temp), "'{}' error 0x{:X} occurred: {}",
+//                                                oura_charts::getGetogoryName(err.category),
+//                                                err.error_code,
+//                                                err.what());
+//
+//      return fmt::formatter<std::string_view>::format(temp, ctx);
 //   }
 //};
-

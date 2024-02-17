@@ -22,9 +22,9 @@ int main(int argc, char* argv[])
       auto params = options.parse(argc, argv);
       string pat = params["token"].as<string>();
       if (pat.empty())
-         pat = detail::getEnvironmentVariable("OURACHARTS_PAT");
+         pat = detail::getEnvironmentVariable("OURA_PAT");
       if (pat.empty())
-         throw std::runtime_error("Personal Access Token not specified. Use the --token parameter or set the OURACHARTS_TOKEN environment variable.");
+         throw std::runtime_error("Personal Access Token not specified. Use the --token parameter or set the OURA_PAT environment variable.");
 
       if (params.count("help"))
       {
@@ -33,6 +33,7 @@ int main(int argc, char* argv[])
       }
 
       auto profile = UserProfile::getProfile(AuthWrapper{ TokenAuth{pat} });
+      fmt::println("Successfully retrieved {}", profile);
 
    }
    catch (std::exception& e)

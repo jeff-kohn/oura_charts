@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include "oura_charts/oura_charts.h"
 #include <string>
 #include <cpr/bearer.h>
 

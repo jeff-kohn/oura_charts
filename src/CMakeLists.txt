@@ -8,14 +8,15 @@ set(THIS_TARGET "oura_rest")
 add_library(${THIS_TARGET} STATIC
 	"../include/oura_charts/RestAuth.h"
 	"../include/oura_charts/UserProfile.h"
-	"../include/oura_charts/detail/constants.h"
+	"../include/oura_charts/constants.h"
    "../include/oura_charts/detail/rest_helpers.h"
 	"../include/oura_charts/detail/utility.h"
    "../include/oura_charts/detail/http_status_codes.h"
    "RestAuth.cpp"
    "UserProfile.cpp"
    "utility.cpp"
- "rest_helpers.cpp")
+   "rest_helpers.cpp"
+)
 
 set_target_properties(${THIS_TARGET}
 	PROPERTIES

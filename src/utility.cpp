@@ -1,6 +1,5 @@
-
+#include "oura_charts/oura_charts.h"
 #include "oura_charts/detail/utility.h"
-#include "oura_charts/detail/constants.h"
 
 #if defined(_WIN32_WINNT)
    #include <windows.h>
@@ -11,6 +10,7 @@
 
 namespace oura_charts::detail
 {
+
    std::string getEnvironmentVariable(const char* var_name, std::string_view default_val)
    {
       if (nullptr == var_name || *var_name == '\0')
