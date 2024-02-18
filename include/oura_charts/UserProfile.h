@@ -37,19 +37,18 @@ namespace oura_charts
 {
 
    /// <summary>
-   /// 
-   /// This class represents the User Profile data from the Oura Cloud API.
-   /// 
+   ///   This class represents the User Profile data from the Oura Cloud API.
    /// </summary>
    /// <remarks>
-   /// 
-   /// No default construction, aside from copy/move objects of this type
-   /// must be initialized by valid a JSON object.
-   /// 
+   ///   No default construction, aside from copy/move objects of this type
+   ///   must be initialized by valid a JSON object.
    /// </remarks>
    class UserProfile : private detail::user_data
    {
    public:
+      // URL used to retrieve 
+      static constexpr std::string_view REST_PATH = constants::REST_PATH_PERSONAL_INFO;
+
       UserProfile(const detail::json& json_data);
       UserProfile(const UserProfile &) = default;
       UserProfile(UserProfile &&) = default;
@@ -57,25 +56,15 @@ namespace oura_charts
       UserProfile& operator=(const UserProfile&) = default;
       UserProfile& operator=(UserProfile&&) = default;
 
-
       /// <summary>
-      /// 
-      /// static factory method for getting an UserProfile object
-      /// from the REST provider. Will throw oura_exception() if
-      /// unable to create the class.
-      /// 
+      ///   static factory method for getting an UserProfile object
+      ///   from the REST provider. Will throw oura_exception() if
+      ///   unable to create the class.
       /// </summary>
       template<typename AuthType>
       static UserProfile getProfile(const AuthWrapper<AuthType>& auth)
       {
-         using namespace detail;
-
-         cpr::Session session{};
-         session.SetOption(auth.getAuthorization());
-         session.SetOption(cpr::Header{ {constants::REST_HEADER_XCLIENT, constants::REST_HEADER_XCLIENT_VALUE} });
-         session.SetOption(cpr::Url{ fmt::format("{}/{}", constants::REST_URL_BASE, constants::REST_PATH_PERSONAL_INFO) });
-
-         return constructFromJson<UserProfile>( getJsonFromResponse(session.Get()) );
+         return detail::getObjectFromRestEndpoint<UserProfile>(auth.getAuthorization());
       }
 
       std::string id() const     { return user_data::id;    }
@@ -95,7 +84,7 @@ namespace oura_charts
    };
 
    /// <summary>
-   /// get() overload for structured binding support for the UserProfile class.
+   ///   get() overload for structured binding support for the UserProfile class.
    /// </summary>
    template < std::size_t Idx > auto get(const oura_charts::UserProfile &user)
    {
@@ -109,20 +98,23 @@ namespace oura_charts
       else { return user.biologicalSex(); }
    }
 
+   /// <summary>
+   ///   custom format() support for UserProfile
+   /// </summary>
    inline auto format_as(const UserProfile& profile)
    {
-      return fmt::format("UserProfile id={} ({}, {}, {})",
-                         profile.id(),
+      return fmt::format("UserProfile for {} ({}, {}, id={})",
                          profile.email(),
                          profile.age(),
-                         profile.biologicalSex());
+                         profile.biologicalSex(),
+                         profile.id());
    }
 
 }
 
 
 /// <summary>
-/// provide a tuple-like API for class UerProfile for structured bindings:
+///   provide a tuple-like API for class UerProfile for structured bindings:
 /// </summary>
 template <> struct std::tuple_size <oura_charts::UserProfile> { static constexpr int value = 6; };
 template <> struct std::tuple_element<0, oura_charts::UserProfile> { using type = std::string; };

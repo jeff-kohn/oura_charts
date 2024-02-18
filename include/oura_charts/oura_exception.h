@@ -30,24 +30,29 @@ namespace oura_charts
          return constants::ERROR_CATEGORY_REST;
       case ErrorCategory::JSON:
          return constants::ERROR_CATEGORY_JSON;
+      default:
+         std::unreachable();
       }
+   }
+
+   /// <summary>
+   ///   formatter for ErrorCategory enum.
+   /// </summary>
+   inline std::string format_as(ErrorCategory ec)
+   {
+      return getGetogoryName(ec);
    }
 
 
    /// <summary>
-   /// 
-   /// exception class used by the Oura Charts project.
-   /// 
+   ///   exception class used by the Oura Charts project.
+   ///  
+   ///   A default-constructed instance of this class will have an error category
+   ///   of "Success" with no other values, essentially representing a non-error.
    /// </summary>
-   /// 
    /// <remarks>
-   /// 
-   /// This type is also used to report errors via return value in some cases
-   /// with std::expected
-   ///
-   /// A default-constructed instance of this class will have an error category
-   /// of "Success" with no other values, essentially representing a non-error.
-   /// 
+   ///   This class is also used to return error information via std::excpected
+   ///   when throwing exceptions is not desirable.
    /// </remarks>
    class oura_exception final : public std::exception
    {
@@ -67,7 +72,7 @@ namespace oura_charts
       oura_exception(std::string error_text, ErrorCategory category = ErrorCategory::Generic)
          : error_code{ -1 },
            message{ error_text },
-           category{ ErrorCategory::Generic }
+           category{ category }
       {
       }
 
@@ -77,7 +82,7 @@ namespace oura_charts
       oura_exception& operator=(const oura_exception&) = default;
       oura_exception& operator=(oura_exception&&) = default;
 
-      int64_t error_code{};
+      int64_t error_code{-1};
       std::string message{};
       ErrorCategory category{ ErrorCategory::Success };
 
@@ -92,29 +97,11 @@ namespace oura_charts
    /// </summary>
    inline auto format_as(const oura_exception& err)
    {
-      return fmt::format("'{}' error 0x{:X} occurred: {}",
+      return fmt::format("{} {} (0x{:X}): {}",
                          getGetogoryName(err.category),
+                         err.error_code,
                          err.error_code,
                          err.what());
    }
 
 }
-
-
-///// <summary>
-///// custom formatter for our exception
-///// </summary>
-//template <>
-//struct fmt::formatter<oura_charts::oura_exception> : fmt::formatter<std::string_view>
-//{
-//   auto format(const oura_charts::oura_exception& err, fmt::format_context& ctx) const
-//   {
-//      std::string temp;
-//      fmt::format_to(std::back_inserter(temp), "'{}' error 0x{:X} occurred: {}",
-//                                                oura_charts::getGetogoryName(err.category),
-//                                                err.error_code,
-//                                                err.what());
-//
-//      return fmt::formatter<std::string_view>::format(temp, ctx);
-//   }
-//};

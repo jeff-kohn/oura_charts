@@ -12,7 +12,7 @@
 
 namespace oura_charts::constants
 {
-   static constexpr const char* REST_URL_BASE = "https://api.ouraring.com//v2/usercollection";
+   static constexpr const char* REST_URL_BASE = "https://api.ouraring.com/v2/usercollection";
    static constexpr const char* REST_PATH_PERSONAL_INFO = "personal_info";
    static constexpr const char* REST_PATH_HEART_RATE = "heartrate";
 
@@ -31,5 +31,9 @@ namespace oura_charts::constants
    static constexpr const char* ERROR_CATEGORY_GENERIC = "Generic Runtime Error";
    static constexpr const char* ERROR_CATEGORY_REST = "REST Error";
    static constexpr const char* ERROR_CATEGORY_JSON = "JSON Error";
+
+   static constexpr const char* UTC_TIMEZONE = "Z";
+   static constexpr const char* ISO_DATETIME_LOCAL_FORMAT = "%F %T%Ez";
+   static constexpr const char* ISO_DATETIME_UTC_FORMAT = "%F %T%Z";
 
 } // namespace oura_charts::constants

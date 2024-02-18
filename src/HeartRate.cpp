@@ -2,6 +2,13 @@
 
 namespace oura_charts::detail
 {
+      struct hr_data
+      {
+         int bpm;
+         std::string source;
+         std::string timestamp;
+      };
+
    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(hr_data, bpm, source, timestamp)
 }
 
@@ -13,7 +20,11 @@ namespace oura_charts
    {
       try
       {
-         json_data.get_to(static_cast<hr_data&>(*this));
+         hr_data data{};
+         json_data.get_to(data);
+
+
+
       }
       catch (json::exception& e)
       {
