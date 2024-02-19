@@ -65,7 +65,7 @@ namespace oura_charts
 
       oura_exception(int64_t code, std::string message, ErrorCategory category) : error_code{ static_cast<int64_t>(code) },
                                                                                   message{ std::move(message) },
-                                                                                  category{ ErrorCategory::REST }
+                                                                                  category{ category }
       {
       }
 
