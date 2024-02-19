@@ -46,7 +46,7 @@ namespace oura_charts
 
    /// <summary>
    ///   exception class used by the Oura Charts project.
-   ///  
+   ///
    ///   A default-constructed instance of this class will have an error category
    ///   of "Success" with no other values, essentially representing a non-error.
    /// </summary>
@@ -65,7 +65,7 @@ namespace oura_charts
 
       oura_exception(int64_t code, std::string message, ErrorCategory category) : error_code{ static_cast<int64_t>(code) },
                                                                                   message{ std::move(message) },
-                                                                                  category{ ErrorCategory::REST }
+                                                                                  category{ category }
       {
       }
 
@@ -86,7 +86,7 @@ namespace oura_charts
       std::string message{};
       ErrorCategory category{ ErrorCategory::Success };
 
-      const char* what() const noexcept override 
+      const char* what() const noexcept override
       {
          return message.c_str();
       }

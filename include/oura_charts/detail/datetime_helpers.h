@@ -2,8 +2,8 @@
 
 #include "oura_charts/constants.h"
 #include <chrono>
-#include <string>
 #include <fmt/format.h>
+#include <expected>
 
 namespace oura_charts::datetime
 {

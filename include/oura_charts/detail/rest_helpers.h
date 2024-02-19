@@ -26,7 +26,7 @@ namespace oura_charts::detail
    ///   indicates the type being parsed as well the error that occured.
    /// </summary>
    template<typename T>
-   [[nodiscard]] oura_exception translateException(const json::exception& e, T* caller = nullptr)
+   [[nodiscard]] oura_exception translateException(const json::exception& e, T*  = nullptr)
    {
       return{ e.id,
               fmt::format("JSON Parse error for type {}: {}", typeid(T).name(), e.what()),
