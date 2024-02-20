@@ -5,7 +5,7 @@
 #include "oura_charts/detail/utility.h"
 #include <cpr/cpr.h>
 #include <nlohmann/json.hpp>
-#include <expected>
+
 
 
 namespace oura_charts::detail
@@ -18,7 +18,7 @@ namespace oura_charts::detail
    ///   expected return value is the parsed JSON object, the unexpected value contains error information
    ///   in the event of failure.
    /// </summary>
-   [[nodiscard]] std::expected<json, oura_exception> getJsonFromResponse(const cpr::Response& response);
+   [[nodiscard]] expected<json, oura_exception> getJsonFromResponse(const cpr::Response& response);
 
 
    /// <summary>
@@ -43,7 +43,7 @@ namespace oura_charts::detail
    ///   object. json parse exceptions are caught and tranlated to oura_exception.
    /// </remarks>
    template<typename ObjectType>
-   [[nodiscard]] auto constructFromJson(std::expected<json, oura_exception>&& expected_json)
+   [[nodiscard]] auto constructFromJson(expected<json, oura_exception>&& expected_json)
    {
       // todo: log json text for debugging
       try

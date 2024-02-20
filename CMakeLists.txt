@@ -10,15 +10,13 @@ project ("oura_charts"
    HOMEPAGE_URL "https://github.com/jeff-kohn/oura-charts"
  )
 
- if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
    # So we can enable/disable build feature depending whether this is top-level build
    set(TOP_LEVEL_PROJECT ON)
 endif()
 
-
 # So that cmake can find any additional modules we've written (stuff like Find modules, export targets, etc)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/extras/")
-
 
 # Only do these if this is the main project, and not if it is included through add_subdirectory
 if (TOP_LEVEL_PROJECT)
@@ -41,11 +39,11 @@ if (TOP_LEVEL_PROJECT)
    endif()
 endif()
 
-
 if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
    message(FATAL_ERROR "In-source builds are not allowed")
 endif()
 
+include(CMakePrintHelpers)
 
 # Set the C++ standard. All our targets will use this, so we can easily change it
 # if desired in the future.
@@ -64,7 +62,6 @@ set(OURACHARTS_CXX_STANDARD cxx_std_23)
 #
 # We only support MSCV on Windows and CLANG on Linux for now. Support for other compilers can be added through presets that define
 # the appropriate flags.
-#
 if (WIN32)
 
     # By defaUlt cmake is using linux conventions (eg libname instead of name.lib) so override that for Windows builds.
@@ -107,11 +104,12 @@ elseif (LINUX)
                                    CACHE STRING "Default global compile options for oura_charts project")
 
     set(OURACHARTS_LINK_OPTIONS "-pie;" CACHE STRING "Default global linker options for oura_charts project")
-   #  set(OURACHARTS_LINK_OPTIONS "-pie;-stdlib=libc++;-lc++abi" CACHE STRING "Default global linker options for oura_charts project")
 
+   # these are only needed on linux due to incomplete standard library implementations, and should
+   # go away at some point.
+   find_package(tl-expected CONFIG REQUIRED)
+   find_package(date CONFIG REQUIRED)
 endif()
-
-include(CMakePrintHelpers)
 
 find_package(Boost REQUIRED)
 find_package(fmt CONFIG REQUIRED)

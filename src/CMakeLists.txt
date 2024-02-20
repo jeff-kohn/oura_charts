@@ -14,7 +14,7 @@ add_library(${THIS_TARGET} STATIC
    "../include/oura_charts/detail/rest_helpers.h"
    "../include/oura_charts/detail/datetime_helpers.h"
 	"../include/oura_charts/detail/utility.h"
-   
+
    "RestAuth.cpp"
    "UserProfile.cpp"
    "HeartRate.cpp"
@@ -44,7 +44,16 @@ target_link_libraries(${THIS_TARGET}
    PUBLIC
       cpr::cpr
       fmt::fmt
+      tl::expected
 )
+
+if (LINUX)
+   target_link_libraries(${THIS_TARGET}
+      PRIVATE
+         date::date
+         date::date-tz
+   )
+endif()
 
 target_compile_features(${THIS_TARGET} PUBLIC ${OURACHARTS_CXX_STANDARD})
 target_compile_options(${THIS_TARGET} PRIVATE ${OURACHARTS_COMPILE_OPTIONS})

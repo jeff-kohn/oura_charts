@@ -70,8 +70,7 @@ namespace oura_charts
       }
 
       oura_exception(std::string error_text, ErrorCategory category = ErrorCategory::Generic)
-         : error_code{ -1 },
-           message{ error_text },
+         : message{ std::move(error_text) },
            category{ category }
       {
       }
@@ -81,6 +80,7 @@ namespace oura_charts
       oura_exception(oura_exception &&) = default;
       oura_exception& operator=(const oura_exception&) = default;
       oura_exception& operator=(oura_exception&&) = default;
+      ~oura_exception() override = default;
 
       int64_t error_code{-1};
       std::string message{};

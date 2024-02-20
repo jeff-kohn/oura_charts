@@ -8,6 +8,14 @@
       "fmt",
       "catch2",
       "nlohmann-json",
-      "cpr"
+      "cpr",
+      {
+         "name": "tl-expected",
+         "platform": "linux"
+      },
+      {
+         "name": "date",
+         "platform": "linux"
+      }
    ]
 }
