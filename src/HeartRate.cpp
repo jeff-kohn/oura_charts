@@ -2,33 +2,48 @@
 
 namespace oura_charts::detail
 {
-      struct hr_data
-      {
-         int bpm;
-         std::string source;
-         std::string timestamp;
-      };
-
+   // POD used for JSON binding.
+   struct hr_data
+   {
+      int bpm;
+      std::string source;
+      std::string timestamp;
+   };
    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(hr_data, bpm, source, timestamp)
 }
 
-namespace oura_charts
+namespace oura_charts::heart_rate
 {
    using namespace detail;
+   using std::move;
+   using std::string;
 
-   HeartRateDatum::HeartRateDatum(const json& json_data)
+   DataPoint::expected_value DataPoint::makeFromJson(const json& json_data) noexcept
    {
       try
       {
          hr_data data{};
          json_data.get_to(data);
-
-
-
+         auto expected_timestamp = parseIsoDateTime(data.timestamp);
+         if (expected_timestamp)
+            return DataPoint{ data.bpm, expected_timestamp.value(), move(data.source) };
+         else
+            return unexpected{ expected_timestamp.error() };
       }
       catch (json::exception& e)
       {
-         throw translateException(e, this);
+         return unexpected{ translateException<DataPoint>(e) };
+      }
+      catch (std::exception& e)
+      {
+         return unexpected{ oura_exception{ fmt::format("unable to parse JSON for object: {}", e.what()), ErrorCategory::Parse }};
       }
    }
-}
+
+   DataPoint::DataPoint(int bpm, time_point timestamp, string source) noexcept
+      : m_bpm(bpm), m_timestamp(timestamp), m_source(move(source))
+   {
+   }
+
+
+} // namespace oura_charts::heart_rate

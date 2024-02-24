@@ -4,8 +4,8 @@
 ###############################################################################
 set(THIS_TARGET "tests")
 add_executable(${THIS_TARGET}
-   "tests_UserProfile.cpp"
-)
+   "test_UserProfile.cpp"
+   "test_datetime_helpers.cpp")
 
 set_target_properties(${THIS_TARGET}
 	PROPERTIES

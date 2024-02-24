@@ -2,25 +2,32 @@
 
 namespace oura_charts::detail
 {
-   [[nodiscard]] expected<json, oura_exception>  getJsonFromResponse(const cpr::Response& response)
+   [[nodiscard]]
+   json  getJsonFromResponse(const cpr::Response& response)
    {
       // todo: logging
-      if (!cpr::status::is_success(response.status_code))
+      if (cpr::status::is_success(response.status_code))
       {
-         if (response.error.code != cpr::ErrorCode::OK)
-            return unexpected{ oura_exception{ response.error } };
-         else
-            return unexpected{ oura_exception{ static_cast<int64_t>(response.status_code),
-                                                    response.reason,
-                                                    ErrorCategory::REST } };
+         try
+         {
+            return json::parse(response.text);
+         }
+         catch (json::exception& e)
+         {
+            throw translateException(e, constants::ERROR_CONTEXT_REST_RESPONSE);
+         }
+         catch (std::exception& e)
+         {
+            throw oura_exception{ std::string{e.what()}, ErrorCategory::REST };
+         }
       }
-      try
+      else if (response.error.code != cpr::ErrorCode::OK)
       {
-         return json::parse(response.text);
+         throw oura_exception{ response.error };
       }
-      catch (std::exception& e)
+      else
       {
-         return unexpected{ oura_exception{ std::string{e.what()}, ErrorCategory::JSON } };
+         throw oura_exception{ static_cast<int64_t>(response.status_code), response.reason, ErrorCategory::REST };
       }
    }
 

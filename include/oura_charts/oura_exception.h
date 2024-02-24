@@ -15,7 +15,7 @@ namespace oura_charts
       Generic = -1,
       Success = 0,
       REST,
-      JSON
+      Parse
    };
 
    inline std::string getGetogoryName(ErrorCategory ec)
@@ -28,8 +28,8 @@ namespace oura_charts
          return constants::ERROR_CATEGORY_SUCCESS;
       case ErrorCategory::REST:
          return constants::ERROR_CATEGORY_REST;
-      case ErrorCategory::JSON:
-         return constants::ERROR_CATEGORY_JSON;
+      case ErrorCategory::Parse:
+         return constants::ERROR_CATEGORY_PARSE;
       default:
          std::unreachable();
       }
@@ -71,7 +71,8 @@ namespace oura_charts
 
       oura_exception(std::string error_text, ErrorCategory category = ErrorCategory::Generic)
          : message{ std::move(error_text) },
-           category{ category }
+           category{ category },
+           error_code{ -1 }
       {
       }
 
@@ -82,7 +83,7 @@ namespace oura_charts
       oura_exception& operator=(oura_exception&&) = default;
       ~oura_exception() override = default;
 
-      int64_t error_code{-1};
+      int64_t error_code{};
       std::string message{};
       ErrorCategory category{ ErrorCategory::Success };
 

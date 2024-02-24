@@ -44,12 +44,13 @@ target_link_libraries(${THIS_TARGET}
    PUBLIC
       cpr::cpr
       fmt::fmt
-      tl::expected
 )
 
+# Need these for now due to incomplete libstdc++
 if (LINUX)
    target_link_libraries(${THIS_TARGET}
       PRIVATE
+         tl::expected
          date::date
          date::date-tz
    )

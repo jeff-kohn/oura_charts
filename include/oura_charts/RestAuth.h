@@ -17,6 +17,8 @@
 namespace oura_charts
 {
 
+
+
    /// <summary>
    ///   The wrapper object we use for authenticating with the Oura REST API.
    /// </summary>
@@ -27,7 +29,9 @@ namespace oura_charts
    class AuthWrapper
    {
    public:
-      AuthWrapper(Auth auth) : m_auth(std::move(auth)) {} // intentionally not explicit
+      // NOLINTBEGIN(google-explicit-constructor)
+      AuthWrapper(Auth auth)   : m_auth(std::move(auth)) {} // not explicit by design
+      // NOLINTEND(google-explicit-constructor)
 
       auto getAuthorization() const
       {
@@ -36,6 +40,7 @@ namespace oura_charts
    private:
       Auth m_auth;
    };
+
 
 
    /// <summary>

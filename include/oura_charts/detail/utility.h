@@ -19,8 +19,11 @@ namespace oura_charts::detail
    ///   'overloaded' utility class. Allows you to inherit from multiple classes (or lambdas),
    ///   inheriting their operator() so that it's overloaded for multiple signatures in one class.
    /// </summary>
-   template<class... Ts> struct overload : Ts... { using Ts::operator()...; };
-   template<class... Ts> overload(Ts...) -> overload<Ts...>;
+   template<class... Ts> struct overload : Ts...
+   {
+      using Ts::operator()...;
+      //consteval void operator()(auto) const { static_assert(false, "Unsupported type");  }
+   };
 
 
    /// <summary>

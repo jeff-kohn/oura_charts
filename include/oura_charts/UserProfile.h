@@ -27,8 +27,8 @@ namespace oura_charts::detail
       std::string id;
       std::string email{};
       int age{};
-      int weight{};
-      int height{};
+      double weight{};
+      double height{};
       std::string biological_sex{};
    };
 }
@@ -57,9 +57,9 @@ namespace oura_charts
       UserProfile& operator=(UserProfile&&) = default;
 
       /// <summary>
-      ///   static factory method for getting an UserProfile object
-      ///   from the REST provider. Will throw oura_exception() if
-      ///   unable to create the class.
+      ///   static factory method for getting a UserProfile object
+      ///   from the REST API. Will throw oura_exception() if
+      ///   unable to retrieve the data or initialize the object with it
       /// </summary>
       template<typename AuthType>
       static UserProfile getProfile(const AuthWrapper<AuthType>& auth)
@@ -72,10 +72,10 @@ namespace oura_charts
       int age() const            { return user_data::age;   }
 
       /// Weight in kg
-      int weight() const         { return user_data::weight; }
+      double weight() const      { return user_data::weight; }
 
       /// Height in meters
-      int height() const         { return user_data::height; }
+      double height() const      { return user_data::height; }
 
       std::string biologicalSex() const { return user_data::biological_sex; }
 
@@ -120,7 +120,7 @@ template <> struct std::tuple_size <oura_charts::UserProfile> { static constexpr
 template <> struct std::tuple_element<0, oura_charts::UserProfile> { using type = std::string; };
 template <> struct std::tuple_element<1, oura_charts::UserProfile> { using type = std::string; };
 template <> struct std::tuple_element<2, oura_charts::UserProfile> { using type = int; };
-template <> struct std::tuple_element<3, oura_charts::UserProfile> { using type = int; };
-template <> struct std::tuple_element<4, oura_charts::UserProfile> { using type = int; };
+template <> struct std::tuple_element<3, oura_charts::UserProfile> { using type = double; };
+template <> struct std::tuple_element<4, oura_charts::UserProfile> { using type = double; };
 template <> struct std::tuple_element<5, oura_charts::UserProfile> { using type = std::string; };
 
