@@ -4,7 +4,6 @@
 #include <fmt/format.h>
 #include "helpers.h"
 
-
 // This example retrieves user-profile info from OURACHARTS_REST using Bearer authentication (PAT)
 int main(int argc, char* argv[])
 {

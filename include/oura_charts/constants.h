@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <fmt/compile.h>
+//#include <fmt/compile.h>
 
 namespace oura_charts::constants
 {
