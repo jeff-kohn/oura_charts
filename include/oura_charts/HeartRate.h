@@ -1,9 +1,10 @@
 #pragma once
 #include "oura_charts/oura_charts.h"
 #include "oura_charts/detail/rest_helpers.h"
-#include "oura_charts/detail/datetime_helpers.h"
+#include "oura_charts/datetime_helpers.h"
 #include <vector>
 #include <string>
+#include <string_view>
 
 namespace oura_charts::heart_rate
 {
@@ -32,11 +33,8 @@ namespace oura_charts::heart_rate
       using expected_value = expected<DataPoint, oura_exception>;
       using DataSet = std::vector<expected_value>;
 
-      // date-times are alwys UTC unless explicitly specified
-      using time_point = detail::clock::time_point;
-
       // date and time (UTC) the HR reading was taken.
-      time_point timestamp() const  { return m_timestamp;   }
+      utc_timestamp timestamp() const  { return m_timestamp;   }
 
       // timestamp as a string in the local timezone
       std::string timestampLocal() const
@@ -60,11 +58,11 @@ namespace oura_charts::heart_rate
       static DataPoint::expected_value makeFromJson(const json& json_data) noexcept;
 
    private:
-      DataPoint(int bpm, time_point timestamp, std::string source) noexcept;
+      DataPoint(int bpm, utc_timestamp timestamp, std::string source) noexcept;
 
-      time_point  m_timestamp{};
-      int         m_bpm{};
-      std::string m_source{};
+      utc_timestamp  m_timestamp{};
+      int            m_bpm{};
+      std::string    m_source{};
    };
 
 
@@ -84,9 +82,7 @@ namespace oura_charts::heart_rate
    /// Retrieve a set of requested HR data points from the Oura REST API
    /// </summary>
    template<typename AuthType>
-   static DataPoint::DataSet getDataSet(const AuthWrapper<AuthType>& auth,
-                                        detail::clock::time_point begin,
-                                        detail::clock::time_point end)
+   static DataPoint::DataSet getDataSet(const AuthWrapper<AuthType>& auth, utc_timestamp begin, utc_timestamp end)
    {
       return getDataSetFromRestEndpoint<DataPoint::DataSet>
                (

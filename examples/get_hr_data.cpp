@@ -10,8 +10,7 @@ int main(int argc, char* argv[])
    using std::string;
    using fmt::println;
    using namespace oura_charts;
-   using namespace oura_charts::detail;
-
+   using namespace oura_charts::chrono;
    try
    {
       cxxopts::Options options{ argv[0], "Get today's HR data from Oura Ring API." };
@@ -27,9 +26,9 @@ int main(int argc, char* argv[])
       }
       auto pat{ getPersonalToken(args) };
 
-      clock::time_point end_date = clock::now();
-      clock::time_point  start_date = chrono::floor<chrono::days>(end_date);
-      auto hrs = chrono::duration_cast<chrono::hours>(end_date - start_date);
+      utc_timestamp end_date = round<seconds>( clock::now());
+      utc_timestamp  start_date = floor<days>(end_date);
+      auto hrs = duration_cast<hours>(end_date - start_date);
       auto hr_data = heart_rate::getDataSet(AuthWrapper{ TokenAuth{pat} }, start_date, end_date);
 
       println("Retrieved {} HR datapoints for today ({:%Om/%d/%Y}):", hr_data.size(), start_date);

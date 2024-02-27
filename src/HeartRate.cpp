@@ -40,7 +40,7 @@ namespace oura_charts::heart_rate
       }
    }
 
-   DataPoint::DataPoint(int bpm, time_point timestamp, string source) noexcept
+   DataPoint::DataPoint(int bpm, utc_timestamp timestamp, string source) noexcept
       : m_bpm(bpm), m_timestamp(timestamp), m_source(move(source))
    {
    }

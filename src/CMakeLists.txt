@@ -12,7 +12,7 @@ add_library(${THIS_TARGET} STATIC
 	"../include/oura_charts/oura_exception.h"
 	"../include/oura_charts/HeartRate.h"
    "../include/oura_charts/detail/rest_helpers.h"
-   "../include/oura_charts/detail/datetime_helpers.h"
+   "../include/oura_charts/datetime_helpers.h"
 	"../include/oura_charts/detail/utility.h"
 
    "RestAuth.cpp"
