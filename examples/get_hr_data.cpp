@@ -26,12 +26,12 @@ int main(int argc, char* argv[])
       }
       auto pat{ getPersonalToken(args) };
 
-      utc_timestamp end_date = round<seconds>( clock::now());
-      utc_timestamp  start_date = floor<days>(end_date);
-      auto hrs = duration_cast<hours>(end_date - start_date);
-      auto hr_data = heart_rate::getDataSet(AuthWrapper{ TokenAuth{pat} }, start_date, end_date);
+      timestamp_local local_end = localTimestamp( localNow() );
+      timestamp_local local_start = localTimestamp(chrono::floor<days>(local_end));
 
-      println("Retrieved {} HR datapoints for today ({:%Om/%d/%Y}):", hr_data.size(), start_date);
+      auto hr_data = heart_rate::getDataSet(AuthWrapper{ TokenAuth{pat} }, local_start, local_end);
+
+      println("Retrieved {} HR datapoints for today ({:%Om/%d/%Y}):", hr_data.size(), local_start);
       for (auto exp_hr : hr_data)
       {
          if (exp_hr)

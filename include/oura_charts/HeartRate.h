@@ -34,7 +34,7 @@ namespace oura_charts::heart_rate
       using DataSet = std::vector<expected_value>;
 
       // date and time (UTC) the HR reading was taken.
-      utc_timestamp timestamp() const  { return m_timestamp;   }
+      timestamp_utc timestamp() const  { return m_timestamp;   }
 
       // timestamp as a string in the local timezone
       std::string timestampLocal() const
@@ -58,9 +58,9 @@ namespace oura_charts::heart_rate
       static DataPoint::expected_value makeFromJson(const json& json_data) noexcept;
 
    private:
-      DataPoint(int bpm, utc_timestamp timestamp, std::string source) noexcept;
+      DataPoint(int bpm, timestamp_utc timestamp, std::string source) noexcept;
 
-      utc_timestamp  m_timestamp{};
+      timestamp_utc  m_timestamp{};
       int            m_bpm{};
       std::string    m_source{};
    };
@@ -82,13 +82,15 @@ namespace oura_charts::heart_rate
    /// Retrieve a set of requested HR data points from the Oura REST API
    /// </summary>
    template<typename AuthType>
-   static DataPoint::DataSet getDataSet(const AuthWrapper<AuthType>& auth, utc_timestamp begin, utc_timestamp end)
+   static DataPoint::DataSet getDataSet(const AuthWrapper<AuthType>& auth, timestamp_utc begin, timestamp_utc end)
    {
+      auto begin_str = toIsoDateString(begin);
+      auto end_str = toIsoDateString(end);
       return getDataSetFromRestEndpoint<DataPoint::DataSet>
                (
                   auth.getAuthorization(),
-                  cpr::Parameters{ {constants::REST_PARAM_START_DATETIME, toIsoDateString(begin) },
-                                   {constants::REST_PARAM_END_DATETIME, toIsoDateString(end) } }
+                  cpr::Parameters{ {constants::REST_PARAM_START_DATETIME, begin_str},
+                                   {constants::REST_PARAM_END_DATETIME,  end_str} }
                );
    }
 
@@ -97,11 +99,10 @@ namespace oura_charts::heart_rate
    /// Retrieve a set of requested HR data points from the Oura REST API
    /// </summary>
    template<typename AuthType>
-   static DataPoint::DataSet getDataSet(const AuthWrapper<AuthType>& auth,
-                               chrono::year_month_day begin,
-                               chrono::year_month_day end)
+   static DataPoint::DataSet getDataSet(const AuthWrapper<AuthType>& auth, timestamp_local begin , timestamp_local end)
+                               
    {
-      return getDataSet(auth.getAuthorization(), chrono::sys_days{ begin }, chrono::sys_days{ end } );
+      return getDataSet(auth, localToUtc(begin), localToUtc(end) );
    }
 
 } // namespace oura_charts
