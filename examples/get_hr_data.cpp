@@ -1,5 +1,5 @@
-#include "oura_charts/RestAuth.h"
-#include "oura_charts/HeartRate.h"
+#include "oura_charts/UserProfile.h"
+#include "oura_charts/RestDataProvider.h"
 #include "oura_charts/detail/utility.h"
 #include <fmt/format.h>
 #include "helpers.h"
@@ -11,6 +11,7 @@ int main(int argc, char* argv[])
    using fmt::println;
    using namespace oura_charts;
    using namespace oura_charts::chrono;
+   using namespace oura_charts::detail;
    try
    {
       cxxopts::Options options{ argv[0], "Get today's HR data from Oura Ring API." };
@@ -26,19 +27,18 @@ int main(int argc, char* argv[])
       }
       auto pat{ getPersonalToken(args) };
 
-      //timestamp_local local_end = localTimestamp( localNow() );
-      //timestamp_local local_start = localTimestamp(chrono::floor<days>(local_end));
+      timestamp_local local_end = localTimestamp( localNow() );
+      timestamp_local local_start = localTimestamp(floor<days>(local_end));
 
-      //auto hr_data = heart_rate::getDataSet(AuthWrapper{ TokenAuth{pat} }, local_start, local_end);
+      RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
+      auto expect_hr = rest_server.getJsonDataSeries<hr_data>(constants::REST_PATH_HEART_RATE, localToUtc(local_start), localToUtc(local_end));
+      if (!expect_hr)
+         throw expect_hr.error();
 
-      //println("Retrieved {} HR datapoints for today ({:%Om/%d/%Y}):", hr_data.size(), local_start);
-      //for (auto exp_hr : hr_data)
-      //{
-      //   if (exp_hr)
-      //      println("{}", *exp_hr);
-      //   else
-      //      println("[error {}", exp_hr.error());
-      //}
+      for (auto& hr : expect_hr->data)
+      {
+         fmt::println("{}bpm at {} ({})", hr.bpm, hr.timestamp, hr.source);
+      }
    }
    catch (oura_exception& e)
    {
@@ -51,4 +51,5 @@ int main(int argc, char* argv[])
 
 
 }
+
 

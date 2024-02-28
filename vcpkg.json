@@ -7,7 +7,7 @@
       "cxxopts",
       "fmt",
       "catch2",
-      "nlohmann-json",
+      "spdlog",
       "glaze",
       "cpr",
       {

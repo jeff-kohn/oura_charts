@@ -2,10 +2,14 @@
 
 #include "oura_charts/oura_charts.h"
 #include "oura_charts/RestAuth.h"
+#include "oura_charts/detail/json_structs.h"
+#include "oura_charts/datetime_helpers.h"
 #include <cpr/cpr.h>
+#include <glaze/glaze.hpp>
 
 namespace oura_charts
 {
+
    /// <summary>
    ///   Provides a common interface for retrieving data objects from a REST endpoint.  
    /// </summary>
@@ -19,29 +23,66 @@ namespace oura_charts
       using expected_json = expected<std::string, oura_exception>;
 
       /// <summary>
-      ///   constructor, takes and Auth object and an URL that should be used
+      ///   constructor, takes an Auth object and an URL that should be used
       ///   to build paths for REST endpoints.
       /// </summary>
-      RestDataProvider(Auth auth, std::string base_url)
-         : m_auth{ auth }, m_base_url{ base_url }
+      RestDataProvider(Auth auth, std::string base_url) : m_auth{ auth }, m_base_url{ base_url }
       {
       }
 
       /// <summary>
-      /// Retrieve the JSON for an object from the rest server.
+      /// Retrieve the JSON for a single object from the rest server.
       /// </summary>
       [[nodiscard]] expected_json getJsonObject(std::string_view path) const noexcept
       {
          cpr::Header header{ {constants::REST_HEADER_XCLIENT, constants::REST_HEADER_XCLIENT_VALUE} };
-         cpr::Url url{ fmt::format("{}/{}", m_base_url, path) };
-         return getJsonFromResponse(cpr::Get(m_auth.getAuthorization(), std::move(url), std::move(header)));
+         return getJsonFromResponse(cpr::Get(m_auth.getAuthorization(), pathToUrl(path), std::move(header)));
       }
 
 
-      [[nodiscard]] expected_json getJsonDataSeries(std::string_view path) const noexcept
+      /// <summary>
+      ///   Retrieve a data series from a REST endpoint into a container of structs. The target container is passed as a parameter. The
+      ///   next_token is used to indicate the request is to retrieve additional data from a previous quest if applicable. The expected
+      ///   retrun value is a DataSeries<T> containing the requested data. The unexpected value is error information if the request was
+      ///   unable to retrieve the requested data.w
+      /// </summary>
+      template <typename DataT>
+      [[nodiscard]] expected<detail::RestDataSeries<DataT>, oura_exception> getJsonDataSeries(std::string_view path,
+                                                                                              timestamp_utc start,
+                                                                                              timestamp_utc end,
+                                                                                              detail::nullible_string next_token = {}) const noexcept
       {
-         return unexpected{ oura_exception{"Not Implememented"} };
+         using namespace oura_charts::constants;
+
+         cpr::Header header{ {REST_HEADER_XCLIENT, REST_HEADER_XCLIENT_VALUE} };
+         cpr::Parameters params{
+            { REST_PARAM_START_DATETIME, toIsoDateString(start) },
+            { REST_PARAM_END_DATETIME, toIsoDateString(end)}
+         };
+         if (next_token)
+            params.Add(cpr::Parameter{ REST_PARAM_NEXT_TOKEN, std::string{ *next_token } });
+
+         // Send the request to server and check that we get a valid response.
+         auto response = cpr::Get(m_auth.getAuthorization(), pathToUrl(path), header, params);
+         auto json = getJsonFromResponse(response);
+         if (!json.has_value())
+            return unexpected(json.error());
+
+         // Read the JSON into a struct. It should contain a 'data' element that is
+         // an array of the requested objects, and a next_token value that indicates
+         // if there is more data.
+         std::string json_text{ json.value() };
+         typename detail::RestDataSeries<DataT> data{};
+         auto pe = glz::read_json(data, json_text);
+         if (pe)
+            return unexpected{ oura_exception{static_cast<int64_t>(pe.ec), glz::format_error(pe, json_text),ErrorCategory::Parse } };
+         else
+            return data;
       }
+
+      // The base URL that is used in combination with the 'path' parameter of the
+      // getJson() methods to build the full URL for the REST endpoint of an object(s)
+      std::string baseURL() const { return m_base_url; }
 
    private:
       Auth m_auth;
@@ -58,7 +99,8 @@ namespace oura_charts
             return unexpected{ oura_exception{static_cast<int64_t>(response.status_code), response.reason, ErrorCategory::REST} };
       }
 
-      inline static cpr::Url pathToUrl(std::string_view relative_path)
+      // concatenate path with base url to get FQ URL
+      cpr::Url pathToUrl(std::string_view relative_path) const
       {
          return { fmt::format("{}/{}", m_base_url, relative_path) };
       }

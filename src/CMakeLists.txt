@@ -10,18 +10,14 @@ add_library(${THIS_TARGET} STATIC
 	"../include/oura_charts/UserProfile.h"
 	"../include/oura_charts/constants.h"
 	"../include/oura_charts/oura_exception.h"
-	#"../include/oura_charts/HeartRate.h"
-   #"../include/oura_charts/detail/rest_helpers.h"
-   #"../include/oura_charts/datetime_helpers.h"
-	"../include/oura_charts/detail/utility.h"
+   "../include/oura_charts/datetime_helpers.h"
    "../include/oura_charts/DataSeries.h"
    "../include/oura_charts/RestDataProvider.h"
-
-   
+   "../include/oura_charts/Logger.h"
+	"../include/oura_charts/detail/utility.h"
+	"../include/oura_charts/detail/json_structs.h"
    "UserProfile.cpp"
-   # "HeartRate.cpp"
    "utility.cpp"
-   # "rest_helpers.cpp"
 )
 
 set_target_properties(${THIS_TARGET}
