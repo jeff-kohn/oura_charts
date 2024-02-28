@@ -3,9 +3,8 @@
 #include "oura_charts/oura_charts.h"
 #include "oura_charts/RestAuth.h"
 #include "oura_charts/detail/utility.h"
-#include "oura_charts/detail/concepts.h"
-#include <cpr/cpr.h>
-#include <nlohmann/json.hpp>
+#include "oura_charts/concepts.h"
+#include <string>
 
 
 
@@ -13,15 +12,9 @@ namespace oura_charts::detail
 {
 
    /// <summary>
-   ///   convenience alias for the json type we use
-   /// </summary>
-   using json = nlohmann::json;
-
-
-   /// <summary>
    ///   alias for expected<json, oura_exception>
    /// </summary>
-   using expected_json = expected<json, oura_exception>;
+   using expected_json = expected<std::string, oura_exception>;
 
 
    /// <summary>
@@ -29,32 +22,32 @@ namespace oura_charts::detail
    ///   If the response indicates success the JSON will be returned. If the response indicates an error,
    ///   an oura_exception will be thrown containing the error information.
    /// </summary>
-   [[nodiscard]] json getJsonFromResponse(const cpr::Response& response);
+   //[[nodiscard]] json getJsonFromResponse(const cpr::Response& response);
 
 
    /// <summary>
    ///   translates a nlohman::basic_json::exception to an oura_exception with error message that
    ///   indicates the type being parsed as well the error that occured.
    /// </summary>
-   template<typename T>
-   [[nodiscard]] oura_exception translateException(const json::exception& e, T*  = nullptr)
-   {
-      return{ e.id,
-              fmt::format("error parsing JSON for type {}: {}", typeid(T).name(), e.what()),
-              ErrorCategory::Parse };
-   }
+   //template<typename T>
+   //[[nodiscard]] oura_exception translateException(const json::exception& e, T*  = nullptr)
+   //{
+   //   return{ e.id,
+   //           fmt::format("error parsing JSON for type {}: {}", typeid(T).name(), e.what()),
+   //           ErrorCategory::Parse };
+   //}
 
 
    /// <summary>
    ///   translates a nlohman::basic_json::exception to an oura_exception with error message that
    ///   indicates the context in which the json was being parsed as well the error that occured.
    /// </summary>
-   template<StringViewCompatible T>
+   /*template<StringViewCompatible T>
    [[nodiscard]] oura_exception translateException(const json::exception& e, T context)
    {
       std::string_view ctx(context);
       return{ e.id, fmt::format("error parsing JSON for {}: {}", ctx, e.what()), ErrorCategory::Parse };
-   }
+   }*/
 
 
    /// <summary>
@@ -97,7 +90,7 @@ namespace oura_charts::detail
       try
       {
          if (json)
-            return RestObject{ *json };
+            return RestObject{ json };
          else
             throw json.error();
       }

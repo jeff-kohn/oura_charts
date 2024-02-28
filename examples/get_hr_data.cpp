@@ -26,19 +26,19 @@ int main(int argc, char* argv[])
       }
       auto pat{ getPersonalToken(args) };
 
-      timestamp_local local_end = localTimestamp( localNow() );
-      timestamp_local local_start = localTimestamp(chrono::floor<days>(local_end));
+      //timestamp_local local_end = localTimestamp( localNow() );
+      //timestamp_local local_start = localTimestamp(chrono::floor<days>(local_end));
 
-      auto hr_data = heart_rate::getDataSet(AuthWrapper{ TokenAuth{pat} }, local_start, local_end);
+      //auto hr_data = heart_rate::getDataSet(AuthWrapper{ TokenAuth{pat} }, local_start, local_end);
 
-      println("Retrieved {} HR datapoints for today ({:%Om/%d/%Y}):", hr_data.size(), local_start);
-      for (auto exp_hr : hr_data)
-      {
-         if (exp_hr)
-            println("{}", *exp_hr);
-         else
-            println("[error {}", exp_hr.error());
-      }
+      //println("Retrieved {} HR datapoints for today ({:%Om/%d/%Y}):", hr_data.size(), local_start);
+      //for (auto exp_hr : hr_data)
+      //{
+      //   if (exp_hr)
+      //      println("{}", *exp_hr);
+      //   else
+      //      println("[error {}", exp_hr.error());
+      //}
    }
    catch (oura_exception& e)
    {

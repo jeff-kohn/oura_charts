@@ -39,13 +39,7 @@ namespace oura_charts::detail
    }
 
 
-   /// <summary>
-   ///   helper to format relative REST path as a complete URL
-   /// </summary>
-   inline cpr::Url pathToUrl(std::string_view relative_path)
-   {
-      return { fmt::format("{}/{}", constants::REST_URL_BASE, relative_path) };
-   }
+
 
 
 }

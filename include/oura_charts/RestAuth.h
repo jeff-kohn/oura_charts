@@ -11,38 +11,12 @@
 #pragma once
 
 #include "oura_charts/oura_charts.h"
-#include <string>
 #include <cpr/bearer.h>
+#include <string>
+#include <string_view>
 
 namespace oura_charts
 {
-
-
-
-   /// <summary>
-   ///   The wrapper object we use for authenticating with the Oura REST API.
-   /// </summary>
-   /// <todo>
-   ///   put some interface constraints on this class
-   /// </todo>
-   template <class Auth>
-   class AuthWrapper
-   {
-   public:
-      // NOLINTBEGIN(google-explicit-constructor)
-      AuthWrapper(Auth auth)   : m_auth(std::move(auth)) {} // not explicit by design
-      // NOLINTEND(google-explicit-constructor)
-
-      auto getAuthorization() const
-      {
-         return m_auth.getAuthorization();
-      }
-   private:
-      Auth m_auth;
-   };
-
-
-
    /// <summary>
    ///   Encapsulates a Personal Access Token (PAT) for connecting to the Oura REST API.
    /// </summary>
@@ -74,7 +48,7 @@ namespace oura_charts
       ///   This is called by AuthWrapper to get the Bearer token used for authenticating
       ///   with OURA REST
       /// </summary>
-      cpr::Bearer getAuthorization() const;
+      cpr::Bearer getAuthorization() const { return cpr::Bearer{ m_token }; }
 
    private:
       std::string m_token;

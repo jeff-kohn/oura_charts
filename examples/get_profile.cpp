@@ -1,5 +1,5 @@
 #include "oura_charts/UserProfile.h"
-#include "oura_charts/RestAuth.h"
+#include "oura_charts/RestDataProvider.h"
 #include "oura_charts/detail/utility.h"
 #include <fmt/format.h>
 #include "helpers.h"
@@ -25,7 +25,9 @@ int main(int argc, char* argv[])
          return 0;
       }
       auto pat = getPersonalToken(args);
-      auto profile = UserProfile::getProfile(AuthWrapper{ TokenAuth{pat} });
+
+      RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
+      auto profile = UserProfile::getUserProfile(rest_server);
       fmt::println("Successfully retrieved {}", profile);
    }
    catch (oura_exception& e)

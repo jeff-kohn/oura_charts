@@ -4,7 +4,7 @@
 cmake_minimum_required (VERSION 3.25)
 
 project ("oura_charts"
-   VERSION 1.0
+   VERSION 0.1.0
    DESCRIPTION "Charting Library and Rest Client for Oura Ring"
    LANGUAGES CXX
    HOMEPAGE_URL "https://github.com/jeff-kohn/oura-charts"

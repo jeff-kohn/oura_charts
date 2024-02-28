@@ -1,15 +1,15 @@
+#pragma once
 
-#include <nlohmann/json.hpp>
 #include <concepts>
 
-namespace oura_charts::detail
+namespace oura_charts
 {
 
    /// <summary>
    ///   concept requiring a template arge to be std::exception or derived from std::exception
    /// </summary>
-   template<typename T>
-   concept ExceptionDerived = std::derived_from<T, std::exception> || std::same_as<T, std::exception>;
+   //template<typename T>
+   //concept ExceptionDerived = std::derived_from<T, std::exception> || std::same_as<T, std::exception>;
 
 
    /// <summary>
@@ -20,6 +20,37 @@ namespace oura_charts::detail
 
 
    /// <summary>
+   ///   concept requireing a type to support the needed functionality to read/write/store
+   ///   a collection of DataT objects.
+   /// </summary>
+   template <typename Container>
+   concept DataSeriesContainer = std::ranges::output_range<Container>
+                              && std::ranges::input_range<Container>
+                              && std::ranges::forward_range<Container>;
+
+
+   /// <summary>
+   ///   concept for an auth object that can be used for authenticating with a data provider (REST, DB, etc).
+   /// </summary>
+   template <typename T>
+   concept AuthObject = requires (T t)
+   {
+      t.getAuthorization();
+   };
+
+
+   /// <summary>
+   ///   concept for a data provider than can retrieve JSON objects from some data source, such as
+   ///   a REST endpoint, database, unit test, etc.
+   /// </summary>
+   template <typename T>
+   concept DataProvider = requires (T dp, typename T::expected_json ej)
+   {
+      ej = dp.getJsonObject("");
+   };
+
+
+   /*/// <summary>
    ///   concept for a class that is can be constructed from JSON and knows the URL
    ///   endpoint to retrieve its data from.
    /// </summary>
@@ -27,18 +58,18 @@ namespace oura_charts::detail
    concept RestConstructable = requires (T t)
    {
       T::REST_PATH;
-      T{ nlohmann::json{} };
-   };
+      T::makeFromJson("a json string");
+   };*/
 
    /// <summary>
    ///   concept for a class that is can be constructed from JSON and knows the URL
    ///   endpoint to retrieve its data from.
    /// </summary>
    template<typename T>
-   concept RestNoThrowConstructable = requires (T t, expected<T, oura_exception> retval)
+   concept RestNoThrowConstructable = requires (T t)
    {
       T::REST_PATH;
-      retval = T::makeFromJson(nlohmann::json{});
+      //retval  = T::makeFromJson(std::string{}); fucking bullshit motherfucker
    };
 
 
@@ -57,4 +88,4 @@ namespace oura_charts::detail
          cont.reserve(55);
       };
 
-}
+} // namespace oura_charts

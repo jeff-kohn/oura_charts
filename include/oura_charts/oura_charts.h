@@ -2,6 +2,7 @@
 
 #include "oura_charts/constants.h"
 #include "oura_charts/oura_exception.h"
+#include "oura_charts/concepts.h"
 
 
 #if __cplusplus > 202002L && __cpp_concepts < 202002L

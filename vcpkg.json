@@ -8,6 +8,7 @@
       "fmt",
       "catch2",
       "nlohmann-json",
+      "glaze",
       "cpr",
       {
          "name": "tl-expected",

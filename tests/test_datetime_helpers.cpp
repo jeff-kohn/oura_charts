@@ -1,12 +1,11 @@
 
 #include "oura_charts/oura_charts.h"
-#include "oura_charts/detail/rest_helpers.h"
+//#include "oura_charts/detail/rest_helpers.h"
 #include "oura_charts/datetime_helpers.h"
 #include <catch2/catch_test_macros.hpp>
 
 namespace oura_charts::test
 {
-   using namespace oura_charts::detail;
    using namespace std::literals::chrono_literals;
 
    TEST_CASE("Parse_IsoDateString", "[datetime][parsing]")

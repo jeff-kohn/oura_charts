@@ -11,7 +11,7 @@
 
 #include "oura_charts/oura_charts.h"
 #include "oura_charts/RestAuth.h"
-#include "oura_charts/detail/rest_helpers.h"
+#include "oura_charts/detail/utility.h"
 #include <cpr/cpr.h>
 #include <string>
 #include <utility>
@@ -33,6 +33,7 @@ namespace oura_charts::detail
    };
 }
 
+
 namespace oura_charts
 {
 
@@ -49,23 +50,26 @@ namespace oura_charts
       // URL used to retrieve 
       static constexpr std::string_view REST_PATH = constants::REST_PATH_PERSONAL_INFO;
 
-      UserProfile(const detail::json& json_data);
-      UserProfile(const UserProfile &) = default;
-      UserProfile(UserProfile &&) = default;
-      ~UserProfile() = default;
-      UserProfile& operator=(const UserProfile&) = default;
-      UserProfile& operator=(UserProfile&&) = default;
-
       /// <summary>
       ///   static factory method for getting a UserProfile object
       ///   from the REST API. Will throw oura_exception() if
       ///   unable to retrieve the data or initialize the object with it
       /// </summary>
-      template<typename AuthType>
-      static UserProfile getProfile(const AuthWrapper<AuthType>& auth)
+      template<DataProvider Provider>
+      static UserProfile getUserProfile(Provider& dp)
       {
-         return detail::getObjectFromRestEndpoint<UserProfile>(auth.getAuthorization());
+         auto json = dp.getJsonObject(REST_PATH);
+         if (json)
+            return UserProfile(json.value());
+         else
+            throw json.error();
       }
+
+      UserProfile(const UserProfile &) = default;
+      UserProfile(UserProfile &&) = default;
+      ~UserProfile() = default;
+      UserProfile& operator=(const UserProfile&) = default;
+      UserProfile& operator=(UserProfile&&) = default;
 
       std::string id() const     { return user_data::id;    }
       std::string email() const  { return user_data::email; }
@@ -81,7 +85,9 @@ namespace oura_charts
 
    private:
       UserProfile() = default;
+      explicit UserProfile(std::string_view json);
    };
+
 
    /// <summary>
    ///   get() overload for structured binding support for the UserProfile class.
@@ -110,7 +116,7 @@ namespace oura_charts
                          profile.id());
    }
 
-}
+} // namespace oura_charts
 
 
 /// <summary>

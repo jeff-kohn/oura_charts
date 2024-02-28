@@ -9,31 +9,20 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "oura_charts/UserProfile.h"
-
-
-namespace oura_charts::detail
-{
-   NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(user_data, id, email, age, weight, height, biological_sex)
-}
+#include <glaze/glaze.hpp>
 
 namespace oura_charts
 {
    using namespace oura_charts::detail;
    
-   UserProfile::UserProfile(const detail::json& json_data)
+   UserProfile::UserProfile(std::string_view json)
    {
-      try
-      {
-         json_data.get_to(static_cast<user_data&>(*this));
-      }
-      catch (json::exception& e)
-      {
-         throw translateException(e, this); 
-      }
+      auto pe = glz::read_json(static_cast<user_data&>(*this), json);
+      if (pe)
+         throw oura_exception{
+                  static_cast<int64_t>(pe.ec),
+                  glz::format_error(pe, json),
+                  ErrorCategory::Parse };
    }
-
-
-
-
 
 } // namespace oura_charts
