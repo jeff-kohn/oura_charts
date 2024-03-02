@@ -1,12 +1,10 @@
-//////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// RestAuth.h
-///
-/// Defines the RestAuth interface and implementation(s) used for access the Oura REST API.
-///
-/// Copyright (c) 2024 Jeff Kohn
-///
-//////////////////////////////////////////////////////////////////////////////////////////////////
+//---------------------------------------------------------------------------------------------------------------------
+// rest_auth.h
+//
+// Defines the authentication objects used for access the Oura REST API.
+//
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
 
 #pragma once
 
@@ -22,8 +20,8 @@ namespace oura_charts
    /// </summary>
    /// <remarks>
    ///   Oura REST API supports two authentication methods: Personal Access Token (PAT)
-   ///   and OAUTH. The PAT allows pulling data from a single Oura account, and is suitable
-   ///   for client apps. User must create a PAT on the OURA website to use with this
+   ///   and OAuth. The PAT allows pulling data from a single Oura account, and is suitable
+   ///   for client apps. Users must create a PAT on the OURA website to use with this
    ///   authentication type.
    /// </remarks>
    class TokenAuth
@@ -45,8 +43,8 @@ namespace oura_charts
       void setToken(std::string&& token)    { m_token = std::move(token);        }
 
       /// <summary>
-      ///   This is called by AuthWrapper to get the Bearer token used for authenticating
-      ///   with OURA REST
+      ///   This is called to get the Bearer token used for
+      ///   authenticating with Oura's REST endpoint
       /// </summary>
       cpr::Bearer getAuthorization() const { return cpr::Bearer{ m_token }; }
 

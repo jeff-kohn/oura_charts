@@ -1,7 +1,16 @@
+//---------------------------------------------------------------------------------------------------------------------
+// RestDataProvider.h
+//
+// Declaration for class RestDataProvider<> which retrieves data from a REST HTTPs server.
+// 
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
+
 #pragma once
 
 #include "oura_charts/oura_charts.h"
-#include "oura_charts/RestAuth.h"
+#include "oura_charts/rest_auth.h"
+#include "oura_charts/detail/logging.h"
 #include "oura_charts/detail/json_structs.h"
 #include "oura_charts/datetime_helpers.h"
 #include <cpr/cpr.h>
@@ -44,7 +53,7 @@ namespace oura_charts
       ///   Retrieve a data series from a REST endpoint into a container of structs. The target container is passed as a parameter. The
       ///   next_token is used to indicate the request is to retrieve additional data from a previous quest if applicable. The expected
       ///   retrun value is a DataSeries<T> containing the requested data. The unexpected value is error information if the request was
-      ///   unable to retrieve the requested data.w
+      ///   unable to retrieve the requested data.
       /// </summary>
       template <typename DataT>
       [[nodiscard]] expected<detail::RestDataSeries<DataT>, oura_exception> getJsonDataSeries(std::string_view path,
@@ -54,24 +63,27 @@ namespace oura_charts
       {
          using namespace oura_charts::constants;
 
-         cpr::Header header{ {REST_HEADER_XCLIENT, REST_HEADER_XCLIENT_VALUE} };
+         cpr::Header header{
+            { REST_HEADER_XCLIENT, REST_HEADER_XCLIENT_VALUE }
+         };
          cpr::Parameters params{
             { REST_PARAM_START_DATETIME, toIsoDateString(start) },
             { REST_PARAM_END_DATETIME, toIsoDateString(end)}
          };
+
          if (next_token)
             params.Add(cpr::Parameter{ REST_PARAM_NEXT_TOKEN, std::string{ *next_token } });
 
          // Send the request to server and check that we get a valid response.
          auto response = cpr::Get(m_auth.getAuthorization(), pathToUrl(path), header, params);
-         auto json = getJsonFromResponse(response);
-         if (!json.has_value())
-            return unexpected(json.error());
+         auto exp_json = getJsonFromResponse(response);
+         if (!exp_json.has_value())
+            return unexpected(exp_json.error());
 
          // Read the JSON into a struct. It should contain a 'data' element that is
          // an array of the requested objects, and a next_token value that indicates
          // if there is more data.
-         std::string json_text{ json.value() };
+         std::string json_text{ exp_json.value() };
          typename detail::RestDataSeries<DataT> data{};
          auto pe = glz::read_json(data, json_text);
          if (pe)

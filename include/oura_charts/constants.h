@@ -1,12 +1,10 @@
-//////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// constants.h
-///
-/// Defines the various constants used throughout the project.
-///
-/// Copyright (c) 2024 Jeff Kohn
-/// 
-//////////////////////////////////////////////////////////////////////////////////////////////////
+//---------------------------------------------------------------------------------------------------------------------
+// constants.h
+//
+// Defines various constants used throughout the project.
+//
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
 
 #pragma once
 
@@ -14,6 +12,9 @@
 
 namespace oura_charts::constants
 {
+   static constexpr const char* APP_NAME = "Oura Charts";
+   static constexpr const char* APP_NAME_NOSPACE = "Oura_Charts";
+
    static constexpr const char* REST_DEFAULT_BASE_URL = "https://api.ouraring.com/v2/usercollection";
    static constexpr const char* REST_PATH_PERSONAL_INFO = "personal_info";
    static constexpr const char* REST_PATH_HEART_RATE = "heartrate";
@@ -45,10 +46,18 @@ namespace oura_charts::constants
    static constexpr const char* PARSE_FMT_STR_ISO_DATETIME_LOCAL = "%FT%T%Ez";
    static constexpr const char* PARSE_FMT_STR_ISO_DATETIME_UTC = "%FT%T%Z";
 
-   // These need to be used at compile time with format(), and declaring them
-   // as objects allows us to pass them as parameters, which we couldn't do
-   // if they were just const char*
-   //static constexpr fmt::format_string<detail::chrono::time_point> FMT_STR_DATETIME_ISO_UTC = "{:%FT%TZ}";
-   //static constexpr auto FMT_STR_DATETIME_LOCAL_SHORT =  "{:%Om/%d/%Y %H}"_cf;
+
+// Platform specific constants
+#if defined(WIN32) || defined (_WIN32)
+   
+   static constexpr const char* CONFIG_DEFAULT_LOG_FOLDER = "%LOCALAPPDATA%/oura_charts/logs";
+
+#elif defined(__linux__)
+
+   static constexpr const char* CONFIG_DEFAULT_LOG_FOLDER = "$HOME/.local/state/oura_charts/logs";
+
+#endif
+
+   static constexpr const char* CONFIG_DEFAULT_LOG_NAME = "DEFAULT";
 
 } // namespace oura_charts::constants

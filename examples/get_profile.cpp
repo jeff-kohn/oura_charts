@@ -1,3 +1,10 @@
+//---------------------------------------------------------------------------------------------------------------------
+// get_profile.cpp
+//
+// sample app that demonstrates retrieving a user profile from the Oura Ring REST API.
+//
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
 #include "oura_charts/UserProfile.h"
 #include "oura_charts/RestDataProvider.h"
 #include "oura_charts/detail/utility.h"

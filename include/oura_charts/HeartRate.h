@@ -1,6 +1,12 @@
+//---------------------------------------------------------------------------------------------------------------------
+//
+// 
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
+
 #pragma once
+
 #include "oura_charts/oura_charts.h"
-//#include "oura_charts/detail/rest_helpers.h"
 #include "oura_charts/datetime_helpers.h"
 #include <vector>
 #include <string>

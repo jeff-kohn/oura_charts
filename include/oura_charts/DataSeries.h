@@ -1,3 +1,11 @@
+//---------------------------------------------------------------------------------------------------------------------
+// DataSeries.h
+//
+// defines the template class DataSeries<> which is use to work with data sets of various Oura Ring metrics.
+// 
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
+
 #pragma once
 
 #include "oura_charts/oura_charts.h"

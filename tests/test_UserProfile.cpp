@@ -1,10 +1,21 @@
+//---------------------------------------------------------------------------------------------------------------------
+// test_userProfile.h
+//
+// unit tests for the UserProfile class
+//
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
+
+#include "oura_charts/oura_charts.h"
+#include "oura_charts/RestDataProvider.h"
 #include "oura_charts/UserProfile.h"
-//#include "oura_charts/detail/rest_helpers.h"
 #include "oura_charts/detail/utility.h"
+#include "oura_charts/detail/logging.h"
 #include <catch2/catch_test_macros.hpp>
 
 namespace oura_charts::test
 {
+   log::LogInit logger{ log::TestLogger::make() };
 
    //auto json_profile = R"(
    //   {
@@ -17,14 +28,17 @@ namespace oura_charts::test
    //   }
    //)"_json;
 
-   //TEST_CASE("Online UserProfile Test", "[online][rest]")
-   //{
-   //   auto pat = detail::getEnvironmentVariable("OURA_PAT");
-   //   if (pat.empty())
-   //      SKIP("No PAT environment variable found for authenticating online tests");
+   TEST_CASE("Online UserProfile Test", "[online][rest]")
+   {
+      auto pat = detail::getEnvironmentVariable("OURA_PAT");
+      if (pat.empty())
+         SKIP("No PAT environment variable found for authenticating online tests");
 
-   //   REQUIRE_NOTHROW(UserProfile::getProfile(AuthWrapper{ TokenAuth{pat} }));
-   //}
+      log::info("PAT environment variable found, running online tests");
+
+      RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
+      REQUIRE_NOTHROW(UserProfile::getUserProfile(rest_server));
+   }
 
    //TEST_CASE("UserProfile Parse and Bindings", "[json][UserProfile]")
    //{

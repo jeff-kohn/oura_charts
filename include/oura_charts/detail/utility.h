@@ -1,12 +1,10 @@
-//////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// helpers.h
-///
-/// miscellaneous utility functions/classes/wrappers used throughout the project.
-///
-/// Copyright (c) 2024 Jeff Kohn
-/// 
-//////////////////////////////////////////////////////////////////////////////////////////////////
+//---------------------------------------------------------------------------------------------------------------------
+// utlity.h
+//
+// declares miscellaneous utility functions/classes/wrappers used throughout the project.
+//
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
 
 #pragma once
 #include <string>

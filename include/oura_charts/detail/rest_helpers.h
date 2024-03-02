@@ -1,7 +1,7 @@
 #pragma once
 
 #include "oura_charts/oura_charts.h"
-#include "oura_charts/RestAuth.h"
+#include "oura_charts/rest_auth.h"
 #include "oura_charts/detail/utility.h"
 #include "oura_charts/concepts.h"
 #include <string>

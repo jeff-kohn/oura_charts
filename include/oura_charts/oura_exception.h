@@ -1,4 +1,13 @@
+//---------------------------------------------------------------------------------------------------------------------
+// oura_exception.h
+//
+// Defines the oura_exception class, which is used to report errors via throw() and expected<>
+// 
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
+
 #pragma once
+
 #include "oura_charts/constants.h"
 #include <cpr/error.h>
 #include <fmt/format.h>
@@ -50,7 +59,7 @@ namespace oura_charts
    ///   of "Success" with no other values, essentially representing a non-error.
    /// </summary>
    /// <remarks>
-   ///   This class is also used to return error information via std::excpected
+   ///   This class is also used to return error information via std::expected<>
    ///   when throwing exceptions is not desirable.
    /// </remarks>
    class oura_exception final : public std::exception
@@ -75,22 +84,30 @@ namespace oura_charts
       {
       }
 
-      oura_exception() = default;
-      oura_exception(const oura_exception &) = default;
-      oura_exception(oura_exception &&) = default;
-      oura_exception& operator=(const oura_exception&) = default;
-      oura_exception& operator=(oura_exception&&) = default;
-      ~oura_exception() override = default;
-
       int64_t error_code{};
+
       std::string message{};
+
       ErrorCategory category{ ErrorCategory::Success };
+
+      std::string categoryName() const
+      {
+         return getGetogoryName(category);
+      }
 
       const char* what() const noexcept override
       {
          return message.c_str();
       }
+
+      oura_exception() = default;
+      oura_exception(const oura_exception&) = default;
+      oura_exception(oura_exception&&) = default;
+      oura_exception& operator=(const oura_exception&) = default;
+      oura_exception& operator=(oura_exception&&) = default;
+      ~oura_exception() override = default;\
    };
+
 
    /// <summary>
    /// custom formatter for our exception
@@ -98,7 +115,7 @@ namespace oura_charts
    inline auto format_as(const oura_exception& err)
    {
       return fmt::format("{} {} (0x{:X}): {}",
-                         getGetogoryName(err.category),
+                         err.categoryName(),
                          err.error_code,
                          err.error_code,
                          err.what());

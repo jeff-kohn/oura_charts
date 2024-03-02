@@ -1,3 +1,11 @@
+//---------------------------------------------------------------------------------------------------------------------
+// utlity.cpp
+//
+// defines miscellaneous utility functions/classes/wrappers used throughout the project.
+//
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
+
 #include "oura_charts/oura_charts.h"
 #include "oura_charts/detail/utility.h"
 

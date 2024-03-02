@@ -1,16 +1,15 @@
-//////////////////////////////////////////////////////////////////////////////////////////////////
-///
-/// UserProfile.h
-///
-/// Declares the UserProfile class and related details.
-///
-/// Copyright (c) 2024 Jeff Kohn
-///
-//////////////////////////////////////////////////////////////////////////////////////////////////
+//---------------------------------------------------------------------------------------------------------------------
+// UserProfile.h
+//
+// Declares the UserProfile class and related details.
+//
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
+
 #pragma once
 
 #include "oura_charts/oura_charts.h"
-#include "oura_charts/RestAuth.h"
+#include "oura_charts/rest_auth.h"
 #include "oura_charts/detail/utility.h"
 #include <cpr/cpr.h>
 #include <string>

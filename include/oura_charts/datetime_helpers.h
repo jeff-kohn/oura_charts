@@ -1,3 +1,11 @@
+//---------------------------------------------------------------------------------------------------------------------
+// datetime_helpers.h
+//
+// miscellaneous utility functions/wrappers used for working with date/time values and the chrono library
+//
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
+
 #pragma once
 
 #include "oura_charts/constants.h"
@@ -24,7 +32,7 @@ namespace oura_charts
 
 
 // incomplete <chrono> in linux libstdc++ as of v12
-#if defined(_GLIBCXX_RELEASE) && _GLIBCXX_RELEASE > 12
+#if defined(__cpp_lib_chrono) && __cpp_lib_chrono < 201907L
    using date::from_stream;
 #else
    using chrono::from_stream;
