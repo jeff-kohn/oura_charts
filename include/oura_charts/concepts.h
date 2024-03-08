@@ -10,6 +10,8 @@
 #pragma once
 
 #include <concepts>
+#include <string_view>
+#include <fmt/format.h>
 
 namespace oura_charts
 {
@@ -17,9 +19,14 @@ namespace oura_charts
    /// <summary>
    ///   concept requiring a template arge to be std::exception or derived from std::exception
    /// </summary>
-   //template<typename T>
-   //concept ExceptionDerived = std::derived_from<T, std::exception> || std::same_as<T, std::exception>;
+   template<typename T>
+   concept ExceptionDerived = std::derived_from<T, std::exception> || std::same_as<T, std::exception>;
 
+   template<typename T>
+   concept FormattedException = ExceptionDerived<T> && requires (T t)
+   {
+      fmt::format("{}", t);
+   };
 
    /// <summary>
    ///   concept requiring a type to be string_view or convertible to string_view

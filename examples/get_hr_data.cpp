@@ -22,6 +22,8 @@ int main(int argc, char* argv[])
    using namespace oura_charts::detail;
    try
    {
+      auto logger = logging::LogFactory::makeDefault();
+
       cxxopts::Options options{ argv[0], "Get today's HR data from Oura Ring API." };
       options.add_options()
          ("t,token", "Personal Access Token for your Oura cloud account", cxxopts::value<string>()->default_value(""))
@@ -50,10 +52,12 @@ int main(int argc, char* argv[])
    }
    catch (oura_exception& e)
    {
+      logging::exception(e);
       println("Unable to retrieve data.\n\n{}", e);
    }
    catch (std::exception& e)
    {
+      logging::exception(e);
       println("Unable to retrieve data.\n\n{}", e.what());
    }
 

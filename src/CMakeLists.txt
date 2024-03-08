@@ -18,6 +18,8 @@ add_library(${THIS_TARGET} STATIC
 	"../include/oura_charts/detail/logging.h"
    "UserProfile.cpp"
    "utility.cpp"
+   "logging.cpp"
+   "DebugCallback.cpp"
 )
 
 set_target_properties(${THIS_TARGET}

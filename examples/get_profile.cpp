@@ -8,6 +8,7 @@
 #include "oura_charts/UserProfile.h"
 #include "oura_charts/RestDataProvider.h"
 #include "oura_charts/detail/utility.h"
+#include "oura_charts/detail/logging.h"
 #include <fmt/format.h>
 #include "helpers.h"
 
@@ -19,6 +20,8 @@ int main(int argc, char* argv[])
    try
    {
       using std::string;
+
+      auto logger =  logging::LogFactory::makeDefault();
 
       cxxopts::Options options(argv[0], "OuraCharts Get User Profile");
       options.add_options()
@@ -33,16 +36,18 @@ int main(int argc, char* argv[])
       }
       auto pat = getPersonalToken(args);
 
-      RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
+      RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL, logger };
       auto profile = UserProfile::getUserProfile(rest_server);
       fmt::println("Successfully retrieved {}", profile);
    }
    catch (oura_exception& e)
    {
+      logging::exception(e);
       fmt::println("Unable to retrieve profile.\n\n{}", e);
    }
    catch (std::exception& e)
    {
+      logging::exception(e);
       fmt::println("Unable to retrieve profile.\n\n{}", e.what());
    }
 }

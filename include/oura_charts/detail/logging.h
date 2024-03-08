@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 // logging.h
 //
-// defines the log:: namespace and interface for logging.
+// defines the logging namespace and interface for logging functionality.
 // 
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
@@ -12,23 +12,26 @@
 #include "oura_charts/constants.h"
 #include "oura_charts/oura_exception.h"
 #include <spdlog/spdlog.h>
-#include <spdlog/async.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/daily_file_sink.h>
 #include <spdlog/sinks/msvc_sink.h>
-#include <source_location>
-#include <vector>
-#include <memory>
 #include <filesystem>
+#include <string_view>
+#include <source_location>
 
-namespace oura_charts::log
+
+/// <summary>
+///   Namespace that contains the types, functions, and objects used for the logging interface of this project.
+/// </summary>
+namespace oura_charts::logging
 {
    //
-   // import these symbols into our namespace, so logging interface looks like log::warn(...) and there's
+   // import these symbols into our namespace, so logging interface looks like logging::warn(...) and there's
    // possiblity to replace logging backend with minimal impact if needed.
    //
    namespace fs = std::filesystem;
    namespace sinks = spdlog::sinks;
+   namespace log_level = spdlog::level;
    using spdlog::logger;
    using spdlog::source_loc;
    using spdlog::level::level_enum;
@@ -44,84 +47,135 @@ namespace oura_charts::log
    using spdlog::info;
    using spdlog::critical;
    using log_ptr_t = std::shared_ptr<logger>;
+   using sink_ptr_t = sinks_init_list::value_type;
+
+} // namespace oura_charts::log
 
 
-   // Logging factory that can be used for apps. TODO: get settings from config file.
-   struct AppLogger
+/// <summary>
+///    logging-related constants.
+/// </summary>
+namespace oura_charts::constants
+{
+   static constexpr const char* CONFIG_DEFAULT_LOG_NAME = "DEFAULT";
+   static constexpr const char* CONFIG_DEFAULT_LOG_PATTERN_CONSOLE = "[%Y-%m-%d %H:%M:%S.%e] [TID %t] [%l] %v";
+   static constexpr const char* CONFIG_DEFAULT_LOG_PATTERN_FILE = "[%Y-%m-%d %H:%M:%S.%e] [%s:%#] [%^%l%$] %v";
+   static constexpr const char* CONFIG_DEFAULT_LOG_PATTERN_DEBUGGER = "[%Y-%m-%d %H:%M:%S.%e] [%s:%#] [%^%l%$] %v";
+
+   #if !defined(NDEBUG)
+      static constexpr auto CONFIG_DEFAULT_LOGLEVEL_DAILYFILE = oura_charts::logging::level_enum::debug;
+      static constexpr auto CONFIG_DEFAULT_LOGLEVEL_CONSOLE = oura_charts::logging::level_enum::warn;
+      static constexpr auto CONFIG_DEFAULT_LOGLEVEL_DEBUGGER = oura_charts::logging::level_enum::info;
+   #else
+      static constexpr auto CONFIG_DEFAULT_LOGLEVEL_DAILYFILE = oura_charts::log::level_enum::warn;
+      static constexpr auto CONFIG_DEFAULT_LOGLEVEL_CONSOLE = oura_charts::log::level_enum::error;
+      static constexpr auto CONFIG_DEFAULT_LOGLEVEL_DEBUGGER = oura_charts::log::level_enum::off;
+   #endif
+} // namespace oura_charts::constants
+
+
+namespace oura_charts::logging
+{
+
+   /// <summary>
+   ///   Log an exception with source information. This overload expects the exception to have
+   ///   formatter support and will be directly output that way.
+   /// </summary>
+   template<ExceptionDerived ExceptionType>
+   void exception(const ExceptionType& e, std::source_location source_loc = std::source_location::current())
    {
-      static log_ptr_t make(std::string_view log_folder = constants::CONFIG_DEFAULT_LOG_FOLDER,
-                            std::string_view log_name = constants::CONFIG_DEFAULT_LOG_NAME)
-      {
-         auto console_sink = std::make_shared<sinks::stdout_color_sink_mt>();
-         console_sink->set_level(spdlog::level::warn);
-         console_sink->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [TID %t] [%l] %v");
+      error("In {}() ({}:{}) - {}", source_loc.file_name(), source_loc.function_name(), source_loc.line(), e);
+   }
 
-         fs::path base_logfile = fs::path{ log_folder } / constants::APP_NAME_NOSPACE;
-         auto file_sink = std::make_shared<daily_file_sink_mt>(base_logfile.string(), 0, 1);
-         file_sink->set_level(spdlog::level::warn);
-         file_sink->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%s:%#] [%^%l%$] %v");
 
-         return  std::make_shared<spdlog::logger>(constants::CONFIG_DEFAULT_LOG_NAME,
-                                                  sinks_init_list{ console_sink, file_sink });
-
-      }
-   };
-
-   // logging factory for debugging
-   struct DebugLogger
+   /// <summary>
+   ///   Log an exception with source information. This overload for non-formatter-compatible types
+   ///   will just use e.what() for the error message.
+   /// </summary>
+   template<FormattedException ExceptionType>
+   void exception(const ExceptionType& e, std::source_location source_loc = std::source_location::current())
    {
-      static log_ptr_t make(std::string_view log_name = constants::CONFIG_DEFAULT_LOG_NAME)
-      {
-         auto console_sink = std::make_shared<sinks::stdout_color_sink_mt>();
-         console_sink->set_level(spdlog::level::info);
-         console_sink->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [TID %t] [%l] %v");
+      error("Error in {}() ({}:{}) - {}", source_loc.file_name(), source_loc.function_name(), source_loc.line(), e.what());
+   }
 
-         std::vector<spdlog::sink_ptr> sinks{ console_sink };
 
-      #if !defined(NDEBUG) && defined(_WIN32)
-	      // log output to MSVC debug window.
-	      auto windbg_sink = std::make_shared<msvc_sink_mt>();
-	      windbg_sink->set_level(spdlog::level::trace);
-	      windbg_sink->set_pattern("****[%l]**** %v");
-         sinks.push_back(std::move(windbg_sink));
-      #endif
+   /// <summary>
+   ///   Create a logging sink that outputs log messages to the console
+   /// </summary>
+   [[nodiscard]] sink_ptr_t makeConsoleSink(log_level::level_enum level = constants::CONFIG_DEFAULT_LOGLEVEL_CONSOLE,
+                                            std::string_view pattern = constants::CONFIG_DEFAULT_LOG_PATTERN_CONSOLE);
 
-         return  std::make_shared<spdlog::logger>(std::string{ log_name }, std::begin(sinks), std::end(sinks));
-      }
-   };
 
-   // logging factory for unit tests.
-   struct TestLogger
+   /// <summary>
+   ///   Create a daily file logging sink with the specified level, path/name and log pattern.
+   /// </summary>
+   [[nodiscard]] sink_ptr_t makeDailyFileSink(log_level::level_enum level,
+                                              fs::path log_folder,
+                                              std::string_view log_filename_base,
+                                              std::string_view pattern);
+
+
+   /// <summary>
+   ///   Overload of makeDailyFileSink() that has default values for convenience.
+   /// </summary>
+   inline [[nodiscard]] sink_ptr_t makeDailyFileSink(log_level::level_enum level = constants::CONFIG_DEFAULT_LOGLEVEL_DAILYFILE,
+                                                     std::string_view log_folder = constants::CONFIG_DEFAULT_LOG_FOLDER,
+                                                     std::string_view log_filename_base = constants::APP_NAME_NOSPACE,
+                                                     std::string_view pattern = constants::CONFIG_DEFAULT_LOG_PATTERN_CONSOLE)
+   {                                   
+      return makeDailyFileSink(level, fs::path{ log_folder }, log_filename_base, pattern);
+   }
+
+
+   /// <summary>
+   ///   Init a log sink that writes output to OutputDebugStringA() on Windows Debug builds,
+   ///   or nullptr otherwise.
+   /// </summary>
+   /// <remarks>
+   ///   Note that this function returns a nullptr object if you're not on Windows. It's safe to pass in a
+   ///   sinks_init_list{} to our LogInit objects, but you should check the value before passing directly
+   ///   to the spdlog logging api.
+   /// </remarks>
+   [[nodiscard]] sinks_init_list::value_type makeDebuggerSync();
+
+
+   struct LogFactory
    {
-      static log_ptr_t make(std::string_view log_name = constants::CONFIG_DEFAULT_LOG_NAME )
-      {
-         auto console_sink = std::make_shared<sinks::stdout_color_sink_mt>();
-         console_sink->set_level(spdlog::level::warn);
-         console_sink->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [TID %t] [%l] %v");
-         std::vector<spdlog::sink_ptr> sinks{ console_sink };
-
-      #if !defined(NDEBUG) && defined(_WIN32)
-         // log output to MSVC debug window.
-         auto windbg_sink = std::make_shared<msvc_sink_mt>();
-         windbg_sink->set_level(spdlog::level::trace);
-         windbg_sink->set_pattern("****[%l]**** %v");
-         sinks.push_back(windbg_sink);
-      #endif
-
-         return  std::make_shared<spdlog::logger>(std::string{ log_name }, std::begin(sinks), std::end(sinks));
-      }
-   };
+      /// <summary>
+      ///   creates a logger instance that is not registered with spdlog and can only be used through
+      ///   the returned object.
+      /// </summary>
+      /// <remarks>
+      ///   note that 'max_level' should be the least restrictive log level you want to use with any
+      ///   sink, as this level will be used to filter messages before calling any sinks. The log level
+      ///   filter on a sink is in addition to the max_level.
+      /// </remarks>
+      static [[nodiscard]] log_ptr_t makePrivate(std::string_view log_name, sinks_init_list sinks, log_level::level_enum max_level);
 
 
-   struct LogInit
-   {
-      LogInit(log_ptr_t&& log_ptr, bool make_default = true) : logger(std::move(log_ptr))
-      {
-         if (make_default)
-            set_default_logger(logger);
-      }
+      /// <summary>
+      ///   create a logger instance and register it with spdlog so it can be used/retrieved through the spdlog
+      ///   api's. Loggers of this type will outlive the returned shared_ptr<> unless you deregister (drop) them.
+      /// </summary>
+      /// <remarks>
+      ///   note that 'max_level' should be the least restrictive log level you want to use with any
+      ///   sink, as this level will be used to filter messages before calling any sinks. The log level
+      ///   filter on a sink is in addition to the max_level.
+      /// </remarks>
+      static log_ptr_t makeRegistered(std::string_view log_name, sinks_init_list sinks, log_level::level_enum max_level);
 
-      log_ptr_t logger{};
+
+      /// <summary>
+      ///   create new logger and register it as the system default/global lgoger, available through the free-
+      ///   standing log functions. This logger will outlive the returned shared_ptr<> since it's also
+      ///   registered as the defualt logger.
+      /// </summary>
+      /// <remarks>
+      ///   note that 'max_level' should be the least restrictive log level you want to use with any
+      ///   sink, as this level will be used to filter messages before calling any sinks. The log level
+      ///   filter on a sink is in addition to the max_level.
+      /// </remarks>
+      static log_ptr_t makeDefault(sinks_init_list sinks = { makeConsoleSink(), makeDailyFileSink() }, log_level::level_enum max_level = level_enum::trace);
    };
    
 } //  namespace oura_charts

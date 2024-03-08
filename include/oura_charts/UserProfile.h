@@ -64,9 +64,14 @@ namespace oura_charts
             throw json.error();
       }
 
+      // throwing constructors that initialize object from json string.
+      explicit UserProfile(std::string_view json);
+      explicit UserProfile(std::string&& json);
+      ~UserProfile() = default;
+
+      // default copy/move semantics
       UserProfile(const UserProfile &) = default;
       UserProfile(UserProfile &&) = default;
-      ~UserProfile() = default;
       UserProfile& operator=(const UserProfile&) = default;
       UserProfile& operator=(UserProfile&&) = default;
 
@@ -84,7 +89,6 @@ namespace oura_charts
 
    private:
       UserProfile() = default;
-      explicit UserProfile(std::string_view json);
    };
 
 

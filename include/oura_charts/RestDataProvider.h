@@ -18,6 +18,18 @@
 
 namespace oura_charts
 {
+   namespace detail
+   {
+      /// <summary>
+      ///   class used for logging callback from cpr.
+      /// </summary>
+      struct LoggingCallback
+      {
+         logging::log_ptr_t m_logger;
+
+         void operator()(cpr::DebugCallback::InfoType type, std::string data, intptr_t userdata);
+      };
+   }
 
    /// <summary>
    ///   Provides a common interface for retrieving data objects from a REST endpoint.  
@@ -31,11 +43,19 @@ namespace oura_charts
       // unexpected value is an exception describing what went wrong.
       using expected_json = expected<std::string, oura_exception>;
 
+      
       /// <summary>
       ///   constructor, takes an Auth object and an URL that should be used
       ///   to build paths for REST endpoints.
       /// </summary>
-      RestDataProvider(Auth auth, std::string base_url) : m_auth{ auth }, m_base_url{ base_url }
+      /// <remarks>
+      ///   if a log object is provided, debug logging will be sent to the specified
+      ///   logger for the REST calls.
+      /// </remarks>
+      RestDataProvider(Auth auth, std::string base_url, logging::log_ptr_t logger = nullptr)
+         : m_auth{ auth },
+           m_base_url{ base_url },
+           m_logger{ std::move(logger) }
       {
       }
 
@@ -44,10 +64,8 @@ namespace oura_charts
       /// </summary>
       [[nodiscard]] expected_json getJsonObject(std::string_view path) const noexcept
       {
-         cpr::Header header{ {constants::REST_HEADER_XCLIENT, constants::REST_HEADER_XCLIENT_VALUE} };
-         return getJsonFromResponse(cpr::Get(m_auth.getAuthorization(), pathToUrl(path), std::move(header)));
+         return doRestGet(path);
       }
-
 
       /// <summary>
       ///   Retrieve a data series from a REST endpoint into a container of structs. The target container is passed as a parameter. The
@@ -63,9 +81,6 @@ namespace oura_charts
       {
          using namespace oura_charts::constants;
 
-         cpr::Header header{
-            { REST_HEADER_XCLIENT, REST_HEADER_XCLIENT_VALUE }
-         };
          cpr::Parameters params{
             { REST_PARAM_START_DATETIME, toIsoDateString(start) },
             { REST_PARAM_END_DATETIME, toIsoDateString(end)}
@@ -75,8 +90,7 @@ namespace oura_charts
             params.Add(cpr::Parameter{ REST_PARAM_NEXT_TOKEN, std::string{ *next_token } });
 
          // Send the request to server and check that we get a valid response.
-         auto response = cpr::Get(m_auth.getAuthorization(), pathToUrl(path), header, params);
-         auto exp_json = getJsonFromResponse(response);
+         auto exp_json = doRestGet(path, params);
          if (!exp_json.has_value())
             return unexpected(exp_json.error());
 
@@ -97,11 +111,28 @@ namespace oura_charts
       std::string baseURL() const { return m_base_url; }
 
    private:
-      Auth m_auth;
-      std::string m_base_url;
+      Auth m_auth{};
+      std::string m_base_url{};
+      logging::log_ptr_t m_logger{};
+
+      // Assembles the REST GET request and sends it to th server, returning any JSON
+      // (or error information) that is received in response.
+      template <typename... Ts>
+      expected_json doRestGet(std::string_view path, Ts... ts) const noexcept
+      {
+         cpr::Header header{
+            { constants::REST_HEADER_XCLIENT, constants::REST_HEADER_XCLIENT_VALUE }
+         };
+
+         // Send the request to server and check that we get a valid response.
+         auto response = m_logger ? cpr::Get(cpr::DebugCallback{ detail::LoggingCallback{m_logger} }, m_auth.getAuthorization(), pathToUrl(path), ts...)
+                                  : cpr::Get(m_auth.getAuthorization(), pathToUrl(path), ts...);
+         
+         return getJsonFromResponse(response);
+      }
 
       // extract the expected json (or unexepected error) from a REST response
-      [[nodiscard]] expected_json getJsonFromResponse(const cpr::Response& response) const noexcept
+      [[nodiscard]] expected_json getJsonFromResponse(const cpr::Response & response) const noexcept
       {
          if (cpr::status::is_success(response.status_code))
             return response.text;

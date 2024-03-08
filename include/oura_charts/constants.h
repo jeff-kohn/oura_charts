@@ -8,7 +8,6 @@
 
 #pragma once
 
-//#include <fmt/compile.h>
 
 namespace oura_charts::constants
 {
@@ -49,7 +48,7 @@ namespace oura_charts::constants
 
 // Platform specific constants
 #if defined(WIN32) || defined (_WIN32)
-   
+
    static constexpr const char* CONFIG_DEFAULT_LOG_FOLDER = "%LOCALAPPDATA%/oura_charts/logs";
 
 #elif defined(__linux__)
@@ -57,7 +56,5 @@ namespace oura_charts::constants
    static constexpr const char* CONFIG_DEFAULT_LOG_FOLDER = "$HOME/.local/state/oura_charts/logs";
 
 #endif
-
-   static constexpr const char* CONFIG_DEFAULT_LOG_NAME = "DEFAULT";
 
 } // namespace oura_charts::constants

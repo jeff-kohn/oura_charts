@@ -13,8 +13,9 @@
 namespace oura_charts
 {
    using namespace oura_charts::detail;
-   
-   UserProfile::UserProfile(std::string_view json)
+
+
+   UserProfile::UserProfile(std::string&& json) 
    {
       auto pe = glz::read_json(static_cast<user_data&>(*this), json);
       if (pe)
@@ -22,6 +23,10 @@ namespace oura_charts
                   static_cast<int64_t>(pe.ec),
                   glz::format_error(pe, json),
                   ErrorCategory::Parse };
+   }
+
+   UserProfile::UserProfile(std::string_view json) : UserProfile(std::string{ json })
+   {
    }
 
 } // namespace oura_charts
