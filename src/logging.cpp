@@ -7,6 +7,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 #include "oura_charts/detail/logging.h"
+#include "oura_charts/detail/utility.h"
 #include <ranges>
 #include <cassert>
 #include <algorithm>
@@ -15,6 +16,7 @@ namespace oura_charts::logging
 {
    namespace rgs = std::ranges;
    namespace vws = rgs::views;
+   using namespace oura_charts::detail;
    using std::make_shared;
    using std::move;
    using std::string_view;
@@ -35,8 +37,14 @@ namespace oura_charts::logging
                                               string_view log_filename_base,
                                               string_view pattern)
    {
-      fs::path base_logfile = log_folder / log_filename_base;
-      auto file_sink = make_shared<daily_file_sink_mt>(base_logfile.generic_string(), 0, 1);
+      auto log_path{ log_folder / log_filename_base };
+      if (!log_path.has_extension())
+         log_path.replace_extension(".log");
+
+      std::string logfile{ log_path.generic_string() };
+      expandEnvironmentVars(logfile);
+
+      auto file_sink = make_shared<daily_file_sink_mt>(logfile, 0, 1);
       file_sink->set_level(spdlog::level::warn);
       file_sink->set_pattern(string{ pattern });
       return move(file_sink);

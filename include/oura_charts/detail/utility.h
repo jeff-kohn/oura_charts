@@ -10,20 +10,10 @@
 #include <string>
 #include <string_view>
 
+
+
 namespace oura_charts::detail
 {
-   
-   /// <summary>
-   ///   'overloaded' utility class. Allows you to inherit from multiple classes (or lambdas),
-   ///   inheriting their operator() so that it's overloaded for multiple signatures in one class.
-   /// </summary>
-   template<class... Ts> struct overload : Ts...
-   {
-      using Ts::operator()...;
-      //consteval void operator()(auto) const { static_assert(false, "Unsupported type");  }
-   };
-
-
    /// <summary>
    ///   retrieve an environment variable. If the environment variable is not found, or an
    ///   error occurs, default_val will be returned. Otherwise the variable's value
@@ -37,7 +27,21 @@ namespace oura_charts::detail
    }
 
 
+   /// <summary>
+   ///   Expand environment varariables in a string (in-place). Returns true if
+   ///   successful, false if unsuccessful in which case text will be unchanged.
+   /// </summary>
+   bool expandEnvironmentVars(std::string& text);
 
 
-
+   /// <summary>
+   ///   Get just the filename from a path. The returned value is a view based on the
+   ///   passed-in path, so it is only valid for the lifetime of the passed-in path
+   /// </summary>
+   /// <remarks>
+   ///   This might seem unnecessary but filesystem::path::filename does a bunch of 
+   ///   extra copying and converting between wstring and string on Windows, and even
+   ///   on linux you're going to get 1-2 extra copies. This function does no copying
+   /// <remarks>
+   std::string_view fileNameFromPath(std::string_view path) noexcept;
 }

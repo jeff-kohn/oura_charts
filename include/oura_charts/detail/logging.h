@@ -11,6 +11,7 @@
 #include "oura_charts/concepts.h"
 #include "oura_charts/constants.h"
 #include "oura_charts/oura_exception.h"
+#include "oura_charts/detail/utility.h"
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/daily_file_sink.h>
@@ -84,7 +85,8 @@ namespace oura_charts::logging
    template<ExceptionDerived ExceptionType>
    void exception(const ExceptionType& e, std::source_location source_loc = std::source_location::current())
    {
-      error("In {}() ({}:{}) - {}", source_loc.file_name(), source_loc.function_name(), source_loc.line(), e);
+      auto file_name = detail::fileNameFromPath(source_loc.file_name());
+      error("In {}:{} - {}", file_name, source_loc.line(), source_loc.function_name(), e);
    }
 
 
@@ -95,7 +97,8 @@ namespace oura_charts::logging
    template<FormattedException ExceptionType>
    void exception(const ExceptionType& e, std::source_location source_loc = std::source_location::current())
    {
-      error("Error in {}() ({}:{}) - {}", source_loc.file_name(), source_loc.function_name(), source_loc.line(), e.what());
+      auto file_name = detail::fileNameFromPath(source_loc.file_name());
+      error("In {}:{} - {}", file_name, source_loc.line(), e.what());
    }
 
 
