@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
    {
       using std::string;
 
-      auto logger =  logging::LogFactory::makeDefault();
+      auto logger = logging::LogFactory::makeDefault();
 
       cxxopts::Options options(argv[0], "OuraCharts Get User Profile");
       options.add_options()

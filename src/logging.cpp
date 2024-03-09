@@ -45,7 +45,7 @@ namespace oura_charts::logging
       expandEnvironmentVars(logfile);
 
       auto file_sink = make_shared<daily_file_sink_mt>(logfile, 0, 1);
-      file_sink->set_level(spdlog::level::warn);
+      file_sink->set_level(level);
       file_sink->set_pattern(string{ pattern });
       return move(file_sink);
    }
