@@ -85,7 +85,7 @@ namespace oura_charts
    concept RestNoThrowConstructable = requires (T t)
    {
       T::REST_PATH;
-      //retval  = T::makeFromJson(std::string{}); fucking bullshit motherfucker
+      //retval  = T::makeFromJson(std::string{}); 
    };
 
 

@@ -74,8 +74,8 @@ namespace oura_charts
    //template<typename AuthType>
    //static DataPoint::DataSet getDataSet(const AuthWrapper<AuthType>& auth, timestamp_utc begin, timestamp_utc end)
    //{
-   //   auto begin_str = toIsoDateString(begin);
-   //   auto end_str = toIsoDateString(end);
+   //   auto begin_str = toIsoDateTime(begin);
+   //   auto end_str = toIsoDateTime(end);
    //   return getDataSetFromRestEndpoint<DataPoint::DataSet>
    //            (
    //               auth.getAuthorization(),

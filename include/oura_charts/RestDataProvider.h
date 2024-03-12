@@ -34,7 +34,6 @@ namespace oura_charts
    /// <summary>
    ///   Provides a common interface for retrieving data objects from a REST endpoint.  
    /// </summary>
-   /// <remarks>
    template <AuthObject Auth>
    class RestDataProvider
    {
@@ -68,22 +67,32 @@ namespace oura_charts
       }
 
       /// <summary>
+      /// Retrieve the JSON for a single object from the rest server.
+      /// </summary>
+      template <typename... Ts>
+      [[nodiscard]] expected_json getJsonObject(std::string_view path, Ts... ts) const noexcept
+      {
+         return doRestGet(path, ts...);
+      }
+
+
+      /// <summary>
       ///   Retrieve a data series from a REST endpoint into a container of structs. The target container is passed as a parameter. The
       ///   next_token is used to indicate the request is to retrieve additional data from a previous quest if applicable. The expected
       ///   retrun value is a DataSeries<T> containing the requested data. The unexpected value is error information if the request was
       ///   unable to retrieve the requested data.
       /// </summary>
       template <typename DataT>
-      [[nodiscard]] expected<detail::RestDataSeries<DataT>, oura_exception> getJsonDataSeries(std::string_view path,
+      [[nodiscard]] expected<detail::RestDataCollection<DataT>, oura_exception> getJsonDataSeries(std::string_view path,
                                                                                               timestamp_utc start,
                                                                                               timestamp_utc end,
-                                                                                              detail::nullible_string next_token = {}) const noexcept
+                                                                                              detail::nullable_string next_token = {}) const noexcept
       {
          using namespace oura_charts::constants;
 
          cpr::Parameters params{
-            { REST_PARAM_START_DATETIME, toIsoDateString(start) },
-            { REST_PARAM_END_DATETIME, toIsoDateString(end)}
+            { REST_PARAM_START_DATETIME, toIsoDateTime(start) },
+            { REST_PARAM_END_DATETIME, toIsoDateTime(end)}
          };
 
          if (next_token)
@@ -98,7 +107,7 @@ namespace oura_charts
          // an array of the requested objects, and a next_token value that indicates
          // if there is more data.
          std::string json_text{ exp_json.value() };
-         typename detail::RestDataSeries<DataT> data{};
+         typename detail::RestDataCollection<DataT> data{};
          auto pe = glz::read_json(data, json_text);
          if (pe)
             return unexpected{ oura_exception{static_cast<int64_t>(pe.ec), glz::format_error(pe, json_text),ErrorCategory::Parse } };
@@ -115,7 +124,7 @@ namespace oura_charts
       std::string m_base_url{};
       logging::log_ptr_t m_logger{};
 
-      // Assembles the REST GET request and sends it to th server, returning any JSON
+      // Assembles the REST GET request and sends it to the server, returning any JSON
       // (or error information) that is received in response.
       template <typename... Ts>
       expected_json doRestGet(std::string_view path, Ts... ts) const noexcept

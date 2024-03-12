@@ -24,6 +24,8 @@ namespace oura_charts::constants
    static constexpr const char* REST_PARAM_AUTH_TOKEN_PREFIX = "Bearer ";
    static constexpr const char* REST_PARAM_START_DATETIME = "start_datetime";
    static constexpr const char* REST_PARAM_END_DATETIME = "end_datetime";
+   static constexpr const char* REST_PARAM_START_DATE = "start_date";
+   static constexpr const char* REST_PARAM_END_DATE = "end_date";
    static constexpr const char* REST_PARAM_NEXT_TOKEN = "next_token";
 
    static constexpr const char* JSON_KEY_DATA = "data";

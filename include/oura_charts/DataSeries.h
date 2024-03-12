@@ -9,15 +9,21 @@
 #pragma once
 
 #include "oura_charts/oura_charts.h"
+#include "oura_charts/concepts.h"
 #include "oura_charts/datetime_helpers.h"
 
 
 namespace oura_charts
 {
    template <RestNoThrowConstructable DataT, typename  Container = std::vector<DataT> >
-   class DataSeries 
+   class DataSet 
    {
    public:
+
+      void loadData(std::string_view path, timestamp_utc start, timestamp_utc end)
+      {
+      }
+
       //template<typename AuthType>
       //static DataSet<T> getDataSet(const AuthWrapper<AuthType>& auth, timestamp_utc begin, timestamp_utc end)
       //{
@@ -33,6 +39,7 @@ namespace oura_charts
 
 
    private:
+      Container m_data;
    };
 
 } // namespace oura_charts

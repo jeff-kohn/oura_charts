@@ -13,6 +13,8 @@
 #include <fmt/chrono.h>
 #include <spanstream>
 #include <chrono>
+#include <string>
+#include <string_view>
 
 #if defined(__cpp_lib_chrono) && __cpp_lib_chrono < 201907L
    #include <date/date.h>
@@ -86,6 +88,8 @@ namespace oura_charts
          return unexpected{ oura_exception{ fmt::format("The intput string {} could not be parsed as a valid date/time", dt_str), ErrorCategory::Parse }};
    }
 
+   inline expected<timestamp_local, oura_exception> 
+
 
    /// <summary>
    ///   Format a date/time as ISO string that can be used with REST calls.
@@ -95,9 +99,15 @@ namespace oura_charts
    ///   value that fmt::format() knows how to format as a date/time.
    /// </remarks>
    template<typename DateType>
-   inline std::string toIsoDateString(DateType&& date_val)
+   inline std::string toIsoDateTime(DateType&& date_val)
    {
       return fmt::format("{:%FT%TZ}", chrono::floor<chrono::seconds>(std::forward<DateType>(date_val)) );
+   }
+
+   template<typename DateType>
+   inline std::string toIsoDate(DateType&& date_val)
+   {
+      return fmt::format("{:%F}", chrono::floor<chrono::seconds>(std::forward<DateType>(date_val)));
    }
 
 }

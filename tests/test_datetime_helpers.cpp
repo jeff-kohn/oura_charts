@@ -26,7 +26,7 @@ namespace oura_charts::test
 
       REQUIRE(tp == parseIsoDateTime(local_date));
       REQUIRE(tp == parseIsoDateTime(date_str));
-      REQUIRE(date_str == toIsoDateString(tp));
+      REQUIRE(date_str == toIsoDateTime(tp));
    }
 
 
