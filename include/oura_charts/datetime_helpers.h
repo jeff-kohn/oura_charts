@@ -60,16 +60,24 @@ namespace oura_charts
    }
 
    /// <summary>
-   /// convenience function for convertiong timestamp_local to timestamp_utc
+   ///   convenience function for convertiong timestamp_local to timestamp_utc
    /// </summary>
-   inline timestamp_utc localToUtc(timestamp_local tp)
+   inline timestamp_utc localToUtc(timestamp_local ts)
    {
-      return chrono::floor<timestamp_utc::duration>(chrono::current_zone()->to_sys(tp));
+      return chrono::floor<timestamp_utc::duration>(chrono::current_zone()->to_sys(ts));
+   }
+
+   /// <summary>
+   ///   convenience function for convertiong timestamp_local to timestamp_utc
+   /// </summary>
+   inline timestamp_local utcToLocal(timestamp_utc ts, const chrono::time_zone* tz = chrono::current_zone())
+   {
+      return chrono::floor<timestamp_local::duration>(tz->to_local(ts));
    }
 
     
    /// <summary>
-   ///   Parse an ISO date string and return it as a UTC timepoint. Values
+   ///   Parse an ISO date-time string and return it as a UTC timepoint. Values
    ///   returned from this function will always be UTC, even if the string
    ///   contained a timezone offeset. Expected value is the parsed date,
    ///   unexpected value is exception object containing error information.
@@ -88,7 +96,22 @@ namespace oura_charts
          return unexpected{ oura_exception{ fmt::format("The intput string {} could not be parsed as a valid date/time", dt_str), ErrorCategory::Parse }};
    }
 
-   inline expected<timestamp_local, oura_exception> 
+
+   /// <summary>
+   /// 
+   /// </summary>
+   inline expected<chrono::year_month_day, oura_exception> parseIsoDate(std::string_view dt_str)
+   {
+
+      auto format_str{ constants::PARSE_FMT_STR_ISO_DATE_ONLY };
+                                                                
+      std::ispanstream dt_strm{ dt_str, };
+      chrono::year_month_day ymd{};
+      if ((dt_strm >> chrono::parse(format_str, ymd)))
+         return ymd;
+      else
+         return unexpected{ oura_exception{ fmt::format("The intput string {} could not be parsed as a valid date", dt_str), ErrorCategory::Parse } };
+   }
 
 
    /// <summary>
@@ -104,6 +127,10 @@ namespace oura_charts
       return fmt::format("{:%FT%TZ}", chrono::floor<chrono::seconds>(std::forward<DateType>(date_val)) );
    }
 
+
+   /// <summary>
+   /// 
+   /// </summary>
    template<typename DateType>
    inline std::string toIsoDate(DateType&& date_val)
    {

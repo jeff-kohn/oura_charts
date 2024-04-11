@@ -45,6 +45,7 @@ namespace oura_charts::detail
 
    struct sleep_data
    {
+      string id;
       chrono::year_month_day day;
       timestamp_local bedtime_start{};
       timestamp_local bedtime_end{};
@@ -73,32 +74,53 @@ namespace oc = oura_charts;
 namespace ocd = oura_charts::detail;
 
 
+/// <summary>
+///   Custom json serializers for chrono types we use.
+/// </summary>
 namespace glz::detail
 {
+   template <>
+   struct from_json<oc::chrono::year_month_day>
+   {
+      template <auto Opts>
+      static void op(oc::chrono::year_month_day& value, is_context auto&& ctx, auto&&... args)
+      {
+         std::string date_str{};
+         read<json>::op<Opts>(date_str, ctx, args...);
+         auto exp_ymd = oc::parseIsoDate(date_str);
+         if (exp_ymd)
+            value = exp_ymd.value();
+         else
+            ctx.error = glz::error_code::parse_number_failure;
+      }
+   };
+
    template <>
    struct from_json<oc::timestamp_local>
    {
       template <auto Opts>
-      static void op(oc::timestamp_local& value, auto&&... args)
+      static void op(oc::timestamp_local& value, is_context auto&& ctx, auto&&... args)
       {
          std::string date_str{};
-         read<json>::op<Opts>(date_str, args...);
-         value  = 
+         read<json>::op<Opts>(date_str, ctx, args...);
+         auto exp_tsl = oc::parseIsoDateTime(date_str);
+         if (exp_tsl)
+            value = oc::utcToLocal(exp_tsl.value());
+         else
+            ctx.error = glz::error_code::parse_number_failure;
+      }
+   };
+
+   template <>
+   struct from_json<oc::chrono::seconds>
+   {
+      template <auto Opts>
+      static void op(oc::chrono::seconds& value, is_context auto&& ctx, auto&&... args)
+      {
+         int32_t sec_count{};
+         read<json>::op<Opts>(sec_count, ctx, args...);
+         if (glz::error_code::none == ctx.error)
+            value = oc::chrono::seconds{ sec_count };
       }
    };
 }
-
-
-
-//// metadata specialization to allow for customizing the parsing behavior
-//// for our class.
-//template <>
-//struct glz::meta<ocd::sleep_data>
-//{
-//   using T = ocd::sleep_data;
-//   static constexpr auto partial_read = true;
-//   static constexpr auto value = object("day", custom<&T::read_x, &T::write_x>,
-//                                          "y", custom<&T::read_y, &T::y>, 
-//                                          "z", custom<&T::z, &T::write_z>);
-//   };
-//};

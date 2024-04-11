@@ -11,7 +11,6 @@ add_library(${THIS_TARGET} STATIC
 	"../include/oura_charts/constants.h"
 	"../include/oura_charts/oura_exception.h"
    "../include/oura_charts/datetime_helpers.h"
-   "../include/oura_charts/DataSeries.h"
    "../include/oura_charts/RestDataProvider.h"
 	"../include/oura_charts/detail/utility.h"
 	"../include/oura_charts/detail/json_structs.h"

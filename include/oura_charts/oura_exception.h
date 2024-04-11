@@ -23,7 +23,8 @@ namespace oura_charts
       Generic = -1,
       Success = 0,
       REST,
-      Parse
+      Parse,
+      FileIO
    };
 
    inline std::string getGetogoryName(ErrorCategory ec)
@@ -38,6 +39,8 @@ namespace oura_charts
          return constants::ERROR_CATEGORY_REST;
       case ErrorCategory::Parse:
          return constants::ERROR_CATEGORY_PARSE;
+      case ErrorCategory::FileIO:
+         return constants::ERROR_CATEGORY_FILE_IO;
       default:
          std::unreachable();
       }
@@ -65,6 +68,8 @@ namespace oura_charts
    class oura_exception final : public std::exception
    {
    public:
+      static constexpr int64_t ERROR_CODE_GENERAL_FAILURE = -1;
+
       explicit oura_exception(cpr::Error err) : error_code{ static_cast<int64_t>(err.code) },
                                                 message{ std::move(err.message) },
                                                 category{ ErrorCategory::REST }
@@ -80,9 +85,21 @@ namespace oura_charts
       oura_exception(std::string error_text, ErrorCategory category = ErrorCategory::Generic)
          : message{ std::move(error_text) },
            category{ category },
-           error_code{ -1 }
+           error_code{ ERROR_CODE_GENERAL_FAILURE }
       {
       }
+
+      /// <summary>
+      ///   This ctor forwards the parameter pack to format() for the error message.
+      /// </summary>
+      template <typename... T>
+      constexpr oura_exception(ErrorCategory errcat, fmt::format_string<T...> fmt, T&&... args)
+         : category{ category },
+           error_code{ ERROR_CODE_GENERAL_FAILURE }
+      {
+         message = fmt::format(fmt, args...);
+      }
+
 
       int64_t error_code{};
 

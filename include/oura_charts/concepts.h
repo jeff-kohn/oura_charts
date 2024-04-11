@@ -12,10 +12,10 @@
 #include <concepts>
 #include <string_view>
 #include <fmt/format.h>
+#include <chrono>
 
 namespace oura_charts
 {
-
    /// <summary>
    ///   concept requiring a template arge to be std::exception or derived from std::exception
    /// </summary>
@@ -57,12 +57,16 @@ namespace oura_charts
 
    /// <summary>
    ///   concept for a data provider than can retrieve JSON objects from some data source, such as
-   ///   a REST endpoint, database, unit test, etc.
+   ///   a REST endpoint, database, unit test mock, etc.
    /// </summary>
-   template <typename T>
-   concept DataProvider = requires (T dp, typename T::expected_json ej)
+   template <typename Provider>
+   concept DataProvider = requires (Provider dp, Provider::expected_json ej)
    {
+
       ej = dp.getJsonObject("");
+      
+      // Can't get this stupid fucking concept to work, this shit is so fucking unintuitive.
+      //ej = dp.getJsonDataSeries(std::string_view{}, std::chrono::sys_seconds{}, std::chrono::sys_seconds{});
    };
 
 
@@ -98,10 +102,10 @@ namespace oura_charts
       && std::ranges::range<Container>
       && RestNoThrowConstructable<typename Container::value_type::value_type>
       && requires (Container cont, Container::value_type val)
-      {
-         Container::value_type::value_type::REST_PATH;
-         cont.push_back(val);
-         cont.reserve(55);
-      };
+   {
+      Container::value_type::value_type::REST_PATH;
+      cont.push_back(val);
+      cont.reserve(55);
+   };
 
 } // namespace oura_charts

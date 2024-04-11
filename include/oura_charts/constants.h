@@ -39,13 +39,16 @@ namespace oura_charts::constants
    static constexpr const char* ERROR_CATEGORY_GENERIC = "Generic Runtime Error";
    static constexpr const char* ERROR_CATEGORY_REST = "REST Error";
    static constexpr const char* ERROR_CATEGORY_PARSE = "Parsing Error";
+   static constexpr const char* ERROR_CATEGORY_FILE_IO = "File I/O Error";
    static constexpr const char* ERROR_CONTEXT_REST_RESPONSE = "REST Response";
+
 
    // these are used for parsing date/time values from string using
    // from_stream()
    static constexpr const char* UTC_TIMEZONE = "Z";
    static constexpr const char* PARSE_FMT_STR_ISO_DATETIME_LOCAL = "%FT%T%Ez";
    static constexpr const char* PARSE_FMT_STR_ISO_DATETIME_UTC = "%FT%T%Z";
+   static constexpr const char* PARSE_FMT_STR_ISO_DATE_ONLY = "%F";
 
 
 // Platform specific constants

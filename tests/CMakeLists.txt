@@ -5,7 +5,11 @@
 set(THIS_TARGET "tests")
 add_executable(${THIS_TARGET}
    "test_UserProfile.cpp"
-   "test_datetime_helpers.cpp")
+   "test_datetime_helpers.cpp"
+   "FileDataProvider.h"
+   "FileDataProvider.cpp"
+   "test_json_data.cpp"
+)
 
 set_target_properties(${THIS_TARGET}
 	PROPERTIES
