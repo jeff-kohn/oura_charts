@@ -16,16 +16,34 @@
 
 namespace oura_charts::detail
 {
-   using std::string;
-   using std::vector;
-
-
    // REST API may return some values as 'null', which the json parser
    // will choke on if you try to map it directly to a string or built-in type.
-   using nullable_string = std::optional<string>;
-   using nullable_number = std::optional<double>;
+   using nullable_string = std::optional<std::string>;
+   using nullable_double = std::optional<double>;
+
+   /// <summary>
+   ///   JSON struct for personal info profile from Oura
+   /// </summary>
+   struct user_data
+   {
+      std::string id;
+      std::string email{};
+      int age{};
+      double weight{};
+      double height{};
+      std::string biological_sex{};
+   };
 
 
+   /// <summary>
+   ///   This is the "outer" struct used with REST calls to the Oura API.
+   /// </summary>
+   /// <remarks>
+   ///   All of the Oura API's that return a series of data use the same format
+   ///   with an array to receive the requested data structs, and a token indicating
+   ///   whether there is more data available to fullfill the request (in case
+   ///   of a very large number of data structs, paging may be used).
+   /// </remarks>
    template<typename Struct>
    struct RestDataCollection
    {
@@ -33,28 +51,33 @@ namespace oura_charts::detail
       nullable_string next_token;
    };
 
+   /// <summary>
+   ///   struct that contains information about a single heart rate measurement.
+   /// </summary>
    struct hr_data
    {
       int bpm;
-      string source;
-      string timestamp;
+      std::string source;
+      std::string timestamp;
    };
-   using hr_data_series = RestDataCollection<hr_data>;
+   using hr_data_series = RestDataCollection<hr_data>;      
 
 
-
+   /// <summary>
+   ///   struct that contains information about a single sleep session.
+   /// </summary>
    struct sleep_data
    {
-      string id;
+      std::string id;
       chrono::year_month_day day;
       timestamp_local bedtime_start{};
       timestamp_local bedtime_end{};
 
-      nullable_number average_breath{};
-      nullable_number average_heart_rate{};
-      nullable_number average_hrv{};
+      nullable_double average_breath{};
+      nullable_double average_heart_rate{};
+      nullable_double average_hrv{};
 
-      nullable_number lowest_heart_rate{};
+      nullable_double lowest_heart_rate{};
 
       chrono::seconds latency{};
       chrono::seconds awake_time{};
@@ -62,7 +85,7 @@ namespace oura_charts::detail
       chrono::seconds light_sleep_duration{};
       chrono::seconds rem_sleep_duration{};
 
-      nullable_number restless_periods{};
+      nullable_double restless_periods{};
 
    };
    using sleep_data_series = RestDataCollection<sleep_data>;
@@ -75,7 +98,7 @@ namespace ocd = oura_charts::detail;
 
 
 /// <summary>
-///   Custom json serializers for chrono types we use.
+///   Custom json serializers used with glaze library for chrono types we use.
 /// </summary>
 namespace glz::detail
 {

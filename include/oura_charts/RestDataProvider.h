@@ -44,7 +44,7 @@ namespace oura_charts
 
       
       /// <summary>
-      ///   constructor, takes an Auth object and an URL that should be used
+      ///   constructor, takes an Auth object and a URL that should be used
       ///   to build paths for REST endpoints.
       /// </summary>
       /// <remarks>
@@ -59,21 +59,21 @@ namespace oura_charts
       }
 
       /// <summary>
-      /// Retrieve the JSON for a single object from the rest server.
+      ///   Retrieve the JSON for a single object from the rest server.
       /// </summary>
       [[nodiscard]] expected_json getJsonObject(std::string_view path) const noexcept
       {
          return doRestGet(path);
       }
 
-      /// <summary>
-      /// Retrieve the JSON for a single object from the rest server.
-      /// </summary>
-      //template <typename... Ts>
-      //[[nodiscard]] expected_json getJsonObject(std::string_view path, Ts... ts) const noexcept
-      //{
-      //   return doRestGet(path, ts...);
-      //}
+       // <summary>
+       //   Retrieve the JSON for a single object from the rest server.
+       // </summary>
+      template <typename... Ts>
+      [[nodiscard]] expected_json getJsonObject(std::string_view path, Ts... ts) const noexcept
+      {
+         return doRestGet(path, ts...);
+      }
 
 
       /// <summary>

@@ -12,6 +12,7 @@ add_library(${THIS_TARGET} STATIC
 	"../include/oura_charts/oura_exception.h"
    "../include/oura_charts/datetime_helpers.h"
    "../include/oura_charts/RestDataProvider.h"
+   "../include/oura_charts/DataSeries.h"
 	"../include/oura_charts/detail/utility.h"
 	"../include/oura_charts/detail/json_structs.h"
 	"../include/oura_charts/detail/logging.h"
@@ -19,6 +20,7 @@ add_library(${THIS_TARGET} STATIC
    "utility.cpp"
    "logging.cpp"
    "DebugCallback.cpp"
+   
 )
 
 set_target_properties(${THIS_TARGET}

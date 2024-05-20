@@ -11,26 +11,10 @@
 #include "oura_charts/oura_charts.h"
 #include "oura_charts/rest_auth.h"
 #include "oura_charts/detail/utility.h"
+#include "oura_charts/detail/json_structs.h"
 #include <cpr/cpr.h>
 #include <string>
 #include <utility>
-
-
-namespace oura_charts::detail
-{
-   /// <summary>
-   /// JSON struct for personal info profile from Oura
-   /// </summary>
-   struct user_data
-   {
-      std::string id;
-      std::string email{};
-      int age{};
-      double weight{};
-      double height{};
-      std::string biological_sex{};
-   };
-}
 
 
 namespace oura_charts
@@ -123,7 +107,7 @@ namespace oura_charts
 
 
 /// <summary>
-///   provide a tuple-like API for class UerProfile for structured bindings:
+///   provide a tuple-like API for class UserProfile for structured bindings:
 /// </summary>
 template <> struct std::tuple_size <oura_charts::UserProfile> { static constexpr int value = 6; };
 template <> struct std::tuple_element<0, oura_charts::UserProfile> { using type = std::string; };

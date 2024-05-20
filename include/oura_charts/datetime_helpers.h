@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "oura_charts/oura_charts.h"
 #include "oura_charts/constants.h"
 #include <fmt/format.h>
 #include <fmt/chrono.h>

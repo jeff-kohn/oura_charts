@@ -36,22 +36,19 @@ namespace oura_charts
 
 
    /// <summary>
-   ///   concept requireing a type to support the needed functionality to read/write/store
-   ///   a collection of DataT objects.
-   /// </summary>
-   template <typename Container>
-   concept DataSeriesContainer = std::ranges::output_range<Container>
-                              && std::ranges::input_range<Container>
-                              && std::ranges::forward_range<Container>;
-
-
-   /// <summary>
    ///   concept for an auth object that can be used for authenticating with a data provider (REST, DB, etc).
    /// </summary>
    template <typename T>
    concept AuthObject = requires (T t)
    {
       t.getAuthorization();
+   };
+
+
+   template <typename T>
+   concept DataSeriesElement = requires (T t, T::StorageType data)
+   {
+      t = T{ std::move(data) };
    };
 
 
@@ -70,19 +67,8 @@ namespace oura_charts
    };
 
 
-   /*/// <summary>
-   ///   concept for a class that is can be constructed from JSON and knows the URL
-   ///   endpoint to retrieve its data from.
-   /// </summary>
-   template<typename T>
-   concept RestConstructable = requires (T t)
-   {
-      T::REST_PATH;
-      T::makeFromJson("a json string");
-   };*/
-
    /// <summary>
-   ///   concept for a class that is can be constructed from JSON and knows the URL
+   ///   concept for a class that can be constructed from JSON and knows the URL
    ///   endpoint to retrieve its data from.
    /// </summary>
    template<typename T>

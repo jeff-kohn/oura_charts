@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
       timestamp_local local_end = localTimestamp( localNow() );
       timestamp_local local_start = localTimestamp(floor<days>(local_end - days{ 7 }));
 
-      RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL, logger };
+      RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
 
       //cpr::Parameters params{
       //   { REST_PARAM_START_DATE, toIsoDate(localToUtc(local_start)) },
