@@ -46,6 +46,7 @@ namespace oura_charts::logging
    using spdlog::error;
    using spdlog::warn;
    using spdlog::info;
+   using spdlog::trace;
    using spdlog::critical;
    using log_ptr_t = std::shared_ptr<logger>;
    using sink_ptr_t = sinks_init_list::value_type;

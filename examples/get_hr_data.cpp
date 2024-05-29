@@ -21,9 +21,10 @@ int main(int argc, char* argv[])
    using namespace oura_charts::chrono;
    using namespace oura_charts::detail;
    using namespace oura_charts::constants;
+
+   auto logger = logging::LogFactory::makeDefault();
    try
    {
-      auto logger = logging::LogFactory::makeDefault();
 
       cxxopts::Options options{ argv[0], "Get today's HR data from Oura Ring API." };
       options.add_options()
@@ -38,42 +39,40 @@ int main(int argc, char* argv[])
       }
       auto pat{ getPersonalToken(args) };
 
-      timestamp_local local_end = localTimestamp( localNow() );
-      timestamp_local local_start = localTimestamp(floor<days>(local_end - days{ 7 }));
+      local_timestamp local_end = localTimestamp( localNow() );
+      local_timestamp local_start = localTimestamp(floor<days>(local_end - days{ 7 }));
 
       RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
 
-      //cpr::Parameters params{
-      //   { REST_PARAM_START_DATE, toIsoDate(localToUtc(local_start)) },
-      //   { REST_PARAM_END_DATE, toIsoDate(localToUtc(local_end))}
-      //};
+      cpr::Parameters params{
+         { REST_PARAM_START_DATE, toIsoDate(localToUtc(local_start)) },
+         { REST_PARAM_END_DATE, toIsoDate(localToUtc(local_end))}
+      };
 
-      //auto exp_json = rest_server.getJsonObject("sleep", params);
-      //if (exp_json)
-      //   saveTextToFile(glz::prettify(exp_json.value()), "sleep.json");
-      //else
-      //   throw exp_json.error();
+      auto exp_json = rest_server.getJsonObject("heartrate", params);
+      if (exp_json)
+         saveTextToFile(glz::prettify_json(exp_json.value()), "hr.json");
+      else
+         throw exp_json.error();
 
-      auto exp_data = rest_server.getJsonDataSeries<sleep_data>("sleep", localToUtc(local_start), localToUtc(local_end));
-
-      //if (exp_data)
-      //{
-      //   auto outer = exp_data.value();
-      //   auto inner = outer.data;
-      //   fmt::println("Retrieved {} sleep records", inner.size());
-      //}
-      //else
-      //   throw exp_data.error();
+ /*     if (exp_data)
+      {
+         auto outer = exp_data.value();
+         auto inner = outer.data;
+         fmt::println("Retrieved {} sleep records", inner.size());
+      }
+      else
+         throw exp_data.error();
 
 
-      //auto expect_hr = rest_server.getJsonDataSeries<hr_data>(constants::REST_PATH_HEART_RATE, localToUtc(local_start), localToUtc(local_end));
-      //if (!expect_hr)
-      //   throw expect_hr.error();
+      auto expect_hr = rest_server.getJsonDataSeries<hr_data>(constants::REST_PATH_HEART_RATE, localToUtc(local_start), localToUtc(local_end));
+      if (!expect_hr)
+         throw expect_hr.error();
 
-      //for (auto& hr : expect_hr->data)
-      //{
-      //   fmt::println("{}bpm at {} ({})", hr.bpm, hr.timestamp, hr.source);
-      //}
+      for (auto& hr : expect_hr->data)
+      {
+         fmt::println("{}bpm at {} ({})", hr.bpm, hr.timestamp, hr.source);
+      }*/
    }
    catch (oura_exception& e)
    {

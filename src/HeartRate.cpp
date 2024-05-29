@@ -48,7 +48,7 @@ namespace oura_charts
    //   }
    //}
 
-   //DataPoint::DataPoint(int bpm, timestamp_utc timestamp, string source) noexcept
+   //DataPoint::DataPoint(int bpm, utc_timestamp timestamp, string source) noexcept
    //   : m_bpm(bpm), m_timestamp(timestamp), m_source(move(source))
    //{
    //}

@@ -20,7 +20,7 @@ namespace oura_charts::test
 
 
    [[nodiscard]] FileDataProvider::expected_json FileDataProvider::getJsonDataSeries(std::string_view path,
-                                                                                     timestamp_utc, timestamp_utc,
+                                                                                     utc_timestamp, utc_timestamp,
                                                                                      detail::nullable_string) const noexcept
    {
       return doFileGet(path);

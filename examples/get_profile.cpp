@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
       }
       auto pat = getPersonalToken(args);
 
-      RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL, logger };
+      RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
       auto profile = UserProfile::getUserProfile(rest_server);
       fmt::println("Successfully retrieved {}", profile);
    }

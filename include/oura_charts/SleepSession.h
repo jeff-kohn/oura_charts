@@ -25,6 +25,8 @@ namespace oura_charts
    public:
       // Required by DataSeriesElement concept
       using StorageType = detail::sleep_data;
+      static constexpr std::string_view REST_PATH = constants::REST_PATH_SLEEP_SESSION;
+
 
       /// <summary>
       ///   constructor, accepts data by value, pass && to move instead of copy
@@ -40,8 +42,8 @@ namespace oura_charts
 
       std::string sleepId() const                  {  return m_data.id;                   }
       chrono::year_month_day sessionDate() const   {  return m_data.day;                  }
-      timestamp_local bedtimeStart() const         {  return m_data.bedtime_start;        }
-      timestamp_local bedtimeEnd() const           {  return m_data.bedtime_end;          }
+      local_timestamp bedtimeStart() const         {  return m_data.bedtime_start;        }
+      local_timestamp bedtimeEnd() const           {  return m_data.bedtime_end;          }
 
       nullable_double avgBreathingRate() const     {  return m_data.average_breath;       }
       nullable_double avgHeartRate() const         {  return m_data.average_heart_rate;   }
@@ -64,7 +66,6 @@ namespace oura_charts
    ///   a collection of SleepSession objects
    /// </summary>
    using SleepSessionSeries = DataSeries<SleepSession>;
-
 
 
 } // namesapce oura_charts

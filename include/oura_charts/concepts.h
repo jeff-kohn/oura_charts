@@ -53,7 +53,7 @@ namespace oura_charts
 
 
    /// <summary>
-   ///   concept for a data provider than can retrieve JSON objects from some data source, such as
+   ///   concept for a data provider than can retrieve JSON data from some data source, such as
    ///   a REST endpoint, database, unit test mock, etc.
    /// </summary>
    template <typename Provider>
@@ -66,32 +66,5 @@ namespace oura_charts
       //ej = dp.getJsonDataSeries(std::string_view{}, std::chrono::sys_seconds{}, std::chrono::sys_seconds{});
    };
 
-
-   /// <summary>
-   ///   concept for a class that can be constructed from JSON and knows the URL
-   ///   endpoint to retrieve its data from.
-   /// </summary>
-   template<typename T>
-   concept RestNoThrowConstructable = requires (T t)
-   {
-      T::REST_PATH;
-      //retval  = T::makeFromJson(std::string{}); 
-   };
-
-
-   /// <summary>
-   ///   concept for a class that can contain a sequence of rest-constructible
-   ///   objects.
-   /// </summary>
-   template<typename Container>
-   concept RestDataSet = std::default_initializable<Container>
-      && std::ranges::range<Container>
-      && RestNoThrowConstructable<typename Container::value_type::value_type>
-      && requires (Container cont, Container::value_type val)
-   {
-      Container::value_type::value_type::REST_PATH;
-      cont.push_back(val);
-      cont.reserve(55);
-   };
 
 } // namespace oura_charts

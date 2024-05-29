@@ -48,8 +48,8 @@ namespace oura_charts::test
       ///   with the REST-based provider's interface.
       /// </summary>
       [[nodiscard]] expected_json getJsonDataSeries(std::string_view path,
-                                                    timestamp_utc start,
-                                                    timestamp_utc end,
+                                                    utc_timestamp start,
+                                                    utc_timestamp end,
                                                     detail::nullable_string = {}) const noexcept;
    private:
       fs::path m_data_folder{};

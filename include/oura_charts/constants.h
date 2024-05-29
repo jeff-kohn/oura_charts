@@ -17,6 +17,7 @@ namespace oura_charts::constants
    static constexpr const char* REST_DEFAULT_BASE_URL = "https://api.ouraring.com/v2/usercollection";
    static constexpr const char* REST_PATH_PERSONAL_INFO = "personal_info";
    static constexpr const char* REST_PATH_HEART_RATE = "heartrate";
+   static constexpr const char* REST_PATH_SLEEP_SESSION = "sleep";
 
    static constexpr const char* REST_HEADER_XCLIENT = "X-Client";
    static constexpr const char* REST_HEADER_XCLIENT_VALUE = "cpr";

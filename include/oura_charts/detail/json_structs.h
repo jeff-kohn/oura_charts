@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "oura_charts/oura_charts.h"
 #include <string>
 #include <vector>
 #include <optional>
@@ -70,8 +71,8 @@ namespace oura_charts::detail
    {
       std::string id;
       chrono::year_month_day day;
-      timestamp_local bedtime_start{};
-      timestamp_local bedtime_end{};
+      local_timestamp bedtime_start{};
+      local_timestamp bedtime_end{};
 
       nullable_double average_breath{};
       nullable_double average_heart_rate{};
@@ -90,11 +91,37 @@ namespace oura_charts::detail
    };
    using sleep_data_series = RestDataCollection<sleep_data>;
 
+
+   /// <summary>
+   ///   wrapper for glz::read<> that returns an expected<> instead of an error code (eliminating the
+   ///   need to pass the struct as a parameter or translate any parse_error's returned.
+   /// </summary>
+   template <glz::opts Opts, typename ValueT>
+   [[nodiscard]] inline expected<ValueT, oura_exception> readJson(const std::string& buffer) noexcept
+   {
+      ValueT value{};
+      auto&& pe = glz::read<Opts>(value, buffer);
+      if (pe)
+         return unexpected(oura_exception{ static_cast<int64_t>(pe.ec), glz::format_error(pe, buffer), ErrorCategory::Parse });
+      else
+         return value;
+   }
+
+
+   /// <summary>
+   ///   wrapper for glz::read<> that sets the "error_on_unknown_keys" compile-time option and returns
+   ///   and expected<> for the value (or error).
+   /// </summary>
+   /// <remarks>
+   ///   if you want to explicitly set glz compile-time options, use the other overload.
+   /// <remarks>
+   template <typename ValueT>
+   [[nodiscard]] inline expected<ValueT, oura_exception> readJson(const std::string& buffer) noexcept
+   {
+      return readJson < glz::opts{ .error_on_unknown_keys = false }, ValueT > (buffer);
+   }
+
 } // namespace oura_charts::detail
-
-
-namespace oc = oura_charts;
-namespace ocd = oura_charts::detail;
 
 
 /// <summary>
@@ -102,6 +129,8 @@ namespace ocd = oura_charts::detail;
 /// </summary>
 namespace glz::detail
 {
+   namespace oc = oura_charts;
+
    template <>
    struct from_json<oc::chrono::year_month_day>
    {
@@ -119,10 +148,10 @@ namespace glz::detail
    };
 
    template <>
-   struct from_json<oc::timestamp_local>
+   struct from_json<oc::local_timestamp>
    {
       template <auto Opts>
-      static void op(oc::timestamp_local& value, is_context auto&& ctx, auto&&... args)
+      static void op(oc::local_timestamp& value, is_context auto&& ctx, auto&&... args)
       {
          std::string date_str{};
          read<json>::op<Opts>(date_str, ctx, args...);

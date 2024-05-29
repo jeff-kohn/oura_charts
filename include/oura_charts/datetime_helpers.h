@@ -29,9 +29,10 @@ namespace oura_charts
    using namespace std::literals::chrono_literals;
    namespace chrono = std::chrono;
    using clock = chrono::system_clock;
-   using chrono::sys_days;
-   using timestamp_utc = chrono::sys_seconds;
-   using timestamp_local = chrono::local_seconds;
+   using utc_date = chrono::sys_days;
+   using utc_timestamp = chrono::sys_seconds;
+   using local_date = chrono::local_days;
+   using local_timestamp = chrono::local_seconds;
 
 
 // incomplete <chrono> in linux libstdc++ as of v12
@@ -49,31 +50,32 @@ namespace oura_charts
    }
 
    template <typename Duration>
-   inline timestamp_local localTimestamp(chrono::local_time<Duration> tp )
+   inline local_timestamp localTimestamp(chrono::local_time<Duration> tp )
    {
-      return chrono::floor<timestamp_local::duration>(tp);
+      return chrono::floor<local_timestamp::duration>(tp);
    }
 
 
-   inline auto toTimestamp(auto timepoint)
+   /*inline auto toTimestamp(auto timepoint)
    {
-      return chrono::floor<timestamp_utc::duration>(timepoint);
+      return chrono::floor<utc_timestamp::duration>(timepoint);
+   }*/
+
+
+   /// <summary>
+   ///   convenience function for convertiong local_timestamp to utc_timestamp
+   /// </summary>
+   inline utc_timestamp localToUtc(local_timestamp ts)
+   {
+      return chrono::floor<utc_timestamp::duration>(chrono::current_zone()->to_sys(ts));
    }
 
    /// <summary>
-   ///   convenience function for convertiong timestamp_local to timestamp_utc
+   ///   convenience function for convertiong local_timestamp to utc_timestamp
    /// </summary>
-   inline timestamp_utc localToUtc(timestamp_local ts)
+   inline local_timestamp utcToLocal(utc_timestamp ts, const chrono::time_zone* tz = chrono::current_zone())
    {
-      return chrono::floor<timestamp_utc::duration>(chrono::current_zone()->to_sys(ts));
-   }
-
-   /// <summary>
-   ///   convenience function for convertiong timestamp_local to timestamp_utc
-   /// </summary>
-   inline timestamp_local utcToLocal(timestamp_utc ts, const chrono::time_zone* tz = chrono::current_zone())
-   {
-      return chrono::floor<timestamp_local::duration>(tz->to_local(ts));
+      return chrono::floor<local_timestamp::duration>(tz->to_local(ts));
    }
 
     
@@ -83,14 +85,14 @@ namespace oura_charts
    ///   contained a timezone offeset. Expected value is the parsed date,
    ///   unexpected value is exception object containing error information.
    /// </summary>
-   inline expected<timestamp_utc, oura_exception> parseIsoDateTime(std::string_view dt_str)
+   inline expected<utc_timestamp, oura_exception> parseIsoDateTime(std::string_view dt_str)
    {
 
       auto format_str{ dt_str.ends_with(constants::UTC_TIMEZONE) ? constants::PARSE_FMT_STR_ISO_DATETIME_UTC
                                                                  : constants::PARSE_FMT_STR_ISO_DATETIME_LOCAL };
 
       std::ispanstream dt_strm{ dt_str, };
-      timestamp_utc ts{};
+      utc_timestamp ts{};
       if ( (dt_strm >> chrono::parse(format_str, ts)) )
          return ts;
       else

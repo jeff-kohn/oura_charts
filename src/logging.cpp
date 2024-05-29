@@ -76,7 +76,7 @@ namespace oura_charts::logging
                                           return val.get() != nullptr;
                                     });
 
-         auto logger = make_shared<log_ptr_t::element_type>(string{ log_name }, begin(sink_view), end(sink_view));
+         auto logger = make_shared<log_ptr_t::element_type>(string{ log_name }, rgs::begin(sink_view), rgs::end(sink_view));
          logger->set_level(max_level);
          set_default_logger(logger);
          return logger;

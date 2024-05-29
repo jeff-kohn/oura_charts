@@ -72,7 +72,7 @@ namespace oura_charts
    ///// Retrieve a set of requested HR data points from the Oura REST API
    ///// </summary>
    //template<typename AuthType>
-   //static DataPoint::DataSet getDataSet(const AuthWrapper<AuthType>& auth, timestamp_utc begin, timestamp_utc end)
+   //static DataPoint::DataSet getDataSet(const AuthWrapper<AuthType>& auth, utc_timestamp begin, utc_timestamp end)
    //{
    //   auto begin_str = toIsoDateTime(begin);
    //   auto end_str = toIsoDateTime(end);
@@ -89,7 +89,7 @@ namespace oura_charts
    ///// Retrieve a set of requested HR data points from the Oura REST API
    ///// </summary>
    //template<typename AuthType>
-   //static DataPoint::DataSet getDataSet(const AuthWrapper<AuthType>& auth, timestamp_local begin , timestamp_local end)
+   //static DataPoint::DataSet getDataSet(const AuthWrapper<AuthType>& auth, local_timestamp begin , local_timestamp end)
    //                            
    //{
    //   return getDataSet(auth, localToUtc(begin), localToUtc(end) );

@@ -19,7 +19,7 @@ namespace oura_charts::test
    {
       chrono::year_month_day ymd{ 2024y / 2 / 1 };
       chrono::hh_mm_ss tod{ 12h + 3min + 33s };
-      timestamp_utc tp = chrono::sys_days{ ymd } + tod.to_duration();
+      utc_timestamp tp = chrono::sys_days{ ymd } + tod.to_duration();
 
       std::string datetime_str{ "2024-02-01T12:03:33Z" };
       std::string date_str{ "2024-02-01" };
