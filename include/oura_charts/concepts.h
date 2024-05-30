@@ -13,9 +13,12 @@
 #include <string_view>
 #include <fmt/format.h>
 #include <chrono>
+#include <ranges>
 
 namespace oura_charts
 {
+   namespace rgs = std::ranges;
+
    /// <summary>
    ///   concept requiring a template arge to be std::exception or derived from std::exception
    /// </summary>
@@ -34,6 +37,10 @@ namespace oura_charts
    template <typename T>
    concept StringViewCompatible = std::convertible_to<T, std::string_view>;
 
+
+   template <typename T>
+   concept KeyValueRange = rgs::input_range<T> && StringViewCompatible<typename T::mapped_type>
+                                               && StringViewCompatible<typename T::key_type>;
 
    /// <summary>
    ///   concept for an auth object that can be used for authenticating with a data provider (REST, DB, etc).

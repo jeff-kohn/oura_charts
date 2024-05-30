@@ -75,17 +75,36 @@ namespace oura_charts
    [[nodiscard]] DataSeries<ElementT> getDataSeries(ProviderT& provider, utc_timestamp start, utc_timestamp end) noexcept(false)
    {
       using JsonCollectionT = detail::RestDataCollection<typename ElementT::StorageType>;
+      using CollectionBuffer = std::deque<typename JsonCollectionT::value_type>;
+      using namespace constants;
 
-      auto exp_json = provider.getJsonDataSeries(ElementT::REST_PATH, start, end);
+      std::unordered_map<std::string, std::string> param_map{ { constants::REST_PARAM_START_DATETIME, toIsoDateTime(start) },
+                                                              { constants::REST_PARAM_END_DATETIME, toIsoDateTime(end) } };
+      auto&& exp_json = provider.getJsonDataSeries(ElementT::REST_PATH, param_map);
       if (!exp_json)
          throw exp_json.error();
 
-      auto exp_data = detail::readJson<JsonCollectionT>(exp_json.value());
+      auto&& exp_data = detail::readJson<JsonCollectionT>(exp_json.value());
       if (!exp_data)
          throw exp_json.error();
 
       auto&& rest_data = exp_data.value();
-      // todo: handle data-paging with next_token.
+      CollectionBuffer buf{ std::make_move_iterator(rest_data.data.begin()), std::make_move_iterator(rest_data.data.end()) };
+      while (rest_data.next_token)
+      {
+         param_map[constants::REST_PARAM_NEXT_TOKEN] = rest_data.next_token.value();
+         exp_json = provider.getJsonDataSeries(ElementT::REST_PATH, param_map);
+         if (!exp_json)
+            throw exp_json.error();
+
+         exp_data = detail::readJson<JsonCollectionT>(exp_json.value());
+         if (!exp_data)
+            throw exp_json.error();
+
+         rest_data = exp_data.value();
+         buf.append_range(std::move(rest_data.data));
+      }
+
       return DataSeries<ElementT>(std::move(rest_data.data));
    }
 

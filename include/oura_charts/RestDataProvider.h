@@ -35,13 +35,9 @@ namespace oura_charts
 
       
       /// <summary>
-      ///   constructor, takes an Auth object and a URL that should be used
+      ///   constructor, takes an Auth object and a base URL that should be used
       ///   to build paths for REST endpoints.
       /// </summary>
-      /// <remarks>
-      ///   if a log object is provided, debug logging will be sent to the specified
-      ///   logger for the REST calls.
-      /// </remarks>
       RestDataProvider(Auth auth, std::string base_url) : m_auth{ auth },
                                                           m_base_url{ base_url }
       {
@@ -55,58 +51,51 @@ namespace oura_charts
          return doRestGet(path);
       }
 
-       // <summary>
-       //   Retrieve the JSON for a single object from the rest server.
-       // </summary>
+      // <summary>
+      //   Retrieve the JSON for a single object from the rest server, passing an arbitrary
+      //   number of other objects to the underlying CPR call.
+      // </summary>
       template <typename... Ts>
       [[nodiscard]] expected_json getJsonObject(std::string_view path, Ts... ts) const noexcept
       {
          return doRestGet(path, ts...);
       }
 
-
       /// <summary>
-      ///   Retrieve a data series from a REST endpoint into a container of structs. The next_token is used to
-      ///   indicate the request is to retrieve additional data from a previous request if applicable.
-      ///   The unexpected value is error information if the request was unable to retrieve the requested data.
+      ///   Retrieve a collection of json data from the rest server
       /// </summary>
-      //template <typename DataT>
-      [[nodiscard]] expected_json getJsonDataSeries(std::string_view path,
-                                                    utc_timestamp start,
-                                                    utc_timestamp end,
-                                                    detail::nullable_string next_token = {}) const noexcept
+      /// <remarks>
+      ///   path should be relative. param_map should contain the key/value pairs that will
+      ///   be passed as parameters to the REST API. Be sure to include next_token param
+      ///   as appropriate when requesting paged/chunked data.
+      /// </remarks>
+      template<KeyValueRange MapT>
+      [[nodiscard]] expected_json getJsonDataSeries(std::string_view path, const MapT& param_map) const noexcept
       {
          using namespace oura_charts::constants;
-         using enum spdlog::level::level_enum;
+         using enum logging::level_enum;
 
-         auto start_param = toIsoDateTime(start);
-         auto end_param = toIsoDateTime(end);
-         logging::info("RestDataProvider - Retrieving json data for series [{}] for date range {} - {}", path, start_param, end_param);
-         cpr::Parameters params{
-            { REST_PARAM_START_DATETIME, start_param },
-            { REST_PARAM_END_DATETIME, end_param}
-         };
-
-         if (next_token)
+         // get the parameters into object for the REST call.
+         cpr::Parameters params{};
+         for (auto&& elem : param_map)
          {
-            logging::info("RestDataProvider - next_token parameter [{}] supplied, requesting paged data", *next_token);
-            params.Add(cpr::Parameter{ REST_PARAM_NEXT_TOKEN, *next_token });
-         }
+            logging::info("RestDataProvider - adding parameter '{}' = {}", elem.first, elem.second);
+            params.Add({ elem.first, elem.second });
+         };
 
          // Send the request to server and check that we get a valid response.
          auto exp_json = doRestGet(path, params);
          if (exp_json)
          {
-            logging::trace("RestDataProvider - doRestGet() returned the following JSON:\r\n{}", glz::prettify_json(exp_json.value()));
+            logging::trace("RestDataProvider - doRestGet() returned the following JSON:\r\n{}", exp_json.value());
          }
          else
          {
-            logging::info("RestDataProvider - doRestGet() returned an error (see next log record for details)");
+            logging::error("RestDataProvider - doRestGet() returned an error (see next log record for details)");
             logging::exception(exp_json.error());
          }
          return exp_json;
       }
-
 
       // The base URL that is used in combination with the 'path' parameter of the
       // getJson() methods to build the full URL for the REST endpoint of an object(s)

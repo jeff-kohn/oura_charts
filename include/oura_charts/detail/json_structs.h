@@ -45,10 +45,11 @@ namespace oura_charts::detail
    ///   whether there is more data available to fullfill the request (in case
    ///   of a very large number of data structs, paging may be used).
    /// </remarks>
-   template<typename Struct>
+   template<typename T>
    struct RestDataCollection
    {
-      std::vector<Struct> data;
+      using value_type = T;
+      std::vector<value_type> data;
       nullable_string next_token;
    };
 
