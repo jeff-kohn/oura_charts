@@ -71,9 +71,9 @@ namespace oura_charts::detail
    struct sleep_data
    {
       std::string id;
-      chrono::year_month_day day;
-      local_timestamp bedtime_start{};
-      local_timestamp bedtime_end{};
+      year_month_day day;
+      local_seconds bedtime_start{};
+      local_seconds bedtime_end{};
 
       nullable_double average_breath{};
       nullable_double average_heart_rate{};
@@ -149,10 +149,10 @@ namespace glz::detail
    };
 
    template <>
-   struct from_json<oc::local_timestamp>
+   struct from_json<oc::local_seconds>
    {
       template <auto Opts>
-      static void op(oc::local_timestamp& value, is_context auto&& ctx, auto&&... args)
+      static void op(oc::local_seconds& value, is_context auto&& ctx, auto&&... args)
       {
          std::string date_str{};
          read<json>::op<Opts>(date_str, ctx, args...);

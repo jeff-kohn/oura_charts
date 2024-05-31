@@ -47,10 +47,12 @@ namespace oura_charts::test
       ///   file that matches the path name. The start/end/next params are just for consistency
       ///   with the REST-based provider's interface.
       /// </summary>
-      [[nodiscard]] expected_json getJsonDataSeries(std::string_view path,
-                                                    utc_timestamp start,
-                                                    utc_timestamp end,
-                                                    detail::nullable_string = {}) const noexcept;
+      template<KeyValueRange MapT>
+      [[nodiscard]] expected_json getJsonDataSeries(std::string_view path) const noexcept
+      {
+         return doFileGet(path);
+      }
+
    private:
       fs::path m_data_folder{};
 

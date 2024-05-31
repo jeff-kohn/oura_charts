@@ -28,10 +28,11 @@ namespace oura_charts
    using namespace std::literals::chrono_literals;
    namespace chrono = std::chrono;
    using clock = chrono::system_clock;
-   using utc_date = chrono::sys_days;
-   using utc_timestamp = chrono::sys_seconds;
-   using local_date = chrono::local_days;
-   using local_timestamp = chrono::local_seconds;
+   using chrono::sys_time;
+   using chrono::sys_seconds;
+   using chrono::year_month_day;
+   using chrono::local_time;
+   using chrono::local_seconds;
 
    
 
@@ -42,34 +43,34 @@ namespace oura_charts
    using chrono::from_stream;
 #endif
 
+   /// <summary>
+   ///   get the current time relative to the local time zone.
+   /// </summary>
    inline [[nodiscard]] auto localNow()
    {
       auto utc_now = clock::now();
       return chrono::current_zone()->to_local(utc_now);
    }
 
-   template <typename Duration>
-   inline [[nodiscard]] local_timestamp localTimestamp(chrono::local_time<Duration> tp )
+
+
+   /// <summary>
+   ///   convenience function for convertiong local_timestamp to utc_timestamp
+   /// </summary>
+   template <typename DurationT>
+   inline [[nodiscard]] chrono::sys_time<DurationT> localToUtc(chrono::local_time<DurationT> ts)
    {
-      return chrono::floor<local_timestamp::duration>(tp);
+      return chrono::current_zone()->to_sys(ts);
    }
 
 
    /// <summary>
    ///   convenience function for convertiong local_timestamp to utc_timestamp
    /// </summary>
-   inline [[nodiscard]] utc_timestamp localToUtc(local_timestamp ts)
+   template <typename DurationT>
+   inline [[nodiscard]] local_time<DurationT> utcToLocal(sys_time<DurationT> ts, const chrono::time_zone* tz = chrono::current_zone())
    {
-      return chrono::floor<utc_timestamp::duration>(chrono::current_zone()->to_sys(ts));
-   }
-
-
-   /// <summary>
-   ///   convenience function for convertiong local_timestamp to utc_timestamp
-   /// </summary>
-   inline [[nodiscard]] local_timestamp utcToLocal(utc_timestamp ts, const chrono::time_zone* tz = chrono::current_zone())
-   {
-      return chrono::floor<local_timestamp::duration>(tz->to_local(ts));
+      return tz->to_local(ts);
    }
 
     
@@ -79,14 +80,14 @@ namespace oura_charts
    ///   contained a timezone offeset. Expected value is the parsed date,
    ///   unexpected value is exception object containing error information.
    /// </summary>
-   inline [[nodiscard]] expected<utc_timestamp, oura_exception> parseIsoDateTime(std::string_view dt_str)
+   inline [[nodiscard]] expected<sys_seconds, oura_exception> parseIsoDateTime(std::string_view dt_str)
    {
 
       auto format_str{ dt_str.ends_with(constants::UTC_TIMEZONE) ? constants::PARSE_FMT_STR_ISO_DATETIME_UTC
                                                                  : constants::PARSE_FMT_STR_ISO_DATETIME_LOCAL };
 
       std::ispanstream dt_strm{ dt_str, };
-      utc_timestamp ts{};
+      sys_seconds ts{};
       if ( (dt_strm >> chrono::parse(format_str, ts)) )
          return ts;
       else
@@ -103,7 +104,7 @@ namespace oura_charts
       constexpr auto format_str{ constants::PARSE_FMT_STR_ISO_DATE_ONLY };
                                                                 
       std::ispanstream dt_strm{ dt_str, };
-      chrono::year_month_day ymd{};
+      year_month_day ymd{};
       if ((dt_strm >> chrono::parse(format_str, ymd)))
          return ymd;
       else
@@ -126,14 +127,8 @@ namespace oura_charts
 
 
    /// <summary>
-   /// 
+   ///   Convert a year_month_day to a ISO date string
    /// </summary>
-   //template<typename DateT>
-   //inline std::string toIsoDate(DateT&& date_val)
-   //{
-   //   return fmt::format("{:%F}", chrono::floor<chrono::seconds>(std::forward<DateT>(date_val)));
-   //}
-
    inline [[nodiscard]] std::string toIsoDate(const chrono::year_month_day& date)
    {
       return std::format("{:%F}", date);
