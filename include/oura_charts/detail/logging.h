@@ -8,14 +8,13 @@
 
 #pragma once
 
-#include "oura_charts/concepts.h"
-#include "oura_charts/constants.h"
-#include "oura_charts/oura_exception.h"
+#include "oura_charts/oura_charts.h"
 #include "oura_charts/detail/utility.h"
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/daily_file_sink.h>
 #include <spdlog/sinks/msvc_sink.h>
+#include <memory>
 #include <filesystem>
 #include <string_view>
 #include <source_location>
@@ -51,7 +50,7 @@ namespace oura_charts::logging
    using log_ptr_t = std::shared_ptr<logger>;
    using sink_ptr_t = sinks_init_list::value_type;
 
-} // namespace oura_charts::log
+} // namespace oura_charts::logging
 
 
 /// <summary>

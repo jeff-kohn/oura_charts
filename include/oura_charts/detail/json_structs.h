@@ -9,10 +9,10 @@
 #pragma once
 
 #include "oura_charts/oura_charts.h"
+#include "oura_charts/datetime_helpers.h"
 #include <string>
 #include <vector>
 #include <optional>
-#include <oura_charts/datetime_helpers.h>
 #include <glaze/glaze.hpp>
 
 namespace oura_charts::detail

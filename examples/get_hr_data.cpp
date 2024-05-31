@@ -39,21 +39,21 @@ int main(int argc, char* argv[])
       }
       auto pat{ getPersonalToken(args) };
 
-      local_timestamp local_end = localTimestamp( localNow() );
-      local_timestamp local_start = localTimestamp(floor<days>(local_end - days{ 7 }));
+      //local_timestamp local_end = localTimestamp( localNow() );
+      //local_timestamp local_start = localTimestamp(floor<days>(local_end - days{ 7 }));
 
-      RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
+      //RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
 
-      cpr::Parameters params{
-         { REST_PARAM_START_DATE, toIsoDate(localToUtc(local_start)) },
-         { REST_PARAM_END_DATE, toIsoDate(localToUtc(local_end))}
-      };
+      //cpr::Parameters params{
+      //   { REST_PARAM_START_DATE, toIsoDate(localToUtc(local_start)) },
+      //   { REST_PARAM_END_DATE, toIsoDate(localToUtc(local_end))}
+      //};
 
-      auto exp_json = rest_server.getJsonObject("heartrate", params);
-      if (exp_json)
-         saveTextToFile(glz::prettify_json(exp_json.value()), "hr.json");
-      else
-         throw exp_json.error();
+      //auto exp_json = rest_server.getJsonObject("heartrate", params);
+      //if (exp_json)
+      //   saveTextToFile(glz::prettify_json(exp_json.value()), "hr.json");
+      //else
+      //   throw exp_json.error();
 
  /*     if (exp_data)
       {

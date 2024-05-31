@@ -9,7 +9,6 @@
 #pragma once
 
 #include "oura_charts/oura_charts.h"
-#include "oura_charts/constants.h"
 #include <fmt/format.h>
 #include <fmt/chrono.h>
 #include <spanstream>
@@ -34,6 +33,7 @@ namespace oura_charts
    using local_date = chrono::local_days;
    using local_timestamp = chrono::local_seconds;
 
+   
 
 // incomplete <chrono> in linux libstdc++ as of v12
 #if defined(__cpp_lib_chrono) && __cpp_lib_chrono < 201907L
@@ -42,38 +42,32 @@ namespace oura_charts
    using chrono::from_stream;
 #endif
 
-
-   inline auto localNow()
+   inline [[nodiscard]] auto localNow()
    {
       auto utc_now = clock::now();
       return chrono::current_zone()->to_local(utc_now);
    }
 
    template <typename Duration>
-   inline local_timestamp localTimestamp(chrono::local_time<Duration> tp )
+   inline [[nodiscard]] local_timestamp localTimestamp(chrono::local_time<Duration> tp )
    {
       return chrono::floor<local_timestamp::duration>(tp);
    }
 
 
-   /*inline auto toTimestamp(auto timepoint)
-   {
-      return chrono::floor<utc_timestamp::duration>(timepoint);
-   }*/
-
-
    /// <summary>
    ///   convenience function for convertiong local_timestamp to utc_timestamp
    /// </summary>
-   inline utc_timestamp localToUtc(local_timestamp ts)
+   inline [[nodiscard]] utc_timestamp localToUtc(local_timestamp ts)
    {
       return chrono::floor<utc_timestamp::duration>(chrono::current_zone()->to_sys(ts));
    }
 
+
    /// <summary>
    ///   convenience function for convertiong local_timestamp to utc_timestamp
    /// </summary>
-   inline local_timestamp utcToLocal(utc_timestamp ts, const chrono::time_zone* tz = chrono::current_zone())
+   inline [[nodiscard]] local_timestamp utcToLocal(utc_timestamp ts, const chrono::time_zone* tz = chrono::current_zone())
    {
       return chrono::floor<local_timestamp::duration>(tz->to_local(ts));
    }
@@ -85,7 +79,7 @@ namespace oura_charts
    ///   contained a timezone offeset. Expected value is the parsed date,
    ///   unexpected value is exception object containing error information.
    /// </summary>
-   inline expected<utc_timestamp, oura_exception> parseIsoDateTime(std::string_view dt_str)
+   inline [[nodiscard]] expected<utc_timestamp, oura_exception> parseIsoDateTime(std::string_view dt_str)
    {
 
       auto format_str{ dt_str.ends_with(constants::UTC_TIMEZONE) ? constants::PARSE_FMT_STR_ISO_DATETIME_UTC
@@ -96,17 +90,17 @@ namespace oura_charts
       if ( (dt_strm >> chrono::parse(format_str, ts)) )
          return ts;
       else
-         return unexpected{ oura_exception{ fmt::format("The intput string {} could not be parsed as a valid date/time", dt_str), ErrorCategory::Parse }};
+         return unexpected{ oura_exception{ fmt::format("The intput string '{}' could not be parsed as a valid date/time", dt_str), ErrorCategory::Parse }};
    }
 
 
    /// <summary>
    /// 
    /// </summary>
-   inline expected<chrono::year_month_day, oura_exception> parseIsoDate(std::string_view dt_str)
+   inline [[nodiscard]] expected<chrono::year_month_day, oura_exception> parseIsoDate(std::string_view dt_str)
    {
 
-      auto format_str{ constants::PARSE_FMT_STR_ISO_DATE_ONLY };
+      constexpr auto format_str{ constants::PARSE_FMT_STR_ISO_DATE_ONLY };
                                                                 
       std::ispanstream dt_strm{ dt_str, };
       chrono::year_month_day ymd{};
@@ -125,7 +119,7 @@ namespace oura_charts
    ///   value that fmt::format() knows how to format as a date/time.
    /// </remarks>
    template<typename DateType>
-   inline std::string toIsoDateTime(DateType&& date_val)
+   inline [[nodiscard]] std::string toIsoDateTime(DateType&& date_val)
    {
       return fmt::format("{:%FT%TZ}", chrono::floor<chrono::seconds>(std::forward<DateType>(date_val)) );
    }
@@ -134,10 +128,14 @@ namespace oura_charts
    /// <summary>
    /// 
    /// </summary>
-   template<typename DateType>
-   inline std::string toIsoDate(DateType&& date_val)
-   {
-      return fmt::format("{:%F}", chrono::floor<chrono::seconds>(std::forward<DateType>(date_val)));
-   }
+   //template<typename DateT>
+   //inline std::string toIsoDate(DateT&& date_val)
+   //{
+   //   return fmt::format("{:%F}", chrono::floor<chrono::seconds>(std::forward<DateT>(date_val)));
+   //}
 
+   inline [[nodiscard]] std::string toIsoDate(const chrono::year_month_day& date)
+   {
+      return std::format("{:%F}", date);
+   }
 }

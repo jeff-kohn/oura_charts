@@ -5,7 +5,6 @@
 //
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
-#include "oura_charts/UserProfile.h"
 #include "oura_charts/DataSeries.h"
 #include "oura_charts/RestDataProvider.h"
 #include "oura_charts/SleepSession.h"
@@ -36,10 +35,10 @@ int main(int argc, char* argv[])
       }
       auto pat{ getPersonalToken(args) };
 
-      auto end = localTimestamp(localNow());
-      auto begin = localTimestamp(floor<days>(end - days{ 7 }));
+      auto start_date = 2024y / 5 / 1d;
+      auto end_date = 2024y / 5 / 31d;
       RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
-      auto sleep_data = getDataSeries<SleepSession>(rest_server, begin, end);
+      auto sleep_data = getDataSeries<SleepSession>(rest_server, start_date, end_date);
 
    }
    catch (oura_exception& e)

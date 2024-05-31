@@ -6,13 +6,11 @@
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
 
-
 #pragma once
 
 #include <concepts>
 #include <string_view>
 #include <fmt/format.h>
-#include <chrono>
 #include <ranges>
 
 namespace oura_charts
@@ -38,9 +36,14 @@ namespace oura_charts
    concept StringViewCompatible = std::convertible_to<T, std::string_view>;
 
 
+   /// <summary>
+   ///   concept for a range/view over a map where both the key and value type are
+   ///   compatible with std::string_view
+   /// </summary>
    template <typename T>
    concept KeyValueRange = rgs::input_range<T> && StringViewCompatible<typename T::mapped_type>
                                                && StringViewCompatible<typename T::key_type>;
+
 
    /// <summary>
    ///   concept for an auth object that can be used for authenticating with a data provider (REST, DB, etc).

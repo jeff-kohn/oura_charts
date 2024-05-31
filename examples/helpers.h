@@ -1,6 +1,5 @@
 #pragma once
 #include "oura_charts/detail/utility.h"
-#include "oura_charts/concepts.h"
 #include <cxxopts.hpp>
 #include <string>
 #include <filesystem>
