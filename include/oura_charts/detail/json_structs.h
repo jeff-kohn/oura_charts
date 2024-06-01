@@ -60,7 +60,7 @@ namespace oura_charts::detail
    {
       int bpm;
       std::string source;
-      std::string timestamp;
+      local_seconds timestamp;
    };
    using hr_data_series = RestDataCollection<hr_data>;      
 
@@ -111,7 +111,7 @@ namespace oura_charts::detail
 
    /// <summary>
    ///   wrapper for glz::read<> that sets the "error_on_unknown_keys" compile-time option and returns
-   ///   and expected<> for the value (or error).
+   ///   an expected<> for the value (or error).
    /// </summary>
    /// <remarks>
    ///   if you want to explicitly set glz compile-time options, use the other overload.

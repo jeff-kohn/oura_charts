@@ -53,9 +53,8 @@ namespace oura_charts
    }
 
 
-
    /// <summary>
-   ///   convenience function for convertiong local_timestamp to utc_timestamp
+   ///   convenience function for convertiong local time to utc
    /// </summary>
    template <typename DurationT>
    inline [[nodiscard]] chrono::sys_time<DurationT> localToUtc(chrono::local_time<DurationT> ts)
@@ -65,7 +64,7 @@ namespace oura_charts
 
 
    /// <summary>
-   ///   convenience function for convertiong local_timestamp to utc_timestamp
+   ///   convenience function for convertiong utc time to local
    /// </summary>
    template <typename DurationT>
    inline [[nodiscard]] local_time<DurationT> utcToLocal(sys_time<DurationT> ts, const chrono::time_zone* tz = chrono::current_zone())
@@ -85,7 +84,6 @@ namespace oura_charts
 
       auto format_str{ dt_str.ends_with(constants::UTC_TIMEZONE) ? constants::PARSE_FMT_STR_ISO_DATETIME_UTC
                                                                  : constants::PARSE_FMT_STR_ISO_DATETIME_LOCAL };
-
       std::ispanstream dt_strm{ dt_str, };
       sys_seconds ts{};
       if ( (dt_strm >> chrono::parse(format_str, ts)) )
@@ -96,11 +94,10 @@ namespace oura_charts
 
 
    /// <summary>
-   /// 
+   ///   parse an ISO date string into a year_month_day
    /// </summary>
    inline [[nodiscard]] expected<chrono::year_month_day, oura_exception> parseIsoDate(std::string_view dt_str)
    {
-
       constexpr auto format_str{ constants::PARSE_FMT_STR_ISO_DATE_ONLY };
                                                                 
       std::ispanstream dt_strm{ dt_str, };

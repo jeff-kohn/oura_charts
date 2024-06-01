@@ -69,11 +69,7 @@ namespace oura_charts
    template <typename Provider>
    concept DataProvider = requires (Provider dp, Provider::expected_json ej)
    {
-
       ej = dp.getJsonObject("");
-      
-      // Can't get this stupid fucking concept to work, this shit is so fucking unintuitive.
-      //ej = dp.getJsonDataSeries(std::string_view{}, std::chrono::sys_seconds{}, std::chrono::sys_seconds{});
    };
 
 
