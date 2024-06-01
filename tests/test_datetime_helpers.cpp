@@ -31,6 +31,9 @@ namespace oura_charts::test
       REQUIRE(date_str == toIsoDate(chrono::sys_days{ ymd }));
       REQUIRE(datetime_str == toIsoDateTime(tp));
 
+      auto [cal_date, civil_time] = getCivilTime(tp);
+      REQUIRE(cal_date == ymd);
+      REQUIRE(civil_time.to_duration() == tod.to_duration());
 
    }
 

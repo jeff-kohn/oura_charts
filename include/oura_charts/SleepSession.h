@@ -23,10 +23,8 @@ namespace oura_charts
    class SleepSession
    {
    public:
-      // Required by DataSeriesElement concept
       using StorageType = detail::sleep_data;
       static constexpr std::string_view REST_PATH = constants::REST_PATH_SLEEP_SESSION;
-
 
       /// <summary>
       ///   constructor, accepts data by value, pass && to move instead of copy

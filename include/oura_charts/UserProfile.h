@@ -9,7 +9,6 @@
 #pragma once
 
 #include "oura_charts/oura_charts.h"
-#include "oura_charts/rest_auth.h"
 #include "oura_charts/detail/utility.h"
 #include "oura_charts/detail/json_structs.h"
 #include <cpr/cpr.h>
@@ -19,7 +18,6 @@
 
 namespace oura_charts
 {
-
    /// <summary>
    ///   This class represents the User Profile data from the Oura Cloud API.
    /// </summary>
@@ -27,53 +25,55 @@ namespace oura_charts
    ///   No default construction, aside from copy/move objects of this type
    ///   must be initialized by valid a JSON object.
    /// </remarks>
-   class UserProfile : private detail::user_data
+   class UserProfile
    {
    public:
-      // URL used to retrieve 
+      // path that will be used with base URL for REST call.
       static constexpr std::string_view REST_PATH = constants::REST_PATH_PERSONAL_INFO;
 
-      /// <summary>
-      ///   static factory method for getting a UserProfile object
-      ///   from the REST API. Will throw oura_exception() if
-      ///   unable to retrieve the data or initialize the object with it
-      /// </summary>
-      template<DataProvider Provider>
-      static UserProfile getUserProfile(Provider& dp)
-      {
-         auto json = dp.getJsonObject(REST_PATH);
-         if (json)
-            return UserProfile(json.value());
-         else
-            throw json.error();
-      }
-
-      // throwing constructors that initialize object from json string.
-      explicit UserProfile(std::string_view json);
-      explicit UserProfile(std::string&& json);
+      explicit UserProfile(detail::profile_data data) : m_data(std::move(data)) {}
       ~UserProfile() = default;
-
-      // default copy/move semantics
       UserProfile(const UserProfile &) = default;
       UserProfile(UserProfile &&) = default;
       UserProfile& operator=(const UserProfile&) = default;
       UserProfile& operator=(UserProfile&&) = default;
 
-      std::string id() const     { return user_data::id;    }
-      std::string email() const  { return user_data::email; }
-      int age() const            { return user_data::age;   }
+      std::string id() const     { return m_data.id;    }
+      std::string email() const  { return m_data.email; }
+      int age() const            { return m_data.age;   }
 
       /// Weight in kg
-      double weight() const      { return user_data::weight; }
+      double weight() const      { return m_data.weight; }
 
       /// Height in meters
-      double height() const      { return user_data::height; }
+      double height() const      { return m_data.height; }
 
-      std::string biologicalSex() const { return user_data::biological_sex; }
+      std::string biologicalSex() const { return m_data.biological_sex; }
 
    private:
-      UserProfile() = default;
+      detail::profile_data m_data;
    };
+
+
+   /// <summary>
+   ///   Retrieve a UserProfile object from the rest data provider.
+   /// </summary>
+   /// <remarks>
+   ///   will thrown an exception if something goes wrong retrieving the profile.
+   /// </remarks>
+   template <DataProvider ProviderT>
+   [[nodiscard]] UserProfile getUserProfile(const ProviderT& provider) noexcept(false)
+   {
+      auto exp_json = provider.getJsonObject(UserProfile::REST_PATH);
+      if (!exp_json)
+         throw exp_json.error();
+
+      auto exp_udt = detail::readJson<detail::profile_data>(exp_json.value());
+      if (!exp_udt)
+         throw exp_udt.error();
+
+      return UserProfile{ *exp_udt };
+   }
 
 
    /// <summary>

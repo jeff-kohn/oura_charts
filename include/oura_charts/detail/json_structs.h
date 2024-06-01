@@ -25,7 +25,7 @@ namespace oura_charts::detail
    /// <summary>
    ///   JSON struct for personal info profile from Oura
    /// </summary>
-   struct user_data
+   struct profile_data
    {
       std::string id;
       std::string email{};

@@ -30,9 +30,13 @@ namespace oura_charts
    using clock = chrono::system_clock;
    using chrono::sys_time;
    using chrono::sys_seconds;
-   using chrono::year_month_day;
+   using chrono::days;
+   using chrono::seconds;
    using chrono::local_time;
    using chrono::local_seconds;
+   using chrono::year_month_day;
+   using chrono::hh_mm_ss;
+   using chrono::time_point_cast;
 
    
 
@@ -57,9 +61,9 @@ namespace oura_charts
    ///   convenience function for convertiong local time to utc
    /// </summary>
    template <typename DurationT>
-   inline [[nodiscard]] chrono::sys_time<DurationT> localToUtc(chrono::local_time<DurationT> ts)
+   inline [[nodiscard]] sys_time<DurationT> localToUtc(local_time<DurationT> ts, const chrono::time_zone* tz = chrono::current_zone())
    {
-      return chrono::current_zone()->to_sys(ts);
+      return tz->to_sys(ts);
    }
 
 
@@ -72,6 +76,30 @@ namespace oura_charts
       return tz->to_local(ts);
    }
 
+
+   /// <summary>
+   ///   stip the time of day from a timepoint
+   /// </summary>
+   template <typename ClockT, typename DurationT>
+   inline [[nodiscard]] chrono::time_point<ClockT, DurationT> stripTimeOfDay(chrono::time_point<ClockT, DurationT>  tp)
+   {
+      return time_point_cast<DurationT>(floor<days>(tp));
+   }
+
+
+   /// <summary>
+   ///   Convert a time point into a date and civil time.
+   /// </summary>
+   template<typename ClockT, typename DurationT>
+   inline [[nodiscard]] std::pair<year_month_day, hh_mm_ss<DurationT>> getCivilTime(chrono::time_point<ClockT, DurationT> tp)
+   {
+      auto daypoint = floor<days>(tp);
+      year_month_day day = daypoint;
+      hh_mm_ss tod{ tp - daypoint };
+
+      return std::make_pair(day, tod);
+   }
+
     
    /// <summary>
    ///   Parse an ISO date-time string and return it as a UTC timepoint. Values
@@ -81,15 +109,19 @@ namespace oura_charts
    /// </summary>
    inline [[nodiscard]] expected<sys_seconds, oura_exception> parseIsoDateTime(std::string_view dt_str)
    {
-
-      auto format_str{ dt_str.ends_with(constants::UTC_TIMEZONE) ? constants::PARSE_FMT_STR_ISO_DATETIME_UTC
-                                                                 : constants::PARSE_FMT_STR_ISO_DATETIME_LOCAL };
-      std::ispanstream dt_strm{ dt_str, };
+      // first try parsing with time zone offset, if that fails try parsing as UTC.
+      std::ispanstream dt_strm{ dt_str };
       sys_seconds ts{};
-      if ( (dt_strm >> chrono::parse(format_str, ts)) )
-         return ts;
-      else
-         return unexpected{ oura_exception{ fmt::format("The intput string '{}' could not be parsed as a valid date/time", dt_str), ErrorCategory::Parse }};
+
+      dt_strm >> chrono::parse(constants::PARSE_FMT_STR_ISO_DATETIME_LOCAL, ts);
+      if (dt_strm.fail())
+      {
+         dt_strm = std::ispanstream{ dt_str };
+         dt_strm >> chrono::parse(constants::PARSE_FMT_STR_ISO_DATETIME_UTC, ts);
+      }
+      if (dt_strm.fail())
+         return unexpected{ oura_exception{ fmt::format("The intput string '{}' could not be parsed as a valid date/time", dt_str), ErrorCategory::Parse } };
+      else return ts;
    }
 
 
@@ -105,7 +137,7 @@ namespace oura_charts
       if ((dt_strm >> chrono::parse(format_str, ymd)))
          return ymd;
       else
-         return unexpected{ oura_exception{ fmt::format("The intput string {} could not be parsed as a valid date", dt_str), ErrorCategory::Parse } };
+         return unexpected{ oura_exception{ fmt::format("The intput string '{}' could not be parsed as a valid date", dt_str), ErrorCategory::Parse } };
    }
 
 
@@ -128,6 +160,7 @@ namespace oura_charts
    /// </summary>
    inline [[nodiscard]] std::string toIsoDate(const chrono::year_month_day& date)
    {
+      // fmt::format doesn't support the date types from C++ 20/23
       return std::format("{:%F}", date);
    }
 }

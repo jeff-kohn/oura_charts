@@ -5,7 +5,7 @@
 //
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
-#include "oura_charts/UserProfile.h"
+#include "oura_charts/HeartRateMeasurement.h"
 #include "oura_charts/RestDataProvider.h"
 #include "oura_charts/detail/utility.h"
 #include "oura_charts/detail/logging.h"
@@ -18,9 +18,6 @@ int main(int argc, char* argv[])
    using std::string;
    using fmt::println;
    using namespace oura_charts;
-   using namespace oura_charts::chrono;
-   using namespace oura_charts::detail;
-   using namespace oura_charts::constants;
 
    auto logger = logging::LogFactory::makeDefault();
    try
@@ -39,40 +36,15 @@ int main(int argc, char* argv[])
       }
       auto pat{ getPersonalToken(args) };
 
-      //local_timestamp local_end = localTimestamp( localNow() );
-      //local_timestamp local_start = localTimestamp(floor<days>(local_end - days{ 7 }));
-
-      //RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
-
-      //cpr::Parameters params{
-      //   { REST_PARAM_START_DATE, toIsoDate(localToUtc(local_start)) },
-      //   { REST_PARAM_END_DATE, toIsoDate(localToUtc(local_end))}
-      //};
-
-      //auto exp_json = rest_server.getJsonObject("heartrate", params);
-      //if (exp_json)
-      //   saveTextToFile(glz::prettify_json(exp_json.value()), "hr.json");
-      //else
-      //   throw exp_json.error();
-
- /*     if (exp_data)
+      RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
+      auto until = localNow();
+      auto from = stripTimeOfDay(until);
+      auto hr_data = getDataSeries<HeartRateMeasurement>(rest_server, from, until);
+      
+      for (auto& hr : hr_data)
       {
-         auto outer = exp_data.value();
-         auto inner = outer.data;
-         fmt::println("Retrieved {} sleep records", inner.size());
+         fmt::println("{}", hr);
       }
-      else
-         throw exp_data.error();
-
-
-      auto expect_hr = rest_server.getJsonDataSeries<hr_data>(constants::REST_PATH_HEART_RATE, localToUtc(local_start), localToUtc(local_end));
-      if (!expect_hr)
-         throw expect_hr.error();
-
-      for (auto& hr : expect_hr->data)
-      {
-         fmt::println("{}bpm at {} ({})", hr.bpm, hr.timestamp, hr.source);
-      }*/
    }
    catch (oura_exception& e)
    {

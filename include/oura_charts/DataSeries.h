@@ -4,6 +4,7 @@
 #include "oura_charts/detail/json_structs.h"
 #include <vector>
 #include <algorithm>
+#include <ranges>
 
 namespace oura_charts
 {
@@ -15,11 +16,11 @@ namespace oura_charts
    ///   to avoid copying data. The collection is considered static once initialized, so operations that modify
    ///   its contents are not provided but the usual element access is.
    /// </remarks>
-   template <DataSeriesElement Element>
-   class DataSeries : private std::vector<Element>
+   template <DataSeriesElement ElementT>
+   class DataSeries : private std::vector<ElementT>
    {
    public:
-      using container = std::vector<Element>;
+      using container = std::vector<ElementT>;
 
       /// <summary>
       ///   DataSeries constructor. Note that data_series is passed by value, since
@@ -30,7 +31,9 @@ namespace oura_charts
       /// <todo>
       ///   use a range template param instead of hard-coded vector.
       /// </todo>
-      DataSeries(std::vector<typename Element::StorageType> data_series)
+      template <std::ranges::input_range RangeT>
+         requires std::ranges::sized_range<RangeT> && std::same_as<rgs::range_rvalue_reference_t<RangeT>, typename ElementT::StorageType&&>
+      DataSeries(RangeT data_series)
       {
          container::reserve(data_series.size());
          for (auto&& elem : data_series)
@@ -110,7 +113,7 @@ namespace oura_charts
          }
 
          // finally move the accumulated data into a new DataSeries to return 
-         return DataSeries<ElementT>(std::move(rest_data.data));
+         return DataSeries<ElementT>( std::move(buf) );
       }
 
    } // namespace detail
@@ -140,8 +143,8 @@ namespace oura_charts
    template <DataSeriesElement ElementT, DataProvider ProviderT, typename DurationT>
    [[nodiscard]] DataSeries<ElementT> getDataSeries(ProviderT& provider, chrono::sys_time<DurationT> start, chrono::sys_time<DurationT> until) noexcept(false)
    {
-      auto begin = chrono::time_point_cast<chrono::sys_seconds>(start);
-      auto end = chrono::time_point_cast<chrono::sys_seconds>(until);
+      auto begin = chrono::time_point_cast<chrono::seconds>(start);
+      auto end = chrono::time_point_cast<chrono::seconds>(until);
       std::unordered_map<std::string, std::string> param_map{ { constants::REST_PARAM_START_DATETIME, toIsoDateTime(begin) },
                                                               { constants::REST_PARAM_END_DATETIME, toIsoDateTime(end) } };
 
@@ -162,7 +165,7 @@ namespace oura_charts
       auto start_utc = localToUtc(start);
       auto until_utc = localToUtc(until);
 
-      return getDataSeries<ElementT>(provider, start, until);
+      return getDataSeries<ElementT>(provider, start_utc, until_utc);
    }
 
 } // namespace oura_charts

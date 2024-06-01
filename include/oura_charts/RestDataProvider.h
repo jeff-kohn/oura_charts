@@ -9,7 +9,7 @@
 #pragma once
 
 #include "oura_charts/oura_charts.h"
-#include "oura_charts/rest_auth.h"
+#include "oura_charts/TokenAuth.h"
 #include "oura_charts/detail/logging.h"
 #include "oura_charts/detail/json_structs.h"
 #include "oura_charts/datetime_helpers.h"

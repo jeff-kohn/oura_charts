@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------------------------------------------
-// rest_auth.h
+// TokenAuth.h
 //
-// Defines the authentication objects used for access the Oura REST API.
+// Defines the class for using Bearer authentication token with Oura REST API
 //
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
