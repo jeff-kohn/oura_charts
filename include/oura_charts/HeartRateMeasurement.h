@@ -22,6 +22,15 @@ namespace oura_charts
       using StorageType = detail::hr_data;
       static constexpr std::string_view REST_PATH = constants::REST_PATH_HEART_RATE;
 
+      // date and time (UTC) the HR reading was taken.
+      local_seconds timestamp() const  {  return m_data.timestamp;   }
+
+      // Heart rate in BPM
+      int beatsPerMin() const          {  return m_data.bpm;         }
+
+      // Condition HR reading was taken in (awake/asleep/etc)
+      std::string source() const       {  return m_data.source;     }
+
       /// <summary>
       ///   HeartRateMeasurement constructor
       /// </summary>
@@ -33,15 +42,6 @@ namespace oura_charts
       HeartRateMeasurement& operator=(const HeartRateMeasurement&) = default;
       HeartRateMeasurement& operator=(HeartRateMeasurement&&) = default;
       ~HeartRateMeasurement() = default;
-
-      // date and time (UTC) the HR reading was taken.
-      local_seconds timestamp() const  {  return m_data.timestamp;   }
-
-      // Heart rate in BPM
-      int beatsPerMin() const          {  return m_data.bpm;         }
-
-      // Condition HR reading was taken in (awake/asleep/etc)
-      std::string source() const       {  return m_data.source;     }
 
    private:
       StorageType m_data;

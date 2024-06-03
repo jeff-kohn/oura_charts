@@ -17,6 +17,7 @@ add_library(${THIS_TARGET} STATIC
    "../include/oura_charts/RestDataProvider.h"
    "../include/oura_charts/DataSeries.h"
    "../include/oura_charts/SleepSession.h"
+   "../include/oura_charts/functors.h"
 	"../include/oura_charts/detail/utility.h"
 	"../include/oura_charts/detail/json_structs.h"
 	"../include/oura_charts/detail/logging.h"

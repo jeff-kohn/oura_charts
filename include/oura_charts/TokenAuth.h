@@ -27,14 +27,6 @@ namespace oura_charts
    class TokenAuth
    {
    public:
-      explicit TokenAuth(std::string_view token) : m_token(token) {}
-      explicit TokenAuth(std::string &&token) : m_token(std::move(token)) {}
-      ~TokenAuth() = default;
-      TokenAuth(const TokenAuth &other) = default;
-      TokenAuth(TokenAuth &&other) = default;
-      TokenAuth &operator=(TokenAuth &&other) = default;
-      TokenAuth &operator=(const TokenAuth &other) = default;
-
       /// <summary>
       ///   The PAT that the user generated on the Oura website.
       /// </summary>
@@ -47,6 +39,14 @@ namespace oura_charts
       ///   authenticating with Oura's REST endpoint
       /// </summary>
       cpr::Bearer getAuthorization() const { return cpr::Bearer{ m_token }; }
+
+      explicit TokenAuth(std::string_view token) : m_token(token) {}
+      explicit TokenAuth(std::string&& token) : m_token(std::move(token)) {}
+      ~TokenAuth() = default;
+      TokenAuth(const TokenAuth& other) = default;
+      TokenAuth(TokenAuth&& other) = default;
+      TokenAuth& operator=(TokenAuth&& other) = default;
+      TokenAuth& operator=(const TokenAuth& other) = default;
 
    private:
       std::string m_token;

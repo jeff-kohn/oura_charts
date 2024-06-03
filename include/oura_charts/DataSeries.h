@@ -25,13 +25,10 @@ namespace oura_charts
       /// <summary>
       ///   DataSeries constructor. Note that data_series is passed by value, since
       ///   its elements will be moved directly into this container. To avoid
-      ///   the copy, you can pass an rvalue reference if you don't need to preseve
+      ///   the copy, you can pass an rvalue reference if you don't need to preserve
       ///   the source data.
       /// </summary>
-      /// <todo>
-      ///   use a range template param instead of hard-coded vector.
-      /// </todo>
-      template <std::ranges::input_range RangeT>
+       template <std::ranges::input_range RangeT>
          requires std::ranges::sized_range<RangeT> && std::same_as<rgs::range_rvalue_reference_t<RangeT>, typename ElementT::StorageType&&>
       DataSeries(RangeT data_series)
       {

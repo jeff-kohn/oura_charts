@@ -31,13 +31,6 @@ namespace oura_charts
       // path that will be used with base URL for REST call.
       static constexpr std::string_view REST_PATH = constants::REST_PATH_PERSONAL_INFO;
 
-      explicit UserProfile(detail::profile_data data) : m_data(std::move(data)) {}
-      ~UserProfile() = default;
-      UserProfile(const UserProfile &) = default;
-      UserProfile(UserProfile &&) = default;
-      UserProfile& operator=(const UserProfile&) = default;
-      UserProfile& operator=(UserProfile&&) = default;
-
       std::string id() const     { return m_data.id;    }
       std::string email() const  { return m_data.email; }
       int age() const            { return m_data.age;   }
@@ -49,6 +42,13 @@ namespace oura_charts
       double height() const      { return m_data.height; }
 
       std::string biologicalSex() const { return m_data.biological_sex; }
+
+      explicit UserProfile(detail::profile_data data) : m_data(std::move(data)) {}
+      ~UserProfile() = default;
+      UserProfile(const UserProfile&) = default;
+      UserProfile(UserProfile&&) = default;
+      UserProfile& operator=(const UserProfile&) = default;
+      UserProfile& operator=(UserProfile&&) = default;
 
    private:
       detail::profile_data m_data;

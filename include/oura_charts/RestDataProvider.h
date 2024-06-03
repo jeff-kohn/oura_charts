@@ -33,16 +33,6 @@ namespace oura_charts
       // unexpected value is an exception describing what went wrong.
       using expected_json = expected<std::string, oura_exception>;
 
-      
-      /// <summary>
-      ///   constructor, takes an Auth object and a base URL that should be used
-      ///   to build paths for REST endpoints.
-      /// </summary>
-      RestDataProvider(Auth auth, std::string base_url) : m_auth{ auth },
-                                                          m_base_url{ base_url }
-      {
-      }
-
       /// <summary>
       ///   Retrieve the JSON for a single object from the rest server.
       /// </summary>
@@ -65,9 +55,9 @@ namespace oura_charts
       ///   Retrieve a collection of json data from the rest server
       /// </summary>
       /// <remarks>
-      ///   path should be relative. param_map should contain the key/value pairs that will
-      ///   be passed as parameters to the REST API. Be sure to include next_token param
-      ///   as appropriate when requesting paged/chunked data.
+      ///   path should be relative to base URL. param_map should contain the key/value
+      ///   pairs that will be passed as parameters to the REST API. Be sure to include
+      ///   next_token param as appropriate when requesting paged/chunked data.
       /// </remarks>
       template<KeyValueRange MapT>
       [[nodiscard]] expected_json getJsonDataSeries(std::string_view path, const MapT& param_map) const noexcept
@@ -100,6 +90,15 @@ namespace oura_charts
       // The base URL that is used in combination with the 'path' parameter of the
       // getJson() methods to build the full URL for the REST endpoint of an object(s)
       std::string baseURL() const { return m_base_url; }
+
+
+      /// <summary>
+      ///   constructor, takes an Auth object and a base URL that should be used
+      ///   to build paths for REST endpoints.
+      /// </summary>
+      RestDataProvider(Auth auth, std::string base_url) : m_auth{ auth },  m_base_url{ base_url }
+      {
+      }
 
    private:
       Auth m_auth{};

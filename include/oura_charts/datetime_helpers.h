@@ -94,13 +94,13 @@ namespace oura_charts
    inline [[nodiscard]] std::pair<year_month_day, hh_mm_ss<DurationT>> getCivilTime(chrono::time_point<ClockT, DurationT> tp)
    {
       auto daypoint = floor<days>(tp);
-      year_month_day day = daypoint;
+      year_month_day day{ daypoint };
       hh_mm_ss tod{ tp - daypoint };
 
       return std::make_pair(day, tod);
    }
 
-    
+
    /// <summary>
    ///   Parse an ISO date-time string and return it as a UTC timepoint. Values
    ///   returned from this function will always be UTC, even if the string

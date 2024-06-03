@@ -26,18 +26,6 @@ namespace oura_charts
       using StorageType = detail::sleep_data;
       static constexpr std::string_view REST_PATH = constants::REST_PATH_SLEEP_SESSION;
 
-      /// <summary>
-      ///   constructor, accepts data by value, pass && to move instead of copy
-      /// </summary>
-      explicit SleepSession(StorageType data) : m_data(std::move(data)) {}
-      ~SleepSession() = default;
-
-      // default copy/move semantics
-      SleepSession(const SleepSession&) = default;
-      SleepSession(SleepSession&&) = default;
-      SleepSession& operator=(const SleepSession&) = default;
-      SleepSession& operator=(SleepSession&&) = default;
-
       std::string sleepId() const                  {  return m_data.id;                   }
       chrono::year_month_day sessionDate() const   {  return m_data.day;                  }
       local_seconds bedtimeStart() const           {  return m_data.bedtime_start;        }
@@ -55,6 +43,16 @@ namespace oura_charts
       chrono::seconds sleepTimeREM() const         {  return m_data.rem_sleep_duration;   }
                                                
       nullable_double restless_periods() const     {  return m_data.restless_periods;     }
+
+      /// <summary>
+      ///   constructor, accepts data by value, pass && to move instead of copy
+      /// </summary>
+      explicit SleepSession(StorageType data) : m_data(std::move(data)) {}
+      SleepSession(const SleepSession&) = default;
+      SleepSession(SleepSession&&) = default;
+      ~SleepSession() = default;
+      SleepSession& operator=(const SleepSession&) = default;
+      SleepSession& operator=(SleepSession&&) = default;
 
    private:
       StorageType m_data;
