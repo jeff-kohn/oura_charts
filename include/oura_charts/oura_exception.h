@@ -70,6 +70,38 @@ namespace oura_charts
    public:
       static constexpr int64_t ERROR_CODE_GENERAL_FAILURE = -1;
 
+      /// <summary>
+      ///   any error code associated with this error, zero if unspecified
+      /// </summary>
+      int64_t error_code{};
+
+      /// <summary>
+      ///   description of the error that occurred
+      /// </summary>
+      std::string message{};
+
+      /// <summary>
+      ///   category of error that occured
+      /// </summary>
+      ErrorCategory category{ ErrorCategory::Success };
+
+      /// <summary>
+      ///   textual name of the ErrorCategory
+      /// </summary>
+      std::string categoryName() const
+      {
+         return getGetogoryName(category);
+      }
+
+      /// <summary>
+      ///   base class override, just returns the contents of message.
+      /// </summary>
+      const char* what() const noexcept override
+      {
+         return message.c_str();
+      }
+
+
       explicit oura_exception(cpr::Error err) : error_code{ static_cast<int64_t>(err.code) },
                                                 message{ std::move(err.message) },
                                                 category{ ErrorCategory::REST }
@@ -101,21 +133,7 @@ namespace oura_charts
       }
 
 
-      int64_t error_code{};
 
-      std::string message{};
-
-      ErrorCategory category{ ErrorCategory::Success };
-
-      std::string categoryName() const
-      {
-         return getGetogoryName(category);
-      }
-
-      const char* what() const noexcept override
-      {
-         return message.c_str();
-      }
 
       oura_exception() = default;
       oura_exception(const oura_exception&) = default;
