@@ -15,34 +15,22 @@
 
 namespace oura_charts::test
 {
-   using namespace std::literals;
-   
    auto default_logger = logging::LogFactory::makePrivate("UnitTesting",
-                                                          { logging::makeConsoleSink(logging::level_enum::info), logging::makeDebuggerSync() },
-                                                          logging::level_enum::trace );
+                                                           { logging::makeConsoleSink(logging::level_enum::info), logging::makeDebuggerSync() },
+                                                           logging::level_enum::trace);
 
-   auto json_profile = R"(
-      {
-         "id":"123",
-         "age":21,
-         "weight":85.3,
-         "height":1.65,
-         "biological_sex":"male",
-         "email":"user@email.com"
-      }
-   )"sv;
 
-   //TEST_CASE("Online UserProfile Test", "[online][rest][UserProfile]")
-   //{
-   //   auto pat = detail::getEnvironmentVariable("OURA_PAT");
-   //   if (pat.empty())
-   //      SKIP("No PAT environment variable found for authenticating online tests");
+   TEST_CASE("Online UserProfile Test", "[online][rest][UserProfile]")
+   {
+      auto pat = detail::getEnvironmentVariable("OURA_PAT");
+      if (pat.empty())
+         SKIP("No PAT environment variable found for authenticating online tests");
 
-   //   logging::info("PAT environment variable found, running online tests");
+      logging::info("PAT environment variable found, running online tests");
 
-   //   RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
-   //   REQUIRE_NOTHROW(getUserProfile(rest_server));
-   //}
+      RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
+      REQUIRE_NOTHROW(getUserProfile(rest_server));
+   }
 
    //TEST_CASE("UserProfile Parse and Bindings", "[json][UserProfile]")
    //{

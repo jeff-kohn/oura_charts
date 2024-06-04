@@ -108,12 +108,19 @@ namespace oura_charts
       {
       }
 
+      /// <summary>
+      ///   create an exception from an error code, error message, and category
+      /// </summary>
       oura_exception(int64_t code, std::string message, ErrorCategory category) : error_code{ static_cast<int64_t>(code) },
                                                                                   message{ std::move(message) },
                                                                                   category{ category }
       {
       }
 
+
+      /// <summary>
+      ///   create an exception from an error message and optional category
+      /// </summary>
       oura_exception(std::string error_text, ErrorCategory category = ErrorCategory::Generic)
          : message{ std::move(error_text) },
            category{ category },
@@ -131,9 +138,6 @@ namespace oura_charts
       {
          message = fmt::format(fmt, args...);
       }
-
-
-
 
       oura_exception() = default;
       oura_exception(const oura_exception&) = default;

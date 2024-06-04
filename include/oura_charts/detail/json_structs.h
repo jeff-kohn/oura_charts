@@ -97,8 +97,8 @@ namespace oura_charts::detail
    ///   wrapper for glz::read<> that returns an expected<> instead of an error code (eliminating the
    ///   need to pass the struct as a parameter or translate any parse_error's returned.
    /// </summary>
-   template <glz::opts Opts, typename ValueT>
-   [[nodiscard]] inline expected<ValueT, oura_exception> readJson(const std::string& buffer) noexcept
+   template <glz::opts Opts, typename ValueT, StringViewCompatible StringT>
+   [[nodiscard]] inline expected<ValueT, oura_exception> readJson(StringT&& buffer) noexcept
    {
       ValueT value{};
       auto&& pe = glz::read<Opts>(value, buffer);
@@ -116,8 +116,8 @@ namespace oura_charts::detail
    /// <remarks>
    ///   if you want to explicitly set glz compile-time options, use the other overload.
    /// <remarks>
-   template <typename ValueT>
-   [[nodiscard]] inline expected<ValueT, oura_exception> readJson(const std::string& buffer) noexcept
+   template <typename ValueT, StringViewCompatible StringT>
+   [[nodiscard]] inline expected<ValueT, oura_exception> readJson(StringT&& buffer) noexcept
    {
       return readJson < glz::opts{ .error_on_unknown_keys = false }, ValueT > (buffer);
    }
