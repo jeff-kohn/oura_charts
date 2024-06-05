@@ -21,7 +21,7 @@ namespace oura_charts
    ///   concept requiring a template arge to be std::exception or derived from std::exception
    /// </summary>
    template<typename T>
-   concept ExceptionDerived = std::derived_from<T, std::exception> || std::same_as<T, std::exception>;
+   concept ExceptionDerived = std::derived_from<T, std::exception> || std::same_as<std::remove_cvref<T>, std::exception>;
 
    template<typename T>
    concept FormattedException = ExceptionDerived<T> && requires (T t)
@@ -41,8 +41,9 @@ namespace oura_charts
    ///   compatible with std::string_view
    /// </summary>
    template <typename T>
-   concept KeyValueRange = rgs::input_range<T> && StringViewCompatible<typename T::mapped_type>
-                                               && StringViewCompatible<typename T::key_type>;
+   concept KeyValueRange = rgs::forward_range<T>
+                         && StringViewCompatible<typename T::mapped_type>
+                         && StringViewCompatible<typename T::key_type>;
 
 
    /// <summary>

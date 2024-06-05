@@ -73,14 +73,16 @@ namespace oura_charts
 
    namespace detail
    {
+      using std::forward;
+
       template <DataSeriesElement ElementT, DataProvider ProviderT, KeyValueRange MapT>
-      [[nodiscard]] DataSeries<ElementT> getDataSeries(ProviderT& provider, MapT param_map) noexcept(false)
+      [[nodiscard]] DataSeries<ElementT> getDataSeries(ProviderT& provider, MapT&& param_map) noexcept(false)
       {
          using JsonCollectionT = detail::RestDataCollection<typename ElementT::StorageType>;
          using CollectionBuffer = std::deque<typename JsonCollectionT::value_type>;
 
          // get JSON from rest server
-         auto&& exp_json = provider.getJsonDataSeries(ElementT::REST_PATH, param_map);
+         auto&& exp_json = provider.getJsonDataSeries(ElementT::REST_PATH, forward<MapT>(param_map));
          if (!exp_json)
             throw exp_json.error();
 
@@ -97,7 +99,7 @@ namespace oura_charts
          while (rest_data.next_token)
          {
             param_map[constants::REST_PARAM_NEXT_TOKEN] = rest_data.next_token.value();
-            exp_json = provider.getJsonDataSeries(ElementT::REST_PATH, param_map);
+            exp_json = provider.getJsonDataSeries(ElementT::REST_PATH, forward<MapT>(param_map));
             if (!exp_json)
                throw exp_json.error();
 
@@ -120,7 +122,7 @@ namespace oura_charts
    ///   Get a series of data of the requested type, for the given date range.
    /// </summary>
    /// <remarks>
-   ///   This overload should be used for REST endpoints that accepts a date (no time) for the filter.
+   ///   This overload should be used for REST endpoints that accepts a date (no time) for the filter range.
    /// </remarks>
    template <DataSeriesElement ElementT, DataProvider ProviderT>
    [[nodiscard]] DataSeries<ElementT> getDataSeries(ProviderT& provider, chrono::year_month_day from, chrono::year_month_day thru) noexcept(false)
@@ -128,8 +130,9 @@ namespace oura_charts
       std::unordered_map<std::string, std::string> param_map{ { constants::REST_PARAM_START_DATE, toIsoDate(from) },
                                                               { constants::REST_PARAM_END_DATE, toIsoDate(thru) } };
 
-      return detail::getDataSeries<ElementT>(provider, param_map);
+      return detail::getDataSeries<ElementT>(provider, std::move(param_map));
    }
+
 
    /// <summary>
    ///   Get a series of data of the requested type, for the given time period.
@@ -145,7 +148,7 @@ namespace oura_charts
       std::unordered_map<std::string, std::string> param_map{ { constants::REST_PARAM_START_DATETIME, toIsoDateTime(begin) },
                                                               { constants::REST_PARAM_END_DATETIME, toIsoDateTime(end) } };
 
-      return detail::getDataSeries<ElementT>(provider, param_map);
+      return detail::getDataSeries<ElementT>(provider, std::move(param_map));
    }
 
 

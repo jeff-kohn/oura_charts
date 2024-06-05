@@ -14,6 +14,7 @@
 #include "oura_charts/detail/json_structs.h"
 #include "oura_charts/datetime_helpers.h"
 #include <cpr/cpr.h>
+#include <optional>
 
 namespace oura_charts
 {
@@ -33,6 +34,7 @@ namespace oura_charts
       // unexpected value is an exception describing what went wrong.
       using expected_json = expected<std::string, oura_exception>;
 
+
       /// <summary>
       ///   Retrieve the JSON for a single object from the rest server.
       /// </summary>
@@ -41,15 +43,17 @@ namespace oura_charts
          return doRestGet(path);
       }
 
+
       // <summary>
       //   Retrieve the JSON for a single object from the rest server, passing an arbitrary
       //   number of other objects to the underlying CPR call.
       // </summary>
-      template <typename... Ts>
-      [[nodiscard]] expected_json getJsonObject(std::string_view path, Ts... ts) const noexcept
+      template<KeyValueRange MapT>
+      [[nodiscard]] expected_json getJsonObject(std::string_view path, const MapT&& param_map) const noexcept
       {
-         return doRestGet(path, ts...);
+         return doRestGet(path, mapToParams(std::forward<MapT>(param_map)));
       }
+
 
       /// <summary>
       ///   Retrieve a collection of json data from the rest server
@@ -60,32 +64,12 @@ namespace oura_charts
       ///   next_token param as appropriate when requesting paged/chunked data.
       /// </remarks>
       template<KeyValueRange MapT>
-      [[nodiscard]] expected_json getJsonDataSeries(std::string_view path, const MapT& param_map) const noexcept
+      [[nodiscard]] expected_json getJsonDataSeries(std::string_view path, MapT&& param_map) const noexcept
       {
-         using namespace oura_charts::constants;
-         using enum logging::level_enum;
-
-         // get the parameters into object for the REST call.
-         cpr::Parameters params{};
-         for (auto&& elem : param_map)
-         {
-            logging::info("RestDataProvider - adding parameter '{}' = {}", elem.first, elem.second);
-            params.Add({ elem.first, elem.second });
-         };
-
          // Send the request to server and check that we get a valid response.
-         auto exp_json = doRestGet(path, params);
-         if (exp_json)
-         {
-            logging::trace("RestDataProvider - doRestGet() returned the following JSON:\r\n{}", exp_json.value());
-         }
-         else
-         {
-            logging::error("RestDataProvider - doRestGet() returned an error (see next log record for details)");
-            logging::exception(exp_json.error());
-         }
-         return exp_json;
+         return  doRestGet(path, mapToParams(std::forward<MapT>(param_map)));
       }
+
 
       // The base URL that is used in combination with the 'path' parameter of the
       // getJson() methods to build the full URL for the REST endpoint of an object(s)
@@ -104,6 +88,7 @@ namespace oura_charts
       Auth m_auth{};
       std::string m_base_url{};
 
+
       // Assembles the REST GET request and sends it to the server, returning any JSON
       // (or error information) that is received in response.
       template <typename... Ts>
@@ -118,21 +103,48 @@ namespace oura_charts
          return getJsonFromResponse(response);
       }
 
+
       // extract the expected json (or unexepected error) from a REST response
-      [[nodiscard]] expected_json getJsonFromResponse(const cpr::Response & response) const noexcept
+      [[nodiscard]] expected_json getJsonFromResponse(const cpr::Response& response) const noexcept
       {
          if (cpr::status::is_success(response.status_code))
+         {
+            logging::trace("RestDataProvider - received the following JSON:\r\n{}", response.text);
             return response.text;
+         }
          else if (response.error.code != cpr::ErrorCode::OK)
-            return unexpected{ oura_exception{ response.error } };
+         {
+            oura_exception ex{ response.error };
+            logging::exception("RestDataProvider", ex);
+            return unexpected{ std::move(ex) };
+         }
          else
-            return unexpected{ oura_exception{static_cast<int64_t>(response.status_code), response.reason, ErrorCategory::REST} };
+         {
+            oura_exception ex{static_cast<int64_t>(response.status_code), response.reason, ErrorCategory::REST};
+            logging::exception("RestDataProvider", ex);
+            return unexpected{ ex };
+         }
       }
+
 
       // concatenate path with base url to get FQ URL
       [[nodiscard]] cpr::Url pathToUrl(std::string_view relative_path) const
       {
          return { fmt::format("{}/{}", m_base_url, relative_path) };
+      }
+
+
+      template<KeyValueRange MapT>
+      [[nodiscard]] static cpr::Parameters mapToParams(const MapT& param_map)
+      {
+         // get the parameters into object for the REST call.
+         cpr::Parameters params{};
+         for (auto&& elem : param_map)
+         {
+            logging::info("RestDataProvider - adding parameter '{}' = {}", elem.first, elem.second);
+            params.Add({ elem.first, elem.second });
+         };
+         return params;
       }
 
    };

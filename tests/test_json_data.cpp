@@ -7,6 +7,9 @@
 //---------------------------------------------------------------------------------------------------------------------
 #include "oura_charts/oura_charts.h"
 #include "oura_charts/detail/json_structs.h"
+#include "oura_charts/UserProfile.h"
+#include "oura_charts/HeartRateMeasurement.h"
+#include "oura_charts/SleepSession.h"
 #include "FileDataProvider.h"
 #include <catch2/catch_test_macros.hpp>
 #include <filesystem>
@@ -17,56 +20,51 @@ namespace oura_charts::test
    namespace fs = std::filesystem;
 
 
-   using namespace std::literals;
-
- 
-   auto user_profile_json = R"(
-      {
-         "id":"123",
-         "age":21,
-         "weight":85.3,
-         "height":1.65,
-         "biological_sex":"male",
-         "email":"user@email.com"
-      }
-   )"sv;
-
-   TEST_CASE("parse_user_profile", "[user_profile][parsing]")
+   TEST_CASE("test_parse_user_profile", "[parsing]")
    {
-      using namespace detail;
-      auto exp_data = readJson<profile_data>(user_profile_json);
-
-      REQUIRE(exp_data.has_value());
-
-      auto&& user_data{ *exp_data };
-      REQUIRE(user_data.id == "123");
-      REQUIRE(user_data.age == 21);
-      REQUIRE(user_data.weight == 85.3);
-      REQUIRE(user_data.height == 1.65);
-      REQUIRE(user_data.biological_sex == "male");
-      REQUIRE(user_data.email == "user@email.com");
-   }
-
-
-   TEST_CASE("parse_sleep", "[sleep][parsing]")
-   {
-      using namespace detail;
-
-      // Load the json data.
+      // data provider for unit tests that gets json from disk files.
       auto data_prov = FileDataProvider{ fs::path{"./test_data" } };
-      auto exp_json = data_prov.getJsonObject("sleep");
+
+      auto exp_json = data_prov.getJsonObject(UserProfile::REST_PATH);
       REQUIRE(exp_json.has_value());
 
-      auto exp_data = readJson<sleep_data_series>(*exp_json);
+      auto exp_data = detail::readJson<detail::profile_data>(*exp_json);
       REQUIRE(exp_data.has_value());
-
-      auto&& sleep_data{ *exp_data };
-      REQUIRE(sleep_data.data.size() > 0);
    }
 
-   TEST_CASE("parse_heart_rate", "[heart_rate][parsing]")
-   {
 
+   TEST_CASE("test_parse_sleep_data", "[parsing]")
+   {
+      using namespace detail;
+
+      // data provider for unit tests that gets json from disk files.
+      auto data_prov = FileDataProvider{ fs::path{"./test_data" } };
+
+      auto exp_json = data_prov.getJsonObject(SleepSession::REST_PATH);
+      REQUIRE(exp_json.has_value());
+
+      auto exp_data = readJson<RestDataCollection<SleepSession::StorageType>>(*exp_json);
+      REQUIRE(exp_data.has_value());
+
+      auto sleep_data{ *exp_data };
+      REQUIRE(sleep_data.data.size() > 1);
+   }
+
+
+   TEST_CASE("test_parse_heart_rate", "[parsing]")
+   {
+      using namespace detail;
+
+      auto data_prov = FileDataProvider{ fs::path{"./test_data" } };
+
+      auto exp_json = data_prov.getJsonObject(HeartRateMeasurement::REST_PATH);
+      REQUIRE(exp_json.has_value());
+
+      auto exp_data = readJson<RestDataCollection<HeartRateMeasurement::StorageType>>(*exp_json);
+      REQUIRE(exp_data.has_value());
+
+      auto hr_data{ *exp_data };
+      REQUIRE(hr_data.data.size() > 1);
    }
 
 

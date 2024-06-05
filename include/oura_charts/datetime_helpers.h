@@ -88,7 +88,7 @@ namespace oura_charts
 
 
    /// <summary>
-   ///   Convert a time point into a date and civil time.
+   ///   Convert a time point into a calendar date and civil time.
    /// </summary>
    template<typename ClockT, typename DurationT>
    inline [[nodiscard]] std::pair<year_month_day, hh_mm_ss<DurationT>> getCivilTime(chrono::time_point<ClockT, DurationT> tp)

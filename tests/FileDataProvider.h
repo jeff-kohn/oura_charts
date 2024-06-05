@@ -37,17 +37,19 @@ namespace oura_charts::test
       FileDataProvider(fs::path data_folder = ".");
 
       /// <summary>
-      /// Retrieve the JSON for a single object.
+      /// Retrieve the JSON for a single object (which for this will just be the contents
+      /// of the file named 'path')
       /// </summary>
-      [[nodiscard]] expected_json getJsonObject(std::string_view path) const noexcept;
+      [[nodiscard]] expected_json getJsonObject(std::string_view path) const noexcept
+      {
+         return doFileGet(path);
+      }
 
       /// <summary>
       ///   Retrieve the json for a series/array of objects. Note that this provider doesn't
       ///   actually do any date filtering, it's just  going to return the contents of the
-      ///   file that matches the path name. The start/end/next params are just for consistency
-      ///   with the REST-based provider's interface.
+      ///   file that matches the path name.
       /// </summary>
-      template<KeyValueRange MapT>
       [[nodiscard]] expected_json getJsonDataSeries(std::string_view path) const noexcept
       {
          return doFileGet(path);

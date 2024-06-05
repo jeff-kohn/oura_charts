@@ -43,7 +43,7 @@ namespace oura_charts
 
       std::string biologicalSex() const { return m_data.biological_sex; }
 
-      explicit UserProfile(detail::profile_data data) : m_data(std::move(data)) {}
+      explicit UserProfile(detail::profile_data data) noexcept : m_data(std::move(data)) {}
       ~UserProfile() = default;
       UserProfile(const UserProfile&) = default;
       UserProfile(UserProfile&&) = default;

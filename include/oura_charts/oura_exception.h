@@ -102,6 +102,9 @@ namespace oura_charts
       }
 
 
+      /// <summary>
+      ///   construct an exception from a cpr::Error
+      /// </summary>
       explicit oura_exception(cpr::Error err) : error_code{ static_cast<int64_t>(err.code) },
                                                 message{ std::move(err.message) },
                                                 category{ ErrorCategory::REST }

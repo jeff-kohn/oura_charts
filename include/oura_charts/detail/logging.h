@@ -103,6 +103,17 @@ namespace oura_charts::logging
 
 
    /// <summary>
+   ///   Log an exception with prefix message for context. This overload for non-formatter-compatible types
+   ///   will just use e.what() for the error message.
+   /// </summary>
+   template<FormattedException ExceptionType, StringViewCompatible StringT>
+   void exception(StringT message_context, const ExceptionType& e)
+   {
+      error("{} - {}", message_context, e.what());
+   }
+
+
+   /// <summary>
    ///   Create a logging sink that outputs log messages to the console
    /// </summary>
    [[nodiscard]] sink_ptr_t makeConsoleSink(log_level::level_enum level = constants::CONFIG_DEFAULT_LOGLEVEL_CONSOLE,
