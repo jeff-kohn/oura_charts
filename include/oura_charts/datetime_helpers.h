@@ -49,15 +49,6 @@ namespace oura_charts
    using chrono::from_stream;
 #endif
 
-   /// <summary>
-   ///   get the current time relative to the local time zone.
-   /// </summary>
-   inline [[nodiscard]] auto localNow()
-   {
-      auto utc_now = clock::now();
-      return chrono::current_zone()->to_local(utc_now);
-   }
-
 
    /// <summary>
    ///   convenience function for convertiong local time to utc
@@ -76,6 +67,15 @@ namespace oura_charts
    inline [[nodiscard]] local_time<DurationT> utcToLocal(sys_time<DurationT> ts, const chrono::time_zone* tz = chrono::current_zone())
    {
       return tz->to_local(ts);
+   }
+
+
+   /// <summary>
+   ///   get the current time relative to the local time zone.
+   /// </summary>
+   inline [[nodiscard]] auto localNow()
+   {
+      return utcToLocal(clock::now());
    }
 
 

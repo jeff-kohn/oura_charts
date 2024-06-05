@@ -17,46 +17,66 @@ namespace oura_charts::test
 
    namespace
    {
-      chrono::year_month_day ymd{ 2024y / 2 / 1 };
-      chrono::hh_mm_ss tod{ 12h + 3min + 33s };
-      sys_seconds tp = chrono::sys_days{ ymd } + tod.to_duration();
+      year_month_day ymd{ 2024y / 2 / 1 };
+      hh_mm_ss tod_utc{ 12h + 3min + 33s };
+      hh_mm_ss tod_local{ 6h + 3min + 33s };
+
+      sys_seconds sys_secs = sys_days{ ymd } + tod_utc.to_duration();
+      local_seconds local_secs = local_days{ ymd } + tod_local.to_duration();
 
       std::string datetime_str{ "2024-02-01T12:03:33Z" };
       std::string date_str{ "2024-02-01" };
-      std::string local_datetime_str{ "2024-02-01T07:03:33-5:00" };
+      std::string local_datetime_str{ "2024-02-01T06:03:33-6:00" };
    }
 
    TEST_CASE("test_parseIsoDateTime", "[datetime][parsing]")
    {
-      REQUIRE(tp == parseIsoDateTime(local_datetime_str));
-      REQUIRE(tp == parseIsoDateTime(datetime_str));
+      REQUIRE(sys_secs == parseIsoDateTime(local_datetime_str));
+      REQUIRE(sys_secs == parseIsoDateTime(datetime_str));
    }
+
 
    TEST_CASE("test_parseIsoDate", "[datetime][parsing]")
    {
       REQUIRE(ymd == parseIsoDate(date_str));
    }
 
+
    TEST_CASE("test_toIsoDateTime", "[datetime][parsing]")
    {
-      REQUIRE(datetime_str == toIsoDateTime(tp));
+      REQUIRE(datetime_str == toIsoDateTime(sys_secs));
    }
+
 
    TEST_CASE("test_toIsoDate", "[datetime][parsing]")
    {
-      REQUIRE(date_str == toIsoDate(chrono::sys_days{ ymd }));
+      REQUIRE(date_str == toIsoDate(sys_days{ ymd }));
    }
+
 
    TEST_CASE("test_getCivilTime", "[datetime]")
    {
-      auto [cal_date, civil_time] = getCivilTime(tp);
+      auto [cal_date, civil_time] = getCivilTime(sys_secs);
       REQUIRE(cal_date == ymd);
-      REQUIRE(civil_time.to_duration() == tod.to_duration());
+      REQUIRE(civil_time.to_duration() == tod_utc.to_duration());
    }
+
 
    TEST_CASE("test_stripTimeOfDay", "[datetime]")
    {
-      REQUIRE(static_cast<sys_seconds>(sys_days{ ymd }) == stripTimeOfDay(tp));
+      REQUIRE(static_cast<sys_seconds>(sys_days{ ymd }) == stripTimeOfDay(sys_secs));
+   }
+
+
+   TEST_CASE("test_localToUtc", "[datetime]")
+   {
+      REQUIRE(local_secs == utcToLocal(sys_secs) );
+   }
+
+
+   TEST_CASE("test_utcToLocal", "[datetime]")
+   {
+      REQUIRE(sys_secs == localToUtc(local_secs));
    }
 
 
