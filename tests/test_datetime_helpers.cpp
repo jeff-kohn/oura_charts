@@ -47,11 +47,16 @@ namespace oura_charts::test
       REQUIRE(date_str == toIsoDate(chrono::sys_days{ ymd }));
    }
 
-   TEST_CASE("test_getCivilTime", "[datetime][parsing]")
+   TEST_CASE("test_getCivilTime", "[datetime]")
    {
       auto [cal_date, civil_time] = getCivilTime(tp);
       REQUIRE(cal_date == ymd);
       REQUIRE(civil_time.to_duration() == tod.to_duration());
+   }
+
+   TEST_CASE("test_stripTimeOfDay", "[datetime]")
+   {
+      REQUIRE(static_cast<sys_seconds>(sys_days{ ymd }) == stripTimeOfDay(tp));
    }
 
 

@@ -30,10 +30,12 @@ namespace oura_charts
    using clock = chrono::system_clock;
    using chrono::sys_time;
    using chrono::sys_seconds;
+   using chrono::sys_days;
    using chrono::days;
    using chrono::seconds;
    using chrono::local_time;
    using chrono::local_seconds;
+   using chrono::local_days;
    using chrono::year_month_day;
    using chrono::hh_mm_ss;
    using chrono::time_point_cast;

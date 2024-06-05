@@ -22,9 +22,7 @@ namespace oura_charts::test
       // data provider for unit tests that gets json from disk files.
       auto data_prov = FileDataProvider{ fs::path{"./test_data" } };
 
-      UserProfile profile{ detail::profile_data{} };
-      REQUIRE_NOTHROW(profile = getUserProfile(data_prov));
-
+      UserProfile profile{ getUserProfile(data_prov) };
       auto& [id, email, age, weight, height, sex] = profile;
 
       REQUIRE(id == profile.id());
@@ -41,17 +39,16 @@ namespace oura_charts::test
       // data provider for unit tests that gets json from disk files.
       auto data_prov = FileDataProvider{ fs::path{"./test_data" } };
 
-      UserProfile profile{ detail::profile_data{} };
-      REQUIRE_NOTHROW(profile = getUserProfile(data_prov));
+      HeartRateDataSeries hr_data{ detail::getDataSeries<HeartRateMeasurement>(data_prov, detail::SortedPropertyMap{}) };
 
-      auto& [id, email, age, weight, height, sex] = profile;
+      REQUIRE(hr_data.size() > 0);
 
-      REQUIRE(id == profile.id());
-      REQUIRE(age == profile.age());
-      REQUIRE(weight == profile.weight());
-      REQUIRE(height == profile.height());
-      REQUIRE(sex == profile.biologicalSex());
-      REQUIRE(email == profile.email());
+      auto&& hr = hr_data[0];
+      auto& [bpm, source, timestamp] = hr;
+
+      REQUIRE(bpm == hr.beatsPerMin());
+      REQUIRE(source == hr.source());
+      REQUIRE(timestamp == hr.timestamp());
    }
 
   

@@ -75,8 +75,10 @@ namespace oura_charts
    {
       using std::forward;
 
+      using SortedPropertyMap = std::map<std::string, std::string>;
+
       template <DataSeriesElement ElementT, DataProvider ProviderT, KeyValueRange MapT>
-      [[nodiscard]] DataSeries<ElementT> getDataSeries(ProviderT& provider, MapT&& param_map) noexcept(false)
+      [[nodiscard]] DataSeries<ElementT> getDataSeries(ProviderT& provider, MapT&& param_map = SortedPropertyMap{}) noexcept(false)
       {
          using JsonCollectionT = detail::RestDataCollection<typename ElementT::StorageType>;
          using CollectionBuffer = std::deque<typename JsonCollectionT::value_type>;
@@ -127,8 +129,8 @@ namespace oura_charts
    template <DataSeriesElement ElementT, DataProvider ProviderT>
    [[nodiscard]] DataSeries<ElementT> getDataSeries(ProviderT& provider, chrono::year_month_day from, chrono::year_month_day thru) noexcept(false)
    {
-      std::unordered_map<std::string, std::string> param_map{ { constants::REST_PARAM_START_DATE, toIsoDate(from) },
-                                                              { constants::REST_PARAM_END_DATE, toIsoDate(thru) } };
+      detail::SortedPropertyMap param_map{ { constants::REST_PARAM_START_DATE, toIsoDate(from) },
+                                           { constants::REST_PARAM_END_DATE, toIsoDate(thru) } };
 
       return detail::getDataSeries<ElementT>(provider, std::move(param_map));
    }
@@ -145,8 +147,8 @@ namespace oura_charts
    {
       auto begin = chrono::time_point_cast<chrono::seconds>(start);
       auto end = chrono::time_point_cast<chrono::seconds>(until);
-      std::unordered_map<std::string, std::string> param_map{ { constants::REST_PARAM_START_DATETIME, toIsoDateTime(begin) },
-                                                              { constants::REST_PARAM_END_DATETIME, toIsoDateTime(end) } };
+      detail::SortedPropertyMap param_map{ { constants::REST_PARAM_START_DATETIME, toIsoDateTime(begin) },
+                                           { constants::REST_PARAM_END_DATETIME, toIsoDateTime(end) } };
 
       return detail::getDataSeries<ElementT>(provider, std::move(param_map));
    }

@@ -50,7 +50,11 @@ namespace oura_charts::test
       ///   actually do any date filtering, it's just  going to return the contents of the
       ///   file that matches the path name.
       /// </summary>
-      [[nodiscard]] expected_json getJsonDataSeries(std::string_view path) const noexcept
+      /// <remarks>
+      ///   the template parameter is just for interface compatibility, it's not actually used.
+      /// </remarks>
+      template <typename T>
+      [[nodiscard]] expected_json getJsonDataSeries(std::string_view path, T) const noexcept
       {
          return doFileGet(path);
       }
