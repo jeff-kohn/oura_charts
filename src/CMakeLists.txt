@@ -13,7 +13,7 @@ add_library(${THIS_TARGET} STATIC
    "../include/oura_charts/datetime_helpers.h"
 	"../include/oura_charts/TokenAuth.h"
 	"../include/oura_charts/UserProfile.h"
-   "../include/oura_charts/HeartRateMeasurement.h"
+   "../include/oura_charts/HeartRate.h"
    "../include/oura_charts/RestDataProvider.h"
    "../include/oura_charts/DataSeries.h"
    "../include/oura_charts/SleepSession.h"

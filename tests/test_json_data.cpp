@@ -8,7 +8,7 @@
 #include "oura_charts/oura_charts.h"
 #include "oura_charts/detail/json_structs.h"
 #include "oura_charts/UserProfile.h"
-#include "oura_charts/HeartRateMeasurement.h"
+#include "oura_charts/HeartRate.h"
 #include "oura_charts/SleepSession.h"
 #include "FileDataProvider.h"
 #include <catch2/catch_test_macros.hpp>
@@ -57,10 +57,10 @@ namespace oura_charts::test
 
       auto data_prov = FileDataProvider{ fs::path{"./test_data" } };
 
-      auto exp_json = data_prov.getJsonObject(HeartRateMeasurement::REST_PATH);
+      auto exp_json = data_prov.getJsonObject(HeartRate::REST_PATH);
       REQUIRE(exp_json.has_value());
 
-      auto exp_data = readJson<RestDataCollection<HeartRateMeasurement::StorageType>>(*exp_json);
+      auto exp_data = readJson<RestDataCollection<HeartRate::StorageType>>(*exp_json);
       REQUIRE(exp_data.has_value());
 
       auto hr_data{ *exp_data };

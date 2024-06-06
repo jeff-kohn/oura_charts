@@ -5,7 +5,7 @@
 //
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
-#include "oura_charts/HeartRateMeasurement.h"
+#include "oura_charts/HeartRate.h"
 #include "oura_charts/RestDataProvider.h"
 #include "oura_charts/functors.h"
 #include "oura_charts/detail/utility.h"
@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
       RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
       auto until = localNow();
       auto from = stripTimeOfDay(until);
-      auto heart_rate_data = getDataSeries<HeartRateMeasurement>(rest_server, from, until);
+      auto heart_rate_data = getDataSeries<HeartRate>(rest_server, from, until);
       
       // group HR measurements by hour of day.
       std::multimap<chrono::hours, int> heart_rates_by_hour{};

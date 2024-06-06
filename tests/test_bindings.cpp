@@ -9,13 +9,11 @@
 #include "oura_charts/oura_charts.h"
 #include "FileDataProvider.h"
 #include "oura_charts/UserProfile.h"
-#include "oura_charts/HeartRateMeasurement.h"
+#include "oura_charts/HeartRate.h"
 #include <catch2/catch_test_macros.hpp>
 
 namespace oura_charts::test
 {
-
-
 
    TEST_CASE("test_UserProfile_bindings", "[binding]")
    {
@@ -39,7 +37,7 @@ namespace oura_charts::test
       // data provider for unit tests that gets json from disk files.
       auto data_prov = FileDataProvider{ fs::path{"./test_data" } };
 
-      HeartRateDataSeries hr_data{ detail::getDataSeries<HeartRateMeasurement>(data_prov, detail::SortedPropertyMap{}) };
+      HeartRateDataSeries hr_data{ detail::getDataSeries<HeartRate>(data_prov, detail::SortedPropertyMap{}) };
 
       REQUIRE(hr_data.size() > 0);
 
