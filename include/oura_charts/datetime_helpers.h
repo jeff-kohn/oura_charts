@@ -40,11 +40,12 @@ namespace oura_charts
    using chrono::hh_mm_ss;
    using chrono::time_point_cast;
 
-   
+
 
 // incomplete <chrono> in linux libstdc++ as of v12
 #if defined(__cpp_lib_chrono) && __cpp_lib_chrono < 201907L
    using date::from_stream;
+   using date::parse;
 #else
    using chrono::from_stream;
 #endif
@@ -54,7 +55,7 @@ namespace oura_charts
    ///   convenience function for convertiong local time to utc
    /// </summary>
    template <typename DurationT>
-   inline [[nodiscard]] sys_time<DurationT> localToUtc(local_time<DurationT> ts, const chrono::time_zone* tz = chrono::current_zone())
+   [[nodiscard]] inline sys_time<DurationT> localToUtc(local_time<DurationT> ts, const chrono::time_zone* tz = chrono::current_zone())
    {
       return tz->to_sys(ts);
    }
@@ -64,7 +65,7 @@ namespace oura_charts
    ///   convenience function for convertiong utc time to local
    /// </summary>
    template <typename DurationT>
-   inline [[nodiscard]] local_time<DurationT> utcToLocal(sys_time<DurationT> ts, const chrono::time_zone* tz = chrono::current_zone())
+   [[nodiscard]] inline local_time<DurationT> utcToLocal(sys_time<DurationT> ts, const chrono::time_zone* tz = chrono::current_zone())
    {
       return tz->to_local(ts);
    }
@@ -73,7 +74,7 @@ namespace oura_charts
    /// <summary>
    ///   get the current time relative to the local time zone.
    /// </summary>
-   inline [[nodiscard]] auto localNow()
+   [[nodiscard]] inline auto localNow()
    {
       return utcToLocal(clock::now());
    }
@@ -83,7 +84,7 @@ namespace oura_charts
    ///   stip the time of day from a timepoint
    /// </summary>
    template <typename ClockT, typename DurationT>
-   inline [[nodiscard]] chrono::time_point<ClockT, DurationT> stripTimeOfDay(chrono::time_point<ClockT, DurationT>  tp)
+   [[nodiscard]] inline chrono::time_point<ClockT, DurationT> stripTimeOfDay(chrono::time_point<ClockT, DurationT>  tp)
    {
       return time_point_cast<DurationT>(floor<days>(tp));
    }
@@ -93,7 +94,7 @@ namespace oura_charts
    ///   Convert a time point into a calendar date and civil time.
    /// </summary>
    template<typename ClockT, typename DurationT>
-   inline [[nodiscard]] std::pair<year_month_day, hh_mm_ss<DurationT>> getCivilTime(chrono::time_point<ClockT, DurationT> tp)
+   [[nodiscard]] inline std::pair<year_month_day, hh_mm_ss<DurationT>> getCivilTime(chrono::time_point<ClockT, DurationT> tp)
    {
       auto daypoint = floor<days>(tp);
       year_month_day day{ daypoint };
@@ -109,17 +110,17 @@ namespace oura_charts
    ///   contained a timezone offeset. Expected value is the parsed date,
    ///   unexpected value is exception object containing error information.
    /// </summary>
-   inline [[nodiscard]] expected<sys_seconds, oura_exception> parseIsoDateTime(std::string_view dt_str)
+   [[nodiscard]] inline expected<sys_seconds, oura_exception> parseIsoDateTime(std::string_view dt_str)
    {
       // first try parsing with time zone offset, if that fails try parsing as UTC.
       std::ispanstream dt_strm{ dt_str };
       sys_seconds ts{};
 
-      dt_strm >> chrono::parse(constants::PARSE_FMT_STR_ISO_DATETIME_LOCAL, ts);
+      dt_strm >> parse(constants::PARSE_FMT_STR_ISO_DATETIME_LOCAL, ts);
       if (dt_strm.fail())
       {
          dt_strm = std::ispanstream{ dt_str };
-         dt_strm >> chrono::parse(constants::PARSE_FMT_STR_ISO_DATETIME_UTC, ts);
+         dt_strm >> parse(constants::PARSE_FMT_STR_ISO_DATETIME_UTC, ts);
       }
       if (dt_strm.fail())
          return unexpected{ oura_exception{ fmt::format("The intput string '{}' could not be parsed as a valid date/time", dt_str), ErrorCategory::Parse } };
@@ -130,14 +131,14 @@ namespace oura_charts
    /// <summary>
    ///   parse an ISO date string into a year_month_day
    /// </summary>
-   inline [[nodiscard]] expected<chrono::year_month_day, oura_exception> parseIsoDate(std::string_view dt_str)
+   [[nodiscard]] inline expected<chrono::year_month_day, oura_exception> parseIsoDate(std::string_view dt_str)
    {
       constexpr auto format_str{ constants::PARSE_FMT_STR_ISO_DATE_ONLY };
-                                                                
+
       std::ispanstream dt_strm{ dt_str, };
-      year_month_day ymd{};
-      if ((dt_strm >> chrono::parse(format_str, ymd)))
-         return ymd;
+      sys_days days{};
+      if ((dt_strm >> parse(format_str, days)))
+         return year_month_day(days);
       else
          return unexpected{ oura_exception{ fmt::format("The intput string '{}' could not be parsed as a valid date", dt_str), ErrorCategory::Parse } };
    }
@@ -151,7 +152,7 @@ namespace oura_charts
    ///   value that fmt::format() knows how to format as a date/time.
    /// </remarks>
    template<typename DateType>
-   inline [[nodiscard]] std::string toIsoDateTime(DateType&& date_val)
+   [[nodiscard]] inline std::string toIsoDateTime(DateType&& date_val)
    {
       return fmt::format("{:%FT%TZ}", chrono::floor<chrono::seconds>(std::forward<DateType>(date_val)) );
    }
@@ -160,7 +161,7 @@ namespace oura_charts
    /// <summary>
    ///   Convert a year_month_day to a ISO date string
    /// </summary>
-   inline [[nodiscard]] std::string toIsoDate(const chrono::year_month_day& date)
+   [[nodiscard]] inline std::string toIsoDate(const chrono::year_month_day& date)
    {
       // fmt::format doesn't support the date types from C++ 20/23
       return std::format("{:%F}", date);

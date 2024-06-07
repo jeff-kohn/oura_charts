@@ -2,7 +2,7 @@
 // oura_exception.h
 //
 // Defines the oura_exception class, which is used to report errors via throw() and expected<>
-// 
+//
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -125,9 +125,10 @@ namespace oura_charts
       ///   create an exception from an error message and optional category
       /// </summary>
       oura_exception(std::string error_text, ErrorCategory category = ErrorCategory::Generic)
-         : message{ std::move(error_text) },
-           category{ category },
-           error_code{ ERROR_CODE_GENERAL_FAILURE }
+         : error_code{ ERROR_CODE_GENERAL_FAILURE },
+           message{ std::move(error_text) },
+           category{ category }
+
       {
       }
 
@@ -135,9 +136,9 @@ namespace oura_charts
       ///   This ctor forwards the parameter pack to format() for the error message.
       /// </summary>
       template <typename... T>
-      constexpr oura_exception(ErrorCategory errcat, fmt::format_string<T...> fmt, T&&... args)
-         : category{ category },
-           error_code{ ERROR_CODE_GENERAL_FAILURE }
+      constexpr oura_exception(ErrorCategory category, fmt::format_string<T...> fmt, T&&... args)
+         : error_code{ ERROR_CODE_GENERAL_FAILURE },
+           category{ category }
       {
          message = fmt::format(fmt, args...);
       }

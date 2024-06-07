@@ -84,7 +84,7 @@ namespace oura_charts
          using CollectionBuffer = std::deque<typename JsonCollectionT::value_type>;
 
          // get JSON from rest server
-         auto&& exp_json = provider.getJsonDataSeries(ElementT::REST_PATH, forward<MapT>(param_map));
+         auto&& exp_json = provider.getJsonDataSeries(ElementT::REST_PATH, std::forward<MapT>(param_map));
          if (!exp_json)
             throw exp_json.error();
 
@@ -101,7 +101,7 @@ namespace oura_charts
          while (rest_data.next_token)
          {
             param_map[constants::REST_PARAM_NEXT_TOKEN] = rest_data.next_token.value();
-            exp_json = provider.getJsonDataSeries(ElementT::REST_PATH, forward<MapT>(param_map));
+            exp_json = provider.getJsonDataSeries(ElementT::REST_PATH, std::forward<MapT>(param_map));
             if (!exp_json)
                throw exp_json.error();
 
@@ -110,10 +110,11 @@ namespace oura_charts
                throw exp_json.error();
 
             rest_data = exp_data.value();
-            buf.append_range(std::move(rest_data.data));
+            // no append_range() in libstdc++ yet
+            buf.insert(buf.end(), std::make_move_iterator(rest_data.data.begin()), std::make_move_iterator(rest_data.data.end()));
          }
 
-         // finally move the accumulated data into a new DataSeries to return 
+         // finally move the accumulated data into a new DataSeries to return
          return DataSeries<ElementT>( std::move(buf) );
       }
 

@@ -2,7 +2,7 @@
 // logging.h
 //
 // defines the logging namespace and interface for logging functionality.
-// 
+//
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -38,7 +38,6 @@ namespace oura_charts::logging
    using spdlog::sinks::daily_file_sink_mt;
    using spdlog::sinks::stdout_color_sink_mt;
    using spdlog::sinks::stderr_color_sink_mt;
-   using spdlog::sinks::msvc_sink_mt;
    using spdlog::sinks_init_list;
    using spdlog::set_default_logger;
    using spdlog::log;
@@ -50,6 +49,9 @@ namespace oura_charts::logging
    using log_ptr_t = std::shared_ptr<logger>;
    using sink_ptr_t = sinks_init_list::value_type;
 
+#if defined(_WIN32)
+   using spdlog::sinks::msvc_sink_mt;
+#endif
 } // namespace oura_charts::logging
 
 
@@ -132,11 +134,11 @@ namespace oura_charts::logging
    /// <summary>
    ///   Overload of makeDailyFileSink() that has default values for convenience.
    /// </summary>
-   inline [[nodiscard]] sink_ptr_t makeDailyFileSink(log_level::level_enum level = constants::CONFIG_DEFAULT_LOGLEVEL_DAILYFILE,
+   [[nodiscard]] inline sink_ptr_t makeDailyFileSink(log_level::level_enum level = constants::CONFIG_DEFAULT_LOGLEVEL_DAILYFILE,
                                                      std::string_view log_folder = constants::CONFIG_DEFAULT_LOG_FOLDER,
                                                      std::string_view log_filename_base = constants::APP_NAME_NOSPACE,
                                                      std::string_view pattern = constants::CONFIG_DEFAULT_LOG_PATTERN_CONSOLE)
-   {                                   
+   {
       return makeDailyFileSink(level, fs::path{ log_folder }, log_filename_base, pattern);
    }
 
@@ -164,7 +166,7 @@ namespace oura_charts::logging
       ///   sink, as this level will be used to filter messages before calling any sinks. The log level
       ///   filter on a sink is in addition to the max_level.
       /// </remarks>
-      static [[nodiscard]] log_ptr_t makePrivate(std::string_view log_name, sinks_init_list sinks, log_level::level_enum max_level);
+      [[nodiscard]] static log_ptr_t makePrivate(std::string_view log_name, sinks_init_list sinks, log_level::level_enum max_level);
 
 
       /// <summary>
@@ -191,5 +193,5 @@ namespace oura_charts::logging
       /// </remarks>
       static log_ptr_t makeDefault(sinks_init_list sinks = { makeConsoleSink(), makeDailyFileSink() }, log_level::level_enum max_level = level_enum::trace);
    };
-   
+
 } //  namespace oura_charts

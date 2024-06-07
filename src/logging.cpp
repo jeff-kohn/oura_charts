@@ -2,7 +2,7 @@
 // logging.cpp
 //
 // defines the logging namespace and interface for logging functionality.
-// 
+//
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ namespace oura_charts::logging
       auto sink = make_shared<sinks::stdout_color_sink_mt>();
       sink->set_level(level);
       sink->set_pattern(string{ pattern });
-      return move(sink);
+      return sink;
    }
 
 
@@ -47,7 +47,7 @@ namespace oura_charts::logging
       auto file_sink = make_shared<daily_file_sink_mt>(logfile, 0, 1);
       file_sink->set_level(level);
       file_sink->set_pattern(string{ pattern });
-      return move(file_sink);
+      return file_sink;
    }
 
 

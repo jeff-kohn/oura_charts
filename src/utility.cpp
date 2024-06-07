@@ -8,10 +8,10 @@
 
 #include "oura_charts/oura_charts.h"
 #include "oura_charts/detail/utility.h"
-
+#include <regex>
 #if defined(_WIN32_WINNT)
    #include <windows.h>
-   #include <vector> 
+   #include <vector>
 #else
    #include <cstdlib>
 #endif
@@ -74,7 +74,7 @@ namespace oura_charts::detail
          return false;
 
       // When using ANSI strings, the buffer size should be the string length,
-      // plus terminating null character, plus one. 
+      // plus terminating null character, plus one.
       string dest(bufsize+2, '\0');
 
       if (ExpandEnvironmentStrings(text.c_str(), dest.data(), bufsize))
