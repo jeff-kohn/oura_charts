@@ -11,7 +11,7 @@ namespace oura_charts::test
                                       std::make_error_code(std::errc::no_such_file_or_directory) };
    }
 
-   FileDataProvider::expected_json FileDataProvider::doFileGet(fs::path filename)  const noexcept
+   FileDataProvider::JsonResult FileDataProvider::doFileGet(fs::path filename)  const noexcept
    {
       try
       {

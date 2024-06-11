@@ -84,32 +84,32 @@ namespace oura_charts
          using CollectionBuffer = std::deque<typename JsonCollectionT::value_type>;
 
          // get JSON from rest server
-         auto&& exp_json = provider.getJsonDataSeries(ElementT::REST_PATH, std::forward<MapT>(param_map));
-         if (!exp_json)
-            throw exp_json.error();
+         auto&& json_res = provider.getJsonDataSeries(ElementT::REST_PATH, std::forward<MapT>(param_map));
+         if (!json_res)
+            throw json_res.error();
 
          // parse into structs
-         auto&& exp_data = readJson<JsonCollectionT>(exp_json.value());
-         if (!exp_data)
-            throw exp_json.error();
+         auto&& data_res = readJson<JsonCollectionT>(json_res.value());
+         if (!data_res)
+            throw json_res.error();
 
          // move the structs into temporary holding so we can accumulate if there's more.
-         auto&& rest_data = exp_data.value();
+         auto&& rest_data = data_res.value();
          CollectionBuffer buf{ std::make_move_iterator(rest_data.data.begin()), std::make_move_iterator(rest_data.data.end()) };
 
          // as long as we got a non-null "next_token" back from the REST server, there's still more data to get.
          while (rest_data.next_token)
          {
             param_map[constants::REST_PARAM_NEXT_TOKEN] = rest_data.next_token.value();
-            exp_json = provider.getJsonDataSeries(ElementT::REST_PATH, std::forward<MapT>(param_map));
-            if (!exp_json)
-               throw exp_json.error();
+            json_res = provider.getJsonDataSeries(ElementT::REST_PATH, std::forward<MapT>(param_map));
+            if (!json_res)
+               throw json_res.error();
 
-            exp_data = readJson<JsonCollectionT>(exp_json.value());
-            if (!exp_data)
-               throw exp_json.error();
+            data_res = readJson<JsonCollectionT>(json_res.value());
+            if (!data_res)
+               throw json_res.error();
 
-            rest_data = exp_data.value();
+            rest_data = data_res.value();
             // no append_range() in libstdc++ yet
             buf.insert(buf.end(), std::make_move_iterator(rest_data.data.begin()), std::make_move_iterator(rest_data.data.end()));
          }

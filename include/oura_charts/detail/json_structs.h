@@ -53,6 +53,7 @@ namespace oura_charts::detail
       nullable_string next_token;
    };
 
+
    /// <summary>
    ///   struct that contains information about a single heart rate measurement.
    /// </summary>
@@ -62,7 +63,6 @@ namespace oura_charts::detail
       std::string source;
       local_seconds timestamp;
    };
-   using hr_data_series = RestDataCollection<hr_data>;      
 
 
    /// <summary>
@@ -90,7 +90,14 @@ namespace oura_charts::detail
       nullable_double restless_periods{};
 
    };
-   using sleep_data_series = RestDataCollection<sleep_data>;
+
+
+   /// <summary>
+   ///   result type used for parsing JSON text into struct data.
+   /// </summary>
+   /// <typeparam name="T"></typeparam>
+   template<typename T>
+   using ParseResult = expected<T, oura_exception>;
 
 
    /// <summary>
@@ -98,7 +105,7 @@ namespace oura_charts::detail
    ///   need to pass the struct as a parameter or translate any parse_error's returned.
    /// </summary>
    template <glz::opts Opts, typename ValueT, StringViewCompatible StringT>
-   [[nodiscard]] inline expected<ValueT, oura_exception> readJson(StringT&& buffer) noexcept
+   [[nodiscard]] inline ParseResult<ValueT> readJson(StringT&& buffer) noexcept
    {
       ValueT value{};
       auto&& pe = glz::read<Opts>(value, buffer);
@@ -117,7 +124,7 @@ namespace oura_charts::detail
    ///   if you want to explicitly set glz compile-time options, use the other overload.
    /// <remarks>
    template <typename ValueT, StringViewCompatible StringT>
-   [[nodiscard]] inline expected<ValueT, oura_exception> readJson(StringT&& buffer) noexcept
+   [[nodiscard]] inline ParseResult<ValueT> readJson(StringT&& buffer) noexcept
    {
       return readJson < glz::opts{ .error_on_unknown_keys = false }, ValueT > (buffer);
    }
@@ -140,9 +147,9 @@ namespace glz::detail
       {
          std::string date_str{};
          read<json>::op<Opts>(date_str, ctx, args...);
-         auto exp_ymd = oc::parseIsoDate(date_str);
-         if (exp_ymd)
-            value = exp_ymd.value();
+         auto ymd_res = oc::parseIsoDate(date_str);
+         if (ymd_res)
+            value = ymd_res.value();
          else
             ctx.error = glz::error_code::parse_number_failure;
       }
@@ -156,9 +163,9 @@ namespace glz::detail
       {
          std::string date_str{};
          read<json>::op<Opts>(date_str, ctx, args...);
-         auto exp_tsl = oc::parseIsoDateTime(date_str);
-         if (exp_tsl)
-            value = oc::utcToLocal(exp_tsl.value());
+         auto tp_res = oc::parseIsoDateTime(date_str);
+         if (tp_res)
+            value = oc::utcToLocal(tp_res.value());
          else
             ctx.error = glz::error_code::parse_number_failure;
       }

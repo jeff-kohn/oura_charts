@@ -68,9 +68,9 @@ namespace oura_charts
    ///   a REST endpoint, database, unit test mock, etc.
    /// </summary>
    template <typename Provider>
-   concept DataProvider = requires (Provider dp, Provider::expected_json ej)
+   concept DataProvider = requires (Provider dp, Provider::JsonResult jr)
    {
-      ej = dp.getJsonObject("");
+      jr = dp.getJsonObject("");
    };
 
 

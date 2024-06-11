@@ -30,7 +30,7 @@ namespace oura_charts::test
       // this is the type we return when retrieving data for a single JSON object.
       // Exected value is the requested json, unexpected value is an exception
       // describing what went wrong in the event of failure.
-      using expected_json = expected<std::string, oura_exception>;
+      using JsonResult = expected<std::string, oura_exception>;
 
       // Initialize a file based data provider with a folder path. If the path doesn't exist,
       // a filesytem_error will be thrown.
@@ -40,7 +40,7 @@ namespace oura_charts::test
       /// Retrieve the JSON for a single object (which for this will just be the contents
       /// of the file named 'path')
       /// </summary>
-      [[nodiscard]] expected_json getJsonObject(std::string_view path) const noexcept
+      [[nodiscard]] JsonResult getJsonObject(std::string_view path) const noexcept
       {
          return doFileGet(path);
       }
@@ -54,7 +54,7 @@ namespace oura_charts::test
       ///   the template parameter is just for interface compatibility, it's not actually used.
       /// </remarks>
       template <typename T>
-      [[nodiscard]] expected_json getJsonDataSeries(std::string_view path, T) const noexcept
+      [[nodiscard]] JsonResult getJsonDataSeries(std::string_view path, T) const noexcept
       {
          return doFileGet(path);
       }
@@ -62,7 +62,7 @@ namespace oura_charts::test
    private:
       fs::path m_data_folder{};
 
-      expected_json doFileGet(fs::path filename) const noexcept;
+      JsonResult doFileGet(fs::path filename) const noexcept;
    };
 
 } // oura_charts::detail

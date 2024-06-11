@@ -64,15 +64,15 @@ namespace oura_charts
    template <DataProvider ProviderT>
    [[nodiscard]] UserProfile getUserProfile(const ProviderT& provider) noexcept(false)
    {
-      auto exp_json = provider.getJsonObject(UserProfile::REST_PATH);
-      if (!exp_json)
-         throw exp_json.error();
+      auto json_res = provider.getJsonObject(UserProfile::REST_PATH);
+      if (!json_res)
+         throw json_res.error();
 
-      auto exp_udt = detail::readJson<detail::profile_data>(exp_json.value());
-      if (!exp_udt)
-         throw exp_udt.error();
+      auto udt_res = detail::readJson<detail::profile_data>(json_res.value());
+      if (!udt_res)
+         throw udt_res.error();
 
-      return UserProfile{ *exp_udt };
+      return UserProfile{ *udt_res };
    }
 
 

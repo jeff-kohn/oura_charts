@@ -32,13 +32,13 @@ namespace oura_charts
    public:
       // this is the type we return when retrieving data. Exected value is the requested json,
       // unexpected value is an exception describing what went wrong.
-      using expected_json = expected<std::string, oura_exception>;
+      using JsonResult = expected<std::string, oura_exception>;
 
 
       /// <summary>
       ///   Retrieve the JSON for a single object from the rest server.
       /// </summary>
-      [[nodiscard]] expected_json getJsonObject(std::string_view path) const noexcept
+      [[nodiscard]] JsonResult getJsonObject(std::string_view path) const noexcept
       {
          return doRestGet(path);
       }
@@ -49,7 +49,7 @@ namespace oura_charts
       //   number of other objects to the underlying CPR call.
       // </summary>
       template<KeyValueRange MapT>
-      [[nodiscard]] expected_json getJsonObject(std::string_view path, const MapT&& param_map) const noexcept
+      [[nodiscard]] JsonResult getJsonObject(std::string_view path, const MapT&& param_map) const noexcept
       {
          return doRestGet(path, mapToParams(std::forward<MapT>(param_map)));
       }
@@ -64,7 +64,7 @@ namespace oura_charts
       ///   next_token param as appropriate when requesting paged/chunked data.
       /// </remarks>
       template<KeyValueRange MapT>
-      [[nodiscard]] expected_json getJsonDataSeries(std::string_view path, MapT&& param_map) const noexcept
+      [[nodiscard]] JsonResult getJsonDataSeries(std::string_view path, MapT&& param_map) const noexcept
       {
          // Send the request to server and check that we get a valid response.
          return  doRestGet(path, mapToParams(std::forward<MapT>(param_map)));
@@ -92,7 +92,7 @@ namespace oura_charts
       // Assembles the REST GET request and sends it to the server, returning any JSON
       // (or error information) that is received in response.
       template <typename... Ts>
-      [[nodiscard]] expected_json doRestGet(std::string_view path, Ts... ts) const noexcept
+      [[nodiscard]] JsonResult doRestGet(std::string_view path, Ts... ts) const noexcept
       {
          cpr::Header header{
             { constants::REST_HEADER_XCLIENT, constants::REST_HEADER_XCLIENT_VALUE }
@@ -105,7 +105,7 @@ namespace oura_charts
 
 
       // extract the expected json (or unexepected error) from a REST response
-      [[nodiscard]] expected_json getJsonFromResponse(const cpr::Response& response) const noexcept
+      [[nodiscard]] JsonResult getJsonFromResponse(const cpr::Response& response) const noexcept
       {
          if (cpr::status::is_success(response.status_code))
          {

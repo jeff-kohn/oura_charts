@@ -25,11 +25,11 @@ namespace oura_charts::test
       // data provider for unit tests that gets json from disk files.
       auto data_prov = FileDataProvider{ fs::path{"./test_data" } };
 
-      auto exp_json = data_prov.getJsonObject(UserProfile::REST_PATH);
-      REQUIRE(exp_json.has_value());
+      auto json_res = data_prov.getJsonObject(UserProfile::REST_PATH);
+      REQUIRE(json_res.has_value());
 
-      auto exp_data = detail::readJson<detail::profile_data>(*exp_json);
-      REQUIRE(exp_data.has_value());
+      auto data_res = detail::readJson<detail::profile_data>(*json_res);
+      REQUIRE(data_res.has_value());
    }
 
 
@@ -40,13 +40,13 @@ namespace oura_charts::test
       // data provider for unit tests that gets json from disk files.
       auto data_prov = FileDataProvider{ fs::path{"./test_data" } };
 
-      auto exp_json = data_prov.getJsonObject(SleepSession::REST_PATH);
-      REQUIRE(exp_json.has_value());
+      auto json_res = data_prov.getJsonObject(SleepSession::REST_PATH);
+      REQUIRE(json_res.has_value());
 
-      auto exp_data = readJson<RestDataCollection<SleepSession::StorageType>>(*exp_json);
-      REQUIRE(exp_data.has_value());
+      auto data_res = readJson<RestDataCollection<SleepSession::StorageType>>(*json_res);
+      REQUIRE(data_res.has_value());
 
-      auto sleep_data{ *exp_data };
+      auto sleep_data{ *data_res };
       REQUIRE(sleep_data.data.size() > 1);
    }
 
@@ -57,13 +57,13 @@ namespace oura_charts::test
 
       auto data_prov = FileDataProvider{ fs::path{"./test_data" } };
 
-      auto exp_json = data_prov.getJsonObject(HeartRate::REST_PATH);
-      REQUIRE(exp_json.has_value());
+      auto json_res = data_prov.getJsonObject(HeartRate::REST_PATH);
+      REQUIRE(json_res.has_value());
 
-      auto exp_data = readJson<RestDataCollection<HeartRate::StorageType>>(*exp_json);
-      REQUIRE(exp_data.has_value());
+      auto data_res = readJson<RestDataCollection<HeartRate::StorageType>>(*json_res);
+      REQUIRE(data_res.has_value());
 
-      auto hr_data{ *exp_data };
+      auto hr_data{ *data_res };
       REQUIRE(hr_data.data.size() > 1);
    }
 
