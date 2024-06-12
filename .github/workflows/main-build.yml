@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-24.04
 
     env:
-      _VCPKG_: ${{ github.workspace }}/vcpkg
+      VCPKG_INSTALLATION_ROOT: ${{ github.workspace }}/vcpkg
       VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg/bincache
       VCPKG_DEFAULT_TRIPLET: "x64-linux"
       VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
@@ -44,7 +44,9 @@ jobs:
 
       - name: run-vcpkg
         uses: lukka/run-vcpkg@v11.5
-            
+        with:
+          vcpkgJsonGlob: '**/vcpkg.json'
+
       - name: Build
         run: |
           scripts/build_preset.sh linux-release
