@@ -42,9 +42,9 @@ jobs:
       # Setup the build machine with the most recent versions of CMake and Ninja. Both are cached if not already: on subsequent runs both will be quickly restored from GitHub cache service.
       - uses: lukka/get-cmake@latest
 
-      - name: Setup anew (or from cache) vcpkg (and does not build any package)
-        uses: lukka/run-vcpkg@11
-
+      - name: run-vcpkg
+        uses: lukka/run-vcpkg@v11.5
+            
       - name: Build
         run: |
           scripts/build_preset.sh linux-release
