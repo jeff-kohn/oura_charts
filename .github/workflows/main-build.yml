@@ -43,7 +43,7 @@ jobs:
       - uses: lukka/get-cmake@latest
 
       - name: Setup anew (or from cache) vcpkg (and does not build any package)
-        uses: lukka/run-vcpkg@latest
+        uses: lukka/run-vcpkg@11
 
       - name: Build
         run: |
