@@ -9,7 +9,6 @@
 #include "oura_charts/RestDataProvider.h"
 #include "oura_charts/functors.h"
 #include "oura_charts/TokenAuth.h"
-#include "oura_charts/detail/utility.h"
 #include "oura_charts/detail/logging.h"
 #include "helpers.h"
 #include <fmt/format.h>

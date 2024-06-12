@@ -39,9 +39,10 @@ namespace oura_charts::detail
    ///   passed-in path, so it is only valid for the lifetime of the passed-in path
    /// </summary>
    /// <remarks>
-   ///   This might seem unnecessary but filesystem::path::filename does a bunch of 
+   ///   This might seem unnecessary but filesystem::path::filename does a bunch of
    ///   extra copying and converting between wstring and string on Windows, and even
    ///   on linux you're going to get 1-2 extra copies. This function does no copying
    /// <remarks>
    std::string_view fileNameFromPath(std::string_view path) noexcept;
-}
+
+} // namespace oura_charts::detail

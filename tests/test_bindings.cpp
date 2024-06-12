@@ -6,7 +6,6 @@
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
 
-#include "oura_charts/oura_charts.h"
 #include "FileDataProvider.h"
 #include "oura_charts/UserProfile.h"
 #include "oura_charts/HeartRate.h"

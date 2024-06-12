@@ -7,7 +7,6 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 
-#include "oura_charts/oura_charts.h"
 #include "oura_charts/datetime_helpers.h"
 #include <catch2/catch_test_macros.hpp>
 
