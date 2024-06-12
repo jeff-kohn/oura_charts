@@ -2,19 +2,22 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "oura-charts",
   "version": "1.0.0",
-  "vcpkg-configuration": {
-    "overlay-ports": [ 
-      "scripts/vcpkg_ports"
-    ]
-  },
   "dependencies": [
     "boost-algorithm",
-    "boost-fusion",
     "cxxopts",
-    "spdlog",
     "fmt",
-    "concurrencpp",
     "catch2",
-    "restc-cpp"
-  ]
+    "spdlog",
+    "glaze",
+    "cpr",
+    {
+      "name": "tl-expected",
+      "platform": "linux"
+    },
+    {
+      "name": "date",
+      "platform": "linux"
+    }
+  ],
+  "builtin-baseline": "eb0f108ebd674c6ed79acb1c2e123208c416af0d"
 }

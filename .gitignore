@@ -400,11 +400,7 @@ FodyWeavers.xsd
 # repo-specific
 build/**/
 vcpkg_installed/
-examples/generate_secret/qr_code.svg
-out/
 CMakeUserPresets.json
-/Testing
 .vscode/
-
 StartupProfileData-NonInteractive
 compile_commands.json

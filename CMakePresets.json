@@ -1,141 +1,120 @@
 {
    "version": 3,
-  "configurePresets": [
-    {
-      "name": "win-base",
-      "description": "Contains all the common settings that should be used by default for all windows configuration presets",
-      "hidden": true,
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build/out/${presetName}",
-      "installDir": "${sourceDir}/build/install/windows",
-      "cacheVariables": {
-        "CMAKE_CXX_COMPILER": "cl.exe",
-        "CMAKE_TOOLCHAIN_FILE": {
-          "value": "$env{VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake",
-          "type": "FILEPATH"
-        },
-        "ENABLE_CPP_CHECK": "OFF",
-        "ENABLE_CLANG_TIDY": "OFF",
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "1"
+   "configurePresets": [
+      {
+         "name": "win-base",
+         "description": "Contains all the common settings that should be used by default for all windows configuration presets",
+         "hidden": true,
+         "generator": "Ninja",
+         "binaryDir": "${sourceDir}/build/out/${presetName}",
+         "installDir": "${sourceDir}/build/install/windows",
+         "architecture": {
+            "value": "x64",
+            "strategy": "external"
+         },
+         "cacheVariables": {
+            "CMAKE_CXX_COMPILER": "cl.exe",
+            "CMAKE_TOOLCHAIN_FILE": {
+               "value": "$env{VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake",
+               "type": "FILEPATH"
+            },
+            "BUILD_TESTING": "OFF",
+            "ENABLE_CPP_CHECK": "OFF",
+            "ENABLE_CLANG_TIDY": "OFF",
+            "CMAKE_EXPORT_COMPILE_COMMANDS": "1",
+            "VCPKG_TARGET_TRIPLET": "x64-windows-static"
+         },
+         "condition": {
+            "type": "equals",
+            "lhs": "${hostSystemName}",
+            "rhs": "Windows"
+         }
       },
-      "condition": {
-        "type": "equals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Windows"
-      }
-    },
-    {
-      "name": "win-x64",
-      "description": "Provides architecture-specific settings that should be used by all x64 configurations",
-      "displayName": "win-x64",
-      "hidden": true,
-      "architecture": {
-        "value": "x64",
-        "strategy": "external"
+      {
+         "name": "win-release",
+         "displayName": "win-release",
+         "description": "release build for windows",
+         "inherits": [
+            "win-base"
+         ],
+         "cacheVariables": {
+            "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+            "CMAKE_POSITION_INDEPENDENT_CODE": "ON"
+         }
       },
-      "cacheVariables": {
-        "VCPKG_TARGET_TRIPLET": "x64-windows-static"
-      }
-    },
-    {
-      "name": "win-release",
-      "displayName": "win-release",
-      "description": "release build for windows",
-      "inherits": [
-        "win-base",
-        "win-x64"
-      ],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
-      }
-    },
-    {
-      "name": "win-debug",
-      "displayName": "win-debug",
-      "description": "Provides settings that should be used by all Windows Debug configurations",
-      "inherits": [
-        "win-base",
-        "win-x64"
-      ],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
-      }
-    },
-    {
-      "name": "linux-base",
-      "description": "Contains all the common settings that should be used by default for all linux configuration presets",
-      "hidden": true,
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build/out/${presetName}",
-      "installDir": "${sourceDir}/build/install/linux",
-      "cacheVariables": {
-        "CMAKE_TOOLCHAIN_FILE": {
-          "value": "$env{VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake",
-          "type": "FILEPATH"
-        },
-        "CMAKE_CXX_COMPILER": "clang++",
-        "DEFAULT_WARNING_FLAGS": "-Wall;-Wextra;-Wpedantic;-Werror;",
-        "DEFAULT_COMPILE_DEFINITIONS": "_GLIBCXX_ASSERTIONS",
-        "BUILD_TESTING": "OFF",
-        "ENABLE_CPP_CHECK": "OFF",
-        "ENABLE_CLANG_TIDY": "OFF",
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "1"
+      {
+         "name": "win-debug",
+         "displayName": "win-debug",
+         "description": "Provides settings that should be used by all Windows Debug configurations",
+         "inherits": [
+            "win-base"
+         ],
+         "cacheVariables": {
+            "CMAKE_BUILD_TYPE": "Debug",
+            "BUILD_TESTING": "ON"
+         }
       },
-      "condition": {
-        "type": "equals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Linux"
+      {
+         "name": "linux-base",
+         "description": "Contains all the common settings that should be used by default for all linux configuration presets",
+         "hidden": true,
+         "generator": "Ninja",
+         "binaryDir": "${sourceDir}/build/out/${presetName}",
+         "installDir": "${sourceDir}/build/install/linux",
+         "architecture": {
+            "value": "x64",
+            "strategy": "external"
+         },
+         "cacheVariables": {
+            "CMAKE_TOOLCHAIN_FILE": {
+               "value": "$env{VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake",
+               "type": "FILEPATH"
+            },
+            "CMAKE_CXX_COMPILER": "clang++",
+            "BUILD_TESTING": "OFF",
+            "ENABLE_CPP_CHECK": "OFF",
+            "ENABLE_CLANG_TIDY": "OFF",
+            "CMAKE_EXPORT_COMPILE_COMMANDS": "1",
+            "VCPKG_TARGET_TRIPLET": "x64-linux"
+         },
+         "condition": {
+            "type": "equals",
+            "lhs": "${hostSystemName}",
+            "rhs": "Linux"
+         },
+         "vendor": {
+            "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+               "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+            }
+         }
       },
-      "vendor": {
-        "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
-          "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
-        }
-      }
-    },
-    {
-      "name": "linux-x64",
-      "description": "Provides architecture-specific settings that should be used by all x64 configurations",
-      "displayName": "linux-x64",
-      "hidden": true,
-      "architecture": {
-        "value": "x64",
-        "strategy": "external"
+      {
+         "name": "linux-release",
+         "displayName": "linux-release",
+         "description": "release build for linux",
+         "inherits": [
+            "linux-base"
+         ],
+         "cacheVariables": {
+            "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+            "CMAKE_POSITION_INDEPENDENT_CODE": "ON"
+         }
       },
-      "cacheVariables": {
-        "VCPKG_TARGET_TRIPLET": "x64-linux"
+      {
+         "name": "linux-debug",
+         "displayName": "linux-debug",
+         "description": "debug build for linux",
+         "inherits": [
+            "linux-base"
+         ],
+         "cacheVariables": {
+            "ENABLE_CPP_CHECK": "ON",
+            "BUILD_TESTING": "ON",
+            "ENABLE_CLANG_TIDY": "ON",
+            "CMAKE_BUILD_TYPE": "Debug"
+         }
       }
-    },
-    {
-      "name": "linux-release",
-      "displayName": "linux-release",
-      "description": "release build for linux",
-      "inherits": [
-        "linux-base",
-        "linux-x64"
-      ],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
-        "DEFAULT_COMPILE_OPTIONS": "-O2;stdlib=libc++;-g;-fstack-clash-protection;-fstack-protector-strong;-fexceptions;-fpie;-grecord-gcc-switches;-fcf-protection;-pipe;-Werror=format-security;-Werror=implicit-function-declaration;",
-        "DEFAULT_LINK_OPTIONS": "-pie;-stdlib=libc++;-lc++abi"
-      }
-    },
-    {
-      "name": "linux-debug",
-      "displayName": "linux-debug",
-      "description": "debug build for linux",
-      "inherits": [
-        "linux-base",
-        "linux-x64"
-      ],
-      "cacheVariables": {
-        "BUILD_TESTING": "ON",
-        "ENABLE_CLANG_TIDY": "ON",
-        "CMAKE_BUILD_TYPE": "Debug",
-        "DEFAULT_COMPILE_OPTIONS": "-Og;-stdlib=libc++;-g;-fstack-clash-protection;-fstack-protector-strong;-fexceptions;-fpie;-grecord-gcc-switches;-fcf-protection;-pipe;-Werror=format-security;-Werror=implicit-function-declaration;",
-        "DEFAULT_LINK_OPTIONS": "-pie;-stdlib=libc++;-lc++abi"
-      }
-    }
-  ],
+   ],
    "buildPresets": [
       {
          "name": "win-debug",
