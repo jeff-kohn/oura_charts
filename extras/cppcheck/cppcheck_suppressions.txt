@@ -1,3 +1,7 @@
 // note, cmake writes abosolute paths to compile_commands.json, and CppCheck isn't smart enough to match relative paths to absolute paths
 // unless you wildcard parent directory so it can match to the absolute path.
-unusedFunction:*/tests/test_*.cpp
+checkersReport
+missingIncludeSystem
+missingInclude
+unusedFunction
+unmatchedSuppression

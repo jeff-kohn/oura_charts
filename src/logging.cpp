@@ -10,7 +10,6 @@
 #include "oura_charts/detail/utility.h"
 #include <ranges>
 #include <cassert>
-#include <algorithm>
 
 namespace oura_charts::logging
 {
@@ -18,7 +17,6 @@ namespace oura_charts::logging
    namespace vws = rgs::views;
    using namespace oura_charts::detail;
    using std::make_shared;
-   using std::move;
    using std::string_view;
    using std::string;
 
@@ -33,7 +31,7 @@ namespace oura_charts::logging
 
 
    [[nodiscard]] sink_ptr_t makeDailyFileSink(log_level::level_enum level,
-                                              fs::path log_folder,
+                                              const fs::path& log_folder,
                                               string_view log_filename_base,
                                               string_view pattern)
    {
@@ -71,7 +69,7 @@ namespace oura_charts::logging
       try
       {
          // Filter any nullptr's out, since debuggerSync may not always be available.
-         auto sink_view = vws::filter(sinks, [] (sinks_init_list::value_type val) -> bool
+         auto sink_view = vws::filter(sinks, [] (const sinks_init_list::value_type& val) -> bool
                                     {
                                           return val.get() != nullptr;
                                     });

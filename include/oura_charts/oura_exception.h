@@ -124,7 +124,7 @@ namespace oura_charts
       /// <summary>
       ///   create an exception from an error message and optional category
       /// </summary>
-      oura_exception(std::string error_text, ErrorCategory category = ErrorCategory::Generic)
+      explicit oura_exception(std::string error_text, ErrorCategory category = ErrorCategory::Generic)
          : error_code{ ERROR_CODE_GENERAL_FAILURE },
            message{ std::move(error_text) },
            category{ category }
@@ -138,9 +138,10 @@ namespace oura_charts
       template <typename... T>
       constexpr oura_exception(ErrorCategory category, fmt::format_string<T...> fmt, T&&... args)
          : error_code{ ERROR_CODE_GENERAL_FAILURE },
+           message{fmt::format(fmt, args...)},
            category{ category }
       {
-         message = fmt::format(fmt, args...);
+
       }
 
       oura_exception() = default;

@@ -2,25 +2,21 @@
 // RestDataProvider.h
 //
 // Declaration for class RestDataProvider<> which retrieves data from a REST HTTPs server.
-// 
+//
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
 
 #pragma once
 
 #include "oura_charts/oura_charts.h"
-#include "oura_charts/TokenAuth.h"
 #include "oura_charts/detail/logging.h"
-#include "oura_charts/detail/json_structs.h"
-#include "oura_charts/datetime_helpers.h"
 #include <cpr/cpr.h>
-#include <optional>
 
 namespace oura_charts
 {
 
    /// <summary>
-   ///   Provides a common interface for retrieving data objects from a REST endpoint.  
+   ///   Provides a common interface for retrieving data objects from a REST endpoint.
    /// </summary>
    /// <remarks>
    ///   this class uses std::expected<> instead of throwing exceptions, but doesn't guarantee
@@ -80,7 +76,7 @@ namespace oura_charts
       ///   constructor, takes an Auth object and a base URL that should be used
       ///   to build paths for REST endpoints.
       /// </summary>
-      RestDataProvider(Auth auth, std::string base_url) : m_auth{ auth },  m_base_url{ base_url }
+      RestDataProvider(Auth auth, std::string base_url) : m_auth{ auth },  m_base_url{ std::move(base_url) }
       {
       }
 
@@ -105,7 +101,7 @@ namespace oura_charts
 
 
       // extract the expected json (or unexepected error) from a REST response
-      [[nodiscard]] JsonResult getJsonFromResponse(const cpr::Response& response) const noexcept
+      [[nodiscard]] static JsonResult getJsonFromResponse(const cpr::Response& response) noexcept
       {
          if (cpr::status::is_success(response.status_code))
          {

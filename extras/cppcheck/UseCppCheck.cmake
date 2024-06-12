@@ -16,12 +16,8 @@ if (ENABLE_CPP_CHECK)
                "--enable=all"
                "--inconclusive"
                "--inline-suppr"
-               "--library=${CMAKE_SOURCE_DIR}/extras/cppcheck/googletest.cfg"    # This defines google test macros so that CppCheck doesn't choke on our unit tests.
+               "--library=${CMAKE_SOURCE_DIR}/extras/cppcheck/catch2.cfg"    # This defines catch2 test macros so that CppCheck doesn't choke on our unit tests.
                "--suppressions-list=${CMAKE_SOURCE_DIR}/extras/cppcheck/cppcheck_suppressions.txt"  # This file is used for surpressing specific checks in specific source files.
-               "--suppress=missingIncludeSystem"
-               "--suppress=missingInclude"
-               "--suppress=unusedFunction"
-               "--suppress=unmatchedSuppression"
                "-I${CMAKE_SOURCE_DIR}/include"
                "--template={file}({line}): warning: ({severity}): {message} [{id}]"
                "--quiet"
@@ -45,9 +41,7 @@ if (CPPCHECK_PATH)
          "--enable=all"
          "--inconclusive"
          "--inline-suppr"
-         "--suppress=missingIncludeSystem"
-         "--suppress=unmatchedSuppression"
-         "--suppress=missingInclude"
+         "--library=${CMAKE_SOURCE_DIR}/extras/cppcheck/catch2.cfg"    # This defines catch2 test macros so that CppCheck doesn't choke on our unit tests.
          "-I\"${CMAKE_SOURCE_DIR}/include\""
          "--template=vs"
          "--cppcheck-build-dir=\"${CMAKE_BINARY_DIR}/cppcheck\""

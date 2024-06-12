@@ -23,20 +23,14 @@
   .PARAMETER SkipUnitTests
   This switch causes cmake to skip running unit tests after building.
 
-  .INPUTS
-  None.
-
-  .OUTPUTS
-  None.
+  .EXAMPLE
+  PS> scripts/Build-Preset.ps1 win-release
 
   .EXAMPLE
-  PS> scripts/Build-Preset.ps1 win-x64-release
+  PS> scripts/Build-Preset.ps1 win-debug -SkipUnitTests
 
   .EXAMPLE
-  PS> scripts/Build-Preset.ps1 win-x86-debug -SkipUnitTests
-
-  .EXAMPLE
-  PS> scripts/Build-Preset.ps1 win-x64-release -RunConfigure $false -Rebuild
+  PS> scripts/Build-Preset.ps1 win-release -SkipConfigure -Rebuild
 
 #>
 

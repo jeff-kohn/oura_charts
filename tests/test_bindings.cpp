@@ -49,6 +49,4 @@ namespace oura_charts::test
       REQUIRE(timestamp == hr.timestamp());
    }
 
-  
-
-}
+} // namespace oura_charts::test

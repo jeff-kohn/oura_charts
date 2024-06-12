@@ -22,7 +22,7 @@ namespace oura_charts::test
 
 
    /// <summary>
-   ///   Mock data provider used for unit tests for our JSON serialization. 
+   ///   Mock data provider used for unit tests for our JSON serialization.
    /// </summary>
    class FileDataProvider
    {
@@ -34,7 +34,7 @@ namespace oura_charts::test
 
       // Initialize a file based data provider with a folder path. If the path doesn't exist,
       // a filesytem_error will be thrown.
-      FileDataProvider(fs::path data_folder = ".");
+      explicit FileDataProvider(fs::path data_folder = ".");
 
       /// <summary>
       /// Retrieve the JSON for a single object (which for this will just be the contents

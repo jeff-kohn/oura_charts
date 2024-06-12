@@ -21,7 +21,7 @@ add_library(${THIS_TARGET} STATIC
 	"../include/oura_charts/detail/utility.h"
 	"../include/oura_charts/detail/json_structs.h"
 	"../include/oura_charts/detail/logging.h"
-   
+
    "utility.cpp"
    "logging.cpp"
 )
@@ -40,7 +40,7 @@ target_include_directories( ${THIS_TARGET}
       ${fmt_INCLUDE_DIRS}
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
 		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-	PRIVATE:
+	PRIVATE
 		${Boost_INCLUDE_DIRS}
 )
 

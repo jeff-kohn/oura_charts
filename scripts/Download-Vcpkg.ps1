@@ -19,12 +19,6 @@
   If this switch is set, we'll run the "vcpkg integrate install" command after downloading
   VCPKG. This ensures that VCPKG can be used by Visual Studio (or VSCode)
 
-  .INPUTS
-  None.
-
-  .OUTPUTS
-  None.
-
   .EXAMPLE
   PS> scripts/Launch-DeveloperShell.ps1 -TargetArch x86
 

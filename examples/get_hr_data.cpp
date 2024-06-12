@@ -8,6 +8,7 @@
 #include "oura_charts/HeartRate.h"
 #include "oura_charts/RestDataProvider.h"
 #include "oura_charts/functors.h"
+#include "oura_charts/TokenAuth.h"
 #include "oura_charts/detail/utility.h"
 #include "oura_charts/detail/logging.h"
 #include "helpers.h"
@@ -24,7 +25,7 @@ int main(int argc, char* argv[])
    auto logger = logging::LogFactory::makeDefault();
    try
    {
-      cxxopts::Options options{ argv[0], "Get today's HR data from Oura Ring API." };
+      cxxopts::Options options{ argv[0], "Get today's HR data from Oura Ring API." }; //NOLINT (cppcoreguidelines-pro-bounds-pointer-arithmetic)
       options.add_options()
          ("t,token", "Personal Access Token for your Oura cloud account", cxxopts::value<string>()->default_value(""))
          ("h,help", "show help", cxxopts::value<bool>());
@@ -41,7 +42,7 @@ int main(int argc, char* argv[])
       auto until = localNow();
       auto from = stripTimeOfDay(until);
       auto heart_rate_data = getDataSeries<HeartRate>(rest_server, from, until);
-      
+
       // group HR measurements by hour of day.
       std::multimap<chrono::hours, int> heart_rates_by_hour{};
       for (auto& hr : heart_rate_data)

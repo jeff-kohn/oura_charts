@@ -71,7 +71,6 @@
                "type": "FILEPATH"
             },
             "CMAKE_CXX_COMPILER": "clang++",
-            "CMAKE_C_COMPILER": "clang",
             "BUILD_TESTING": "OFF",
             "ENABLE_CPP_CHECK": "OFF",
             "ENABLE_CLANG_TIDY": "OFF",
@@ -109,6 +108,7 @@
             "linux-base"
          ],
          "cacheVariables": {
+            "ENABLE_CPP_CHECK": "ON",
             "BUILD_TESTING": "ON",
             "ENABLE_CLANG_TIDY": "ON",
             "CMAKE_BUILD_TYPE": "Debug"

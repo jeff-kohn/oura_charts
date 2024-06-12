@@ -27,7 +27,7 @@ namespace oura_charts::detail
    {
       auto sep = path.find_last_of('\\');
       if (string_view::npos == sep)
-         sep = path.find_last_of("/");
+         sep = path.find_last_of('/');
 
       if (string_view::npos == sep)
          return path;
@@ -49,7 +49,7 @@ namespace oura_charts::detail
       else
          return string{ default_val };
 #else
-      const char* val_ptr = std::getenv(var_name);
+      const char* val_ptr = std::getenv(var_name); // NOLINT(concurrency-mt-unsafe)
       if (nullptr == val_ptr)
          return string{ default_val };
 
@@ -93,10 +93,10 @@ namespace oura_charts::detail
    ///   Expand environment varariables in a string (in-place). Returns true if
    ///   successful, false if unsuccessful in which case text will be unchanged.
    /// </summary>
-   bool expandEnvironmentVars(string& text)
+   bool expandEnvironmentVars(string& text) // NOLINT(misc-no-recursion)
    {
       using namespace std;
-      static regex envRegex("\\$(\\w+|\\{\\w+\\})", regex::ECMAScript);
+      static regex envRegex(R"(\$(\w+|\{\w+\}))", regex::ECMAScript);
 
       // 0,1 indicates to get the full match + first subgroup
       size_t offset = 0;
@@ -115,7 +115,7 @@ namespace oura_charts::detail
          }
 
          // Search for env var and replace if found
-         const char* s = getenv(envVarName.c_str());
+         const char* s = getenv(envVarName.c_str()); // NOLINT(misc-no-recursion, concurrency-mt-unsafe)
          if (s != nullptr)
          {
             string value(s);

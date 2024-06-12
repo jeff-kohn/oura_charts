@@ -4,10 +4,10 @@
 namespace oura_charts::test
 {
 
-   FileDataProvider::FileDataProvider(fs::path data_folder) : m_data_folder(data_folder)
+   FileDataProvider::FileDataProvider(fs::path data_folder) : m_data_folder(std::move(data_folder))
    {
       if (!fs::exists(m_data_folder))
-         throw fs::filesystem_error{ "Data directory not found for file-based JSON data provider.", data_folder,
+         throw fs::filesystem_error{ "Data directory not found for file-based JSON data provider.", m_data_folder,
                                       std::make_error_code(std::errc::no_such_file_or_directory) };
    }
 
@@ -22,8 +22,8 @@ namespace oura_charts::test
          auto file_str = file_path.generic_string();
          if (!fs::exists(file_path))
          {
-            auto msg = fmt::format("", file_path.generic_string());
-            return unexpected{ oura_exception{ ErrorCategory::FileIO, "JSON data file[{}] not found.",  file_str} };
+            auto path = file_path.generic_string();
+            return unexpected{ oura_exception{ ErrorCategory::FileIO, "JSON data file[{}] not found.",  path} };
          }
 
          std::ifstream json_file{ file_path };
@@ -39,4 +39,4 @@ namespace oura_charts::test
    }
 
 
-}
+} // namespace oura_charts::test

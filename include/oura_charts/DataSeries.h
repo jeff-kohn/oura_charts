@@ -28,9 +28,9 @@ namespace oura_charts
       ///   the copy, you can pass an rvalue reference if you don't need to preserve
       ///   the source data.
       /// </summary>
-       template <std::ranges::input_range RangeT>
-         requires std::ranges::sized_range<RangeT> && std::same_as<rgs::range_rvalue_reference_t<RangeT>, typename ElementT::StorageType&&>
-      DataSeries(RangeT data_series)
+      template <std::ranges::input_range RangeT> requires std::ranges::sized_range<RangeT> &&
+                                                          std::same_as<rgs::range_rvalue_reference_t<RangeT>, typename ElementT::StorageType&&>
+      explicit DataSeries(RangeT data_series)
       {
          container::reserve(data_series.size());
          for (auto&& elem : data_series)

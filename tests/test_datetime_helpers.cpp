@@ -13,20 +13,25 @@
 
 namespace oura_charts::test
 {
-   using namespace std::literals::chrono_literals;
+   using namespace std::literals;
 
    namespace
    {
-      year_month_day ymd{ 2024y / 2 / 1 };
-      hh_mm_ss tod_utc{ 12h + 3min + 33s };
-      hh_mm_ss tod_local{ 6h + 3min + 33s };
 
-      sys_seconds sys_secs = sys_days{ ymd } + tod_utc.to_duration();
-      local_seconds local_secs = local_days{ ymd } + tod_local.to_duration();
+      // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+      constexpr year_month_day ymd{ 2024y / 2 / 1 };
+      constexpr hh_mm_ss tod_utc{ 12h + 3min + 33s };
+      constexpr hh_mm_ss tod_local{ 6h + 3min + 33s };
+      // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
-      std::string datetime_str{ "2024-02-01T12:03:33Z" };
-      std::string date_str{ "2024-02-01" };
-      std::string local_datetime_str{ "2024-02-01T06:03:33-6:00" };
+      // NOLINTBEGIN(cert-err58-cpp)
+      const sys_seconds sys_secs       = sys_days{ ymd } + tod_utc.to_duration();
+      const local_seconds local_secs   = local_days{ ymd } + tod_local.to_duration();
+      // NOLINTEND(cert-err58-cpp)
+
+      static constexpr auto datetime_str          = "2024-02-01T12:03:33Z"sv;
+      static constexpr auto date_str              = "2024-02-01"sv;
+      static constexpr auto local_datetime_str    = "2024-02-01T06:03:33-6:00"sv;
    }
 
    TEST_CASE("test_parseIsoDateTime", "[datetime][parsing]")

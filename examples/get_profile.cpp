@@ -7,6 +7,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 #include "oura_charts/UserProfile.h"
 #include "oura_charts/RestDataProvider.h"
+#include "oura_charts/TokenAuth.h"
 #include "oura_charts/detail/utility.h"
 #include "oura_charts/detail/logging.h"
 #include <fmt/format.h>
@@ -23,7 +24,7 @@ int main(int argc, char* argv[])
 
       auto logger = logging::LogFactory::makeDefault();
 
-      cxxopts::Options options(argv[0], "OuraCharts Get User Profile");
+      cxxopts::Options options(argv[0], "OuraCharts Get User Profile"); //NOLINT (cppcoreguidelines-pro-bounds-pointer-arithmetic)
       options.add_options()
          ("t,token", "Personal Access Token for your Oura cloud account", cxxopts::value<string>()->default_value(""))
          ("h,help", "show help", cxxopts::value<bool>());

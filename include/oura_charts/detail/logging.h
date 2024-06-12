@@ -126,7 +126,7 @@ namespace oura_charts::logging
    ///   Create a daily file logging sink with the specified level, path/name and log pattern.
    /// </summary>
    [[nodiscard]] sink_ptr_t makeDailyFileSink(log_level::level_enum level,
-                                              fs::path log_folder,
+                                              const fs::path& log_folder,
                                               std::string_view log_filename_base,
                                               std::string_view pattern);
 
