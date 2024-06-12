@@ -1,4 +1,4 @@
-name: linux-clang-build
+name: windows-build
 on:
   push:
     branches:

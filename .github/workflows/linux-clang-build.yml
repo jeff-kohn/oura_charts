@@ -29,6 +29,10 @@ jobs:
         with:
           submodules: true
 
+      - name: Install Dependencies
+        run: |
+          apt install cppcheck -y
+
       - name: "Create directory '${{ env.VCPKG_DEFAULT_BINARY_CACHE }}'"
         run: mkdir -p $VCPKG_DEFAULT_BINARY_CACHE
         shell: bash
