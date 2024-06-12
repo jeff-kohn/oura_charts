@@ -1,4 +1,4 @@
-./<#
+<#
   .SYNOPSIS
   Build project using the specified CMake Preset
 
