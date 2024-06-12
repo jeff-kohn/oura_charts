@@ -46,4 +46,4 @@ jobs:
 
       - name: "Perform Build"
         run: |
-          scripts/Build-Preset.ps1 -release
+          scripts/Build-Preset.ps1 win-release

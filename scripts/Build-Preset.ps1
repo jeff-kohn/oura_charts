@@ -52,7 +52,7 @@ Set-Location $RepoDir
 
 try
 {
-   Write-Host "Building project for $PresetName..." -ForegroundColor Cyan
+   Write-Host "Building project for $PresetName... using repo dir $RepoDir" -ForegroundColor Cyan
 
    if (! $SkipConfigure)
    {
