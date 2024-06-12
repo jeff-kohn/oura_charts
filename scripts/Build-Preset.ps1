@@ -1,10 +1,10 @@
-<#
+./<#
   .SYNOPSIS
   Build project using the specified CMake Preset
 
   .DESCRIPTION
    This script will build the specified preset/configuration from the command line.
-   cmake should be in your path, if not you should run this script from a VS Developer
+   Cmake should be in your path, if not you should run this script from a VS Developer
    Command Prompt.
 
   .PARAMETER PresetName
@@ -47,15 +47,12 @@ param
 $ErrorActionPreference = 'Stop'
 
 $RepoDir = Split-Path $PSScriptRoot
-$DevPromptCmd = Join-Path $PSScriptRoot Launch-DeveloperShell.ps1
-
 $saved_location = Get-Location
 Set-Location $RepoDir
 
 try
 {
    Write-Host "Building project for $PresetName..." -ForegroundColor Cyan
-   & $DevPromptCmd
 
    if (! $SkipConfigure)
    {

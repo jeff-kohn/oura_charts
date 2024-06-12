@@ -48,8 +48,8 @@ foreach ($path in $VS2022Cmds)
       Write-Output "Found [$path]"
 
       # run the script to set up the environment
-      $params = " -Arch $Arch =HostArg $HostArch "
-      & $path $params
+      cmd = "`"$path`" -Arch $Arch =HostArg $HostArch "
+      & cmd
 
       Break
    }

@@ -33,14 +33,17 @@ jobs:
         run: mkdir -p $VCPKG_DEFAULT_BINARY_CACHE
         shell: bash
 
-      # Setup the build machine with the most recent versions of CMake and Ninja. Both are cached if not already
-      - uses: lukka/get-cmake@latest
+      - name: 'Set vcvars'
+        uses: ilammy/msvc-dev-cmd@v1
+  
+      - name: "Setup the build machine with the most recent versions of CMake and Ninja. Both are cached if not already"
+        uses: lukka/get-cmake@latest
 
-      - name: run-vcpkg
+      - name: "Run Vcpkg"
         uses: lukka/run-vcpkg@v11.5
         with:
           vcpkgJsonGlob: '**/vcpkg.json'
 
-      - name: Build
+      - name: "Perform Build"
         run: |
           scripts/Build-Preset.ps1 -release
