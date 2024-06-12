@@ -3,7 +3,7 @@
   Launch a Developer Command Prompt
 
   .DESCRIPTION
-   This script will create the necessary build environment for totp_mfa so that the
+   This script will create the necessary build environment for the project so that the
    needed environment variables for using MSVC are set.
 
   .PARAMETER TargetArch

@@ -61,10 +61,10 @@ repo_dir=$(dirname "$script_folder")
 saved_location=$(pwd)
 cd "$repo_dir" || exit
 
-echo "Building totp_mfa linux for $preset_name... using repo dir $repo_dir"
+echo "Building project or preset $preset_name... using repo dir $repo_dir"
 
 if ! $skip_configure; then
-   cmake --preset=$preset_name 
+   cmake --preset=$preset_name
 fi
 
 if $rebuild; then

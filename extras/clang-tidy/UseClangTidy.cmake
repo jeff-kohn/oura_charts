@@ -3,7 +3,7 @@
 # We only want to enable the in-build scanning for presets which ask for it.
 
 # only do the in-build scanning for the presets that request it.
-if(TOTP_ENABLE_CLANG_TIDY)
+if(ENABLE_CLANG_TIDY)
    message(CHECK_START "Looking for clang-tidy")
    find_program(CMAKE_CXX_CLANG_TIDY NAMES clang-tidy clang-tidy.exe)
 
@@ -12,7 +12,7 @@ if(TOTP_ENABLE_CLANG_TIDY)
       list(
          APPEND CMAKE_CXX_CLANG_TIDY
          "--use-color"
-         "--header-filter=.*/totp_mfa/.*"
+         "--header-filter=.*/oura_charts/**"
          "--quiet"
       )
       message(STATUS "clang-tidy build integration is enabled for this preset.")

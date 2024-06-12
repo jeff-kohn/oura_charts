@@ -41,7 +41,7 @@ param(
 
 
 # This script downloads VCPKG to ./external/vcpkg and sets the environment
-# variable VCPKG_INSTALLATION_ROOT to this location so that totp-mfa builds can find it.
+# variable VCPKG_INSTALLATION_ROOT to this location so that project builds can find it.
 #
 # If the vcpkg repo already exists at the specified location, we'll just pull latest
 
