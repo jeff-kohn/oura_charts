@@ -6,11 +6,11 @@
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
 #include "oura_charts/HeartRate.h"
+#include "helpers.h"
 #include "oura_charts/RestDataProvider.h"
-#include "oura_charts/functors.h"
 #include "oura_charts/TokenAuth.h"
 #include "oura_charts/detail/logging.h"
-#include "helpers.h"
+#include "oura_charts/functors.h"
 #include <fmt/format.h>
 #include <map>
 

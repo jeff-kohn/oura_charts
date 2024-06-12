@@ -6,11 +6,11 @@
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
 #include "oura_charts/oura_charts.h"
-#include "oura_charts/detail/json_structs.h"
-#include "oura_charts/UserProfile.h"
+#include "FileDataProvider.h"
 #include "oura_charts/HeartRate.h"
 #include "oura_charts/SleepSession.h"
-#include "FileDataProvider.h"
+#include "oura_charts/UserProfile.h"
+#include "oura_charts/detail/json_structs.h"
 #include <catch2/catch_test_macros.hpp>
 #include <filesystem>
 

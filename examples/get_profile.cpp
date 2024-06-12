@@ -5,13 +5,13 @@
 //
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
-#include "oura_charts/UserProfile.h"
+#include "helpers.h"
 #include "oura_charts/RestDataProvider.h"
 #include "oura_charts/TokenAuth.h"
-#include "oura_charts/detail/utility.h"
+#include "oura_charts/UserProfile.h"
 #include "oura_charts/detail/logging.h"
+#include "oura_charts/detail/utility.h"
 #include <fmt/format.h>
-#include "helpers.h"
 
 // This example retrieves user-profile info from OURACHARTS_REST using Bearer authentication (PAT)
 int main(int argc, char* argv[])

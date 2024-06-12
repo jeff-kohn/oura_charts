@@ -6,12 +6,12 @@
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
 #include "oura_charts/DataSeries.h"
-#include "oura_charts/TokenAuth.h"
+#include "helpers.h"
 #include "oura_charts/RestDataProvider.h"
 #include "oura_charts/SleepSession.h"
+#include "oura_charts/TokenAuth.h"
 #include "oura_charts/detail/logging.h"
 #include <fmt/format.h>
-#include "helpers.h"
 
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
 

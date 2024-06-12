@@ -31,7 +31,8 @@ namespace oura_charts::test
       static constexpr auto datetime_str          = "2024-02-01T12:03:33Z"sv;
       static constexpr auto date_str              = "2024-02-01"sv;
       static constexpr auto local_datetime_str    = "2024-02-01T06:03:33-6:00"sv;
-   }
+
+   }  // namespace
 
    TEST_CASE("test_parseIsoDateTime", "[datetime][parsing]")
    {

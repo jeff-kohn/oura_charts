@@ -7,8 +7,8 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 #include "FileDataProvider.h"
-#include "oura_charts/UserProfile.h"
 #include "oura_charts/HeartRate.h"
+#include "oura_charts/UserProfile.h"
 #include <catch2/catch_test_macros.hpp>
 
 namespace oura_charts::test

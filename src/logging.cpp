@@ -8,8 +8,8 @@
 
 #include "oura_charts/detail/logging.h"
 #include "oura_charts/detail/utility.h"
-#include <ranges>
 #include <cassert>
+#include <ranges>
 
 namespace oura_charts::logging
 {
