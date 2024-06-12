@@ -1,0 +1,46 @@
+name: linux-clang-build
+on:
+  push:
+    branches:
+      - '**'
+    paths-ignore:
+      - 'README.md'
+      - '**/.gitignore'
+  pull_request:
+    branches:
+      - main
+
+
+permissions:
+  contents: write
+
+jobs:
+  linux_build:
+    runs-on: windows-latest
+    env:
+      VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}/vcpkg"
+      VCPKG_DEFAULT_BINARY_CACHE: "${{ github.workspace }}/vcpkg/bincache"
+      VCPKG_DEFAULT_TRIPLET: "x64-linux"
+      VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+      VCPKG_FEATURE_FLAGS: dependencygraph
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: "Create directory '${{ env.VCPKG_DEFAULT_BINARY_CACHE }}'"
+        run: mkdir -p $VCPKG_DEFAULT_BINARY_CACHE
+        shell: bash
+
+      # Setup the build machine with the most recent versions of CMake and Ninja. Both are cached if not already
+      - uses: lukka/get-cmake@latest
+
+      - name: run-vcpkg
+        uses: lukka/run-vcpkg@v11.5
+        with:
+          vcpkgJsonGlob: '**/vcpkg.json'
+
+      - name: Build
+        run: |
+          scripts/Build-Preset.ps1 -release
