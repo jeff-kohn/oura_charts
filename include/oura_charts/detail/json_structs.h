@@ -2,7 +2,7 @@
 // json_structs.h
 //
 // Declaration for binding structs used for parsing JSON text
-// 
+//
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -89,6 +89,25 @@ namespace oura_charts::detail
 
       nullable_double restless_periods{};
 
+      struct glaze
+      {
+         using T = sleep_data;
+         static constexpr auto value = glz::object(
+            &T::id,
+            &T::day,
+            &T::bedtime_start,
+            &T::bedtime_end,
+            &T::average_breath,
+            &T::average_heart_rate,
+            &T::average_hrv,
+            &T::lowest_heart_rate,
+            &T::latency,
+            &T::awake_time,
+            &T::deep_sleep_duration,
+            &T::light_sleep_duration,
+            &T::rem_sleep_duration,
+            &T::restless_periods);
+      };
    };
 
 
