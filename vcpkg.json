@@ -2,21 +2,22 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "oura-charts",
   "version": "1.0.0",
-   "dependencies": [
-      "boost-algorithm",
-      "cxxopts",
-      "fmt",
-      "catch2",
-      "spdlog",
-      "glaze",
-      "cpr",
-      {
-         "name": "tl-expected",
-         "platform": "linux"
-      },
-      {
-         "name": "date",
-         "platform": "linux"
-      }
-   ]
+  "dependencies": [
+    "boost-algorithm",
+    "cxxopts",
+    "fmt",
+    "catch2",
+    "spdlog",
+    "glaze",
+    "cpr",
+    {
+      "name": "tl-expected",
+      "platform": "linux"
+    },
+    {
+      "name": "date",
+      "platform": "linux"
+    }
+  ],
+  "builtin-baseline": "eb0f108ebd674c6ed79acb1c2e123208c416af0d"
 }
