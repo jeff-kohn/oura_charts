@@ -15,7 +15,7 @@ permissions:
   contents: write
 
 jobs:
-  linux_build:
+  windows_build:
     runs-on: windows-latest
     env:
       VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}/vcpkg"
@@ -35,7 +35,7 @@ jobs:
 
       - name: 'Set vcvars'
         uses: ilammy/msvc-dev-cmd@v1
-  
+
       - name: "Setup the build machine with the most recent versions of CMake and Ninja. Both are cached if not already"
         uses: lukka/get-cmake@latest
 

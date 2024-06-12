@@ -45,6 +45,15 @@ jobs:
         with:
           vcpkgJsonGlob: '**/vcpkg.json'
 
-      - name: Build
+      - name: configure
         run: |
-          scripts/build_preset.sh linux-release
+          scripts/build_preset.sh --preset linux-release --configure
+
+      - name: build
+        run: |
+          scripts/build_preset.sh --preset linux-release --build
+
+      - name: tests
+        run: |
+          scripts/build_preset.sh --preset linux-release --tests
+
