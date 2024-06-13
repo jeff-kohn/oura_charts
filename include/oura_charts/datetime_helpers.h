@@ -16,9 +16,6 @@
 #include <string>
 #include <string_view>
 
-#if defined(__cpp_lib_chrono) && __cpp_lib_chrono < 201907L
-   #include <date/date.h>
-#endif
 
 namespace oura_charts
 {
@@ -39,16 +36,6 @@ namespace oura_charts
    using chrono::year_month_day;
    using chrono::hh_mm_ss;
    using chrono::time_point_cast;
-
-
-
-// incomplete <chrono> in linux libstdc++ as of v12
-#if defined(__cpp_lib_chrono) && __cpp_lib_chrono < 201907L
-   using date::from_stream;
-   using date::parse;
-#else
-   using chrono::from_stream;
-#endif
 
 
    /// <summary>
