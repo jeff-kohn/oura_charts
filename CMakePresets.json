@@ -18,7 +18,7 @@
                "value": "$env{VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake",
                "type": "FILEPATH"
             },
-            "BUILD_TESTING": "OFF",
+            "BUILD_TESTING": "ON",
             "ENABLE_CPP_CHECK": "OFF",
             "ENABLE_CLANG_TIDY": "OFF",
             "CMAKE_EXPORT_COMPILE_COMMANDS": "1",
@@ -50,8 +50,7 @@
             "win-base"
          ],
          "cacheVariables": {
-            "CMAKE_BUILD_TYPE": "Debug",
-            "BUILD_TESTING": "ON"
+            "CMAKE_BUILD_TYPE": "Debug"
          }
       },
       {

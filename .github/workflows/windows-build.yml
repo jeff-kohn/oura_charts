@@ -23,6 +23,7 @@ jobs:
       VCPKG_DEFAULT_TRIPLET: "x64-linux"
       VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
       VCPKG_FEATURE_FLAGS: dependencygraph
+      PRESET_NAME: "win-release"
 
     steps:
       - uses: actions/checkout@v4
@@ -44,6 +45,14 @@ jobs:
         with:
           vcpkgJsonGlob: '**/vcpkg.json'
 
-      - name: "Perform Build"
+      - name: configure
         run: |
-          scripts/Build-Preset.ps1 win-release
+          cmake --preset=$env:PRESET_NAME
+
+      - name: build
+        run: |
+          cmake --build --preset=$env:PRESET_NAME --target=all
+
+      - name: tests
+        run: |
+          ctest --preset $env:PRESET_NAME --output-on-failure --output-junit "$env:PRESET_NAME.test_results.xml"
