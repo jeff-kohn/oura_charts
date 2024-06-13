@@ -15,7 +15,6 @@
 #include <chrono>
 #include <string>
 #include <string_view>
-#include <date/date.h>
 
 
 namespace oura_charts
