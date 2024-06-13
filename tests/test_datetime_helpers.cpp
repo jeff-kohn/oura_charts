@@ -31,6 +31,7 @@ namespace oura_charts::test
       static constexpr auto datetime_str          = "2024-02-01T12:03:33Z"sv;
       static constexpr auto date_str              = "2024-02-01"sv;
       static constexpr auto local_datetime_str    = "2024-02-01T06:03:33-6:00"sv;
+      static constexpr auto tz_str                = "America/Chicago"sv;
 
    }  // namespace
 
@@ -75,13 +76,19 @@ namespace oura_charts::test
 
    TEST_CASE("test_localToUtc", "[datetime]")
    {
-      REQUIRE(local_secs == utcToLocal(sys_secs) );
+      auto& db = std::chrono::get_tzdb();
+      auto tz = db.locate_zone(tz_str);
+      REQUIRE(nullptr != tz);
+      REQUIRE(local_secs == utcToLocal(sys_secs, tz) );
    }
 
 
    TEST_CASE("test_utcToLocal", "[datetime]")
    {
-      REQUIRE(sys_secs == localToUtc(local_secs));
+      auto& db = std::chrono::get_tzdb();
+      auto tz = db.locate_zone(tz_str);
+      REQUIRE(nullptr != tz);
+      REQUIRE(sys_secs == localToUtc(local_secs, tz));
    }
 
 
