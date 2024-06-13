@@ -108,7 +108,6 @@ elseif (LINUX)
    # these are only needed on linux due to incomplete standard library implementations, and should
    # go away at some point.
    find_package(tl-expected CONFIG REQUIRED)
-   find_package(date CONFIG REQUIRED)
 endif()
 
 find_package(Boost REQUIRED)
@@ -129,12 +128,5 @@ if (BUILD_TESTING)
    add_subdirectory("tests")
 endif()
 
-# copy compile_commands.json where clangd can find it.
-add_custom_target(
-    copy-compile-commands ALL
-    ${CMAKE_COMMAND} -E copy_if_different
-        ${CMAKE_BINARY_DIR}/compile_commands.json
-        ${CMAKE_CURRENT_LIST_DIR}
-)
 
 
