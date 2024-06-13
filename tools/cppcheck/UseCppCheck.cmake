@@ -42,13 +42,14 @@ if (CPPCHECK_PATH)
          "--inconclusive"
          "--inline-suppr"
          "--library=${CMAKE_SOURCE_DIR}/tools/cppcheck/catch2.cfg"    # This defines catch2 test macros so that CppCheck doesn't choke on our unit tests.
+         "--suppressions-list=${CMAKE_SOURCE_DIR}/tools/cppcheck/cppcheck_suppressions.txt"
          "-I\"${CMAKE_SOURCE_DIR}/include\""
          "--template=vs"
+         "--relative-paths=${CMAKE_SOURCE_DIR}"
          "--cppcheck-build-dir=\"${CMAKE_BINARY_DIR}/cppcheck\""
          "--xml"
          "--output-file=${CMAKE_BINARY_DIR}/cppcheck_results.xml"
          "--project=${CMAKE_BINARY_DIR}/compile_commands.json"
-         "--suppressions-list=${CMAKE_SOURCE_DIR}/tools/cppcheck/cppcheck_suppressions.txt"
       WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 
    )
