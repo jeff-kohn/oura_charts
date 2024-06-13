@@ -22,7 +22,6 @@ jobs:
       VCPKG_DEFAULT_BINARY_CACHE: "${{ github.workspace }}/vcpkg/bincache"
       VCPKG_DEFAULT_TRIPLET: "x64-linux"
       VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
-      VCPKG_FEATURE_FLAGS: dependencygraph
       PRESET_NAME: "linux-release"
 
     steps:

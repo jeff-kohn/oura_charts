@@ -1,0 +1,8 @@
+name: "Default Config"
+disable-default-queries: true
+queries:
+  - uses: security-extended
+query-filters:
+- exclude:
+    id:
+      - cpp/commented-out-code

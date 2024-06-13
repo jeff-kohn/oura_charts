@@ -16,7 +16,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 endif()
 
 # So that cmake can find any additional modules we've written (stuff like Find modules, export targets, etc)
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/extras/")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/tools/")
 
 # Only do these if this is the main project, and not if it is included through add_subdirectory
 if (TOP_LEVEL_PROJECT)

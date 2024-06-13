@@ -1,0 +1,4 @@
+name: "Scan All Config"
+disable-default-queries: true
+queries:
+  - uses: security-and-quality
