@@ -52,12 +52,7 @@ target_link_libraries(${THIS_TARGET}
 
 # Need these for now due to incomplete libstdc++
 if (LINUX)
-   target_link_libraries(${THIS_TARGET}
-      PRIVATE
-         tl::expected
-         date::date
-         date::date-tz
-   )
+   target_link_libraries(${THIS_TARGET} PRIVATE tl::expected)
 endif()
 
 target_compile_features(${THIS_TARGET} PUBLIC ${OURACHARTS_CXX_STANDARD})

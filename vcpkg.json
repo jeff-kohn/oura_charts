@@ -13,11 +13,7 @@
     {
       "name": "tl-expected",
       "platform": "linux"
-    },
-    {
-      "name": "date",
-      "platform": "linux"
     }
   ],
-  "builtin-baseline": "eb0f108ebd674c6ed79acb1c2e123208c416af0d"
+  "builtin-baseline": "9fcfb7b48017d65403a8245da656a7b91039156a"
 }
