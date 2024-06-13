@@ -15,10 +15,8 @@
 #include <chrono>
 #include <string>
 #include <string_view>
+#include <date/date.h>
 
-#if defined(__cpp_lib_chrono) && __cpp_lib_chrono < 201907L
-   #include <date/date.h>
-#endif
 
 namespace oura_charts
 {
