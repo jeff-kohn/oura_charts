@@ -23,6 +23,7 @@ jobs:
       VCPKG_DEFAULT_TRIPLET: "x64-linux"
       VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
       VCPKG_FEATURE_FLAGS: dependencygraph
+      PRESET_NAME: "linux-release"
 
     steps:
       - uses: actions/checkout@v4
@@ -47,13 +48,12 @@ jobs:
 
       - name: configure
         run: |
-          cmake --preset=linux-release
+          cmake --preset=$PRESET_NAME
 
       - name: build
         run: |
-          scripts/build_preset.sh --preset linux-release --build
+          cmake --build --preset=$PRESET_NAME --target=all
 
       - name: tests
         run: |
-          scripts/build_preset.sh --preset linux-release --tests
-
+          ctest --preset $PRESET_NAME --output-on-failure --output-junit "$PRESET_NAME.test_results.xml"
