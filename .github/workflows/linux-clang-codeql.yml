@@ -77,6 +77,14 @@ jobs:
         output: $SARIF_DIR
         upload: failure-only
 
+    - name: debug
+      shell: bash
+      run: |
+        ls -lah $REPO_DIR
+        ls -lah $BUILD_DIR
+        ls -lah sarif-results
+
+
     - name: 'Filter vcpkg lib code from codeql results'
       uses: advanced-security/filter-sarif@v1
       with:
