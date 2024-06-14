@@ -22,7 +22,8 @@ jobs:
       VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
       VCPKG_FEATURE_FLAGS: dependencygraph
       PRESET_NAME: "linux-release"
-      BUILD_DIR: "build/out/$PRESET_NAME"
+      BUILD_DIR: "build/out/${{ env.PRESET_NAME }}"
+      REPO_DIR: ${{ github.workspace }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     permissions:
@@ -87,7 +88,7 @@ jobs:
 
     - name: 'Convert CppCheck XML to SARIF'
       run: |
-        scripts/trim_repo_paths.sh --input-file "$BUILD_DIR/cppcheck_results.xml" --repo-path "${{ github.workspace }}/" --backup
+        scripts/trim_repo_paths.sh --input-file "$BUILD_DIR/cppcheck_results.xml" --repo-path "$REPO_DIR/" --backup
         $HOME/.dotnet/tools/sarif convert $BUILD_DIR/cppcheck_results.xml --tool CppCheck --output sarif-results/cpp-cppcheck.sarif
 
     - name: 'Copy clang-tidy results'
