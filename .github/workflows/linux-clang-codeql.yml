@@ -21,6 +21,7 @@ jobs:
       VCPKG_DEFAULT_TRIPLET: "x64-linux"
       VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
       VCPKG_FEATURE_FLAGS: "dependencygraph"
+      DOTNET_ROLL_FORWARD: "latestMajor"
       PRESET_NAME: "linux-debug"
       BUILD_DIR: "build/out/linux-debug"
       REPO_DIR: "${{ github.workspace }}"
