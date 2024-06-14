@@ -85,7 +85,7 @@ jobs:
 
     - name: 'Run clang-tidy and CppCheck'
       run: |
-        scripts/build_preset.sh --preset $PRESET_NAME --target code_analysis
+        scripts/build_preset.sh --preset $PRESET_NAME --target code_analysis --build
 
     - name: debug
       shell: bash
@@ -94,10 +94,10 @@ jobs:
         ls -lah $BUILD_DIR
         ls -lah sarif-results
 
-   #  - name: 'Convert CppCheck XML to SARIF'
-   #    run: |
-   #      scripts/trim_repo_paths.sh --input-file "$BUILD_DIR/cppcheck_results.xml" --repo-path "$REPO_DIR/" --backup
-   #      $HOME/.dotnet/tools/sarif convert $BUILD_DIR/cppcheck_results.xml --tool CppCheck --output sarif-results/cpp-cppcheck.sarif
+    - name: 'Convert CppCheck XML to SARIF'
+      run: |
+        scripts/trim_repo_paths.sh --input-file "$BUILD_DIR/cppcheck_results.xml" --repo-path "$REPO_DIR/" --backup
+        $HOME/.dotnet/tools/sarif convert $BUILD_DIR/cppcheck_results.xml --tool CppCheck --output sarif-results/cpp-cppcheck.sarif
 
     - name: 'Copy clang-tidy results'
       run: |
