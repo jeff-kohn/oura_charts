@@ -22,7 +22,7 @@ jobs:
       VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
       VCPKG_FEATURE_FLAGS: dependencygraph
       PRESET_NAME: "linux-release"
-      BUILD_DIR: "/build/out/$PRESET_NAME"
+      BUILD_DIR: "build/out/$PRESET_NAME"
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     permissions:
@@ -63,6 +63,7 @@ jobs:
 
     - shell: bash
       run: |
+        echo "$GITHUB_CONTEXT"
         scripts/build_preset.sh --preset $PRESET_NAME --configure --build
 
     - name: 'Perform CodeQL Analysis'
