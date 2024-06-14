@@ -87,6 +87,13 @@ jobs:
       run: |
         scripts/build_preset.sh --preset $PRESET_NAME --target code_analysis
 
+    - name: debug
+      shell: bash
+      run: |
+        ls -lah $REPO_DIR
+        ls -lah $BUILD_DIR
+        ls -lah sarif-results
+
    #  - name: 'Convert CppCheck XML to SARIF'
    #    run: |
    #      scripts/trim_repo_paths.sh --input-file "$BUILD_DIR/cppcheck_results.xml" --repo-path "$REPO_DIR/" --backup
@@ -96,9 +103,6 @@ jobs:
       run: |
          cp $BUILD_DIR/clang_tidy_results.sarif sarif-results/cpp-clang-tidy.sarif
 
-    - shell: bash
-      run: |
-        ls -lah sarif-results
 
     - name: 'Upload SARIF'
       uses: github/codeql-action/upload-sarif@v3
