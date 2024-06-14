@@ -74,7 +74,7 @@ jobs:
       uses: github/codeql-action/analyze@v3
       with:
         category: cpp
-        output: $SARIF_DIR
+        output: ${{ env.SARIF_DIR }}
         upload: failure-only
 
     - name: debug
@@ -82,8 +82,7 @@ jobs:
       run: |
         ls -lah $REPO_DIR
         ls -lah $BUILD_DIR
-        ls -lah sarif-results
-
+        ls -lah $SARIF_DIR
 
     - name: 'Filter vcpkg lib code from codeql results'
       uses: advanced-security/filter-sarif@v1
