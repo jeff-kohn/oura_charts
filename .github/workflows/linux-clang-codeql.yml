@@ -77,13 +77,6 @@ jobs:
         output: ${{ env.SARIF_DIR }}
         upload: failure-only
 
-    - name: debug
-      shell: bash
-      run: |
-        ls -lah $REPO_DIR
-        ls -lah $BUILD_DIR
-        ls -lah $SARIF_DIR
-
     - name: 'Filter vcpkg lib code from codeql results'
       uses: advanced-security/filter-sarif@v1
       with:
@@ -115,6 +108,6 @@ jobs:
     - name: Upload loc as a Build Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ env.SARIF_DIR }}
+        name: sarif-results
         path: ${{ env.SARIF_DIR }}
         retention-days: 1
