@@ -3,4 +3,5 @@
 checkersReport
 missingIncludeSystem
 missingInclude
+unusedFunction
 unmatchedSuppression

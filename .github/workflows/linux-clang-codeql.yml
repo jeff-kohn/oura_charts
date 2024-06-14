@@ -25,6 +25,7 @@ jobs:
       PRESET_NAME: "linux-debug"
       BUILD_DIR: "build/out/linux-debug"
       REPO_DIR: "${{ github.workspace }}"
+      SARIF_DIR: "sarif-results"
       GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
     permissions:
@@ -73,7 +74,7 @@ jobs:
       uses: github/codeql-action/analyze@v3
       with:
         category: cpp
-        output: sarif-results
+        output: $SARIF_DIR
         upload: failure-only
 
     - name: 'Filter vcpkg lib code from codeql results'
@@ -81,39 +82,32 @@ jobs:
       with:
         patterns: |
           -**/vcpkg*/**/*.*
-        input: sarif-results/cpp.sarif
-        output: sarif-results/cpp.sarif
+          -**/CMakeFiles/CMakeScratch/**
+        input: $SARIF_DIR/cpp.sarif
+        output: $SARIF_DIR/cpp.sarif
 
     - name: 'Run clang-tidy and CppCheck'
       run: |
         scripts/build_preset.sh --preset $PRESET_NAME --target code_analysis --build
 
-    - name: debug
-      shell: bash
-      run: |
-        ls -lah $REPO_DIR
-        ls -lah $BUILD_DIR
-        ls -lah sarif-results
-
     - name: 'Convert CppCheck XML to SARIF'
       run: |
         scripts/trim_repo_paths.sh --input-file "$BUILD_DIR/cppcheck_results.xml" --repo-path "$REPO_DIR/" --backup
-        $HOME/.dotnet/tools/sarif convert $BUILD_DIR/cppcheck_results.xml --tool CppCheck --output sarif-results/cpp-cppcheck.sarif
+        $HOME/.dotnet/tools/sarif convert $BUILD_DIR/cppcheck_results.xml --tool CppCheck --output $SARIF_DIR/cpp-cppcheck.sarif
 
     - name: 'Copy clang-tidy results'
       run: |
-         cp $BUILD_DIR/clang_tidy_results.sarif sarif-results/cpp-clang-tidy.sarif
-
+         cp $BUILD_DIR/clang_tidy_results.sarif $SARIF_DIR/cpp-clang-tidy.sarif
 
     - name: 'Upload SARIF'
       uses: github/codeql-action/upload-sarif@v3
       with:
-        sarif_file: sarif-results
+        sarif_file: $SARIF_DIR
         category: cpp
 
     - name: Upload loc as a Build Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: sarif-results
-        path: sarif-results
+        name: $SARIF_DIR
+        path: $SARIF_DIR
         retention-days: 1
