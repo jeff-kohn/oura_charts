@@ -23,7 +23,6 @@ jobs:
       VCPKG_FEATURE_FLAGS: dependencygraph
       PRESET_NAME: "linux-release"
       BUILD_DIR: "/build/out/$PRESET_NAME"
-      SARIF_RESULTS_DIR: "sarif-results"
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     permissions:
@@ -70,7 +69,7 @@ jobs:
       uses: github/codeql-action/analyze@v3
       with:
         category: cpp
-        output: $SARIF_RESULTS_DIR
+        output: sarif-results
         upload: failure-only
 
     - name: 'Filter vcpkg lib code from codeql results'
@@ -78,8 +77,8 @@ jobs:
       with:
         patterns: |
           -**/vcpkg*/**/*.*
-        input: $SARIF_RESULTS_DIR/cpp.sarif
-        output: $SARIF_RESULTS_DIR/cpp.sarif
+        input: sarif-results/cpp.sarif
+        output: sarif-results/cpp.sarif
 
     - name: 'Run clang-tidy and CppCheck'
       run: |
@@ -88,20 +87,20 @@ jobs:
     - name: 'Convert CppCheck XML to SARIF'
       run: |
         scripts/trim_repo_paths.sh" --input-file "$BUILD_DIR/cppcheck_results.xml" --repo-path "${{ github.workspace }}/" --backup
-        $HOME/.dotnet/tools/sarif convert $BUILD_DIR/cppcheck_results.xml --tool CppCheck --output $SARIF_RESULTS_DIR/cpp-cppcheck.sarif
+        $HOME/.dotnet/tools/sarif convert $BUILD_DIR/cppcheck_results.xml --tool CppCheck --output sarif-results/cpp-cppcheck.sarif
 
     - name: 'Copy clang-tidy results'
       run: |
-         cp $BUILD_DIR/clang_tidy_results.sarif $SARIF_RESULTS_DIR/cpp-clang-tidy.sarif
+         cp $BUILD_DIR/clang_tidy_results.sarif sarif-results/cpp-clang-tidy.sarif
 
     - shell: bash
       run: |
-        ls -lah $SARIF_RESULTS_DIR
+        ls -lah sarif-results
 
     - name: 'Upload SARIF'
       uses: github/codeql-action/upload-sarif@v3
       with:
-        sarif_file: $SARIF_RESULTS_DIR
+        sarif_file: sarif-results
         category: cpp
 
     - name: Upload loc as a Build Artifact
