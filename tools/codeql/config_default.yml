@@ -6,3 +6,4 @@ query-filters:
 - exclude:
     id:
       - cpp/commented-out-code
+      - cpp/unused-static-function

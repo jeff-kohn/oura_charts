@@ -77,7 +77,7 @@ namespace oura_charts::test
    TEST_CASE("test_localToUtc", "[datetime]")
    {
       auto& db = std::chrono::get_tzdb();
-      auto tz = db.locate_zone(tz_str);
+      const auto* tz = db.locate_zone(tz_str);
       REQUIRE(nullptr != tz);
       REQUIRE(local_secs == utcToLocal(sys_secs, tz) );
    }
@@ -86,7 +86,7 @@ namespace oura_charts::test
    TEST_CASE("test_utcToLocal", "[datetime]")
    {
       auto& db = std::chrono::get_tzdb();
-      auto tz = db.locate_zone(tz_str);
+      const auto* tz = db.locate_zone(tz_str);
       REQUIRE(nullptr != tz);
       REQUIRE(sys_secs == localToUtc(local_secs, tz));
    }

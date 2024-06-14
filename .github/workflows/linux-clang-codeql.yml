@@ -1,10 +1,12 @@
-name: "Static Code Analysis"
+name: "linux-clang-codeql"
 
 on:
   push:
-    branches: [ "*" ]
+    branches:
+      - '**'
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
   schedule:
     - cron: '26 0 * * 5'
 
@@ -18,9 +20,13 @@ jobs:
       VCPKG_DEFAULT_BINARY_CACHE: "${{ github.workspace }}/vcpkg/bincache"
       VCPKG_DEFAULT_TRIPLET: "x64-linux"
       VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
-      VCPKG_FEATURE_FLAGS: dependencygraph
-      PRESET_NAME: "linux-release"
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      VCPKG_FEATURE_FLAGS: "dependencygraph"
+      DOTNET_ROLL_FORWARD: "latestMajor"
+      PRESET_NAME: "linux-debug"
+      BUILD_DIR: "build/out/linux-debug"
+      REPO_DIR: "${{ github.workspace }}"
+      SARIF_DIR: "${{ github.workspace }}/sarif-results"
+      GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
     permissions:
       security-events: write
@@ -34,6 +40,11 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt install cppcheck -y
+        sudo curl -sSL https://github.com/psastras/sarif-rs/releases/download/clang-tidy-sarif-latest/clang-tidy-sarif-x86_64-unknown-linux-gnu -o /usr/local/bin/clang-tidy-sarif
+        sudo chmod +x /usr/local/bin/clang-tidy-sarif
+        sudo curl -sSL https://github.com/psastras/sarif-rs/releases/download/sarif-fmt-latest/sarif-fmt-x86_64-unknown-linux-gnu -o /usr/local/bin/sarif-fmt
+        sudo chmod +x /usr/local/bin/sarif-fmt
+        dotnet tool install --global Sarif.Multitool
 
     - name: "Create directory '${{ env.VCPKG_DEFAULT_BINARY_CACHE }}'"
       run: mkdir -p $VCPKG_DEFAULT_BINARY_CACHE
@@ -49,41 +60,54 @@ jobs:
     - name: 'Initialize CodeQL'
       uses: github/codeql-action/init@v3
       with:
-        config-file: tools/codeql/config_scan_all.yml
+        config-file: tools/codeql/config_default.yml
         languages: 'c-cpp'
         build-mode: 'manual'
 
-    - shell: bash
+    - name: 'Run Build'
+      shell: bash
       run: |
-        scripts/build_preset.sh --preset linux-release --configure --build
+        echo "$GITHUB_CONTEXT"
+        scripts/build_preset.sh --preset $PRESET_NAME --configure --build
 
     - name: 'Perform CodeQL Analysis'
       uses: github/codeql-action/analyze@v3
       with:
         category: cpp
-        output: sarif-results
+        output: ${{ env.SARIF_DIR }}
         upload: failure-only
 
-    - shell: bash
-      run: |
-        ls -lah sarif-results
-
-    - name: 'Filter vcpkg lib code from results'
+    - name: 'Filter vcpkg lib code from codeql results'
       uses: advanced-security/filter-sarif@v1
       with:
         patterns: |
-          -**/vcpkg*/**/*.*
-        input: sarif-results/cpp.sarif
-        output: sarif-results/cpp.sarif
+          -**/vcpkg*/**/*
+          -**/CMakeFiles/CMakeScratch/**/*
+        input: $SARIF_DIR/cpp.sarif
+        output: $SARIF_DIR/cpp.sarif
 
-    - name: Upload SARIF
+    - name: 'Run clang-tidy and CppCheck'
+      run: |
+        scripts/build_preset.sh --preset $PRESET_NAME --target code_analysis --build
+
+    - name: 'Convert CppCheck XML to SARIF'
+      run: |
+        scripts/trim_repo_paths.sh --input-file "$BUILD_DIR/cppcheck_results.xml" --repo-path "$REPO_DIR/" --backup
+        $HOME/.dotnet/tools/sarif convert $BUILD_DIR/cppcheck_results.xml --tool CppCheck --output $SARIF_DIR/cpp-cppcheck.sarif
+
+    - name: 'Copy clang-tidy results'
+      run: |
+         cp $BUILD_DIR/clang_tidy_results.sarif $SARIF_DIR/cpp-clang-tidy.sarif
+
+    - name: 'Upload SARIF'
       uses: github/codeql-action/upload-sarif@v3
       with:
-        sarif_file: sarif-results/cpp.sarif
+        sarif_file: ${{ env.SARIF_DIR }}
+        category: cpp
 
     - name: Upload loc as a Build Artifact
       uses: actions/upload-artifact@v4
       with:
         name: sarif-results
-        path: sarif-results
+        path: ${{ env.SARIF_DIR }}
         retention-days: 1
