@@ -16,7 +16,7 @@ show_help() {
   printf "                         run a clean re-build.\n\n"
     echo "  --build                If this switch is supplied a regular build will be run."
   printf "  --tests                If this switch is supplied tests will be run.\n\n"
-  printf "If some combination of configure/build/rebuild/test  is not specified, the default will be to run\n"
+  printf "If some combination of configure/build/rebuild/test is not specified, the default will be to run\n"
   printf "a regular build and execute tests".
 
   exit 1
