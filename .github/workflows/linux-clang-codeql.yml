@@ -20,11 +20,11 @@ jobs:
       VCPKG_DEFAULT_BINARY_CACHE: "${{ github.workspace }}/vcpkg/bincache"
       VCPKG_DEFAULT_TRIPLET: "x64-linux"
       VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
-      VCPKG_FEATURE_FLAGS: dependencygraph
-      PRESET_NAME: "linux-release"
-      BUILD_DIR: "build/out/${{ env.PRESET_NAME }}"
-      REPO_DIR: ${{ github.workspace }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      VCPKG_FEATURE_FLAGS: "dependencygraph"
+      PRESET_NAME: "linux-debug"
+      BUILD_DIR: "build/out/linux-debug"
+      REPO_DIR: "${{ github.workspace }}"
+      GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
     permissions:
       security-events: write
@@ -62,7 +62,8 @@ jobs:
         languages: 'c-cpp'
         build-mode: 'manual'
 
-    - shell: bash
+    - name: 'Run Build'
+      shell: bash
       run: |
         echo "$GITHUB_CONTEXT"
         scripts/build_preset.sh --preset $PRESET_NAME --configure --build
