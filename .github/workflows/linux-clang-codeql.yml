@@ -23,7 +23,7 @@ jobs:
       VCPKG_FEATURE_FLAGS: dependencygraph
       PRESET_NAME: "linux-release"
       BUILD_DIR: "/build/out/$PRESET_NAME"
-      SARIF_RESULTS_DIR: "sarif_results"
+      SARIF_RESULTS_DIR: "sarif-results"
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     permissions:
@@ -73,10 +73,6 @@ jobs:
         output: $SARIF_RESULTS_DIR
         upload: failure-only
 
-    - shell: bash
-      run: |
-        ls -lah $SARIF_RESULTS_DIR
-
     - name: 'Filter vcpkg lib code from codeql results'
       uses: advanced-security/filter-sarif@v1
       with:
@@ -97,6 +93,10 @@ jobs:
     - name: 'Copy clang-tidy results'
       run: |
          cp $BUILD_DIR/clang_tidy_results.sarif $SARIF_RESULTS_DIR/cpp-clang-tidy.sarif
+
+    - shell: bash
+      run: |
+        ls -lah $SARIF_RESULTS_DIR
 
     - name: 'Upload SARIF'
       uses: github/codeql-action/upload-sarif@v3
