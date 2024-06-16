@@ -1,8 +1,6 @@
 name: windows-build
 on:
   push:
-    branches:
-      - '*'
     paths-ignore:
       - 'README.md'
       - '**/.gitignore'

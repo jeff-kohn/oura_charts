@@ -2,8 +2,6 @@ name: "linux-clang-codeql"
 
 on:
   push:
-    branches:
-      - '*'
   pull_request:
     branches:
       - main
