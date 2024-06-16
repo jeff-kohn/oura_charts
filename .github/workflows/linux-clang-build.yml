@@ -10,6 +10,12 @@ on:
     branches:
       - main
 
+env:
+  VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}/vcpkg"
+  VCPKG_DEFAULT_BINARY_CACHE: "${{ github.workspace }}/vcpkg/bincache"
+  VCPKG_DEFAULT_TRIPLET: "x64-linux"
+  VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+  PRESET_NAME: "linux-release"
 
 permissions:
   contents: write
@@ -17,12 +23,6 @@ permissions:
 jobs:
   linux_build:
     runs-on: ubuntu-24.04
-    env:
-      VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}/vcpkg"
-      VCPKG_DEFAULT_BINARY_CACHE: "${{ github.workspace }}/vcpkg/bincache"
-      VCPKG_DEFAULT_TRIPLET: "x64-linux"
-      VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
-      PRESET_NAME: "linux-release"
 
     steps:
       - uses: actions/checkout@v4
@@ -53,6 +53,19 @@ jobs:
         run: |
           cmake --build --preset=$PRESET_NAME --target=all
 
+  unit_tests:
+    runs-on: ubuntu-24.04
+    needs: linux_build
+    steps:
       - name: tests
         run: |
           ctest --preset $PRESET_NAME --output-on-failure --output-junit "$PRESET_NAME.test_results.xml"
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+            files: |
+              test-results/**/*.xml
+              test-results/**/*.trx
+              test-results/**/*.json
