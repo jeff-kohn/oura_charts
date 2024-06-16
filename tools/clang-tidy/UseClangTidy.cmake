@@ -2,7 +2,7 @@
 # saving the results to a sarif file; and once for the integrated build check, where CMake calls clang-tidy for each file when it's compiled.
 # We only want to enable the in-build scanning for presets which ask for it.
 
-# only do the in-build scanning for the presets that request it.
+# only do the in-built scanning for the presets that request it.
 if(ENABLE_CLANG_TIDY)
    message(CHECK_START "Looking for clang-tidy")
    find_program(CMAKE_CXX_CLANG_TIDY NAMES clang-tidy clang-tidy.exe)
