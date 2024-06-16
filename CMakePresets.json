@@ -18,9 +18,10 @@
                "value": "$env{VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake",
                "type": "FILEPATH"
             },
-            "BUILD_TESTING": "ON",
+            "ENABLE_UNIT_TESTS": "ON",
             "ENABLE_CPP_CHECK": "OFF",
             "ENABLE_CLANG_TIDY": "OFF",
+            "ENABLE_CODE_COVERAGE": "OFF",
             "CMAKE_EXPORT_COMPILE_COMMANDS": "1",
             "VCPKG_TARGET_TRIPLET": "x64-windows-static"
          },
@@ -70,9 +71,10 @@
                "type": "FILEPATH"
             },
             "CMAKE_CXX_COMPILER": "clang++",
-            "BUILD_TESTING": "ON",
+            "ENABLE_UNIT_TESTS": "ON",
             "ENABLE_CPP_CHECK": "ON",
             "ENABLE_CLANG_TIDY": "ON",
+            "ENABLE_CODE_COVERAGE": "OFF",
             "CMAKE_EXPORT_COMPILE_COMMANDS": "1",
             "VCPKG_TARGET_TRIPLET": "x64-linux"
          },
@@ -111,6 +113,17 @@
             "ENABLE_CLANG_TIDY": "OFF",
             "CMAKE_BUILD_TYPE": "Debug"
          }
+      },
+      {
+         "name": "linux-gcovr",
+         "displayName": "linux-gcovr",
+         "description": "debug build for linux",
+         "inherits": [
+            "linux-base"
+         ],
+         "cacheVariables": {
+            "ENABLE_CODE_COVERAGE": "ON"
+         }
       }
    ],
    "buildPresets": [
@@ -131,6 +144,12 @@
          "description": "Linux Debug",
          "displayName": "linux-debug",
          "configurePreset": "linux-debug"
+      },
+      {
+         "name": "linux-gcovr",
+         "description": "Linux gcovr",
+         "displayName": "linux-gcovr",
+         "configurePreset": "linux-gcovr"
       },
       {
          "name": "linux-release",
