@@ -2,7 +2,7 @@ name: linux-clang-build
 on:
   push:
     branches:
-      - '**'
+      - '*'
     paths-ignore:
       - 'README.md'
       - '**/.gitignore'
