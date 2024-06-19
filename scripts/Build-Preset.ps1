@@ -7,7 +7,7 @@
    Cmake should be in your path, if not you should run this script from a VS Developer
    Command Prompt.
 
-  .PARAMETER PresetName
+  .PARAMETER Preset
   Required - Specifies the build preset to use. See CMakePresets.json for the full list.
 
   .PARAMETER Configure
@@ -40,10 +40,10 @@
 
 param
 (
-   [string] $PresetName,
+   [string] $Preset = "win-debug",
    [string] $Target = "all",
    [switch] $Configure,
-   [switch] $Build
+   [switch] $Build,
    [switch] $Rebuild,
    [switch] $Tests
 )
@@ -56,31 +56,38 @@ Set-Location $RepoDir
 
 try
 {
-   Write-Host "Building project for $PresetName... using repo dir $RepoDir" -ForegroundColor Cyan
+   Write-Host "Building project for $Preset... using repo dir $RepoDir" -ForegroundColor Cyan
 
-   if (!Configure -and !Build -and !Rebuild -and !Tests)
+   if (!$Configure -and !$Build -and !$Rebuild -and !$Tests)
    {
-      Build = $true
-      Tests = $true
+      if (Test-Path "$RepoDir/build/out/$Preset")
+      {
+         $Build = $true
+         $Tests = $true
+      }
+      else{
+         Write-Host "`r`nBuild directory not found. Use  the '-Configure' switch to run configure before building.`r`n"
+         exit (-1)
+      }
    }
 
    if ( $Configure )
    {
-      cmake -S $RepoDir --preset $PresetName
+      cmake -S $RepoDir --preset $Preset
    }
 
    if ( $Rebuild )
    {
-      cmake --build --preset=$PresetName --target=$Target --clean-first
+      cmake --build --preset=$Preset --target=$Target --clean-first
    }
-   else if ( $Build )
+   elseif ( $Build )
    {
-      cmake --build --preset=$PresetName --target=$Target
+      cmake --build --preset=$Preset --target=$Target
    }
 
    if ( $Tests )
    {
-      ctest --preset $PresetName --output-on-failure --output-junit "$PresetName.test_results.xml"
+      ctest --preset $Preset --output-on-failure --output-junit "$Preset.test_results.xml"
    }
 }
 finally

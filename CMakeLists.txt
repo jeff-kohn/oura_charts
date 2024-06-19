@@ -18,31 +18,6 @@ endif()
 # So that cmake can find any additional modules we've written (stuff like Find modules, export targets, etc)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/tools/")
 
-# Only do these if this is the main project, and not if it is included through add_subdirectory
-if (TOP_LEVEL_PROJECT)
-   # Let's ensure -std=c++xx instead of -std=g++xx
-   set(CMAKE_CXX_EXTENSIONS OFF)
-
-   # Let's nicely support folders in IDEs
-   set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
-   # Different presets may enable/disable code analysis tools
-   add_custom_target (code_analysis DEPENDS all)
-   include (cppcheck/UseCppCheck)
-   include (clang-tidy/UseClangTidy)
-
-   if (BUILD_TESTING)
-      enable_testing()
-      find_package(Catch2 3 REQUIRED)
-      include(CTest)
-      include(Catch)
-   endif()
-endif()
-
-if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
-   message(FATAL_ERROR "In-source builds are not allowed")
-endif()
-
 include(CMakePrintHelpers)
 
 # Set the C++ standard. All our targets will use this, so we can easily change it
@@ -110,23 +85,48 @@ elseif (LINUX)
    find_package(tl-expected CONFIG REQUIRED)
 endif()
 
+if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
+   message(FATAL_ERROR "In-source builds are not allowed")
+endif()
+
+
+# Only do these if this is the main project, and not if it is included through add_subdirectory
+if (TOP_LEVEL_PROJECT)
+   # Let's ensure -std=c++xx instead of -std=g++xx
+   set(CMAKE_CXX_EXTENSIONS OFF)
+
+   # Let's nicely support folders in IDEs
+   set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+   # Set up the analysis tools and unit testing.
+   add_custom_target (code_analysis DEPENDS all)
+   include (cppcheck/UseCppCheck)
+   include (clang-tidy/UseClangTidy)
+
+   if (ENABLE_UNIT_TESTS)
+      enable_testing()
+      find_package(Catch2 3 REQUIRED)
+      include(CTest)
+      include(Catch)
+      add_subdirectory ("tests")
+  endif()
+
+endif()
+
 find_package(Boost REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 find_package(cxxopts CONFIG REQUIRED)
 find_package(cpr CONFIG REQUIRED)
+
+# Include sub-projects.
+add_subdirectory("src")
+add_subdirectory("examples")
 
 cmake_print_variables(OURACHARTS_CXX_STANDARD)
 cmake_print_variables(OURACHARTS_COMPILE_DEFINITIONS)
 cmake_print_variables(OURACHARTS_WARNING_FLAGS)
 cmake_print_variables(OURACHARTS_COMPILE_OPTIONS)
 cmake_print_variables(OURACHARTS_LINK_OPTIONS)
-
-# Include sub-projects.
-add_subdirectory("src")
-add_subdirectory("examples")
-if (BUILD_TESTING)
-   add_subdirectory("tests")
-endif()
 
 
 

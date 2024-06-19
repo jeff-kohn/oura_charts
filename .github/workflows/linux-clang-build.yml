@@ -1,8 +1,6 @@
-name: linux-clang-build
+name: Linux Clang Build
 on:
   push:
-    branches:
-      - '**'
     paths-ignore:
       - 'README.md'
       - '**/.gitignore'
@@ -10,19 +8,19 @@ on:
     branches:
       - main
 
+env:
+  VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}/vcpkg"
+  PRESET_NAME: "linux-release"
+  BUILD_DIR: "build/out/linux-release"
+
 
 permissions:
   contents: write
+  checks: write
 
 jobs:
   linux_build:
     runs-on: ubuntu-24.04
-    env:
-      VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}/vcpkg"
-      VCPKG_DEFAULT_BINARY_CACHE: "${{ github.workspace }}/vcpkg/bincache"
-      VCPKG_DEFAULT_TRIPLET: "x64-linux"
-      VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
-      PRESET_NAME: "linux-release"
 
     steps:
       - uses: actions/checkout@v4
@@ -33,12 +31,8 @@ jobs:
         run: |
           sudo apt install cppcheck -y
 
-      - name: "Create directory '${{ env.VCPKG_DEFAULT_BINARY_CACHE }}'"
-        run: mkdir -p $VCPKG_DEFAULT_BINARY_CACHE
-        shell: bash
-
-      # Setup the build machine with the most recent versions of CMake and Ninja. Both are cached if not already
-      - uses: lukka/get-cmake@latest
+      - name: "Setup cmake/ninja"
+        uses: lukka/get-cmake@latest
 
       - name: run-vcpkg
         uses: lukka/run-vcpkg@v11.5
@@ -55,4 +49,12 @@ jobs:
 
       - name: tests
         run: |
-          ctest --preset $PRESET_NAME --output-on-failure --output-junit "$PRESET_NAME.test_results.xml"
+          ctest --preset $PRESET_NAME --output-on-failure --output-junit "test_results.xml"
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+            files: |
+              ${{ env.BUILD_DIR }}/test_results.xml
+
