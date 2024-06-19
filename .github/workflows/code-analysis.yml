@@ -10,9 +10,17 @@ on:
 
 env:
   VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}/vcpkg"
+  # VCPKG_DEFAULT_BINARY_CACHE: "${{ github.workspace }}/vcpkg/bincache"
+  # VCPKG_DEFAULT_TRIPLET: "x64-linux"
+  # VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
   REPO_DIR: "${{ github.workspace }}"
   GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
+permissions:
+  security-events: write
+  contents: write
+  packages: read
+      
 jobs:
   analyze:
     name: 'Static Code Analysis'
@@ -118,10 +126,7 @@ jobs:
       PRESET_NAME: "win-debug"
       BUILD_DIR: "build/out/win-debug"
 
-    permissions:
-      security-events: write
-      contents: write
-      packages: read
+
 
     steps:
     - name: 'Checkout repository'
@@ -136,6 +141,7 @@ jobs:
     - name: 'Run Build'
       run: |
         cmake --preset=$env:PRESET_NAME
+        cmake --build --preset=$PRESET_NAME --target=all
     
     - name: "Run Code Coverage"
       run: |

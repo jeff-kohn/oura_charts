@@ -10,12 +10,12 @@ on:
 
 env:
   VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}/vcpkg"
-  VCPKG_DEFAULT_BINARY_CACHE: "${{ github.workspace }}/vcpkg/bincache"
-  VCPKG_DEFAULT_TRIPLET: "x64-linux"
-  VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
-  VCPKG_FEATURE_FLAGS: dependencygraph
+  # VCPKG_DEFAULT_BINARY_CACHE: "${{ github.workspace }}/vcpkg/bincache"
+  # VCPKG_DEFAULT_TRIPLET: "x64-linux"
+  # VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+  # VCPKG_FEATURE_FLAGS: dependencygraph
   PRESET_NAME: "win-release"
-  BUILD_DIR: "build/out/linux-release"
+  BUILD_DIR: "build/out/win-release"
 
 permissions:
   contents: write
