@@ -9,7 +9,7 @@ on:
       - main
 
 env:
-  VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}\vcpkg"
+  VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}\\vcpkg"
   PRESET_NAME: "win-release"
   BUILD_DIR: "build/out/win-release"
 

@@ -118,7 +118,7 @@ jobs:
     env:
       PRESET_NAME: "win-debug"
       BUILD_DIR: "build/out/win-debug"
-      VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}\vcpkg"
+      VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}\\vcpkg"
 
 
     steps:
