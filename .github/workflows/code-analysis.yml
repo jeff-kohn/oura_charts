@@ -16,6 +16,7 @@ permissions:
   security-events: write
   contents: write
   packages: read
+  checks: write
       
 jobs:
   analyze:
@@ -29,7 +30,6 @@ jobs:
       PRESET_NAME: "linux-debug"
       BUILD_DIR: "build/out/linux-debug"
       SARIF_DIR: "${{ github.workspace }}/sarif-results"
-
 
     permissions:
       security-events: write
