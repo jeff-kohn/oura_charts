@@ -60,7 +60,7 @@ jobs:
       - name: Code Coverage
         run: |
           choco install OpenCppCoverage -y
-          "C:\Program Files\OpenCppCoverage\opencppcoverage.exe" --sources=".\src" --sources=".\include" --export_type=cobertura -- $env:BUILD_DIR\tests\tests.exe
+          "C:\Program Files\OpenCppCoverage\opencppcoverage.exe" --sources="$env:BUILD_DIR\src" --sources="$env:BUILD_DIR\include" --export_type=cobertura -- $env:BUILD_DIR\tests\tests.exe
 
       - name: Publlish Coverage
         uses: 5monkeys/cobertura-action@master
@@ -74,7 +74,7 @@ jobs:
         with:
             files: |
               ${{ env.BUILD_DIR }}/test_results.xml
-              ${{ env.BUILD_DIR }}/*Coverage.xml
+
 
 
 
