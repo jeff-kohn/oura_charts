@@ -9,10 +9,6 @@ on:
     - cron: '26 0 * * 5'
 
 env:
-  VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}/vcpkg"
-  # VCPKG_DEFAULT_BINARY_CACHE: "${{ github.workspace }}/vcpkg/bincache"
-  # VCPKG_DEFAULT_TRIPLET: "x64-linux"
-  # VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
   REPO_DIR: "${{ github.workspace }}"
   GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
@@ -27,6 +23,7 @@ jobs:
     runs-on: 'ubuntu-24.04'
     timeout-minutes: 45
     env:
+      VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}/vcpkg"
       VCPKG_FEATURE_FLAGS: "dependencygraph"
       DOTNET_ROLL_FORWARD: "latestMajor"
       PRESET_NAME: "linux-debug"
@@ -51,10 +48,6 @@ jobs:
         sudo curl -sSL https://github.com/psastras/sarif-rs/releases/download/sarif-fmt-latest/sarif-fmt-x86_64-unknown-linux-gnu -o /usr/local/bin/sarif-fmt
         sudo chmod +x /usr/local/bin/sarif-fmt
         dotnet tool install --global Sarif.Multitool
-
-    # - name: "Create directory '${{ env.VCPKG_DEFAULT_BINARY_CACHE }}'"
-    #   run: mkdir -p $VCPKG_DEFAULT_BINARY_CACHE
-    #   shell: bash
 
       # Setup Cmake, Ninja, and VCPKG
     - uses: lukka/get-cmake@latest
@@ -125,7 +118,7 @@ jobs:
     env:
       PRESET_NAME: "win-debug"
       BUILD_DIR: "build/out/win-debug"
-
+      VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}\vcpkg"
 
 
     steps:
@@ -151,7 +144,8 @@ jobs:
         choco install OpenCppCoverage -y
         scripts/Run-CodeCoverage.ps1 -Preset $env:PRESET_NAME
 
-    - uses: 5monkeys/cobertura-action@master
+    - name: "Publish Coverage Report"
+      uses: 5monkeys/cobertura-action@master
       with:
         path: ${{ env.REPO_DIR }}\build\out\${{ env.PRESET_NAME }}\code_coverage.xml
         minimum_coverage: 50

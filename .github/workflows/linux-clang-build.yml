@@ -10,9 +10,6 @@ on:
 
 env:
   VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}/vcpkg"
-  # VCPKG_DEFAULT_BINARY_CACHE: "${{ github.workspace }}/vcpkg/bincache"
-  # VCPKG_DEFAULT_TRIPLET: "x64-linux"
-  # VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
   PRESET_NAME: "linux-release"
   BUILD_DIR: "build/out/linux-release"
 
@@ -34,12 +31,8 @@ jobs:
         run: |
           sudo apt install cppcheck -y
 
-      # - name: "Create directory '${{ env.VCPKG_DEFAULT_BINARY_CACHE }}'"
-      #   run: mkdir -p $VCPKG_DEFAULT_BINARY_CACHE
-      #   shell: bash
-
-      # Setup the build machine with the most recent versions of CMake and Ninja. Both are cached if not already
-      - uses: lukka/get-cmake@latest
+      - name: "Setup cmake/ninja"
+        uses: lukka/get-cmake@latest
 
       - name: run-vcpkg
         uses: lukka/run-vcpkg@v11.5

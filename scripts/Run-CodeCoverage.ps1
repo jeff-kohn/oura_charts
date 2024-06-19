@@ -23,7 +23,7 @@ try
       --excluded_sources "D:\"                                       `
       --excluded_sources $env:VCPKG_INSTALLATION_ROOT                `
       --excluded_sources $BinDir\vcpkg_installed                     `
-      --export_type=cobertura:"../code_coverage.xml"                 `
+      --export_type=cobertura:"..\code_coverage.xml"                 `
       -- tests.exe
 }
 finally

@@ -9,11 +9,7 @@ on:
       - main
 
 env:
-  VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}/vcpkg"
-  # VCPKG_DEFAULT_BINARY_CACHE: "${{ github.workspace }}/vcpkg/bincache"
-  # VCPKG_DEFAULT_TRIPLET: "x64-linux"
-  # VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
-  # VCPKG_FEATURE_FLAGS: dependencygraph
+  VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}\vcpkg"
   PRESET_NAME: "win-release"
   BUILD_DIR: "build/out/win-release"
 
@@ -30,14 +26,10 @@ jobs:
       with:
         submodules: true
 
-    # - name: "Create directory '${{ env.VCPKG_DEFAULT_BINARY_CACHE }}'"
-    #   run: mkdir -p $VCPKG_DEFAULT_BINARY_CACHE
-    #   shell: bash
-
     - name: 'Set vcvars'
       uses: ilammy/msvc-dev-cmd@v1
 
-    - name: "Setup the build machine with the most recent versions of CMake and Ninja. Both are cached if not already"
+    - name: "Setup CMake/ninja"
       uses: lukka/get-cmake@latest
 
     - name: "Run Vcpkg"
