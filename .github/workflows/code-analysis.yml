@@ -144,7 +144,7 @@ jobs:
     - name: 'Run Build'
       run: |
         cmake --preset=$env:PRESET_NAME
-        cmake --build --preset=$PRESET_NAME --target=all
+        cmake --build --preset=$env:PRESET_NAME --target=all
     
     - name: "Run Code Coverage"
       run: |
