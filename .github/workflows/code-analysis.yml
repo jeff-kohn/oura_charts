@@ -132,6 +132,9 @@ jobs:
     - name: 'Checkout repository'
       uses: actions/checkout@v4
 
+    - name: 'Set vcvars'
+      uses: ilammy/msvc-dev-cmd@v1
+
       # Setup Cmake, Ninja, and VCPKG
     - uses: lukka/get-cmake@latest
     - uses: lukka/run-vcpkg@v11.5
