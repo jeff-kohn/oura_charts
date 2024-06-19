@@ -15,6 +15,8 @@ Set-Location $TestsDir
 
 try
 {
+   Write-Host "running OpenCppCoverage with the folllowing values: RepoDir=$RepoDir, BinDir=$BinDir, TestsDir=$TestsDir"
+   
    & $env:ProgramFiles\OpenCppCoverage\opencppcoverage.exe --verbose `
       --modules $BinDir\tests\tests.exe                              `
       --sources $RepoDir\src                                         `
@@ -24,6 +26,7 @@ try
       --excluded_sources $env:VCPKG_INSTALLATION_ROOT                `
       --excluded_sources $BinDir\vcpkg_installed                     `
       --export_type=cobertura:"..\code_coverage.xml"                 `
+      --export_type=html:"..\code_coverage_html"                     `
       -- tests.exe
 }
 finally

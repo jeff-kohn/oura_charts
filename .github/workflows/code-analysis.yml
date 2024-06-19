@@ -154,6 +154,8 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: coverage-results
-        path: ${{ env.REPO_DIR }}\build\out\${{ env.PRESET_NAME }}\code_coverage.xml
         retention-days: 10
+        path: |
+          ${{ env.REPO_DIR }}\build\out\${{ env.PRESET_NAME }}\code_coverage.xml
+          ${{ env.REPO_DIR }}\build\out\${{ env.PRESET_NAME }}\code_coverage_html
 
