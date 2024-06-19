@@ -1,4 +1,4 @@
-name: windows-build
+name: Windows MSVC Build
 on:
   push:
     paths-ignore:
@@ -26,43 +26,43 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: true
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
 
-      - name: "Create directory '${{ env.VCPKG_DEFAULT_BINARY_CACHE }}'"
-        run: mkdir -p $VCPKG_DEFAULT_BINARY_CACHE
-        shell: bash
+    - name: "Create directory '${{ env.VCPKG_DEFAULT_BINARY_CACHE }}'"
+      run: mkdir -p $VCPKG_DEFAULT_BINARY_CACHE
+      shell: bash
 
-      - name: 'Set vcvars'
-        uses: ilammy/msvc-dev-cmd@v1
+    - name: 'Set vcvars'
+      uses: ilammy/msvc-dev-cmd@v1
 
-      - name: "Setup the build machine with the most recent versions of CMake and Ninja. Both are cached if not already"
-        uses: lukka/get-cmake@latest
+    - name: "Setup the build machine with the most recent versions of CMake and Ninja. Both are cached if not already"
+      uses: lukka/get-cmake@latest
 
-      - name: "Run Vcpkg"
-        uses: lukka/run-vcpkg@v11.5
-        with:
-          vcpkgJsonGlob: '**/vcpkg.json'
+    - name: "Run Vcpkg"
+      uses: lukka/run-vcpkg@v11.5
+      with:
+        vcpkgJsonGlob: '**/vcpkg.json'
 
-      - name: configure
-        run: |
-          cmake --preset=$env:PRESET_NAME
+    - name: configure
+      run: |
+        cmake --preset=$env:PRESET_NAME
 
-      - name: build
-        run: |
-          cmake --build --preset=$env:PRESET_NAME --target=all
+    - name: build
+      run: |
+        cmake --build --preset=$env:PRESET_NAME --target=all
 
-      - name: tests
-        run: |
-          ctest --preset $env:PRESET_NAME --output-on-failure --output-junit "test_results.xml"
+    - name: tests
+      run: |
+        ctest --preset $env:PRESET_NAME --output-on-failure --output-junit "test_results.xml"
 
-      - name: Publish Test Artifacts
-        uses: EnricoMi/publish-unit-test-result-action/windows@v2
-        if: always()
-        with:
-            files: |
-              ${{ env.BUILD_DIR }}/test_results.xml
+    - name: Publish Test Artifacts
+      uses: EnricoMi/publish-unit-test-result-action/windows@v2
+      if: always()
+      with:
+          files: |
+            ${{ env.BUILD_DIR }}/test_results.xml
 
 
 

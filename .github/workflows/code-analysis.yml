@@ -1,4 +1,4 @@
-name: "linux-clang-codeql"
+name: Static Code Analysis and Code Coverage
 
 on:
   push:
@@ -8,23 +8,23 @@ on:
   schedule:
     - cron: '26 0 * * 5'
 
+env:
+  VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}/vcpkg"
+  REPO_DIR: "${{ github.workspace }}"
+  GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
 jobs:
   analyze:
-    name: 'Analyze C++'
+    name: 'Static Code Analysis'
     runs-on: 'ubuntu-24.04'
-    timeout-minutes: 360
+    timeout-minutes: 45
     env:
-      VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}/vcpkg"
-      VCPKG_DEFAULT_BINARY_CACHE: "${{ github.workspace }}/vcpkg/bincache"
-      VCPKG_DEFAULT_TRIPLET: "x64-linux"
-      VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
       VCPKG_FEATURE_FLAGS: "dependencygraph"
       DOTNET_ROLL_FORWARD: "latestMajor"
       PRESET_NAME: "linux-debug"
       BUILD_DIR: "build/out/linux-debug"
-      REPO_DIR: "${{ github.workspace }}"
       SARIF_DIR: "${{ github.workspace }}/sarif-results"
-      GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
 
     permissions:
       security-events: write
@@ -44,11 +44,11 @@ jobs:
         sudo chmod +x /usr/local/bin/sarif-fmt
         dotnet tool install --global Sarif.Multitool
 
-    - name: "Create directory '${{ env.VCPKG_DEFAULT_BINARY_CACHE }}'"
-      run: mkdir -p $VCPKG_DEFAULT_BINARY_CACHE
-      shell: bash
+    # - name: "Create directory '${{ env.VCPKG_DEFAULT_BINARY_CACHE }}'"
+    #   run: mkdir -p $VCPKG_DEFAULT_BINARY_CACHE
+    #   shell: bash
 
-      # Setup the build machine with the most recent versions of CMake and Ninja. Both are cached if not already
+      # Setup Cmake, Ninja, and VCPKG
     - uses: lukka/get-cmake@latest
     - uses: lukka/run-vcpkg@v11.5
       with:
@@ -65,8 +65,8 @@ jobs:
     - name: 'Run Build'
       shell: bash
       run: |
-        echo "$GITHUB_CONTEXT"
-        scripts/build_preset.sh --preset $PRESET_NAME --configure --build
+        cmake --preset=$PRESET_NAME
+        cmake --build --preset=$PRESET_NAME --target=all
 
     - name: 'Perform CodeQL Analysis'
       uses: github/codeql-action/analyze@v3
@@ -103,9 +103,54 @@ jobs:
         sarif_file: ${{ env.SARIF_DIR }}
         category: cpp
 
-    - name: Upload loc as a Build Artifact
+    - name: Upload SARIF Artifact
       uses: actions/upload-artifact@v4
       with:
         name: sarif-results
         path: ${{ env.SARIF_DIR }}
-        retention-days: 1
+        retention-days: 10
+
+  coverage:
+    name: 'Code Coverage'
+    runs-on: 'windows-latest'
+    timeout-minutes: 20
+    env:
+      PRESET_NAME: "win-debug"
+      BUILD_DIR: "build/out/win-debug"
+
+    permissions:
+      security-events: write
+      contents: write
+      packages: read
+
+    steps:
+    - name: 'Checkout repository'
+      uses: actions/checkout@v4
+
+      # Setup Cmake, Ninja, and VCPKG
+    - uses: lukka/get-cmake@latest
+    - uses: lukka/run-vcpkg@v11.5
+      with:
+        vcpkgJsonGlob: '**/vcpkg.json'
+
+    - name: 'Run Build'
+      run: |
+        cmake --preset=$env:PRESET_NAME
+    
+    - name: "Run Code Coverage"
+      run: |
+        choco install OpenCppCoverage -y
+        scripts/Run-CodeCoverage.ps1 -Preset $env:PRESET_NAME
+
+    - uses: 5monkeys/cobertura-action@master
+      with:
+        path: ${{ env.REPO_DIR }}\build\out\${{ env.PRESET_NAME }}\code_coverage.xml
+        minimum_coverage: 50
+
+    - name: Upload Coverage Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-results
+        path: ${{ env.REPO_DIR }}\build\out\${{ env.PRESET_NAME }}\code_coverage.xml
+        retention-days: 10
+

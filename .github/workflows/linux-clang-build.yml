@@ -1,4 +1,4 @@
-name: linux-clang-build
+name: Linux Clang Build
 on:
   push:
     paths-ignore:
