@@ -30,9 +30,9 @@ jobs:
       with:
         submodules: true
 
-    - name: "Create directory '${{ env.VCPKG_DEFAULT_BINARY_CACHE }}'"
-      run: mkdir -p $VCPKG_DEFAULT_BINARY_CACHE
-      shell: bash
+    # - name: "Create directory '${{ env.VCPKG_DEFAULT_BINARY_CACHE }}'"
+    #   run: mkdir -p $VCPKG_DEFAULT_BINARY_CACHE
+    #   shell: bash
 
     - name: 'Set vcvars'
       uses: ilammy/msvc-dev-cmd@v1
