@@ -9,12 +9,13 @@ on:
       - main
 
 env:
-   VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}/vcpkg"
-   VCPKG_DEFAULT_BINARY_CACHE: "${{ github.workspace }}/vcpkg/bincache"
-   VCPKG_DEFAULT_TRIPLET: "x64-linux"
-   VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
-   VCPKG_FEATURE_FLAGS: dependencygraph
-   PRESET_NAME: "win-release"
+  VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}/vcpkg"
+  VCPKG_DEFAULT_BINARY_CACHE: "${{ github.workspace }}/vcpkg/bincache"
+  VCPKG_DEFAULT_TRIPLET: "x64-linux"
+  VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+  VCPKG_FEATURE_FLAGS: dependencygraph
+  PRESET_NAME: "win-release"
+  BUILD_DIR: "build/out/linux-release"
 
 permissions:
   contents: write
@@ -51,20 +52,15 @@ jobs:
         run: |
           cmake --build --preset=$env:PRESET_NAME --target=all
 
-  unit_tests:
-    runs-on: windows-latest
-    needs: windows_build
-    steps:
       - name: tests
         run: |
-          ctest --preset $env:PRESET_NAME --output-on-failure --output-junit "$env:PRESET_NAME.test_results.xml"
+          ctest --preset $env:PRESET_NAME --output-on-failure --output-junit "test_results.xml"
+
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action/windows@v2
         if: always()
         with:
             files: |
-              test-results/**/*.xml
-              test-results/**/*.trx
-              test-results/**/*.json
+              ${{ env.BUILD_DIR }}/test_results.xml
 

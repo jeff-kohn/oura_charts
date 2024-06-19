@@ -14,9 +14,12 @@ env:
   VCPKG_DEFAULT_TRIPLET: "x64-linux"
   VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
   PRESET_NAME: "linux-release"
+  BUILD_DIR: "build/out/linux-release"
+
 
 permissions:
   contents: write
+  checks: write
 
 jobs:
   linux_build:
@@ -51,19 +54,14 @@ jobs:
         run: |
           cmake --build --preset=$PRESET_NAME --target=all
 
-  unit_tests:
-    runs-on: ubuntu-24.04
-    needs: linux_build
-    steps:
       - name: tests
         run: |
-          ctest --preset $PRESET_NAME --output-on-failure --output-junit "$PRESET_NAME.test_results.xml"
+          ctest --preset $PRESET_NAME --output-on-failure --output-junit "test_results.xml"
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
             files: |
-              test-results/**/*.xml
-              test-results/**/*.trx
-              test-results/**/*.json
+              ${{ env.BUILD_DIR }}/test_results.xml
+
