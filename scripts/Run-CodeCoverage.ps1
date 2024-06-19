@@ -22,7 +22,7 @@ try
       --sources $RepoDir\src                                         `
       --sources $ReporDir\include                                    `
       --excluded_sources $env:ProgramFiles                           `
-      --excluded_sources "D:\"                                       `
+      --excluded_sources "D:\a\_work\1'                              `
       --excluded_sources $env:VCPKG_INSTALLATION_ROOT                `
       --excluded_sources $BinDir\vcpkg_installed                     `
       --export_type=cobertura:"..\code_coverage.xml"                 `
