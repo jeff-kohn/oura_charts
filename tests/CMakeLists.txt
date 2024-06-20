@@ -9,6 +9,7 @@ add_executable(${THIS_TARGET}
    "test_bindings.cpp"
    "test_datetime_helpers.cpp"
    "test_json_data.cpp"
+   "test_oura_exception.cpp"
 )
 
 set_target_properties(${THIS_TARGET}

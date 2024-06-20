@@ -21,13 +21,13 @@ namespace oura_charts
    enum class ErrorCategory
    {
       Generic = -1,
-      Success = 0,
+      Success,
       REST,
       Parse,
       FileIO
    };
 
-   inline std::string getGetogoryName(ErrorCategory ec)
+   inline std::string getCategoryName(ErrorCategory ec)
    {
       switch (ec)
       {
@@ -41,9 +41,14 @@ namespace oura_charts
          return constants::ERROR_CATEGORY_PARSE;
       case ErrorCategory::FileIO:
          return constants::ERROR_CATEGORY_FILE_IO;
-      default:
-         std::unreachable();
       }
+
+   #if defined(_DEBUG)
+      std::unreachable();
+   #else
+      return {};
+   #endif
+
    }
 
    /// <summary>
@@ -51,7 +56,7 @@ namespace oura_charts
    /// </summary>
    inline std::string format_as(ErrorCategory ec)
    {
-      return getGetogoryName(ec);
+      return getCategoryName(ec);
    }
 
 
@@ -90,7 +95,7 @@ namespace oura_charts
       /// </summary>
       std::string categoryName() const
       {
-         return getGetogoryName(category);
+         return getCategoryName(category);
       }
 
       /// <summary>
