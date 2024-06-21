@@ -5,7 +5,7 @@
 //
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
-#include "oura_charts/oura_charts.h"
+#include "oura_charts/oura_charts.h"      // IWYU pragma: keep
 #include <catch2/catch_test_macros.hpp>
 #include <cpr/error.h>
 #include <fmt/format.h>

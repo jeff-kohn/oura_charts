@@ -57,6 +57,8 @@ namespace oura_charts::test
    }
 
 
+   // clang-tidy thinks this method shouldn't be noexcept(), but I can't see how it would ever through short of memory allocation failing 
+   // NOLINTNEXTLINE(bugprone-exception-escape)
    [[nodiscard]] TestDataProvider::JsonResult TestDataProvider::getJsonObject(std::string_view path, std::string_view next_token) const noexcept
    {
       using namespace detail;
