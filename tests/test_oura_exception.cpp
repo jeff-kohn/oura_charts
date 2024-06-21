@@ -45,17 +45,24 @@ namespace oura_charts::test
       REQUIRE(ex.categoryName() == getCategoryName(cat));
       REQUIRE(ex.message == ex.what());
 
-      ex = oura_exception{ err_msg, cat };
-      REQUIRE(ex.error_code == err_code);
-      REQUIRE(ex.message == err_msg);
-      REQUIRE(ex.category == ErrorCategory::Generic);
-      REQUIRE(ex.categoryName() == getCategoryName(cat));
-      REQUIRE(ex.message == ex.what());
+      oura_exception ex1{ err_msg, cat };
+      oura_exception ex2{ std::move(ex1) };
+      oura_exception ex3{ ex2 };
+      REQUIRE(ex3.error_code == err_code);
+      REQUIRE(ex3.message == err_msg);
+      REQUIRE(ex3.category == ErrorCategory::Generic);
+      REQUIRE(ex3.categoryName() == getCategoryName(cat));
+      REQUIRE(ex3.message == ex.what());
 
-      cpr::Error err_cpr{ int32_t{0}, std::string{err_msg} };
-      ex = oura_exception{ err_cpr };
-      REQUIRE(ex.error_code == static_cast<int>(err_cpr.code));
-      REQUIRE(ex.message == err_cpr.message);
+      cpr::Error cpr_err{ int32_t{0}, std::string{err_msg} };
+      oura_exception cpr_ex{ cpr_err };
+      ex = cpr_ex;
+      REQUIRE(ex.error_code == static_cast<int>(cpr_err.code));
+      REQUIRE(ex.message == cpr_err.message);
+
+      const std::string expected_msg{ fmt::format("Error message is: {}", err_msg) };
+      ex = oura_exception{ cat, "Error message is: {}", err_msg };
+      REQUIRE(ex.message == expected_msg);
    }
 
 
