@@ -10,11 +10,8 @@
 #pragma once
 
 #include "oura_charts/oura_charts.h"
-#include "oura_charts/datetime_helpers.h"
-#include "oura_charts/detail/json_structs.h"
 #include <filesystem>
 #include <map>
-#include <ranges>
 #include <string>
 #include <string_view>
 #include <variant>
@@ -67,7 +64,7 @@ namespace oura_charts::test
       ///   true if a new object was added or an existing object was replaced, false if the
       ///   id already existing and overwrite_existing was 'false'
       /// </returns>
-      bool addJsonData(std::string path, std::string json_data, bool overwrite_existing = false);
+      bool addJsonData(std::string_view path, std::string_view json_data, bool overwrite_existing = false);
       bool addJsonData(std::string path, std::string json_data, std::string_view next_token, bool overwrite_existing = false);
 
 
@@ -101,7 +98,7 @@ namespace oura_charts::test
 
       void enumerateJsonFromFolder(const fs::path& data_folder);
 
-      JsonResult doFileGet(fs::path json_path)  const noexcept;
+      JsonResult doFileGet(const fs::path& json_path)  const noexcept;
    };
 
-} // oura_charts::detail
+} // namespace oura_charts::test

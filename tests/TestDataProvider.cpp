@@ -30,9 +30,9 @@ namespace oura_charts::test
    }
 
 
-   bool TestDataProvider::addJsonData(std::string path, std::string json_data, bool overwrite_existing)
+   bool TestDataProvider::addJsonData(std::string_view path, std::string_view json_data, bool overwrite_existing)
    {
-      return addJsonData(path, json_data, "", overwrite_existing);
+      return addJsonData(std::string{path}, std::string{json_data}, "", overwrite_existing);
    }
 
 
@@ -77,15 +77,14 @@ namespace oura_charts::test
    }
 
 
-   TestDataProvider::JsonResult TestDataProvider::doFileGet(fs::path file_path)  const noexcept
+   TestDataProvider::JsonResult TestDataProvider::doFileGet(const fs::path& file_path)  const noexcept
    {
       try
       {
          auto file_str = file_path.generic_string();
          if (!fs::exists(file_path))
          {
-            auto path = file_path.generic_string();
-            return unexpected{ oura_exception{ ErrorCategory::FileIO, "JSON data file[{}] not found.",  path} };
+            return unexpected{ oura_exception{ ErrorCategory::FileIO, "JSON data file[{}] not found.",  file_str} };
          }
 
          std::ifstream json_file{ file_path };

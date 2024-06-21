@@ -7,8 +7,8 @@
 //---------------------------------------------------------------------------------------------------------------------
 #include "oura_charts/oura_charts.h"
 #include <catch2/catch_test_macros.hpp>
-#include <fmt/format.h>
 #include <cpr/error.h>
+#include <fmt/format.h>
 
 namespace oura_charts::test
 {
