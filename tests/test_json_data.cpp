@@ -6,7 +6,7 @@
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
 #include "oura_charts/oura_charts.h"
-#include "FileDataProvider.h"
+#include "TestDataProvider.h"
 #include "oura_charts/HeartRate.h"
 #include "oura_charts/SleepSession.h"
 #include "oura_charts/UserProfile.h"
@@ -23,7 +23,7 @@ namespace oura_charts::test
    TEST_CASE("test_parse_user_profile", "[parsing]")
    {
       // data provider for unit tests that gets json from disk files.
-      auto data_prov = FileDataProvider{ fs::path{"./test_data" } };
+      auto data_prov = TestDataProvider{ fs::path{"./test_data" } };
 
       auto json_res = data_prov.getJsonObject(UserProfile::REST_PATH);
       REQUIRE(json_res.has_value());
@@ -38,7 +38,7 @@ namespace oura_charts::test
       using namespace detail;
 
       // data provider for unit tests that gets json from disk files.
-      auto data_prov = FileDataProvider{ fs::path{"./test_data" } };
+      auto data_prov = TestDataProvider{ fs::path{"./test_data" } };
 
       auto json_res = data_prov.getJsonObject(SleepSession::REST_PATH);
       REQUIRE(json_res.has_value());
@@ -55,7 +55,7 @@ namespace oura_charts::test
    {
       using namespace detail;
 
-      auto data_prov = FileDataProvider{ fs::path{"./test_data" } };
+      auto data_prov = TestDataProvider{ fs::path{"./test_data" } };
 
       auto json_res = data_prov.getJsonObject(HeartRate::REST_PATH);
       REQUIRE(json_res.has_value());

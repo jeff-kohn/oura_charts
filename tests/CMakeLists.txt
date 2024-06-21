@@ -4,8 +4,8 @@
 ###############################################################################
 set(THIS_TARGET "tests")
 add_executable(${THIS_TARGET}
-   "FileDataProvider.h"
-   "FileDataProvider.cpp"
+   "TestDataProvider.h"
+   "TestDataProvider.cpp"
    "test_bindings.cpp"
    "test_datetime_helpers.cpp"
    "test_json_data.cpp"

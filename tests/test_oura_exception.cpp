@@ -8,6 +8,7 @@
 #include "oura_charts/oura_charts.h"
 #include <catch2/catch_test_macros.hpp>
 #include <fmt/format.h>
+#include <cpr/error.h>
 
 namespace oura_charts::test
 {
@@ -51,7 +52,10 @@ namespace oura_charts::test
       REQUIRE(ex.categoryName() == getCategoryName(cat));
       REQUIRE(ex.message == ex.what());
 
-
+      cpr::Error err_cpr{ int32_t{0}, std::string{err_msg} };
+      ex = oura_exception{ err_cpr };
+      REQUIRE(ex.error_code == static_cast<int>(err_cpr.code));
+      REQUIRE(ex.message == err_cpr.message);
    }
 
 
