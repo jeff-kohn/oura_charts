@@ -7,7 +7,7 @@ message (CHECK_START "Looking for CppCheck")
 
 # only do the in-build scanning for the presets that request it.
 if (ENABLE_CPP_CHECK)
-   find_program(CMAKE_CXX_CPPCHECK NAMES cppcheck)
+   find_program(CMAKE_CXX_CPPCHECK NAMES cppcheck HINTS $ENV{PROGRAMFILES}/cppcheck)
 
    if (CMAKE_CXX_CPPCHECK)
       message (CHECK_PASS "CppCheck found at '${CPPCHECK_PATH}'")

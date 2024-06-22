@@ -19,7 +19,7 @@
                "type": "FILEPATH"
             },
             "ENABLE_UNIT_TESTS": "ON",
-            "ENABLE_CPP_CHECK": "OFF",
+            "ENABLE_CPP_CHECK": "ON",
             "ENABLE_CLANG_TIDY": "OFF",
             "CMAKE_EXPORT_COMPILE_COMMANDS": "1",
             "VCPKG_TARGET_TRIPLET": "x64-windows-static"

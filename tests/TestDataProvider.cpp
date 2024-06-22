@@ -100,12 +100,12 @@ namespace oura_charts::test
    }
 
 
-   void TestDataProvider::paginateDataSource(std::string_view json_path, size_t num_pages) noexcept(false)
+   void TestDataProvider::paginateDataSource(std::string_view path, size_t num_pages) noexcept(false)
    {
       constexpr std::string_view token_fmt_str{ R"("next_token": "{}")" };
       constexpr std::string_view null_token_str{ R"("next_token": null)" };
 
-      auto result = getJsonData(json_path);
+      auto result = getJsonData(path);
       if (!result)
          throw result.error();
 
@@ -128,7 +128,7 @@ namespace oura_charts::test
             json_text.replace(token_pos, null_token_str.size(), fmt::format(token_fmt_str, idx + 1));
          }
          std::string id_str = (idx == 0) ? "" : std::to_string(idx);
-         addJsonData(std::string{ json_path }, json_text, id_str, true);
+         addJsonData(std::string{ path }, json_text, id_str, true);
       }
    }
 

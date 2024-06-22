@@ -51,7 +51,7 @@ namespace oura_charts
 
       // The base URL that is used in combination with the 'path' parameter of the
       // getJson() methods to build the full URL for the REST endpoint of an object(s)
-      std::string baseURL() const { return m_base_url; }
+      const std::string& baseURL() const { return m_base_url; }
 
 
       /// <summary>
