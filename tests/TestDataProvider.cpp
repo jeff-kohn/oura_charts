@@ -6,6 +6,7 @@
 
 namespace oura_charts::test
 {
+   using namespace detail;
 
    TestDataProvider::TestDataProvider(const fs::path& data_folder) 
    {
@@ -59,10 +60,8 @@ namespace oura_charts::test
 
    // clang-tidy thinks this method shouldn't be noexcept(), but I can't see how it would ever through short of memory allocation failing 
    // NOLINTNEXTLINE(bugprone-exception-escape)
-   [[nodiscard]] TestDataProvider::JsonResult TestDataProvider::getJsonObject(std::string_view path, std::string_view next_token) const noexcept
+   [[nodiscard]] TestDataProvider::JsonResult TestDataProvider::getJsonData(std::string_view path, std::string_view next_token) const noexcept
    {
-      using namespace detail;
-
       std::string json_id{ path };
       json_id.append(next_token);
 
@@ -71,15 +70,14 @@ namespace oura_charts::test
          return unexpected{ oura_exception{ErrorCategory::Parse, "JSON data not found for path '{}'", path } };
 
       // either return the string, or if we got a path load the file's contents and return that.
-      auto visitor = overload{ [](auto&& json) -> JsonResult                     {  return std::string{json};      },
-                              [this] (const fs::path& json_path) -> JsonResult   {  return doFileGet(json_path);   }
+      auto visitor = overload{ [](auto&& json) -> JsonResult                     {  return std::string{ json };      },
+                               [this] (const fs::path& json_path) -> JsonResult  {  return getJsonFile(json_path);   }
       };
-
       return std::visit(visitor, it->second);
    }
 
 
-   TestDataProvider::JsonResult TestDataProvider::doFileGet(const fs::path& file_path)  const noexcept
+   TestDataProvider::JsonResult TestDataProvider::getJsonFile(const fs::path& file_path)  const noexcept
    {
       try
       {
@@ -107,7 +105,7 @@ namespace oura_charts::test
       constexpr std::string_view token_fmt_str{ R"("next_token": "{}")" };
       constexpr std::string_view null_token_str{ R"("next_token": null)" };
 
-      auto result = getJsonObject(json_path);
+      auto result = getJsonData(json_path);
       if (!result)
          throw result.error();
 

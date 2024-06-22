@@ -26,7 +26,7 @@ namespace oura_charts::test
       // data provider for unit tests that gets json from disk files.
       auto data_prov = TestDataProvider{ fs::path{ UNIT_TEST_DATA_DIR } };
 
-      auto json_res = data_prov.getJsonObject(UserProfile::REST_PATH);
+      auto json_res = data_prov.getJsonData(UserProfile::REST_PATH);
       REQUIRE(json_res.has_value());
 
       auto data_res = detail::readJson<detail::profile_data>(*json_res);
@@ -41,7 +41,7 @@ namespace oura_charts::test
       // data provider for unit tests that gets json from disk files.
       auto data_prov = TestDataProvider{ fs::path{ UNIT_TEST_DATA_DIR } };
 
-      auto json_res = data_prov.getJsonObject(SleepSession::REST_PATH);
+      auto json_res = data_prov.getJsonData(SleepSession::REST_PATH);
       REQUIRE(json_res.has_value());
 
       auto data_res = readJson<RestDataCollection<SleepSession::StorageType>>(*json_res);
@@ -58,7 +58,7 @@ namespace oura_charts::test
 
       auto data_prov = TestDataProvider{ fs::path{ UNIT_TEST_DATA_DIR } };
 
-      auto json_res = data_prov.getJsonObject(HeartRate::REST_PATH);
+      auto json_res = data_prov.getJsonData(HeartRate::REST_PATH);
       REQUIRE(json_res.has_value());
 
       auto data_res = readJson<RestDataCollection<HeartRate::StorageType>>(*json_res);

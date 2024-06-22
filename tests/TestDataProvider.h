@@ -60,21 +60,34 @@ namespace oura_charts::test
       ///   Retrieve the JSON data associated with the specified path. expected return value
       ///   is the JSON text, unexpected is an oura_exception.
       /// </summary>
-      [[nodiscard]] JsonResult getJsonObject(std::string_view path, std::string_view next_token = "") const noexcept;
+      [[nodiscard]] JsonResult getJsonData(std::string_view path) const noexcept
+      {
+         return getJsonData(path, "");
+      }
 
 
       /// <summary>
-      ///   Retrieve the json for a series/array of objects. Note that this provider doesn't
-      ///   actually do any filtering, it's just going to return the contents of the we have
-      ///   for the specified path.
+      ///   Retrieve the JSON data associated with the specified path. expected return value
+      ///   is the JSON text, unexpected is an oura_exception.
       /// </summary>
       /// <remarks>
-      ///   the template parameter is just for interface compatibility, it's not actually used.
+      ///   currently the only MapT param this provider supports is "next_token". Others will be
+      ///   ignored, and if you pass a non-empty MapT that doesn't contain "next_token" an exception
+      ///   will be thrown.
       /// </remarks>
-      template <typename T>
-      [[nodiscard]] JsonResult getJsonDataSeries(std::string_view path, T) const noexcept
+      template<KeyValueRange MapT>
+      [[nodiscard]] JsonResult getJsonData(std::string_view path, const MapT&& param_map) const noexcept
       {
-         return getJsonObject(path);
+         // we may get called with empty MapT by code that doesn't know whether it's passing params or not.
+         if (param_map.empty())
+            return getJsonData(path);
+
+         // pull the next_token value out, so we can use it to look up paged data.
+         auto it = param_map.find(constants::REST_PARAM_NEXT_TOKEN);
+         if (it == param_map.end())
+            return unexpected{ oura_exception{ "TestDataProvider::getJsonData() called with invalid param_map, missing next_token", ErrorCategory::Parse } };
+
+         return getJsonData(path, it->second);
       }
 
 
@@ -92,7 +105,7 @@ namespace oura_charts::test
 
       /// <summary>
       ///   turn an existing data source into a paged data source by duplicating it to multiple
-      ///   pages. may throw on error.
+      ///   sections. may throw on error.
       /// </summary>
       void paginateDataSource(std::string_view path, size_t num_pages) noexcept(false);
 
@@ -103,8 +116,8 @@ namespace oura_charts::test
       JsonMap m_json_map{};
 
       void enumerateJsonFromFolder(const fs::path& data_folder);
-
-      JsonResult doFileGet(const fs::path& json_path)  const noexcept;
+      [[nodiscard]] JsonResult getJsonData(std::string_view path, std::string_view next_token) const noexcept;
+      [[nodiscard]] JsonResult getJsonFile(const fs::path& json_path)  const noexcept;
    };
 
 } // namespace oura_charts::test

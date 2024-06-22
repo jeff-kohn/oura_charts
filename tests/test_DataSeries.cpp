@@ -9,7 +9,7 @@ namespace oura_charts::test
    using namespace std::string_view_literals;
    using namespace detail;
 
-   TEST_CASE("test_DataSeries_paged_data", "[parsing][binding]")
+   TEST_CASE("test_DataSeries_paging", "[parsing][binding]")
    {
       TestDataProvider provider{ constants::UNIT_TEST_DATA_DIR };
 
@@ -18,8 +18,8 @@ namespace oura_charts::test
 
       // paginate the data, tripling it to 3 pages and retrieve again
       REQUIRE_NOTHROW(provider.paginateDataSource(constants::REST_PATH_HEART_RATE, 3));
-      HeartRateDataSeries paged{ detail::getDataSeries<HeartRate>(provider, detail::SortedPropertyMap{}) };
 
+      HeartRateDataSeries paged{ detail::getDataSeries<HeartRate>(provider, detail::SortedPropertyMap{}) };
       REQUIRE(paged.size() == non_paged.size() * 3);
    }
 
