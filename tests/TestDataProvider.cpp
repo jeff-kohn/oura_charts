@@ -119,7 +119,7 @@ namespace oura_charts::test
 
       // paginate our datasource by duplicating the file in-memory and adding next_token values.
       // We'll just use the loop counter for the next_token values.
-      for (int idx{ 0 }; idx < num_pages; ++idx)
+      for (size_t idx{ 0 }; idx < num_pages; ++idx)
       {
          std::string json_text{ original_json }; // always start with unmodified original
          auto next_idx = idx + 1;
