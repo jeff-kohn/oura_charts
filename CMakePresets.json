@@ -21,13 +21,18 @@
             "ENABLE_UNIT_TESTS": "ON",
             "ENABLE_CPP_CHECK": "ON",
             "ENABLE_CLANG_TIDY": "OFF",
-            "CMAKE_EXPORT_COMPILE_COMMANDS": "1",
             "VCPKG_TARGET_TRIPLET": "x64-windows-static"
          },
          "condition": {
             "type": "equals",
             "lhs": "${hostSystemName}",
             "rhs": "Windows"
+         },
+         "vendor": {
+            "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+               "enableMicrosoftCodeAnalysis": false,
+               "enableClangTidyCodeAnalysis": true
+            }
          }
       },
       {
@@ -73,7 +78,6 @@
             "ENABLE_UNIT_TESTS": "ON",
             "ENABLE_CPP_CHECK": "ON",
             "ENABLE_CLANG_TIDY": "ON",
-            "CMAKE_EXPORT_COMPILE_COMMANDS": "1",
             "VCPKG_TARGET_TRIPLET": "x64-linux"
          },
          "condition": {
@@ -111,7 +115,8 @@
             "ENABLE_CLANG_TIDY": "OFF",
             "CMAKE_BUILD_TYPE": "Debug"
          }
-      }   ],
+      }
+   ],
    "buildPresets": [
       {
          "name": "win-debug",

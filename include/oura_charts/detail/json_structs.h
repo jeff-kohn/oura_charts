@@ -27,7 +27,7 @@ namespace oura_charts::detail
    /// </summary>
    struct profile_data
    {
-      std::string id;
+      std::string id{};
       std::string email{};
       int age{};
       double weight{};
@@ -49,8 +49,8 @@ namespace oura_charts::detail
    struct RestDataCollection
    {
       using value_type = T;
-      std::vector<value_type> data;
-      nullable_string next_token;
+      std::vector<value_type> data{};
+      nullable_string next_token{};
    };
 
 
@@ -59,9 +59,9 @@ namespace oura_charts::detail
    /// </summary>
    struct hr_data
    {
-      int bpm;
-      std::string source;
-      local_seconds timestamp;
+      int bpm{};
+      std::string source{};
+      local_seconds timestamp{};
    };
 
 
@@ -70,8 +70,8 @@ namespace oura_charts::detail
    /// </summary>
    struct sleep_data
    {
-      std::string id;
-      year_month_day day;
+      std::string id{};
+      year_month_day day{};
       local_seconds bedtime_start{};
       local_seconds bedtime_end{};
 

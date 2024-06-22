@@ -134,6 +134,9 @@ jobs:
       with:
         vcpkgJsonGlob: '**/vcpkg.json'
 
+    - name: Install winget
+      uses: Cyberboss/install-winget@v1
+
     - name: Install pre-reqs
       run: |
         winget install CppCheck --verbose --disable-interactivity

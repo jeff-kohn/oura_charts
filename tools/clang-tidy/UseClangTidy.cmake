@@ -14,6 +14,8 @@ if(ENABLE_CLANG_TIDY)
          "--use-color"
          "--header-filter=.*/oura_charts/**"
          "--quiet"
+#         "-p"
+#         "${CMAKE_BINARY_DIR}/compile_commands.json"
       )
       message(STATUS "clang-tidy build integration is enabled for this preset.")
    else()
