@@ -57,18 +57,6 @@ namespace oura_charts::test
 
 
       /// <summary>
-      ///   Add  the specified JSON text to the provider using the specified path as
-      ///   its key.
-      /// </summary>
-      /// <returns>
-      ///   true if a new object was added or an existing object was replaced, false if the
-      ///   id already existing and overwrite_existing was 'false'
-      /// </returns>
-      bool addJsonData(std::string_view path, std::string_view json_data, bool overwrite_existing = false);
-      bool addJsonData(std::string path, std::string json_data, std::string_view next_token, bool overwrite_existing = false);
-
-
-      /// <summary>
       ///   Retrieve the JSON data associated with the specified path. expected return value
       ///   is the JSON text, unexpected is an oura_exception.
       /// </summary>
@@ -89,6 +77,24 @@ namespace oura_charts::test
          return getJsonObject(path);
       }
 
+
+      /// <summary>
+      ///   Add  the specified JSON text to the provider using the specified path as
+      ///   its key.
+      /// </summary>
+      /// <returns>
+      ///   true if a new object was added or an existing object was replaced, false if the
+      ///   id already existing and overwrite_existing was 'false'
+      /// </returns>
+      bool addJsonData(std::string_view path, std::string_view json_data, bool overwrite_existing = false);
+      bool addJsonData(std::string path, std::string json_data, std::string_view next_token, bool overwrite_existing = false);
+
+
+      /// <summary>
+      ///   turn an existing data source into a paged data source by duplicating it to multiple
+      ///   pages. may throw on error.
+      /// </summary>
+      void paginateDataSource(std::string_view path, size_t num_pages) noexcept(false);
 
    private:
       using JsonEntry = std::variant<fs::path, std::string>;

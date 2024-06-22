@@ -16,6 +16,7 @@
 
 namespace oura_charts::test
 {
+   using namespace constants;
    using namespace std::literals::chrono_literals;
    namespace fs = std::filesystem;
 
@@ -23,7 +24,7 @@ namespace oura_charts::test
    TEST_CASE("test_parse_user_profile", "[parsing]")
    {
       // data provider for unit tests that gets json from disk files.
-      auto data_prov = TestDataProvider{ fs::path{"./test_data" } };
+      auto data_prov = TestDataProvider{ fs::path{ UNIT_TEST_DATA_DIR } };
 
       auto json_res = data_prov.getJsonObject(UserProfile::REST_PATH);
       REQUIRE(json_res.has_value());
@@ -38,7 +39,7 @@ namespace oura_charts::test
       using namespace detail;
 
       // data provider for unit tests that gets json from disk files.
-      auto data_prov = TestDataProvider{ fs::path{"./test_data" } };
+      auto data_prov = TestDataProvider{ fs::path{ UNIT_TEST_DATA_DIR } };
 
       auto json_res = data_prov.getJsonObject(SleepSession::REST_PATH);
       REQUIRE(json_res.has_value());
@@ -55,7 +56,7 @@ namespace oura_charts::test
    {
       using namespace detail;
 
-      auto data_prov = TestDataProvider{ fs::path{"./test_data" } };
+      auto data_prov = TestDataProvider{ fs::path{ UNIT_TEST_DATA_DIR } };
 
       auto json_res = data_prov.getJsonObject(HeartRate::REST_PATH);
       REQUIRE(json_res.has_value());

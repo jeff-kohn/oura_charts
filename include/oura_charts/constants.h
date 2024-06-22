@@ -31,9 +31,11 @@ namespace oura_charts::constants
 
    static constexpr const char* JSON_KEY_DATA = "data";
 
-   static constexpr int REST_DEFAULT_DATA_LIMIT{ 1024 * 1024 }; // 1MB
+   //static constexpr int REST_DEFAULT_DATA_LIMIT{ 1024 * 1024 }; // 1MB
 
    static constexpr int MAX_ENV_VAR_LENGTH = 1024;
+
+   static constexpr const char* UNIT_TEST_DATA_DIR = "./test_data";
 
    // string names for ErrorCategory enum values.
    static constexpr const char* ERROR_CATEGORY_SUCCESS = "Success";

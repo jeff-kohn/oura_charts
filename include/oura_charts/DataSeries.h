@@ -74,7 +74,6 @@ namespace oura_charts
    namespace detail
    {
       using std::forward;
-
       using SortedPropertyMap = std::map<std::string, std::string>;
 
       template <DataSeriesElement ElementT, DataProvider ProviderT, KeyValueRange MapT>

@@ -102,6 +102,36 @@ namespace oura_charts::test
    }
 
 
+   void TestDataProvider::paginateDataSource(std::string_view json_path, size_t num_pages) noexcept(false)
+   {
+      constexpr std::string_view token_fmt_str{ R"("next_token": "{}")" };
+      constexpr std::string_view null_token_str{ R"("next_token": null)" };
 
+      auto result = getJsonObject(json_path);
+      if (!result)
+         throw result.error();
+
+      std::string original_json{ result.value() };
+      auto token_pos = original_json.find(null_token_str);
+      if (token_pos == std::string::npos)
+      {
+         auto func = std::source_location::current().function_name();
+         throw oura_exception{ ErrorCategory::Parse, "{} - couldn't find next_token in JSON data",  func };
+      }
+
+      // paginate our datasource by duplicating the file in-memory and adding next_token values.
+      // We'll just use the loop counter for the next_token values.
+      for (int idx{ 0 }; idx < num_pages; ++idx)
+      {
+         std::string json_text{ original_json }; // always start with unmodified original
+         auto next_idx = idx + 1;
+         if (next_idx < num_pages)
+         {
+            json_text.replace(token_pos, null_token_str.size(), fmt::format(token_fmt_str, idx + 1));
+         }
+         std::string id_str = (idx == 0) ? "" : std::to_string(idx);
+         addJsonData(std::string{ json_path }, json_text, id_str, true);
+      }
+   }
 
 } // namespace oura_charts::test
