@@ -37,6 +37,11 @@ jobs:
       with:
         vcpkgJsonGlob: '**/vcpkg.json'
 
+    - name: Install pre-reqs
+      run: |
+        winget install CppCheck --verbose --disable-interactivity
+        choco install OpenCppCoverage -y
+
     - name: configure
       run: |
         cmake --preset=$env:PRESET_NAME
