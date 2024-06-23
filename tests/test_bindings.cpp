@@ -6,18 +6,19 @@
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
 
-#include "FileDataProvider.h"
+#include "TestDataProvider.h"
 #include "oura_charts/HeartRate.h"
 #include "oura_charts/UserProfile.h"
 #include <catch2/catch_test_macros.hpp>
 
 namespace oura_charts::test
 {
-
+   using namespace constants;
+   
    TEST_CASE("test_UserProfile_bindings", "[binding]")
    {
       // data provider for unit tests that gets json from disk files.
-      auto data_prov = FileDataProvider{ fs::path{"./test_data" } };
+      auto data_prov = TestDataProvider{ fs::path{ UNIT_TEST_DATA_DIR } };
 
       UserProfile profile{ getUserProfile(data_prov) };
       auto& [id, email, age, weight, height, sex] = profile;
@@ -34,7 +35,7 @@ namespace oura_charts::test
    TEST_CASE("test_HeartRateMeasurement_bindings", "[binding]")
    {
       // data provider for unit tests that gets json from disk files.
-      auto data_prov = FileDataProvider{ fs::path{"./test_data" } };
+      auto data_prov = TestDataProvider{ fs::path{ UNIT_TEST_DATA_DIR } };
 
       HeartRateDataSeries hr_data{ detail::getDataSeries<HeartRate>(data_prov, detail::SortedPropertyMap{}) };
 

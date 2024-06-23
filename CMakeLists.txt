@@ -24,6 +24,8 @@ include(CMakePrintHelpers)
 # if desired in the future.
 set(OURACHARTS_CXX_STANDARD cxx_std_23)
 
+#export compile_commands.json for tools like clang-tidy and cppcheck
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
 
 # Set up platform-specific target options, by creating the vars that will be used to call target_compile_options/definitions
 # for each target. If any of these variables have already been defined by a preset, we will NOT override the preset values.

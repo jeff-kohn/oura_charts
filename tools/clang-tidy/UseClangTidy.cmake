@@ -14,6 +14,8 @@ if(ENABLE_CLANG_TIDY)
          "--use-color"
          "--header-filter=.*/oura_charts/**"
          "--quiet"
+#         "-p"
+#         "${CMAKE_BINARY_DIR}/compile_commands.json"
       )
       message(STATUS "clang-tidy build integration is enabled for this preset.")
    else()
@@ -23,14 +25,14 @@ else()
    message(STATUS "clang-tidy build integration disabled for this build preset")
 endif()
 
-message(CHECK_START "Looking for run-clang-tidy")
-find_program(RUN_CLANG_TIDY NAMES run-clang-tidy run-clang-tidy.py)
+if (UNIX)
+   message(CHECK_START "Looking for run-clang-tidy")
+   find_program(RUN_CLANG_TIDY NAMES run-clang-tidy run-clang-tidy.py)
 
-if(RUN_CLANG_TIDY)
-   message(CHECK_PASS "run-clang-tidy found at '${RUN_CLANG_TIDY}'")
+   if(RUN_CLANG_TIDY)
+      message(CHECK_PASS "run-clang-tidy found at '${RUN_CLANG_TIDY}'")
 
-   # When 'code_analysis' target is built/run, clang-tidy will be run for the entire project using compile_commands.json
-   if(UNIX)
+      # When 'code_analysis' target is built/run, clang-tidy will be run for the entire project using compile_commands.json
       add_custom_command(TARGET code_analysis
          COMMAND "${CMAKE_SOURCE_DIR}/scripts/run_clang_tidy_project_scan.sh"
          "--source-dir"
@@ -41,7 +43,9 @@ if(RUN_CLANG_TIDY)
          WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
       )
       message(STATUS "run-clang-tidy project scanning enabled for target 'code_analysis'")
+   else()
+      message(CHECK_FAIL "run-clang-tidy was not found, 'code_analysis' target will not use clang-tidy")
    endif()
 else()
-   message(CHECK_FAIL "run-clang-tidy was not found, 'code_analysis' target will not use clang-tidy")
+   message(STATUS "run-clang-tidy project scanning not currently enabled for Windows builds. code_analysis target will only provide project scanning with CppCheck.")
 endif()

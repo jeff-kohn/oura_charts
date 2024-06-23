@@ -14,6 +14,7 @@
 
 namespace oura_charts
 {
+   using namespace detail;
 
    /// <summary>
    ///   Provides a common interface for retrieving data objects from a REST endpoint.
@@ -30,46 +31,27 @@ namespace oura_charts
       // unexpected value is an exception describing what went wrong.
       using JsonResult = expected<std::string, oura_exception>;
 
-
       /// <summary>
-      ///   Retrieve the JSON for a single object from the rest server.
+      ///   Retrieve the JSON data for the specified path with no parameters
       /// </summary>
-      [[nodiscard]] JsonResult getJsonObject(std::string_view path) const noexcept
+      [[nodiscard]] JsonResult getJsonData(std::string_view path) const noexcept
       {
          return doRestGet(path);
       }
 
-
       // <summary>
-      //   Retrieve the JSON for a single object from the rest server, passing an arbitrary
-      //   number of other objects to the underlying CPR call.
+      ///   Retrieve the JSON data for the specified path, passing a list of
+      ///   key/value pairs as paremeters
       // </summary>
       template<KeyValueRange MapT>
-      [[nodiscard]] JsonResult getJsonObject(std::string_view path, const MapT&& param_map) const noexcept
+      [[nodiscard]] JsonResult getJsonData(std::string_view path, MapT&& param_map) const noexcept
       {
          return doRestGet(path, mapToParams(std::forward<MapT>(param_map)));
       }
 
-
-      /// <summary>
-      ///   Retrieve a collection of json data from the rest server
-      /// </summary>
-      /// <remarks>
-      ///   path should be relative to base URL. param_map should contain the key/value
-      ///   pairs that will be passed as parameters to the REST API. Be sure to include
-      ///   next_token param as appropriate when requesting paged/chunked data.
-      /// </remarks>
-      template<KeyValueRange MapT>
-      [[nodiscard]] JsonResult getJsonDataSeries(std::string_view path, MapT&& param_map) const noexcept
-      {
-         // Send the request to server and check that we get a valid response.
-         return  doRestGet(path, mapToParams(std::forward<MapT>(param_map)));
-      }
-
-
       // The base URL that is used in combination with the 'path' parameter of the
       // getJson() methods to build the full URL for the REST endpoint of an object(s)
-      std::string baseURL() const { return m_base_url; }
+      const std::string& baseURL() const { return m_base_url; }
 
 
       /// <summary>
@@ -131,7 +113,7 @@ namespace oura_charts
 
 
       template<KeyValueRange MapT>
-      [[nodiscard]] static cpr::Parameters mapToParams(const MapT& param_map)
+      [[nodiscard]] static cpr::Parameters mapToParams(MapT&& param_map)
       {
          // get the parameters into object for the REST call.
          cpr::Parameters params{};

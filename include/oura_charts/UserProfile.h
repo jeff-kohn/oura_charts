@@ -64,7 +64,7 @@ namespace oura_charts
    template <DataProvider ProviderT>
    [[nodiscard]] UserProfile getUserProfile(const ProviderT& provider) noexcept(false)
    {
-      auto json_res = provider.getJsonObject(UserProfile::REST_PATH);
+      auto json_res = provider.getJsonData(UserProfile::REST_PATH);
       if (!json_res)
          throw json_res.error();
 

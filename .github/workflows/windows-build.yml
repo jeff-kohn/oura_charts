@@ -37,6 +37,14 @@ jobs:
       with:
         vcpkgJsonGlob: '**/vcpkg.json'
 
+    - name: Install winget
+      uses: Cyberboss/install-winget@v1
+
+    - name: Install pre-reqs
+      run: |
+        winget install CppCheck --verbose --disable-interactivity  --accept-source-agreements --accept-package-agreements
+        choco install OpenCppCoverage -y
+
     - name: configure
       run: |
         cmake --preset=$env:PRESET_NAME

@@ -70,7 +70,7 @@ namespace oura_charts
    template <typename Provider>
    concept DataProvider = requires (Provider dp, Provider::JsonResult jr)
    {
-      jr = dp.getJsonObject("");
+      jr = dp.getJsonData("");
    };
 
 

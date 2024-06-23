@@ -21,13 +21,13 @@ namespace oura_charts
    enum class ErrorCategory
    {
       Generic = -1,
-      Success = 0,
+      Success,
       REST,
       Parse,
       FileIO
    };
 
-   inline std::string getGetogoryName(ErrorCategory ec)
+   inline std::string getCategoryName(ErrorCategory ec)
    {
       switch (ec)
       {
@@ -41,9 +41,14 @@ namespace oura_charts
          return constants::ERROR_CATEGORY_PARSE;
       case ErrorCategory::FileIO:
          return constants::ERROR_CATEGORY_FILE_IO;
-      default:
-         std::unreachable();
       }
+
+   #if defined(_DEBUG)
+      std::unreachable();
+   #else
+      return {};
+   #endif
+
    }
 
    /// <summary>
@@ -51,7 +56,7 @@ namespace oura_charts
    /// </summary>
    inline std::string format_as(ErrorCategory ec)
    {
-      return getGetogoryName(ec);
+      return getCategoryName(ec);
    }
 
 
@@ -90,7 +95,7 @@ namespace oura_charts
       /// </summary>
       std::string categoryName() const
       {
-         return getGetogoryName(category);
+         return getCategoryName(category);
       }
 
       /// <summary>
@@ -114,9 +119,9 @@ namespace oura_charts
       /// <summary>
       ///   create an exception from an error code, error message, and category
       /// </summary>
-      oura_exception(int64_t code, std::string message, ErrorCategory category) : error_code{ static_cast<int64_t>(code) },
-                                                                                  message{ std::move(message) },
-                                                                                  category{ category }
+      oura_exception(int64_t code, std::string message, ErrorCategory category) noexcept : error_code{ static_cast<int64_t>(code) },
+                                                                                           message{ std::move(message) },
+                                                                                           category{ category }
       {
       }
 
@@ -124,7 +129,7 @@ namespace oura_charts
       /// <summary>
       ///   create an exception from an error message and optional category
       /// </summary>
-      explicit oura_exception(std::string error_text, ErrorCategory category = ErrorCategory::Generic)
+      explicit oura_exception(std::string error_text, ErrorCategory category = ErrorCategory::Generic) noexcept
          : error_code{ ERROR_CODE_GENERAL_FAILURE },
            message{ std::move(error_text) },
            category{ category }
@@ -165,4 +170,4 @@ namespace oura_charts
                          err.what());
    }
 
-}
+} // namespace oura_charts

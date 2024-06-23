@@ -74,7 +74,6 @@ namespace oura_charts
    namespace detail
    {
       using std::forward;
-
       using SortedPropertyMap = std::map<std::string, std::string>;
 
       template <DataSeriesElement ElementT, DataProvider ProviderT, KeyValueRange MapT>
@@ -84,7 +83,7 @@ namespace oura_charts
          using CollectionBuffer = std::deque<typename JsonCollectionT::value_type>;
 
          // get JSON from rest server
-         auto&& json_res = provider.getJsonDataSeries(ElementT::REST_PATH, std::forward<MapT>(param_map));
+         auto&& json_res = provider.getJsonData(ElementT::REST_PATH, std::forward<MapT>(param_map));
          if (!json_res)
             throw json_res.error();
 
@@ -101,7 +100,7 @@ namespace oura_charts
          while (rest_data.next_token)
          {
             param_map[constants::REST_PARAM_NEXT_TOKEN] = rest_data.next_token.value();
-            json_res = provider.getJsonDataSeries(ElementT::REST_PATH, std::forward<MapT>(param_map));
+            json_res = provider.getJsonData(ElementT::REST_PATH, std::forward<MapT>(param_map));
             if (!json_res)
                throw json_res.error();
 
