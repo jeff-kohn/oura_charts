@@ -1,6 +1,6 @@
 #include "TestDataProvider.h"
-#include "oura_charts/HeartRate.h"
 #include "oura_charts/DataSeries.h"
+#include "oura_charts/HeartRate.h"
 #include <catch2/catch_test_macros.hpp>
 #include <fmt/format.h>
 

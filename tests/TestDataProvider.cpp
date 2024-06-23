@@ -107,13 +107,13 @@ namespace oura_charts::test
 
       auto result = getJsonData(path);
       if (!result)
-         throw result.error();
+         throw oura_exception{ std::move(result.error()) };
 
       std::string original_json{ result.value() };
       auto token_pos = original_json.find(null_token_str);
       if (token_pos == std::string::npos)
       {
-         auto func = std::source_location::current().function_name();
+         const auto* func = std::source_location::current().function_name();
          throw oura_exception{ ErrorCategory::Parse, "{} - couldn't find next_token in JSON data",  func };
       }
 
