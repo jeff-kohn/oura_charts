@@ -4,9 +4,7 @@ on:
     paths-ignore:
       - 'README.md'
       - '**/.gitignore'
-  pull_request:
-    branches:
-      - main
+
 
 env:
   VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}/vcpkg"
