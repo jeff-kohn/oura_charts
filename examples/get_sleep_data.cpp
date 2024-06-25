@@ -38,10 +38,12 @@ int main(int argc, char* argv[])
       }
       auto pat{ getPersonalToken(args) };
 
-      auto start_date = 2024y / 5 / 1d;
-      auto end_date = 2024y / 5 / 31d;
+      auto start_date = 2022y / 1 / 1d;
+      year_month_day end_date{ floor<days>(clock::now()) };
       RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
       auto sleep_data = getDataSeries<SleepSession>(rest_server, start_date, end_date);
+
+      // average a few sleep metrics my day of week.
 
    }
    catch (oura_exception& e)

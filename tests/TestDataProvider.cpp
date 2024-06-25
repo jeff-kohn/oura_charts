@@ -1,3 +1,12 @@
+//---------------------------------------------------------------------------------------------------------------------
+// TestDataProvider.cpp
+//
+// Implements the Data Provider interface for testing, using json files on disk (or in memory) for the data rather
+// than hitting a REST endpoint or database.
+//
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
+
 #include "TestDataProvider.h"
 #include "oura_charts/detail/utility.h"
 #include <boost/algorithm/string.hpp>

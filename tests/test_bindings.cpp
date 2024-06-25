@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------------------------------------------------
-// test_bindings.h
+// test_bindings.cpp
 //
 // unit tests for the binding interfaces of classes that support it
 //
