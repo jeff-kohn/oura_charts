@@ -14,8 +14,9 @@
 #include <algorithm>
 #include <random>
 
-
-// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+// These functors will never have empty optional<> because we never pass empty ranges to them. Any
+// invalid access to an empty option would be a bug requiring a fix to the test, so we WANT that to throw.
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, bugprone-unchecked-optional-access) 
 namespace oura_charts::test
 {
    namespace rg = std::ranges;
@@ -128,4 +129,4 @@ namespace oura_charts::test
 
 }  // namespace oura_charts::test
 
-// NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers, bugprone-unchecked-optional-access)
