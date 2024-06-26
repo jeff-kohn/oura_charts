@@ -40,6 +40,7 @@ int main(int argc, char* argv[])
       }
       auto pat{ getPersonalToken(args) };
 
+      // Get all data from midnight local time to now.
       RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
       auto until = localNow();
       auto from = stripTimeOfDay(until);
@@ -53,6 +54,7 @@ int main(int argc, char* argv[])
          heart_rates_by_hour.insert(std::make_pair(chrono::floor<chrono::hours>(tod.hours()), hr.beatsPerMin()));
       }
 
+      // Now for each hour, calculate the avergage of all the HR readings we have.
       auto it = heart_rates_by_hour.begin();
       while (it != heart_rates_by_hour.end())
       {
@@ -63,7 +65,7 @@ int main(int argc, char* argv[])
          AvgCalc<int> avg_calc{};
          rg::for_each(hour_range, std::ref(avg_calc), [] (auto&& val) { return val.second; });
 
-         // need the hour range for label
+         // need the hour range for display purposes
          auto start_time = from + it->first;
          auto end_time = start_time + 1h;
 

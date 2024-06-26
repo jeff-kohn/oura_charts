@@ -12,6 +12,9 @@
 #include "oura_charts/TokenAuth.h"
 #include "oura_charts/detail/logging.h"
 #include <fmt/format.h>
+#include <map>
+#include <ranges>
+
 
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
 
@@ -20,6 +23,7 @@ int main(int argc, char* argv[])
 {
    using namespace oura_charts;
    using namespace oura_charts::chrono;
+   using namespace std::chrono_literals;
 
    auto logger = logging::LogFactory::makeDefault();
 
@@ -38,12 +42,19 @@ int main(int argc, char* argv[])
       }
       auto pat{ getPersonalToken(args) };
 
-      auto start_date = 2022y / 1 / 1d;
-      year_month_day end_date{ floor<days>(clock::now()) };
+      // Get sleep date for the past year.
+      auto today = stripTimeOfDay(localNow());
       RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
-      auto sleep_data = getDataSeries<SleepSession>(rest_server, start_date, end_date);
+      auto sleep_data = getDataSeries<SleepSession>(rest_server, today - years{ 1 }, today);
 
-      // average a few sleep metrics my day of week.
+
+      // group the data by day of year. We'll move() the data from the DataSeries to our map to avoid copying.
+      std::multimap<weekday, SleepSession> sleep_by_weekday{};
+      
+      //rg::for_each(sleep_data, [](SleepSession& session)
+      //             {
+      //                sleep_by_weekday.emplace
+
 
    }
    catch (oura_exception& e)

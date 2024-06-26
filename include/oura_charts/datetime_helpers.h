@@ -43,6 +43,7 @@ namespace oura_charts
    using chrono::years;
 
    using chrono::year_month_day;
+   using chrono::weekday;
    using chrono::hh_mm_ss;
  
    using chrono::time_point_cast;
