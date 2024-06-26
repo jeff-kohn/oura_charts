@@ -71,7 +71,7 @@ namespace oura_charts
    /// <summary>
    ///   Functor to calculate a sum.
    /// </summary>
-   template<typename T, typename ResultTypeT = typename T>
+   template<typename T, typename ResultTypeT = T>
    class SumCalc
    {
    public:
