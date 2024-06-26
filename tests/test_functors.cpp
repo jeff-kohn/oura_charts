@@ -8,11 +8,10 @@
 
 #include "oura_charts/functors.h"
 #include "oura_charts/datetime_helpers.h"
-#include <catch2/catch_test_macros.hpp>
-#include <array>
-#include <ranges>
 #include <algorithm>
-#include <random>
+#include <array>
+#include <catch2/catch_test_macros.hpp>
+#include <ranges>
 
 // These functors will never have empty optional<> because we never pass empty ranges to them. Any
 // invalid access to an empty option would be a bug requiring a fix to the test, so we WANT that to throw.
@@ -45,66 +44,65 @@ namespace oura_charts::test
 
    // helper function that uses our functors on a range of various element types to
    // find the desired values. Note, some of these functors return an optional<>
-   template< template<typename T> class FuncT, rg::forward_range RangeT>
-   auto testFunctor(RangeT&& rg) 
+   auto testFunctor(rg::forward_range auto const& rg, auto&& fn) 
    {
-      FuncT<rg::range_value_t<RangeT>> min_fn{};
-      rg::for_each(rg, std::ref(min_fn));
-      return min_fn.result();
+      rg::for_each(rg, std::ref(fn));
+      return fn.result();
    }
 
 
    TEST_CASE("test_MinCalc_int")
    {
-      REQUIRE( testFunctor<MinCalc>(int_range).value() == 1 );
+      auto val = testFunctor(int_range, MinCalc<int>{}).value();
+      REQUIRE( val == 1 );
    }
    
 
    TEST_CASE("test_MinCalc_double")
    {
-      REQUIRE( testFunctor<MinCalc>(double_range).value() == 0.3 );
+      REQUIRE( testFunctor(double_range, MinCalc<double>{}).value() == 0.3 );
    }
 
 
    TEST_CASE("test_MinCalc_chrono_types")
    {
       // test finding minimum ymd
-      REQUIRE( testFunctor<MinCalc>(date_range).value() == min_date );
+      REQUIRE( testFunctor(date_range, MinCalc<year_month_day>{}).value() == min_date );
 
       // test finding min time_point
       auto&& tp_view = date_range | vw::transform([] (auto&& ymd) -> auto { return civilTimeToClockTime(ymd); });
-      REQUIRE( min_tp == testFunctor<MinCalc>(tp_view).value());
+      REQUIRE( min_tp == testFunctor(tp_view, MinCalc<clock::time_point>{}).value());
 
       // test finding min duration.
       auto&& dur_view = tp_view | vw::transform([] (auto&& tp) -> auto { return getTimeOfDayDuration(tp); });
-      REQUIRE( getCivilTime(min_tp).second.to_duration() == testFunctor<MinCalc>(dur_view).value());
+      REQUIRE( getCivilTime(min_tp).second.to_duration() == testFunctor(dur_view, MinCalc<clock::duration>{}).value());
    }
 
 
    TEST_CASE("test_MaxCalc_int")
    {
-      REQUIRE(testFunctor<MaxCalc>(int_range).value() == 5);
+      REQUIRE(testFunctor(int_range, MaxCalc<int>{}).value() == 5);
    }
 
 
    TEST_CASE("test_MaxCalc_double")
    {
-      REQUIRE(testFunctor<MaxCalc>(double_range).value() == 6.66);
+      REQUIRE(testFunctor(double_range, MaxCalc<double>{}).value() == 6.66);
    }
 
 
    TEST_CASE("test_MaxCalc_chrono_types")
    {
       // ymd
-      REQUIRE(testFunctor<MaxCalc>(date_range).value() == max_date);
+      REQUIRE(testFunctor(date_range, MaxCalc<year_month_day>{}).value() == max_date);
 
       // time_point
       auto&& tp_view = date_range | vw::transform([] (auto&& ymd) -> auto { return civilTimeToClockTime(ymd); });
-      REQUIRE(max_tp == testFunctor<MaxCalc>(tp_view).value());
+      REQUIRE(max_tp == testFunctor(tp_view, MaxCalc<clock::time_point>{}).value());
 
       // duration.
       auto&& dur_view = tp_view | vw::transform([] (auto&& tp) -> auto { return getTimeOfDayDuration(tp); });
-      REQUIRE(getCivilTime(max_tp).second.to_duration() == testFunctor<MaxCalc>(dur_view).value());
+      REQUIRE(getCivilTime(max_tp).second.to_duration() == testFunctor(dur_view, MaxCalc<clock::duration>{}).value());
    }
 
    TEST_CASE("test_SumCalc_AvgCalc_int")
@@ -112,8 +110,8 @@ namespace oura_charts::test
       auto sum = std::accumulate(int_range.begin(), int_range.end(), 0);
       auto avg = static_cast<double>(sum) / int_range.size();
 
-      REQUIRE( sum == testFunctor<SumCalc>(int_range) );
-      REQUIRE( avg == testFunctor<AvgCalc>(int_range) );
+      REQUIRE( sum == testFunctor(int_range, SumCalc<int>{}) );
+      REQUIRE( avg == testFunctor(int_range, AvgCalc<int>{}) );
    }
 
 
@@ -122,8 +120,8 @@ namespace oura_charts::test
       auto sum = std::accumulate(double_range.begin(), double_range.end(), 0.0);
       auto avg = sum / double_range.size();
 
-      REQUIRE(sum == testFunctor<SumCalc>(double_range));
-      REQUIRE(avg == testFunctor<AvgCalc>(double_range));
+      REQUIRE(sum == testFunctor(double_range, SumCalc<double>{}) );
+      REQUIRE(avg == testFunctor(double_range, AvgCalc<double>{}) );
    }
 
 
