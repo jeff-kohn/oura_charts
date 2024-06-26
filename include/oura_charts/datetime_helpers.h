@@ -25,16 +25,26 @@ namespace oura_charts
    using namespace std::literals::chrono_literals;
    namespace chrono = std::chrono;
    using clock = chrono::system_clock;
+
    using chrono::sys_time;
    using chrono::sys_seconds;
    using chrono::sys_days;
-   using chrono::days;
-   using chrono::seconds;
+  
    using chrono::local_time;
    using chrono::local_seconds;
    using chrono::local_days;
+
+   using chrono::seconds;
+   using chrono::minutes;
+   using chrono::hours;
+   using chrono::days;
+   using chrono::weeks;
+   using chrono::months;
+   using chrono::years;
+
    using chrono::year_month_day;
    using chrono::hh_mm_ss;
+ 
    using chrono::time_point_cast;
 
 
@@ -68,26 +78,52 @@ namespace oura_charts
 
 
    /// <summary>
-   ///   stip the time of day from a timepoint
+   ///   For a given time_point, return a time_point that represents only the date portion of the original time_point
+   ///   (in other words, midnight).
    /// </summary>
    template <typename ClockT, typename DurationT>
-   [[nodiscard]] inline chrono::time_point<ClockT, DurationT> stripTimeOfDay(chrono::time_point<ClockT, DurationT>  tp)
+   [[nodiscard]] inline constexpr chrono::time_point<ClockT, DurationT> stripTimeOfDay(chrono::time_point<ClockT, DurationT>  tp)
    {
       return time_point_cast<DurationT>(floor<days>(tp));
    }
+
+   /// <summary>
+   ///   For a given time_point, return a duration that represents only the time of day (no date).
+   /// </summary>
+   template <typename ClockT, typename DurationT>
+   [[nodiscard]] inline constexpr ClockT::duration getTimeOfDayDuration(chrono::time_point<ClockT, DurationT>  tp)
+   {
+      auto daypoint = floor<days>(tp);
+      return tp - daypoint;
+   }
+
 
 
    /// <summary>
    ///   Convert a time point into a calendar date and civil time.
    /// </summary>
    template<typename ClockT, typename DurationT>
-   [[nodiscard]] inline std::pair<year_month_day, hh_mm_ss<DurationT>> getCivilTime(chrono::time_point<ClockT, DurationT> tp)
+   [[nodiscard]] inline constexpr std::pair<year_month_day, hh_mm_ss<DurationT>> getCivilTime(chrono::time_point<ClockT, DurationT> tp)
    {
       auto daypoint = floor<days>(tp);
-      year_month_day day{ daypoint };
       hh_mm_ss tod{ tp - daypoint };
+      year_month_day day{ daypoint };
 
       return std::make_pair(day, tod);
+   }
+
+
+   /// <summary>
+   ///   convert a year_month_day and (option) hh_mm_ss to a UTC time_point
+   /// </summary>
+   /// <remarks>
+   ///   if no time of day is supplied, you'll get midnight UTC.
+   /// </remarks>
+   template<typename ClockT = clock, typename DurationT = clock::duration>
+   [[nodiscard]] inline constexpr clock::time_point civilTimeToClockTime(year_month_day ymd, hh_mm_ss<DurationT> tod = {})
+   {
+      chrono::time_point<ClockT, days>  day_point{ ymd };
+      return day_point + tod.to_duration();
    }
 
 

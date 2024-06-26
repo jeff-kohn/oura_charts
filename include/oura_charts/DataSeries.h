@@ -29,7 +29,7 @@ namespace oura_charts
       ///   the source data.
       /// </summary>
       template <std::ranges::input_range RangeT> requires std::ranges::sized_range<RangeT> &&
-                                                          std::same_as<rgs::range_rvalue_reference_t<RangeT>, typename ElementT::StorageType&&>
+                                                          std::same_as<rg::range_rvalue_reference_t<RangeT>, typename ElementT::StorageType&&>
       explicit DataSeries(RangeT data_series)
       {
          container::reserve(data_series.size());

@@ -29,10 +29,36 @@ namespace oura_charts
       template<typename ValT>
       void operator()(ValT&& val) noexcept
       {
-         m_result = m_result.has_value() ? std::min(*m_result, std::forward<T>(val)) : val;
+          m_result = m_result.has_value() ? std::min(*m_result, val) : val;
       }
 
-      std::optional<ResultType> result() const noexcept
+      const std::optional<ResultType>& result() const noexcept
+      {
+         return m_result;
+      }
+
+   private:
+      std::optional<ResultType> m_result{};
+   };
+
+
+   /// <summary>
+   ///   accumulate a minimum value. make sure to pass std::ref() to algorithms
+   ///   that take callables by value.
+   /// </summary>
+   template <typename T>
+   class MaxCalc
+   {
+   public:
+      using ResultType = T;
+
+      template<typename ValT>
+      void operator()(ValT&& val) noexcept
+      {
+         m_result = m_result.has_value() ? std::max(*m_result, val) : val;
+      }
+
+      const std::optional<ResultType>& result() const noexcept
       {
          return m_result;
       }
@@ -51,11 +77,18 @@ namespace oura_charts
    public:
       using ResultType = ResultTypeT;
 
-      void operator()(T&& val) const noexcept   { m_sum += val; }
-      ResultType result() const noexcept        { return m_sum; }
+      void operator()(const T& val) noexcept
+      {
+         m_sum += val;
+      }
+
+      ResultType result() const noexcept
+      {
+         return m_sum;
+      }
 
    private:
-      ResultType m_sum;
+      ResultType m_sum{};
    };
 
 
@@ -68,7 +101,7 @@ namespace oura_charts
    public:
       using ResultType = ResultTypeT;
 
-      void operator()(T&& val) const noexcept
+      void operator()(const T& val) noexcept
       {
          m_sum += val;
          ++m_count;
@@ -84,26 +117,6 @@ namespace oura_charts
       size_t      m_count{};
    };
 
-
-   /// <summary>
-   ///   Helper for accumulating an average value.
-   /// </summary>
-   template <typename SumT>
-   struct AverageAccumulator
-   {
-      SumT sum{0};
-      size_t count{0};
-
-      template <typename T> requires std::convertible_to<T, SumT>
-      AverageAccumulator& operator+=(T val)
-      {
-         sum += val;
-         ++count;
-         return *this;
-      }
-
-      double getAverage() const { return static_cast<double>(sum) / count; }
-   };
 
 
 }  // namespace oura_charts

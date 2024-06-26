@@ -13,6 +13,8 @@
 #include "oura_charts/functors.h"
 #include <fmt/format.h>
 #include <map>
+#include <ranges>
+
 
 // This example retrieves heart-rate data from the REST API
 int main(int argc, char* argv[])
@@ -20,6 +22,7 @@ int main(int argc, char* argv[])
    using std::string;
    using fmt::println;
    using namespace oura_charts;
+   namespace rg = std::ranges;
 
    auto logger = logging::LogFactory::makeDefault();
    try
@@ -50,25 +53,25 @@ int main(int argc, char* argv[])
          heart_rates_by_hour.insert(std::make_pair(chrono::floor<chrono::hours>(tod.hours()), hr.beatsPerMin()));
       }
 
-      auto it = heart_rates_by_hour.cbegin();
-      while (it != heart_rates_by_hour.cend())
+      auto it = heart_rates_by_hour.begin();
+      while (it != heart_rates_by_hour.end())
       {
          // get the sub range representing all the values for the current key/hour and compute an average
-         auto hour_range = heart_rates_by_hour.equal_range(it->first);
-         auto acc = std::accumulate(hour_range.first, hour_range.second, AverageAccumulator<int>{},
-                                    [] (auto&& avg, auto kvp)
-                                    {
-                                       return avg += kvp.second;
-                                    });
+         auto [beg, end] = heart_rates_by_hour.equal_range(it->first);
+         std::ranges::subrange hour_range{ beg, end };
 
-         // output the average to the console, need the hour range for labeling
+         AvgCalc<int> avg_calc{};
+         rg::for_each(hour_range, std::ref(avg_calc), [] (auto&& val) { return val.second; });
+
+         // need the hour range for label
          auto start_time = from + it->first;
          auto end_time = start_time + 1h;
 
-         fmt::println("{:%I:%M%p}-{:%I:%M%p} average heart rate = {:.1f} bpm", start_time, end_time, acc.getAverage());
+         // output the average to the console
+         fmt::println("{:%I:%M%p}-{:%I:%M%p} average heart rate = {:.1f} bpm", start_time, end_time, avg_calc.result());
 
          // move to next hour range if we're not already at the last.
-         it = hour_range.second;
+         it = end;
       }
    }
    catch (oura_exception& e)

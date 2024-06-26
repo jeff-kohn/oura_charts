@@ -4,6 +4,24 @@
 ###############################################################################
 set(THIS_TARGET "tests")
 add_executable(${THIS_TARGET}
+   # first group is shared headers, they're here to trigger builds
+   "../include/oura_charts/oura_charts.h"
+	"../include/oura_charts/constants.h"
+	"../include/oura_charts/concepts.h"
+	"../include/oura_charts/oura_exception.h"
+   "../include/oura_charts/datetime_helpers.h"
+	"../include/oura_charts/TokenAuth.h"
+	"../include/oura_charts/UserProfile.h"
+   "../include/oura_charts/HeartRate.h"
+   "../include/oura_charts/RestDataProvider.h"
+   "../include/oura_charts/DataSeries.h"
+   "../include/oura_charts/SleepSession.h"
+   "../include/oura_charts/functors.h"
+	"../include/oura_charts/detail/utility.h"
+	"../include/oura_charts/detail/json_structs.h"
+	"../include/oura_charts/detail/logging.h"
+
+   # these are test-specific
    "TestDataProvider.h"
    "TestDataProvider.cpp"
    "test_bindings.cpp"

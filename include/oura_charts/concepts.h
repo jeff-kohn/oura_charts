@@ -15,7 +15,7 @@
 
 namespace oura_charts
 {
-   namespace rgs = std::ranges;
+   namespace rg = std::ranges;
 
    /// <summary>
    ///   concept requiring a template arge to be std::exception or derived from std::exception
@@ -41,7 +41,7 @@ namespace oura_charts
    ///   compatible with std::string_view
    /// </summary>
    template <typename T>
-   concept KeyValueRange = rgs::forward_range<T>
+   concept KeyValueRange = rg::forward_range<T>
                          && StringViewCompatible<typename T::mapped_type>
                          && StringViewCompatible<typename T::key_type>;
 

@@ -13,8 +13,8 @@
 
 namespace oura_charts::logging
 {
-   namespace rgs = std::ranges;
-   namespace vws = rgs::views;
+   namespace rg = std::ranges;
+   namespace vw = rg::views;
    using namespace oura_charts::detail;
    using std::make_shared;
    using std::string_view;
@@ -69,12 +69,12 @@ namespace oura_charts::logging
       try
       {
          // Filter any nullptr's out, since debuggerSync may not always be available.
-         auto sink_view = vws::filter(sinks, [] (const sinks_init_list::value_type& val) -> bool
+         auto sink_view = vw::filter(sinks, [] (const sinks_init_list::value_type& val) -> bool
                                     {
                                           return val.get() != nullptr;
                                     });
 
-         auto logger = make_shared<log_ptr_t::element_type>(string{ log_name }, rgs::begin(sink_view), rgs::end(sink_view));
+         auto logger = make_shared<log_ptr_t::element_type>(string{ log_name }, rg::begin(sink_view), rg::end(sink_view));
          logger->set_level(max_level);
          set_default_logger(logger);
          return logger;
