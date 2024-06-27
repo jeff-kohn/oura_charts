@@ -86,8 +86,9 @@ namespace oura_charts::detail
       chrono::seconds deep_sleep_duration{};
       chrono::seconds light_sleep_duration{};
       chrono::seconds rem_sleep_duration{};
-
       nullable_double restless_periods{};
+      chrono::seconds total_sleep_duration{};
+      chrono::seconds time_in_bed{};
 
       struct glaze
       {
@@ -106,7 +107,10 @@ namespace oura_charts::detail
             &T::deep_sleep_duration,
             &T::light_sleep_duration,
             &T::rem_sleep_duration,
-            &T::restless_periods);
+            &T::restless_periods,
+            &T::total_sleep_duration,
+            &T::time_in_bed
+            );
       };
    };
 

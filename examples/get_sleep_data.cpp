@@ -10,8 +10,13 @@
 #include "oura_charts/RestDataProvider.h"
 #include "oura_charts/SleepSession.h"
 #include "oura_charts/TokenAuth.h"
+#include "oura_charts/datetime_helpers.h"
 #include "oura_charts/detail/logging.h"
+#include "oura_charts/functors.h"
+#include <algorithm>
+#include <chrono>
 #include <fmt/format.h>
+#include <print>
 #include <map>
 #include <ranges>
 
@@ -47,13 +52,24 @@ int main(int argc, char* argv[])
       RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
       auto sleep_data = getDataSeries<SleepSession>(rest_server, today - years{ 1 }, today);
 
+      // group the data by day of week. We'll move() the data from the DataSeries to our map to avoid copying.
+      std::multimap<weekday, SleepSession, weekday_compare_less> sleep_by_weekday{};
+      rg::for_each(sleep_data, [&sleep_by_weekday](SleepSession& session)
+                  {
+                     sleep_by_weekday.emplace(weekday{session.sessionDate()}, std::move(session));
+                  });
 
-      // group the data by day of year. We'll move() the data from the DataSeries to our map to avoid copying.
-      std::multimap<weekday, SleepSession> sleep_by_weekday{};
-      
-      //rg::for_each(sleep_data, [](SleepSession& session)
-      //             {
-      //                sleep_by_weekday.emplace
+      for (auto wd : getWeekdays())
+      {
+         // get the sub range representing all the data for the current weekday.
+         auto [beg, end] = sleep_by_weekday.equal_range(wd);
+         std::ranges::subrange sleep_range{ beg, end };
+
+         AvgCalc<seconds> avg_sleep_time{};
+
+         rg::for_each(vw::values(sleep_range), avg_sleep_time, &SleepSession::sleepTimeTotal);
+         std::println("{}: {} sleep on average", wd, hh_mm_ss{avg_sleep_time.result()});
+      }
 
 
    }

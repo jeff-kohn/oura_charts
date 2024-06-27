@@ -9,8 +9,10 @@
 #pragma once
 
 #include "oura_charts/oura_charts.h"
+#include "oura_charts/functors.h"
 #include <fmt/format.h>
 #include <fmt/chrono.h>
+#include <ranges>
 #include <spanstream>
 #include <chrono>
 #include <string>
@@ -47,6 +49,34 @@ namespace oura_charts
    using chrono::hh_mm_ss;
  
    using chrono::time_point_cast;
+
+
+   namespace detail
+   {
+      using chrono::duration;
+
+      template <class T>
+      struct is_duration : std::false_type {};
+
+      template <class RepT, class PeriodT>
+      struct is_duration<duration<RepT, PeriodT> > : std::true_type  {};
+
+      template <class RepT, class PeriodT>
+      struct is_duration<const duration<RepT, PeriodT> > : std::true_type  {};
+
+      template <class RepT, class PeriodT>
+      struct is_duration<volatile duration<RepT, PeriodT> > : std::true_type  {};
+
+      template <class RepT, class PeriodT>
+      struct is_duration<const volatile duration<RepT, PeriodT> > : std::true_type  {};
+
+      /// <summary>
+      ///   Concept for duration types, implement via the above type traits.
+      /// <summary>
+      template <typename T>
+      concept ChronoDuration = is_duration<T>::value;
+
+   } // namespace detail
 
 
    /// <summary>
@@ -190,4 +220,56 @@ namespace oura_charts
       // fmt::format doesn't support the date types from C++ 20/23
       return std::format("{:%F}", date);
    }
+
+
+   /// <summary>
+   ///   operator '<' comparison for weekday based on c_encoding() so we can 
+   ///   store them in ordered containers like maps.
+   /// </summary>
+   struct weekday_compare_less
+   {
+      bool operator()(const weekday& lhs, const weekday& rhs) const noexcept
+      {
+         return lhs.c_encoding() < rhs.c_encoding();
+      }
+   };
+
+   
+   /// <summary>
+   ///   small helper to generate a sorted array containing the days of the week
+   /// </summary>
+   [[nodiscard]] inline constexpr auto getWeekdays(weekday sortFirst = {chrono::Monday})
+   {
+         constexpr int weekday_count = 7;
+         std::array<weekday, weekday_count> weekdays{};
+         std::iota(rg::begin(weekdays), rg::end(weekdays), sortFirst);
+         return weekdays;
+   }
+
+
+   /// Use parttial specialization with concept to make AvgCalc work with duration types
+   template<detail::ChronoDuration DurationT>
+   class AvgCalc<DurationT>
+   {
+   public:
+      using Duration = DurationT;
+      using Rep = Duration::rep;
+      
+      void operator()(const Duration& val) noexcept
+      {
+         m_sum += val.count();
+         ++m_count;
+      }
+
+      Duration result() const noexcept
+      {
+         return Duration{ static_cast<Rep>( m_sum / m_count) };
+      }
+
+   private:
+      double m_sum{};
+      size_t m_count{};
+   };
+
+
 }

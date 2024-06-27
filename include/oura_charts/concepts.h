@@ -16,6 +16,7 @@
 namespace oura_charts
 {
    namespace rg = std::ranges;
+   namespace vw = rg::views;
 
    /// <summary>
    ///   concept requiring a template arge to be std::exception or derived from std::exception

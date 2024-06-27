@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <functional>
 #include <oura_charts/oura_charts.h>
 #include <concepts>
 #include <algorithm>
@@ -95,7 +96,7 @@ namespace oura_charts
    /// <summary>
    ///   Functor to calculate an average.
    /// </summary>
-   template<typename T, typename ResultTypeT = double>
+   template<typename T, typename ResultTypeT = double >
    class AvgCalc
    {
    public:
@@ -103,17 +104,17 @@ namespace oura_charts
 
       void operator()(const T& val) noexcept
       {
-         m_sum += val;
+         m_sum(val);
          ++m_count;
       }
 
       ResultType result() const noexcept
       {
-         return m_sum / m_count;
+         return static_cast<ResultType>(m_sum.result()) / m_count;
       }
 
    private:
-      ResultType  m_sum{};
+      SumCalc<T>  m_sum{};
       size_t      m_count{};
    };
 

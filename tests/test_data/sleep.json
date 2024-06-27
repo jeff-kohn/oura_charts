@@ -71,9 +71,6 @@
          "type": "sleep"
       },
       {
-         "seconds_duration": 5458
-      },
-      {
          "id": "a4ce2fa2-802d-42ed-ac72-e8199f75cc2e",
          "average_breath": 19.0,
          "average_heart_rate": 66.0,

@@ -41,6 +41,8 @@ namespace oura_charts
       chrono::seconds sleepTimeDeep() const        {  return m_data.deep_sleep_duration;  }
       chrono::seconds sleepTimeLight() const       {  return m_data.light_sleep_duration; }
       chrono::seconds sleepTimeREM() const         {  return m_data.rem_sleep_duration;   }
+      chrono::seconds sleepTimeTotal() const       {  return m_data.total_sleep_duration; }
+      chrono::seconds timeInBed() const            {  return m_data.time_in_bed;          }
                                                
       nullable_double restless_periods() const     {  return m_data.restless_periods;     }
 
