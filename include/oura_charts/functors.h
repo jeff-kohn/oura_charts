@@ -113,6 +113,11 @@ namespace oura_charts
          return static_cast<ResultType>(m_sum.result()) / m_count;
       }
 
+      size_t count()const noexcept
+      {
+         return m_count;
+      }
+
    private:
       SumCalc<T>  m_sum{};
       size_t      m_count{};

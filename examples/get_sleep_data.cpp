@@ -49,11 +49,13 @@ int main(int argc, char* argv[])
 
       // Get sleep date for the past year.
       auto today = stripTimeOfDay(localNow());
+      auto last_week = today - weeks{ 1 };
       RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
-      auto sleep_data = getDataSeries<SleepSession>(rest_server, today - years{ 1 }, today);
+      auto sleep_data = getDataSeries<SleepSession>(rest_server, getCalendarDate(last_week), getCalendarDate(today));
 
       // group the data by day of week. We'll move() the data from the DataSeries to our map to avoid copying.
-      std::multimap<weekday, SleepSession, weekday_compare_less> sleep_by_weekday{};
+      using SleepByWeekdayMap = std::multimap<weekday, SleepSession, weekday_compare_less>;
+      SleepByWeekdayMap sleep_by_weekday{};
       rg::for_each(sleep_data, [&sleep_by_weekday](SleepSession& session)
                   {
                      sleep_by_weekday.emplace(weekday{session.sessionDate()}, std::move(session));
@@ -63,14 +65,22 @@ int main(int argc, char* argv[])
       {
          // get the sub range representing all the data for the current weekday.
          auto [beg, end] = sleep_by_weekday.equal_range(wd);
+         if (beg == end)
+            continue;
+
          std::ranges::subrange sleep_range{ beg, end };
 
          AvgCalc<seconds> avg_sleep_time{};
+         for (auto& [key, session] : sleep_range)
+         {
+            avg_sleep_time(session.sleepTimeTotal());
+         }
 
-         rg::for_each(vw::values(sleep_range), avg_sleep_time, &SleepSession::sleepTimeTotal);
-         std::println("{}: {} sleep on average", wd, hh_mm_ss{avg_sleep_time.result()});
+         // I can't get this ranges version to work, it never actually calls my projection.
+         //rg::for_each(sleep_range, std::ref(avg_sleep_time), &SleepSession::sleepTimeTotal);
+
+         std::println("{} ({}): {} sleep on average", wd, avg_sleep_time.count(), hh_mm_ss{avg_sleep_time.result()});
       }
-
 
    }
    catch (oura_exception& e)

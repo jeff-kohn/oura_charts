@@ -10,10 +10,10 @@
 
 #include "oura_charts/oura_charts.h"
 #include "oura_charts/datetime_helpers.h"
+#include <glaze/glaze.hpp>
+#include <optional>
 #include <string>
 #include <vector>
-#include <optional>
-#include <glaze/glaze.hpp>
 
 namespace oura_charts::detail
 {
@@ -89,6 +89,7 @@ namespace oura_charts::detail
       nullable_double restless_periods{};
       chrono::seconds total_sleep_duration{};
       chrono::seconds time_in_bed{};
+      std::string type{};
 
       struct glaze
       {
@@ -109,7 +110,8 @@ namespace oura_charts::detail
             &T::rem_sleep_duration,
             &T::restless_periods,
             &T::total_sleep_duration,
-            &T::time_in_bed
+            &T::time_in_bed,
+            &T::type
             );
       };
    };

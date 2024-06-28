@@ -12,9 +12,10 @@
 #include "oura_charts/functors.h"
 #include <fmt/format.h>
 #include <fmt/chrono.h>
+#include <cassert>
+#include <chrono>
 #include <ranges>
 #include <spanstream>
-#include <chrono>
 #include <string>
 #include <string_view>
 
@@ -112,10 +113,26 @@ namespace oura_charts
    ///   For a given time_point, return a time_point that represents only the date portion of the original time_point
    ///   (in other words, midnight).
    /// </summary>
+   /// <remarks>
+   ///   return value is still same type as passed-in value, just without the TOD. If you need a year_month_day call
+   ///   getCalendarDate()
    template <typename ClockT, typename DurationT>
    [[nodiscard]] inline constexpr chrono::time_point<ClockT, DurationT> stripTimeOfDay(chrono::time_point<ClockT, DurationT>  tp)
    {
-      return time_point_cast<DurationT>(floor<days>(tp));
+      return floor<days>(tp);
+   }
+
+   /// <summary>
+   ///   For a given time_point, return a time_point that represents only the date portion of the original time_point
+   ///   (in other words, midnight).
+   /// </summary>
+   /// <remarks>
+   ///   return value is still same type as passed-in value, just without the TOD. If you need a year_month_day call
+   ///   getCalendarDate()
+   template <typename ClockT, typename DurationT>
+   [[nodiscard]] inline constexpr year_month_day getCalendarDate(chrono::time_point<ClockT, DurationT>  tp)
+   {
+      return year_month_day{ floor<days>(tp) };
    }
 
    /// <summary>
@@ -263,7 +280,16 @@ namespace oura_charts
 
       Duration result() const noexcept
       {
+         // Hitting this means you either averaged an empty range, or you forgot to
+         // use std::ref() when passing the functor to a std:: algorithm.
+         assert(m_sum != 0);
+
          return Duration{ static_cast<Rep>( m_sum / m_count) };
+      }
+
+      size_t count()const noexcept
+      {
+         return m_count;
       }
 
    private:
