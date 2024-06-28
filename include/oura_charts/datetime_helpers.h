@@ -56,26 +56,14 @@ namespace oura_charts
    {
       using chrono::duration;
 
-      template <class T>
-      struct is_duration : std::false_type {};
-
-      template <class RepT, class PeriodT>
-      struct is_duration<duration<RepT, PeriodT> > : std::true_type  {};
-
-      template <class RepT, class PeriodT>
-      struct is_duration<const duration<RepT, PeriodT> > : std::true_type  {};
-
-      template <class RepT, class PeriodT>
-      struct is_duration<volatile duration<RepT, PeriodT> > : std::true_type  {};
-
-      template <class RepT, class PeriodT>
-      struct is_duration<const volatile duration<RepT, PeriodT> > : std::true_type  {};
-
       /// <summary>
-      ///   Concept for duration types, implement via the above type traits.
-      /// <summary>
+      ///   Concept requiring a type to be a chrono::duration
+      /// </summary>
       template <typename T>
-      concept ChronoDuration = is_duration<T>::value;
+      concept ChronoDuration = requires {
+         [] <class Rep, class Period>(std::type_identity<duration<Rep, Period>>) {}(
+             std::type_identity<T>());
+      };
 
    } // namespace detail
 

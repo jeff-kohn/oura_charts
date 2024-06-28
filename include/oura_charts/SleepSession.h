@@ -24,9 +24,12 @@ namespace oura_charts
    {
    public:
       using StorageType = detail::sleep_data;
+      using SleepType = StorageType::SleepType;
+
       static constexpr std::string_view REST_PATH = constants::REST_PATH_SLEEP_SESSION;
 
       std::string sleepId() const                  {  return m_data.id;                   }
+      SleepType sleepType() const                  {  return m_data.type;                 }
       chrono::year_month_day sessionDate() const   {  return m_data.day;                  }
       local_seconds bedtimeStart() const           {  return m_data.bedtime_start;        }
       local_seconds bedtimeEnd() const             {  return m_data.bedtime_end;          }

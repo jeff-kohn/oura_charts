@@ -70,6 +70,14 @@ namespace oura_charts::detail
    /// </summary>
    struct sleep_data
    {
+      enum class SleepType
+      {
+         rest,
+         late_nap,
+         sleep,
+         long_sleep,
+      };
+
       std::string id{};
       year_month_day day{};
       local_seconds bedtime_start{};
@@ -89,7 +97,7 @@ namespace oura_charts::detail
       nullable_double restless_periods{};
       chrono::seconds total_sleep_duration{};
       chrono::seconds time_in_bed{};
-      std::string type{};
+      SleepType type{};
 
       struct glaze
       {
@@ -112,9 +120,10 @@ namespace oura_charts::detail
             &T::total_sleep_duration,
             &T::time_in_bed,
             &T::type
-            );
+         );
       };
    };
+
 
 
    /// <summary>
@@ -208,4 +217,17 @@ namespace glz::detail
             value = oc::chrono::seconds{ sec_count };
       }
    };
-}
+
+} // namespace oura_charts::detail
+
+template <>
+struct glz::meta<oura_charts::detail::sleep_data::SleepType>
+{
+   using enum oura_charts::detail::sleep_data::SleepType;
+   static constexpr auto value = enumerate(
+         rest,
+         late_nap,
+         sleep,
+         long_sleep
+   );
+};

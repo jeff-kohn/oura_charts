@@ -83,17 +83,17 @@ namespace oura_charts
          using CollectionBuffer = std::deque<typename JsonCollectionT::value_type>;
 
          // get JSON from rest server
-         auto&& json_res = provider.getJsonData(ElementT::REST_PATH, std::forward<MapT>(param_map));
+         auto json_res = provider.getJsonData(ElementT::REST_PATH, std::forward<MapT>(param_map));
          if (!json_res)
-            throw json_res.error();
+            throw oura_exception{ json_res.error() };
 
          // parse into structs
-         auto&& data_res = readJson<JsonCollectionT>(json_res.value());
-         if (!data_res)
-            throw json_res.error();
+         auto data_res = readJson<JsonCollectionT>(json_res.value());
+         if (!data_res.has_value())
+            throw oura_exception(data_res.error());
 
          // move the structs into temporary holding so we can accumulate if there's more.
-         auto&& rest_data = data_res.value();
+         auto& rest_data = data_res.value();
          CollectionBuffer buf{ std::make_move_iterator(rest_data.data.begin()), std::make_move_iterator(rest_data.data.end()) };
 
          // as long as we got a non-null "next_token" back from the REST server, there's still more data to get.
@@ -102,11 +102,11 @@ namespace oura_charts
             param_map[constants::REST_PARAM_NEXT_TOKEN] = rest_data.next_token.value();
             json_res = provider.getJsonData(ElementT::REST_PATH, std::forward<MapT>(param_map));
             if (!json_res)
-               throw json_res.error();
+               throw oura_exception{ json_res.error() };
 
             data_res = readJson<JsonCollectionT>(json_res.value());
             if (!data_res)
-               throw json_res.error();
+               throw oura_exception{ json_res.error() };
 
             rest_data = data_res.value();
             // no append_range() in libstdc++ yet

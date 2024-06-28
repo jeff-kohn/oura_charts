@@ -5,8 +5,8 @@
 //
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
-#include "oura_charts/DataSeries.h"
 #include "helpers.h"
+#include "oura_charts/DataSeries.h"
 #include "oura_charts/RestDataProvider.h"
 #include "oura_charts/SleepSession.h"
 #include "oura_charts/TokenAuth.h"
@@ -16,8 +16,8 @@
 #include <algorithm>
 #include <chrono>
 #include <fmt/format.h>
-#include <print>
 #include <map>
+#include <print>
 #include <ranges>
 
 
@@ -49,18 +49,25 @@ int main(int argc, char* argv[])
 
       // Get sleep date for the past year.
       auto today = stripTimeOfDay(localNow());
-      auto last_week = today - weeks{ 1 };
+      auto last_week = today - years{ 1 };
       RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
       auto sleep_data = getDataSeries<SleepSession>(rest_server, getCalendarDate(last_week), getCalendarDate(today));
 
-      // group the data by day of week. We'll move() the data from the DataSeries to our map to avoid copying.
+      // create a filter to only get "long" sleep sessions (don't include naps, they throw off the averages).
+      auto filt = vw::filter(sleep_data, [] (const SleepSession& session)
+                             {
+                                return session.sleepType() == SleepSession::SleepType::long_sleep;
+                             });
+
+      // Now sort the filtered view into buckets by day of week.
       using SleepByWeekdayMap = std::multimap<weekday, SleepSession, weekday_compare_less>;
       SleepByWeekdayMap sleep_by_weekday{};
-      rg::for_each(sleep_data, [&sleep_by_weekday](SleepSession& session)
+      rg::for_each(filt, [&sleep_by_weekday](SleepSession& session)
                   {
                      sleep_by_weekday.emplace(weekday{session.sessionDate()}, std::move(session));
                   });
 
+      // calculate the average of all the sleep sessions for each weekday
       for (auto wd : getWeekdays())
       {
          // get the sub range representing all the data for the current weekday.
@@ -79,7 +86,8 @@ int main(int argc, char* argv[])
          // I can't get this ranges version to work, it never actually calls my projection.
          //rg::for_each(sleep_range, std::ref(avg_sleep_time), &SleepSession::sleepTimeTotal);
 
-         std::println("{} ({}): {} sleep on average", wd, avg_sleep_time.count(), hh_mm_ss{avg_sleep_time.result()});
+         // note we decrement the weekday, because the date is actually the following moring.
+         std::println("{} ({}): {} sleep on average", --wd, avg_sleep_time.count(), hh_mm_ss{avg_sleep_time.result()});
       }
 
    }
