@@ -49,15 +49,12 @@ int main(int argc, char* argv[])
 
       // Get sleep date for the past year.
       auto today = stripTimeOfDay(localNow());
-      auto last_week = today - years{ 1 };
+      auto last_week = today - months{ 12 };
       RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
       auto sleep_data = getDataSeries<SleepSession>(rest_server, getCalendarDate(last_week), getCalendarDate(today));
 
-      // create a filter to only get "long" sleep sessions (don't include naps, they throw off the averages).
-      auto filt = vw::filter(sleep_data, [] (const SleepSession& session)
-                             {
-                                return session.sleepType() == SleepSession::SleepType::long_sleep;
-                             });
+      // create a filter to only get "long" sleep sessions (don't include naps/rest, they throw off the averages).
+      auto filt = sleep_data | vw::filter(SleepTypeFilter{ SleepSession::SleepType::long_sleep });
 
       // Now sort the filtered view into buckets by day of week.
       using SleepByWeekdayMap = std::multimap<weekday, SleepSession, weekday_compare_less>;
@@ -77,14 +74,9 @@ int main(int argc, char* argv[])
 
          std::ranges::subrange sleep_range{ beg, end };
 
+         // get the average for this weekday sub-range
          AvgCalc<seconds> avg_sleep_time{};
-         for (auto& [key, session] : sleep_range)
-         {
-            avg_sleep_time(session.sleepTimeTotal());
-         }
-
-         // I can't get this ranges version to work, it never actually calls my projection.
-         //rg::for_each(sleep_range, std::ref(avg_sleep_time), &SleepSession::sleepTimeTotal);
+         rg::for_each(sleep_range | vw::values, std::ref(avg_sleep_time), &SleepSession::sleepTimeTotal);
 
          // note we decrement the weekday, because the date is actually the following moring.
          std::println("{} ({}): {} sleep on average", --wd, avg_sleep_time.count(), hh_mm_ss{avg_sleep_time.result()});

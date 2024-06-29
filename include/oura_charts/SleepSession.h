@@ -69,4 +69,20 @@ namespace oura_charts
    using SleepSessionSeries = DataSeries<SleepSession>;
 
 
+   /// <summary>
+   ///   predicate to allow filter SleepSession's by type.
+   /// </summary>
+   struct SleepTypeFilter
+   {
+      using SleepType = SleepSession::SleepType;
+
+      SleepType sleep_type{ SleepType::long_sleep };
+
+      bool operator()(const SleepSession& sess)
+      {
+         return sess.sleepType() == sleep_type;
+      }
+   };
+
+
 } // namesapce oura_charts

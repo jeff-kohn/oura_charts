@@ -19,16 +19,21 @@ namespace oura_charts
    namespace vw = rg::views;
 
    /// <summary>
-   ///   concept requiring a template arge to be std::exception or derived from std::exception
+   ///   concept requiring a template arg to be std::exception or derived from std::exception
    /// </summary>
    template<typename T>
    concept ExceptionDerived = std::derived_from<T, std::exception> || std::same_as<std::remove_cvref<T>, std::exception>;
 
+
+   /// <summary>
+   ///   concept rquiring a template arg to be ExceptionDerived and additionally support formatted output.
+   /// </summary>
    template<typename T>
    concept FormattedException = ExceptionDerived<T> && requires (T t)
    {
       fmt::format("{}", t);
    };
+
 
    /// <summary>
    ///   concept requiring a type to be string_view or convertible to string_view
@@ -56,11 +61,31 @@ namespace oura_charts
       t.getAuthorization();
    };
 
-
+   /// <summary>
+   ///   concept for a type that is an rest deta object that can be stored in a DataSeries<>
+   /// </summary>
    template <typename T>
    concept DataSeriesElement = requires (T t, T::StorageType data)
    {
       t = T{ std::move(data) };
+   };
+
+
+   /// <summary>
+   ///   Concept for a type that is a range of data structs that can be used to initialize a DataSeries<> object.
+   /// </summary>
+   template <typename RangeT, typename ElementT>
+   concept JsonStructRange = rg::sized_range<RangeT> &&
+                             std::same_as<rg::range_rvalue_reference_t<RangeT>, typename ElementT::StorageType&&>;
+
+
+   /// <summary>
+   ///   Concept for a type that is an instantiation of the DataSeries<> template.
+   /// </summary>
+   template <typename T>
+   concept DataSeriesObject =  rg::random_access_range<T> && requires (T t, T::container::value_type val)
+   {
+      typename T::container;
    };
 
 

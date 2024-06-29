@@ -1,10 +1,18 @@
+//---------------------------------------------------------------------------------------------------------------------
+// DataSeries.h
+//
+// defines a template class  and related utility functions for working with a collection of data from the Oura REST API
+//
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
 #pragma once
 
 #include "oura_charts/oura_charts.h"
 #include "oura_charts/detail/json_structs.h"
-#include <vector>
 #include <algorithm>
+#include <map>
 #include <ranges>
+#include <vector>
 
 namespace oura_charts
 {
@@ -28,8 +36,7 @@ namespace oura_charts
       ///   the copy, you can pass an rvalue reference if you don't need to preserve
       ///   the source data.
       /// </summary>
-      template <std::ranges::input_range RangeT> requires std::ranges::sized_range<RangeT> &&
-                                                          std::same_as<rg::range_rvalue_reference_t<RangeT>, typename ElementT::StorageType&&>
+      template <rg::forward_range RangeT> requires JsonStructRange<RangeT, ElementT>
       explicit DataSeries(RangeT data_series)
       {
          container::reserve(data_series.size());
@@ -55,6 +62,16 @@ namespace oura_charts
       }
 
       // expose the needed container interface from base class.
+      using container::value_type;
+      using container::size_type;
+      using container::difference_type;
+      using container::reference;
+      using container::const_reference;
+      using container::pointer;
+      using container::const_pointer;
+      using container::reverse_iterator;
+      using container::const_reverse_iterator;
+
       using container::begin;
       using container::end;
       using container::cbegin;
@@ -70,6 +87,23 @@ namespace oura_charts
       using container::back;
 
    };
+
+
+   /// <summary>
+   ///   this function will 
+   /// </summary>
+   /// <typeparam name="ElementT"></typeparam>
+   /// <param name="series"></param>
+   /// <returns></returns>
+   template < template<typename, typename> typename MapT = std::multimap, DataSeriesElement ElementT >
+   int groupByWeekday(DataSeries<ElementT>&& series)
+   {
+      MapT<weekday, ElementT> weekday_map{};
+      
+      //rg::for_each(filt, [&weekday_map]
+      return 0;
+   }
+
 
    namespace detail
    {

@@ -135,6 +135,7 @@ namespace oura_charts
       return year_month_day{ floor<days>(tp) };
    }
 
+
    /// <summary>
    ///   For a given time_point, return a duration that represents only the time of day (no date).
    /// </summary>
