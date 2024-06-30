@@ -57,12 +57,7 @@ int main(int argc, char* argv[])
       auto filt = sleep_data | vw::filter(SleepTypeFilter{ SleepSession::SleepType::long_sleep });
 
       // Now sort the filtered view into buckets by day of week.
-      using SleepByWeekdayMap = std::multimap<weekday, SleepSession, weekday_compare_less>;
-      SleepByWeekdayMap sleep_by_weekday{};
-      rg::for_each(filt, [&sleep_by_weekday](SleepSession& session)
-                  {
-                     sleep_by_weekday.emplace(weekday{session.sessionDate()}, std::move(session));
-                  });
+      auto sleep_by_weekday = groupByWeekday(std::move(sleep_data), SelectSessionDate{});
 
       // calculate the average of all the sleep sessions for each weekday
       for (auto wd : getWeekdays())

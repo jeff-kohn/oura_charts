@@ -78,9 +78,20 @@ namespace oura_charts
 
       SleepType sleep_type{ SleepType::long_sleep };
 
-      bool operator()(const SleepSession& sess)
+      bool operator()(const SleepSession& sess) const
       {
          return sess.sleepType() == sleep_type;
+      }
+   };
+
+
+   // simple functor since I haven't managed to get projections working
+   // for the use cases I need.
+   struct SelectSessionDate
+   {
+      auto operator()(const SleepSession& sess) const
+      {
+         return sess.sessionDate();
       }
    };
 

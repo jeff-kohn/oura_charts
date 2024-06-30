@@ -89,19 +89,27 @@ namespace oura_charts
    };
 
 
+
+
+   template<typename T>
+   using WeekdayMap = std::multimap<weekday, T, weekday_compare_less>;
+
+
    /// <summary>
-   ///   this function will 
+   ///   this function will group a data series
    /// </summary>
-   /// <typeparam name="ElementT"></typeparam>
-   /// <param name="series"></param>
-   /// <returns></returns>
-   template < template<typename, typename> typename MapT = std::multimap, DataSeriesElement ElementT >
-   int groupByWeekday(DataSeries<ElementT>&& series)
+   template<DataSeriesObject DataSeriesT, typename ProjT>
+   WeekdayMap<typename DataSeriesT::value_type> groupByWeekday(DataSeriesT&& series, ProjT proj)
    {
-      MapT<weekday, ElementT> weekday_map{};
-      
-      //rg::for_each(filt, [&weekday_map]
-      return 0;
+      using MappedType = DataSeriesT::value_type;
+      using MapValueType = WeekdayMap<MappedType>::value_type;
+
+      WeekdayMap<MappedType> weekday_map{};
+      for (auto&& val : series)
+      {
+         weekday_map.emplace(proj(val), std::move(val));
+      }
+      return weekday_map;
    }
 
 

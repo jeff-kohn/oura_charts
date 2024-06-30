@@ -51,7 +51,7 @@ if (WIN32)
                                        CACHE STRING "Default global preprocessor definitions for oura_charts project")
 
     set(OURACHARTS_WARNING_FLAGS "/W4;/w14263;/w14265;/w14311;/w14555;/w14640;/w14928;/wd4100;/WX"
-                                 CACHE STRING "Default global compile options for oura_charts project")
+                                 CACHE STRING "Default global warning options for oura_charts project")
 
     set(OURACHARTS_COMPILE_OPTIONS "/MP;/cgthreads8;/sdl;/GS;/Zc:wchar_t;/Zc:inline;/permissive-;/utf-8;/EHsc;/Zf;/Zi;/Zc:__cplusplus;/Zc:strictStrings;/Zf;/Zc:templateScope;/Zc:throwingNew;"
                                    "$<$<CONFIG:Debug>:/Od;/EHr;/RTC1>"
