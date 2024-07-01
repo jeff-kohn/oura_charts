@@ -46,6 +46,8 @@ namespace oura_charts
    using chrono::years;
 
    using chrono::year_month_day;
+   using chrono::year_month;
+   using chrono::year;
    using chrono::weekday;
    using chrono::hh_mm_ss;
  
@@ -252,7 +254,7 @@ namespace oura_charts
       }
    };
 
-   
+ 
    /// <summary>
    ///   small helper to generate a sorted array containing the days of the week
    /// </summary>
@@ -262,6 +264,26 @@ namespace oura_charts
          std::array<weekday, weekday_count> weekdays{};
          std::iota(rg::begin(weekdays), rg::end(weekdays), sortFirst);
          return weekdays;
+   }
+
+
+   /// <summary>
+   ///   convert a year_month_day into a year_month. trivial convesion, but doing it
+   ///   'inline' will often be ugly/tedious.
+   /// </summary>
+   [[nodiscard]] inline constexpr year_month stripDay(year_month_day val)
+   {
+      return year_month{ val.year(), val.month() };
+   }
+
+
+   /// <summary>
+   ///   convert a year_month_day into a year_month. trivial convesion, but doing it
+   ///   'inline' will often be ugly/tedious.
+   /// </summary>
+   [[nodiscard]] inline constexpr year stripDayAndMonth(year_month_day val)
+   {
+      return year{ val.year() };
    }
 
 

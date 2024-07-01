@@ -8,6 +8,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 #include "TestDataProvider.h"
+#include "oura_charts/functors.h"
 #include "oura_charts/detail/utility.h"
 #include <boost/algorithm/string.hpp>
 #include <fstream>

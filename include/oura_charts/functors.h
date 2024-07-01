@@ -16,6 +16,37 @@
 
 namespace oura_charts
 {
+   //template <auto T>
+   //constexpr auto projectionFunc = [] (auto&&... args) -> decltype(auto) { return std::invoke(T, std::forward<auto>(args)...); };
+
+
+   /// <summary>
+   ///   template that combines a sequence of lambda's into a functor that overloads
+   ///   function operator() once for each lambda.
+   /// </summary>
+   /// <remarks>
+   ///   useful for creating creating visitors from lambdas when working with variants, etc.
+   /// </remarks>
+   template < typename... Ts >
+   struct overload : Ts...
+   {
+      using Ts:: operator()...;
+   };
+   template < typename... Ts > overload(Ts...) -> overload < Ts... >;
+
+
+   /// <summary>
+   ///   helper functor that can be used as a default predicate that always returns true.
+   /// </summary>
+   template<typename T>
+   struct AlwaysTruePred
+   {
+      bool operator()(const T& val) const noexcept
+      {
+         return true;
+      }
+   };
+
 
    /// <summary>
    ///   accumulate a minimum value. make sure to pass std::ref() to algorithms

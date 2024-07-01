@@ -72,21 +72,19 @@ namespace oura_charts
 
 
    /// <summary>
+   ///   Concept for a type that is an instantiation of the DataSeries<> template.
+   /// </summary>
+   template <typename T>
+   concept DataSeriesObject = rg::input_range<T> &&
+                              DataSeriesElement<rg::range_value_t<T> >;
+
+
+   /// <summary>
    ///   Concept for a type that is a range of data structs that can be used to initialize a DataSeries<> object.
    /// </summary>
    template <typename RangeT, typename ElementT>
    concept JsonStructRange = rg::sized_range<RangeT> &&
                              std::same_as<rg::range_rvalue_reference_t<RangeT>, typename ElementT::StorageType&&>;
-
-
-   /// <summary>
-   ///   Concept for a type that is an instantiation of the DataSeries<> template.
-   /// </summary>
-   template <typename T>
-   concept DataSeriesObject =  rg::random_access_range<T> && requires (T t, T::container::value_type val)
-   {
-      typename T::container;
-   };
 
 
    /// <summary>

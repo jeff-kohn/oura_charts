@@ -53,11 +53,10 @@ int main(int argc, char* argv[])
       RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
       auto sleep_data = getDataSeries<SleepSession>(rest_server, getCalendarDate(last_week), getCalendarDate(today));
 
-      // create a filter to only get "long" sleep sessions (don't include naps/rest, they throw off the averages).
-      auto filt = sleep_data | vw::filter(SleepTypeFilter{ SleepSession::SleepType::long_sleep });
-
-      // Now sort the filtered view into buckets by day of week.
-      auto sleep_by_weekday = groupByWeekday(std::move(sleep_data), SelectSessionDate{});
+      // create a filter to only get "long" sleep sessions (don't include naps/rest)
+      // and group by day of week.
+      auto filt = sleep_data | vw::filter(filter_long_sleep);
+      auto sleep_by_weekday = groupByWeekday(filt, SessionYearMonthDay{});
 
       // calculate the average of all the sleep sessions for each weekday
       for (auto wd : getWeekdays())

@@ -63,14 +63,10 @@ namespace oura_charts
       StorageType m_data;
    };
 
-   /// <summary>
-   ///   a collection of SleepSession objects
-   /// </summary>
-   using SleepSessionSeries = DataSeries<SleepSession>;
-
 
    /// <summary>
-   ///   predicate to allow filter SleepSession's by type.
+   ///   predicat to allow filtering SleepSessions by sleep type.
+   ///   defaults to only selecting "long" sleep sessions.
    /// </summary>
    struct SleepTypeFilter
    {
@@ -84,16 +80,44 @@ namespace oura_charts
       }
    };
 
+   static constexpr SleepTypeFilter filter_long_sleep{};
+   
 
-   // simple functor since I haven't managed to get projections working
-   // for the use cases I need.
-   struct SelectSessionDate
+
+   // simple functor that greatly simplifies the template syntax
+   // when passing a projection to range algorithsm without littering
+   // inline lambda's all over the place.
+   struct SessionYearMonthDay
    {
       auto operator()(const SleepSession& sess) const
       {
          return sess.sessionDate();
       }
    };
+
+   // simple functor that greatly simplifies the template syntax
+   // when passing a projection to range algorithsm without littering
+   // inline lambda's all over the place.
+   struct SessionYearMonth
+   {
+      auto operator()(const SleepSession& sess) const
+      {
+         return stripDay(sess.sessionDate());
+      }
+   };
+
+
+   // simple functor that greatly simplifies the template syntax
+   // when passing a projection to range algorithsm without littering
+   // inline lambda's all over the place.
+   struct SessionYear
+   {
+      auto operator()(const SleepSession& sess) const
+      {
+         return stripDayAndMonth(sess.sessionDate());
+      }
+   };
+
 
 
 } // namesapce oura_charts

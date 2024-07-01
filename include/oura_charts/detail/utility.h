@@ -13,20 +13,6 @@
 
 namespace oura_charts::detail
 {
-   /// <summary>
-   ///   template that combines a sequence of lambda's into a functor that overloads
-   ///   function operator() once for each lambda.
-   /// </summary>
-   /// <remarks>
-   ///   useful for creating creating visitors from lambda's
-   /// </remarks>
-   template < typename... Ts >
-   struct overload : Ts...
-   {
-      using Ts:: operator()...;
-   };
-   template < typename... Ts > overload( Ts...) -> overload < Ts... >;
-
 
    /// <summary>
    ///   retrieve an environment variable. If the environment variable is not found, or an

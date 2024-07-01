@@ -89,28 +89,54 @@ namespace oura_charts
    };
 
 
-
-
    template<typename T>
    using WeekdayMap = std::multimap<weekday, T, weekday_compare_less>;
 
+   template<typename T>
+   using MonthMap = std::multimap<chrono::month, T>;
+
+   template <typename T>
+   using YearMonthMap = std::multimap<chrono::year_month, T > ;
+
 
    /// <summary>
-   ///   this function will group a data series
+   ///   this function will group a data series by day of week. It is a greedy/eager
+   ///   algorithm, that consumes the input range by moving elements to the returned map.
    /// </summary>
-   template<DataSeriesObject DataSeriesT, typename ProjT>
-   WeekdayMap<typename DataSeriesT::value_type> groupByWeekday(DataSeriesT&& series, ProjT proj)
+   /// <remarks>
+   ///   The default filter includes everything from the source range, but you can pass
+   ///   any predicate you like to filter the elements that will get grouped.
+   /// 
+   ///   If you're getting a compile error calling this function, make sure you're
+   ///   passing an r-value reference.
+   /// </remarks>
+   template<DataSeriesObject RangeT, typename ProjT>
+   WeekdayMap<rg::range_value_t<RangeT>> groupByWeekday(RangeT&& rng, ProjT proj)
    {
-      using MappedType = DataSeriesT::value_type;
-      using MapValueType = WeekdayMap<MappedType>::value_type;
+      using ValueType = rg::range_value_t<RangeT>;
+      using MapType = WeekdayMap<ValueType>;
 
-      WeekdayMap<MappedType> weekday_map{};
-      for (auto&& val : series)
-      {
-         weekday_map.emplace(proj(val), std::move(val));
-      }
-      return weekday_map;
+      return rng | vw::transform([proj] (ValueType& val) -> auto
+                                 {
+                                    return typename MapType::value_type{ proj(val), std::forward<ValueType>(val) };
+                                 })
+                 | rg::to<MapType>();
    }
+
+
+   template<DataSeriesObject RangeT, typename ProjT>
+   YearMonthMap<rg::range_value_t<RangeT>> groupByYearMonth(RangeT&& rng, ProjT proj)
+   {
+      using ValueType = rg::range_value_t<RangeT>;
+      using MapType = YearMonthMap<ValueType>;
+
+      return rng | vw::transform([proj] (ValueType& val) -> auto
+                                 {
+                                    return typename MapType::value_type{ proj(val), std::forward<ValueType>(val) };
+                                 })
+         | rg::to<MapType>();
+   }
+
 
 
    namespace detail
