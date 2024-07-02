@@ -41,7 +41,7 @@ namespace oura_charts
    template<typename T>
    struct AlwaysTruePred
    {
-      bool operator()(const T& val) const noexcept
+      bool operator()(const T&) const noexcept
       {
          return true;
       }

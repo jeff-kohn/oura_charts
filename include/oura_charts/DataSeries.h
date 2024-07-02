@@ -61,16 +61,16 @@ namespace oura_charts
          return *this;
       }
 
-      // expose the needed container interface from base class.
-      using container::value_type;
-      using container::size_type;
-      using container::difference_type;
-      using container::reference;
-      using container::const_reference;
-      using container::pointer;
-      using container::const_pointer;
-      using container::reverse_iterator;
-      using container::const_reverse_iterator;
+      // expotypename se the needed container interface from base class.
+      using typename container::value_type;
+      using typename container::size_type;
+      using typename container::difference_type;
+      using typename container::reference;
+      using typename container::const_reference;
+      using typename container::pointer;
+      using typename container::const_pointer;
+      using typename container::reverse_iterator;
+      using typename container::const_reverse_iterator;
 
       using container::begin;
       using container::end;
