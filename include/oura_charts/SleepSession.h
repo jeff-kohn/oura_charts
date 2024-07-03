@@ -139,14 +139,14 @@ namespace oura_charts
    inline WeekdayMap<SleepSession> groupByWeekday(SleepSessionSeries&& series, SleepTypeFilter filter = {})
    {
       WeekdayMap<SleepSession> sleep_by_weekday{};
-      groupBy(std::move(series), sleep_by_weekday, SessionWeekday{});
+      groupBy(series | vw::filter(filter), sleep_by_weekday, SessionWeekday{});
       return sleep_by_weekday;
    }
 
    inline YearMonthMap<SleepSession> groupByYearMonth(SleepSessionSeries&& series, SleepTypeFilter filter = {})
    {
       YearMonthMap<SleepSession> sleep_by_year_month{};
-      groupBy(std::move(series), sleep_by_year_month, SessionYearMonth{});
+      groupBy(series | vw::filter(filter), sleep_by_year_month, SessionYearMonth{});
       return sleep_by_year_month;
    }
 

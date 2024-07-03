@@ -95,6 +95,7 @@ namespace oura_charts
    ///   returned by calling the specified projection for each element in the input range.
    /// </summary>
    template<DataSeriesObject RangeT, rg::range MapT, typename ProjT>
+      //requires std::is_rvalue_reference_v<RangeT>
    void groupBy(RangeT&& rng, MapT&& map, ProjT proj)
    {
       using ValueType = rg::range_value_t<RangeT>;
