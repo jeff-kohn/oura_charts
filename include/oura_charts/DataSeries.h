@@ -28,66 +28,94 @@ namespace oura_charts
    class DataSeries : private std::vector<ElementT>
    {
    public:
-      using container = std::vector<ElementT>;
+      using base = std::vector<ElementT>;
 
       /// <summary>
       ///   DataSeries constructor. Note that data_series is passed by value, since
-      ///   its elements will be moved directly into this container. To avoid
+      ///   its elements will be moved directly into this base. To avoid
       ///   the copy, you can pass an rvalue reference if you don't need to preserve
       ///   the source data.
       /// </summary>
       template <rg::forward_range RangeT> requires JsonStructRange<RangeT, ElementT>
       explicit DataSeries(RangeT data_series)
       {
-         container::reserve(data_series.size());
+         base::reserve(data_series.size());
          for (auto&& elem : data_series)
          {
-            container::emplace_back(std::move(elem));
+            base::emplace_back(std::move(elem));
          };
       }
       ~DataSeries() = default;
 
       // move/copy construction and assignment
-      DataSeries(DataSeries&& other) : container(std::move(other)) {}
-      DataSeries(const DataSeries& other) : container(other) {}
+      DataSeries(DataSeries&& other) : base(std::move(other)) {}
+      DataSeries(const DataSeries& other) : base(other) {}
       DataSeries& operator=(DataSeries&& rhs)
       {
-         container::operator=(std::move(rhs));
+         base::operator=(std::move(rhs));
          return *this;
       }
       DataSeries& operator=(const DataSeries& rhs)
       {
-         container::operator=(rhs);
+         base::operator=(rhs);
          return *this;
       }
 
-      // expotypename se the needed container interface from base class.
-      using typename container::value_type;
-      using typename container::size_type;
-      using typename container::difference_type;
-      using typename container::reference;
-      using typename container::const_reference;
-      using typename container::pointer;
-      using typename container::const_pointer;
-      using typename container::reverse_iterator;
-      using typename container::const_reverse_iterator;
+      // expose the needed base interface from base class. clang insists on teh "typename"
+      // even though I don't think it should be necessary and MSVC doens't need it.
+      using typename base::value_type;
+      using typename base::size_type;
+      using typename base::difference_type;
+      using typename base::reference;
+      using typename base::const_reference;
+      using typename base::pointer;
+      using typename base::const_pointer;
+      using typename base::reverse_iterator;
+      using typename base::const_reverse_iterator;
 
-      using container::begin;
-      using container::end;
-      using container::cbegin;
-      using container::cend;
-      using container::rbegin;
-      using container::rend;
-      using container::crbegin;
-      using container::crend;
-      using container::operator[];
-      using container::size;
-      using container::empty;
-      using container::front;
-      using container::back;
+      using base::begin;
+      using base::end;
+      using base::cbegin;
+      using base::cend;
+      using base::rbegin;
+      using base::rend;
+      using base::crbegin;
+      using base::crend;
+      using base::operator[];
+      using base::size;
+      using base::empty;
+      using base::front;
+      using base::back;
 
    };
 
+
+   /// <summary>
+   ///   Groups a data-series into a map/range that can accept elements grouped/sorted by the value
+   ///   returned by calling the specified projection for each element in the input range.
+   /// </summary>
+   template<DataSeriesObject RangeT, rg::range MapT, typename ProjT>
+   void groupBy(RangeT&& rng, MapT&& map, ProjT proj)
+   {
+      using ValueType = rg::range_value_t<RangeT>;
+      using MapValueType = rg::range_value_t<MapT>;
+
+
+      // I don't know why we have to pass an insert_iterator here, but the overload that takes an output_range
+      // won't compile. 
+      rg::transform(std::forward<RangeT>(rng),
+                    std::inserter(std::forward<MapT>(map), map.end()),
+                    [proj] (ValueType& val) -> auto
+                           {
+                              return MapValueType{ proj(val), std::forward<ValueType>(val) };
+                           });
+   }
+
+
+
+   //
+   // these type aliases make working the syntax when callilng groupBy() a little cleaner
+   //
 
    template<typename T>
    using WeekdayMap = std::multimap<weekday, T, weekday_compare_less>;
@@ -97,45 +125,6 @@ namespace oura_charts
 
    template <typename T>
    using YearMonthMap = std::multimap<chrono::year_month, T > ;
-
-
-   /// <summary>
-   ///   this function will group a data series by day of week. It is a greedy/eager
-   ///   algorithm, that consumes the input range by moving elements to the returned map.
-   /// </summary>
-   /// <remarks>
-   ///   The default filter includes everything from the source range, but you can pass
-   ///   any predicate you like to filter the elements that will get grouped.
-   /// 
-   ///   If you're getting a compile error calling this function, make sure you're
-   ///   passing an r-value reference.
-   /// </remarks>
-   template<DataSeriesObject RangeT, typename ProjT>
-   WeekdayMap<rg::range_value_t<RangeT>> groupByWeekday(RangeT&& rng, ProjT proj)
-   {
-      using ValueType = rg::range_value_t<RangeT>;
-      using MapType = WeekdayMap<ValueType>;
-
-      return rng | vw::transform([proj] (ValueType& val) -> auto
-                                 {
-                                    return typename MapType::value_type{ proj(val), std::forward<ValueType>(val) };
-                                 })
-                 | rg::to<MapType>();
-   }
-
-
-   template<DataSeriesObject RangeT, typename ProjT>
-   YearMonthMap<rg::range_value_t<RangeT>> groupByYearMonth(RangeT&& rng, ProjT proj)
-   {
-      using ValueType = rg::range_value_t<RangeT>;
-      using MapType = YearMonthMap<ValueType>;
-
-      return rng | vw::transform([proj] (ValueType& val) -> auto
-                                 {
-                                    return typename MapType::value_type{ proj(val), std::forward<ValueType>(val) };
-                                 })
-         | rg::to<MapType>();
-   }
 
 
 

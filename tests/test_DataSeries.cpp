@@ -1,6 +1,7 @@
 #include "TestDataProvider.h"
 #include "oura_charts/DataSeries.h"
 #include "oura_charts/HeartRate.h"
+#include "oura_charts/SleepSession.h"
 #include <catch2/catch_test_macros.hpp>
 #include <fmt/format.h>
 
@@ -23,4 +24,14 @@ namespace oura_charts::test
       REQUIRE(paged.size() == non_paged.size() * 3);
    }
 
+
+   TEST_CASE("test_SleepSessionSeries_grouping")
+   {
+      TestDataProvider provider{ constants::UNIT_TEST_DATA_DIR };
+
+      auto sleep_sessions = getDataSeries<SleepSession>(provider, detail::SortedPropertyMap{});
+
+      auto by_weekday = groupByWeekday(SleepSessionSeries{ sleep_sessions }, SleepTypeFilter{});
+      auto by_year_month = groupByYearMonth(SleepSessionSeries{ sleep_sessions }, SleepTypeFilter{});
+   }
 } // namespace oura_charts::test

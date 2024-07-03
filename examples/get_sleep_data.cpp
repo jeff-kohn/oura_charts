@@ -55,8 +55,7 @@ int main(int argc, char* argv[])
 
       // create a filter to only get "long" sleep sessions (don't include naps/rest)
       // and group by day of week.
-      auto filt = sleep_data | vw::filter(filter_long_sleep);
-      auto sleep_by_weekday = groupByWeekday(filt, SessionYearMonthDay{});
+      auto sleep_by_weekday = groupByWeekday(std::move(sleep_data), filter_long_sleep);
 
       // calculate the average of all the sleep sessions for each weekday
       for (auto wd : getWeekdays())

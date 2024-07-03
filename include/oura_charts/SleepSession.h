@@ -63,9 +63,11 @@ namespace oura_charts
       StorageType m_data;
    };
 
+   using SleepSessionSeries = DataSeries<SleepSession>;
 
+   
    /// <summary>
-   ///   predicat to allow filtering SleepSessions by sleep type.
+   ///   predicate to allow filtering SleepSessions by sleep type.
    ///   defaults to only selecting "long" sleep sessions.
    /// </summary>
    struct SleepTypeFilter
@@ -83,24 +85,34 @@ namespace oura_charts
    static constexpr SleepTypeFilter filter_long_sleep{};
    
 
+   // simple functor that greatly simplifies the template syntax
+   // when passing a projection to range algorithms without littering
+   // inline lambda's all over the place.
+   struct SessionWeekday
+   {
+      weekday operator()(const SleepSession& sess) const
+      {
+         return sys_days{ sess.sessionDate() };
+      }
+   };
 
    // simple functor that greatly simplifies the template syntax
-   // when passing a projection to range algorithsm without littering
+   // when passing a projection to range algorithms without littering
    // inline lambda's all over the place.
    struct SessionYearMonthDay
    {
-      auto operator()(const SleepSession& sess) const
+      year_month_day operator()(const SleepSession& sess) const
       {
          return sess.sessionDate();
       }
    };
 
    // simple functor that greatly simplifies the template syntax
-   // when passing a projection to range algorithsm without littering
+   // when passing a projection to range algorithms without littering
    // inline lambda's all over the place.
    struct SessionYearMonth
    {
-      auto operator()(const SleepSession& sess) const
+      year_month operator()(const SleepSession& sess) const
       {
          return stripDay(sess.sessionDate());
       }
@@ -108,16 +120,34 @@ namespace oura_charts
 
 
    // simple functor that greatly simplifies the template syntax
-   // when passing a projection to range algorithsm without littering
+   // when passing a projection to range algorithms without littering
    // inline lambda's all over the place.
    struct SessionYear
    {
-      auto operator()(const SleepSession& sess) const
+      year operator()(const SleepSession& sess) const
       {
          return stripDayAndMonth(sess.sessionDate());
       }
    };
+   
+
+   template <typename T>
+   concept SleepSessionMap =  std::same_as<std::remove_cvref<typename T::mapped_type>, SleepSession>
+                           && rg::input_range<T>;
 
 
+   inline WeekdayMap<SleepSession> groupByWeekday(SleepSessionSeries&& series, SleepTypeFilter filter = {})
+   {
+      WeekdayMap<SleepSession> sleep_by_weekday{};
+      groupBy(std::move(series), sleep_by_weekday, SessionWeekday{});
+      return sleep_by_weekday;
+   }
+
+   inline YearMonthMap<SleepSession> groupByYearMonth(SleepSessionSeries&& series, SleepTypeFilter filter = {})
+   {
+      YearMonthMap<SleepSession> sleep_by_year_month{};
+      groupBy(std::move(series), sleep_by_year_month, SessionYearMonth{});
+      return sleep_by_year_month;
+   }
 
 } // namesapce oura_charts
