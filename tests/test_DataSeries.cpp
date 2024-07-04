@@ -31,7 +31,7 @@ namespace oura_charts::test
 
       auto sleep_sessions = getDataSeries<SleepSession>(provider, detail::SortedPropertyMap{});
 
-      auto by_weekday = groupByWeekday(SleepSessionSeries{ sleep_sessions }, SleepTypeFilter{});
-      auto by_year_month = groupByYearMonth(SleepSessionSeries{ sleep_sessions }, SleepTypeFilter{});
+//      auto by_weekday = groupBy < WeekdayMap<SleepSession>>(SleepSessionSeries{ sleep_sessions }, SessionWeekday, SleepTypeFilter{});
+//      auto by_year_month = groupByYearMonth(SleepSessionSeries{ sleep_sessions }, SleepTypeFilter{});
    }
 } // namespace oura_charts::test

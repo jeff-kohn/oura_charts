@@ -1,13 +1,13 @@
 //---------------------------------------------------------------------------------------------------------------------
-// test_datetime_helpers.cpp
+// test_chrono_helpers.cpp
 //
-// unit tests for datetime_helpers.h
+// unit tests for chrono_helpers.h
 //
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
 
 
-#include "oura_charts/datetime_helpers.h"
+#include "oura_charts/chrono_helpers.h"
 #include <catch2/catch_test_macros.hpp>
 
 namespace oura_charts::test

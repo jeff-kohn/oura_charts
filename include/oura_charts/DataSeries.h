@@ -94,9 +94,8 @@ namespace oura_charts
    ///   Groups a data-series into a map/range that can accept elements grouped/sorted by the value
    ///   returned by calling the specified projection for each element in the input range.
    /// </summary>
-   template<DataSeriesObject RangeT, rg::range MapT, typename ProjT>
-      //requires std::is_rvalue_reference_v<RangeT>
-   void groupBy(RangeT&& rng, MapT&& map, ProjT proj)
+   template<rg::input_range RangeT, rg::range MapT, typename ProjT>
+   void groupBy(RangeT&& rng, MapT&& map, ProjT proj)  //requires std::is_rvalue_reference_v<decltype(*(rg::begin(rng)))>
    {
       using ValueType = rg::range_value_t<RangeT>;
       using MapValueType = rg::range_value_t<MapT>;

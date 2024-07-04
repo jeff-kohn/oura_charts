@@ -9,7 +9,7 @@ add_executable(${THIS_TARGET}
 	"../include/oura_charts/constants.h"
 	"../include/oura_charts/concepts.h"
 	"../include/oura_charts/oura_exception.h"
-   "../include/oura_charts/datetime_helpers.h"
+   "../include/oura_charts/chrono_helpers.h"
 	"../include/oura_charts/TokenAuth.h"
 	"../include/oura_charts/UserProfile.h"
    "../include/oura_charts/HeartRate.h"

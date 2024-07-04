@@ -8,7 +8,7 @@
 
 #include "oura_charts/oura_charts.h"
 #include "oura_charts/DataSeries.h"
-#include "oura_charts/datetime_helpers.h"
+#include "oura_charts/chrono_helpers.h"
 
 
 namespace oura_charts

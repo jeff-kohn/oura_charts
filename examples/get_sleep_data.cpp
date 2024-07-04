@@ -10,7 +10,7 @@
 #include "oura_charts/RestDataProvider.h"
 #include "oura_charts/SleepSession.h"
 #include "oura_charts/TokenAuth.h"
-#include "oura_charts/datetime_helpers.h"
+#include "oura_charts/chrono_helpers.h"
 #include "oura_charts/detail/logging.h"
 #include "oura_charts/functors.h"
 #include <algorithm>
@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
 
       // create a filter to only get "long" sleep sessions (don't include naps/rest)
       // and group by day of week.
-      auto sleep_by_weekday = groupByWeekday(std::move(sleep_data), filter_long_sleep);
+      auto sleep_by_weekday = group<SleepByWeekday>(std::move(sleep_data), SessionWeekday, long_sleep_filter);
 
       // calculate the average of all the sleep sessions for each weekday
       for (auto wd : getWeekdays())

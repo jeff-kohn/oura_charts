@@ -7,7 +7,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 #include "oura_charts/functors.h"
-#include "oura_charts/datetime_helpers.h"
+#include "oura_charts/chrono_helpers.h"
 #include <algorithm>
 #include <array>
 #include <catch2/catch_test_macros.hpp>

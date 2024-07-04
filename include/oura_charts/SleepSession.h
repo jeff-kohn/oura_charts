@@ -16,7 +16,6 @@ namespace oura_charts
 {
    using detail::nullable_double;
 
-
    /// <summary>
    ///   encapsulates data for a single sleep session from the Oura API.
    /// </summary>
@@ -50,7 +49,7 @@ namespace oura_charts
       nullable_double restless_periods() const     {  return m_data.restless_periods;     }
 
       /// <summary>
-      ///   constructor, accepts data by value, pass && to move instead of copy
+      ///   constructor accepts data by value, pass && to move instead of copy
       /// </summary>
       explicit SleepSession(StorageType data) : m_data(std::move(data)) {}
       SleepSession(const SleepSession&) = default;
@@ -63,91 +62,78 @@ namespace oura_charts
       StorageType m_data;
    };
 
+
+   using SleepType = SleepSession::SleepType;
    using SleepSessionSeries = DataSeries<SleepSession>;
 
-   
+
    /// <summary>
    ///   predicate to allow filtering SleepSessions by sleep type.
-   ///   defaults to only selecting "long" sleep sessions.
    /// </summary>
    struct SleepTypeFilter
    {
-      using SleepType = SleepSession::SleepType;
+      // default value of "any" will match all.
+      SleepType sleep_type{ SleepType::any };
 
-      SleepType sleep_type{ SleepType::long_sleep };
-
-      bool operator()(const SleepSession& sess) const
+      constexpr bool operator()(const SleepSession& sess) const
       {
-         return sess.sleepType() == sleep_type;
+         return sleep_type == SleepType::any ? true
+                                             : (sess.sleepType() == sleep_type);
       }
    };
 
-   static constexpr SleepTypeFilter filter_long_sleep{};
+   static constexpr SleepTypeFilter long_sleep_filter{SleepType::long_sleep};
    
 
-   // simple functor that greatly simplifies the template syntax
-   // when passing a projection to range algorithms without littering
-   // inline lambda's all over the place.
-   struct SessionWeekday
-   {
-      weekday operator()(const SleepSession& sess) const
-      {
-         return sys_days{ sess.sessionDate() };
-      }
-   };
-
-   // simple functor that greatly simplifies the template syntax
-   // when passing a projection to range algorithms without littering
-   // inline lambda's all over the place.
-   struct SessionYearMonthDay
-   {
-      year_month_day operator()(const SleepSession& sess) const
-      {
-         return sess.sessionDate();
-      }
-   };
-
-   // simple functor that greatly simplifies the template syntax
-   // when passing a projection to range algorithms without littering
-   // inline lambda's all over the place.
-   struct SessionYearMonth
-   {
-      year_month operator()(const SleepSession& sess) const
-      {
-         return stripDay(sess.sessionDate());
-      }
-   };
+   static constexpr auto&& SessionWeekday      = [] (const SleepSession& session) -> weekday { return sys_days{ session.sessionDate() }; };
+   static constexpr auto&& SessionYearMonthDay = [] (const SleepSession& session) -> year_month_day { return session.sessionDate(); };
+   static constexpr auto&& SessionYearMonth    = [] (const SleepSession& session) -> weekday { return sys_days{ session.sessionDate() }; };
+   static constexpr auto&& SessionYear         = [] (const SleepSession& session) -> weekday { return sys_days{ session.sessionDate() }; };
 
 
-   // simple functor that greatly simplifies the template syntax
-   // when passing a projection to range algorithms without littering
-   // inline lambda's all over the place.
-   struct SessionYear
-   {
-      year operator()(const SleepSession& sess) const
-      {
-         return stripDayAndMonth(sess.sessionDate());
-      }
-   };
-   
-
+   /// <summary>
+   ///   concept for a map that can hold SleepSession objects.
+   /// </summary>
    template <typename T>
-   concept SleepSessionMap =  std::same_as<std::remove_cvref<typename T::mapped_type>, SleepSession>
-                           && rg::input_range<T>;
+   concept SleepSessionMap =  std::same_as<std::remove_cvref<typename T::mapped_type>, SleepSession>;
 
 
-   inline WeekdayMap<SleepSession> groupByWeekday(SleepSessionSeries&& series, SleepTypeFilter filter = {})
+   //
+   // These projection aliases make working with the group-by functionality much easier.
+   // The first alias allows you to specify the container type, while the second allows
+   // using the default of std::multimap without having to use/remember the trailing <>
+   //
+
+   // map to group sessions by day of the week
+   template <template <typename, typename, typename> typename MapT = std::multimap> 
+   using SleepByWeekdayT = MapT<weekday, SleepSession, weekday_compare_less>;
+   using SleepByWeekday = SleepByWeekdayT<>;
+
+   // map to group sessions by month of the year (not a specific year, just month)
+   template <template <typename, typename> typename MapT = std::multimap>
+   using SleepByMonthT = MapT<month, SleepSession>;
+   using SleepByMonth = SleepByMonthT<>;
+
+   // map to group sessions by year and month
+   template <template <typename, typename> typename MapT = std::multimap>
+   using SleepByYearMonthT = MapT<year_month, SleepSession>;
+   using SleepByYearMonth = SleepByYearMonthT<>;
+
+   // map to group sessions by year
+   template <template <typename, typename> typename MapT = std::multimap>
+   using SleepByYearT = MapT<year, SleepSession>;
+   using SleepByYear = SleepByYearT<>;
+
+
+
+   template <typename MapT, std::invocable<SleepSession> KeyProjT>
+      //requires std::same_as < std::remove_cvref<typename MapT::key_type>, decltype(KeyProjT{}()) >
+   inline auto group(SleepSessionSeries&& series, KeyProjT&& proj, SleepTypeFilter filter = {})
    {
-      WeekdayMap<SleepSession> sleep_by_weekday{};
-      groupBy(series | vw::filter(filter), sleep_by_weekday, SessionWeekday{});
-      return sleep_by_weekday;
-   }
+      MapT map{};
+      groupBy(std::move(series) | vw::filter(filter), map, proj);
+      return map;
 
-   inline YearMonthMap<SleepSession> groupByYearMonth(SleepSessionSeries&& series, SleepTypeFilter filter = {})
-   {
-      YearMonthMap<SleepSession> sleep_by_year_month{};
-      groupBy(series | vw::filter(filter), sleep_by_year_month, SessionYearMonth{});
-      return sleep_by_year_month;
    }
 
 } // namesapce oura_charts

@@ -9,7 +9,7 @@
 #pragma once
 
 #include "oura_charts/oura_charts.h"
-#include "oura_charts/datetime_helpers.h"
+#include "oura_charts/chrono_helpers.h"
 #include <glaze/glaze.hpp>
 #include <optional>
 #include <string>
@@ -72,6 +72,7 @@ namespace oura_charts::detail
    {
       enum class SleepType
       {
+         any = 0,
          rest,
          late_nap,
          sleep,

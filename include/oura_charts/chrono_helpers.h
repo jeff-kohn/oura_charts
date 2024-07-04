@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------------------------------------------------
-// datetime_helpers.h
+// chrono_helpers.h
 //
 // miscellaneous utility functions/wrappers used for working with date/time values and the chrono library
 //
@@ -47,6 +47,7 @@ namespace oura_charts
 
    using chrono::year_month_day;
    using chrono::year_month;
+   using chrono::month;
    using chrono::year;
    using chrono::weekday;
    using chrono::hh_mm_ss;
