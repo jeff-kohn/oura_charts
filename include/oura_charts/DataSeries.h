@@ -100,7 +100,6 @@ namespace oura_charts
       using ValueType = rg::range_value_t<RangeT>;
       using MapValueType = rg::range_value_t<MapT>;
 
-
       // I don't know why we have to pass an insert_iterator here, but the overload that takes an output_range
       // won't compile. 
       rg::transform(std::forward<RangeT>(rng),
@@ -110,22 +109,6 @@ namespace oura_charts
                               return MapValueType{ proj(val), std::forward<ValueType>(val) };
                            });
    }
-
-
-
-   //
-   // these type aliases make working the syntax when callilng groupBy() a little cleaner
-   //
-
-   template<typename T>
-   using WeekdayMap = std::multimap<weekday, T, weekday_compare_less>;
-
-   template<typename T>
-   using MonthMap = std::multimap<chrono::month, T>;
-
-   template <typename T>
-   using YearMonthMap = std::multimap<chrono::year_month, T > ;
-
 
 
    namespace detail

@@ -82,9 +82,16 @@ namespace oura_charts
       }
    };
 
+   /// <summary>
+   ///   This unary predicate will return true for any SleepSessions
+   ///   of type 'long_sleep'
+   /// </summary>
    static constexpr SleepTypeFilter long_sleep_filter{SleepType::long_sleep};
-   
 
+
+   //
+   // These lambda's can be used as projections for converting sessionDate() to various calandar types.
+   //
    static constexpr auto&& SessionWeekday      = [] (const SleepSession& session) -> weekday { return sys_days{ session.sessionDate() }; };
    static constexpr auto&& SessionYearMonthDay = [] (const SleepSession& session) -> year_month_day { return session.sessionDate(); };
    static constexpr auto&& SessionYearMonth    = [] (const SleepSession& session) -> weekday { return sys_days{ session.sessionDate() }; };
@@ -101,7 +108,7 @@ namespace oura_charts
    //
    // These projection aliases make working with the group-by functionality much easier.
    // The first alias allows you to specify the container type, while the second allows
-   // using the default of std::multimap without having to use/remember the trailing <>
+   // using the default std::multimap without having to use/remember the trailing <>'s
    //
 
    // map to group sessions by day of the week
@@ -125,7 +132,10 @@ namespace oura_charts
    using SleepByYear = SleepByYearT<>;
 
 
-
+   /// <summary>
+   ///   group a SleepSession series by projecting the sessionDate to the
+   ///   desired grouping value (day of week, month of year, etc).
+   /// </summary>
    template <typename MapT, std::invocable<SleepSession> KeyProjT>
       //requires std::same_as < std::remove_cvref<typename MapT::key_type>, decltype(KeyProjT{}()) >
    inline auto group(SleepSessionSeries&& series, KeyProjT&& proj, SleepTypeFilter filter = {})
