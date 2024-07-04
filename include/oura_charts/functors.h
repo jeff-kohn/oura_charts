@@ -155,5 +155,17 @@ namespace oura_charts
    };
 
 
+   // Helper template for deducing return type of a class method.
+   template<typename T>
+   struct method_return_type;
+
+   template<typename R, typename C, typename... Args>
+   struct method_return_type<R(C::*)(Args...)> {
+       using type = R;
+   };
+
+   template<typename MethodT>
+   using method_return_type_t = typename method_return_type<MethodT>::type;
+
 
 }  // namespace oura_charts
