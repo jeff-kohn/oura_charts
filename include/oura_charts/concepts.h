@@ -18,6 +18,7 @@ namespace oura_charts
    namespace rg = std::ranges;
    namespace vw = rg::views;
 
+
    /// <summary>
    ///   concept requiring a template arg to be std::exception or derived from std::exception
    /// </summary>
@@ -53,6 +54,17 @@ namespace oura_charts
 
 
    /// <summary>
+   ///   concept requiring that the return type of a projection matches the key type of map.
+   /// </summary>
+   template<typename MapT, typename ProjectionT>
+   concept CompatibleKeyProjection = std::invocable<ProjectionT, typename MapT::mapped_type> &&
+                                  requires (MapT map, MapT::key_type key, MapT::mapped_type val, ProjectionT proj)
+   {
+      map.insert(typename MapT::value_type{ proj(val), val });
+   };
+
+
+   /// <summary>
    ///   concept for an auth object that can be used for authenticating with a data provider (REST, DB, etc).
    /// </summary>
    template <typename T>
@@ -60,23 +72,6 @@ namespace oura_charts
    {
       t.getAuthorization();
    };
-
-   /// <summary>
-   ///   concept for a type that is an rest deta object that can be stored in a DataSeries<>
-   /// </summary>
-   template <typename T>
-   concept DataSeriesElement = requires (T t, T::StorageType data)
-   {
-      t = T{ std::move(data) };
-   };
-
-
-   /// <summary>
-   ///   Concept for a type that is an instantiation of the DataSeries<> template.
-   /// </summary>
-   template <typename T>
-   concept DataSeriesObject = rg::input_range<T> &&
-                              DataSeriesElement<rg::range_value_t<T> >;
 
 
    /// <summary>

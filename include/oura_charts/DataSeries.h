@@ -17,37 +17,84 @@
 namespace oura_charts
 {
    /// <summary>
-   ///   template class for constructing and managing a collection of data objects from the Oura API
+   ///   concept for a type that be stored in a DataSeries<> collection
    /// </summary>
-   /// <remarks>
-   ///   this class accepts a vector of json UDT's and constructs an object for each, using move semantics
-   ///   to avoid copying data. The collection is considered static once initialized, so operations that modify
-   ///   its contents are not provided but the usual element access is.
-   /// </remarks>
+   template <typename T>
+   concept DataSeriesElement = requires (T t, T::StorageType data)
+   {
+      t = T{ std::move(data) };
+   };
+
+
+   /// <summary>
+   /// <summary>
+   ///   Concept for a type that is an instantiation of the DataSeries<> template.
+   /// </summary>
+   template <typename T>
+   concept DataSeriesObject = DataSeriesElement<typename T::ElementType> &&
+                              requires (T t, T::ElementType e, T::base base_obj)
+   {
+      base_obj.push_back(e);
+      base_obj.emplace_back(e);
+   };
+
+
+   /// <summary>
+   ///   template class for constructing and managing a series of data objects from the Oura API
+   /// </summary>
    template <DataSeriesElement ElementT>
    class DataSeries : private std::vector<ElementT>
    {
    public:
       using base = std::vector<ElementT>;
+      using ElementType = ElementT;
 
       /// <summary>
       ///   DataSeries constructor. Note that data_series is passed by value, since
-      ///   its elements will be moved directly into this base. To avoid
+      ///   its elements will be moved directly into this container. To avoid
       ///   the copy, you can pass an rvalue reference if you don't need to preserve
       ///   the source data.
       /// </summary>
       template <rg::forward_range RangeT> requires JsonStructRange<RangeT, ElementT>
       explicit DataSeries(RangeT data_series)
       {
-         base::reserve(data_series.size());
-         for (auto&& elem : data_series)
-         {
-            base::emplace_back(std::move(elem));
-         };
+         base::insert(end(), std::make_move_iterator(data_series.begin()), std::make_move_iterator(data_series.end()));
       }
-      ~DataSeries() = default;
 
-      // move/copy construction and assignment
+
+      /// <summary>
+      ///   remove all elements that don't match the supplied predicate. Unike STL
+      ///   "remove" algorithms, this method actually removes the filtered elements.
+      /// </summary>
+      template<std::predicate<ElementType> PredT>
+      size_t keepIf(PredT pred)
+      {
+         // we need to "negate" the predicate since we're actually specifying what
+         // to remove, not what to keep, when calling remove_if()
+         auto new_end = std::remove_if(begin(), end(), [pred] (const ElementType& t) -> bool { return !pred(t); });
+         auto count = std::distance(new_end, end());
+         base::erase(new_end, end());
+         return count;
+      }
+
+
+      /// <summary>
+      ///   remove all elements that match the supplied predicate. Unike STL
+      ///   "remove" algorithms, this method actually removes the filtered elements.
+      /// </summary>
+      template<std::predicate<ElementType> PredT>
+      size_t removeIf(PredT pred)
+      {
+         // we need to "negate" the predicate since we're actually specifying what
+         // to remove, not what to keep, when calling remove_if()
+         auto new_end = std::remove_if(begin(), end(), pred);
+         auto count = std::distance(new_end, end());
+         base::erase(new_end, end());
+         return count;
+      }
+
+
+      ~DataSeries() = default;
       DataSeries(DataSeries&& other) : base(std::move(other)) {}
       DataSeries(const DataSeries& other) : base(other) {}
       DataSeries& operator=(DataSeries&& rhs)
@@ -60,51 +107,24 @@ namespace oura_charts
          base::operator=(rhs);
          return *this;
       }
-
-      // expose the needed base interface from base class. clang insists on teh "typename"
-      // even though I don't think it should be necessary and MSVC doens't need it.
-      using typename base::value_type;
-      using typename base::size_type;
-      using typename base::difference_type;
-      using typename base::reference;
-      using typename base::const_reference;
-      using typename base::pointer;
-      using typename base::const_pointer;
-      using typename base::reverse_iterator;
-      using typename base::const_reverse_iterator;
-
-      using base::begin;
-      using base::end;
-      using base::cbegin;
-      using base::cend;
-      using base::rbegin;
-      using base::rend;
-      using base::crbegin;
-      using base::crend;
-      using base::operator[];
-      using base::size;
-      using base::empty;
-      using base::front;
-      using base::back;
-
    };
 
 
+
    /// <summary>
-   ///   Groups a data-series into a map/range that can accept elements grouped/sorted by the value
+   ///   Groups a data-series into a map that can accept elements grouped/sorted by the value
    ///   returned by calling the specified projection for each element in the input range.
    /// </summary>
-   template<rg::input_range RangeT, rg::range MapT, typename ProjT>
-   void groupBy(RangeT&& rng, MapT&& map, ProjT proj)  //requires std::is_rvalue_reference_v<decltype(*(rg::begin(rng)))>
+   template<DataSeriesObject DataSeriesT, rg::range MapT, std::invocable<typename DataSeriesT::ElementType> KeyProjT>
+      requires CompatibleKeyProjection<std::remove_cvref_t<MapT>, KeyProjT> 
+   void groupBy(DataSeriesT&& series, MapT& map, KeyProjT&& proj)
    {
-      using ValueType = rg::range_value_t<RangeT>;
+      using ValueType = DataSeriesT::ElementType;
       using MapValueType = rg::range_value_t<MapT>;
 
-      // I don't know why we have to pass an insert_iterator here, but the overload that takes an output_range
-      // won't compile. 
-      rg::transform(std::forward<RangeT>(rng),
-                    std::inserter(std::forward<MapT>(map), map.end()),
-                    [proj] (ValueType& val) -> auto
+      rg::transform(std::forward<DataSeriesT>(series),
+                    std::inserter(map, map.end()),
+                    [&proj] (ValueType& val) -> auto
                            {
                               return MapValueType{ proj(val), std::forward<ValueType>(val) };
                            });
@@ -113,7 +133,6 @@ namespace oura_charts
 
    namespace detail
    {
-      using std::forward;
       using SortedPropertyMap = std::map<std::string, std::string>;
 
       template <DataSeriesElement ElementT, DataProvider ProviderT, KeyValueRange MapT>
