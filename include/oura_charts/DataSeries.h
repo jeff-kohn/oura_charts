@@ -49,6 +49,33 @@ namespace oura_charts
       using base = std::vector<ElementT>;
       using ElementType = ElementT;
 
+      // expose the needed base interface from base class. clang insists on teh "typename"
+      // even though I don't think it should be necessary and MSVC doens't need it.
+      using typename base::value_type;
+      using typename base::size_type;
+      using typename base::difference_type;
+      using typename base::reference;
+      using typename base::const_reference;
+      using typename base::pointer;
+      using typename base::const_pointer;
+      using typename base::reverse_iterator;
+      using typename base::const_reverse_iterator;
+
+      using base::begin;
+      using base::end;
+      using base::cbegin;
+      using base::cend;
+      using base::rbegin;
+      using base::rend;
+      using base::crbegin;
+      using base::crend;
+      using base::operator[];
+      using base::size;
+      using base::empty;
+      using base::front;
+      using base::back;
+
+
       /// <summary>
       ///   DataSeries constructor. Note that data_series is passed by value, since
       ///   its elements will be moved directly into this container. To avoid
