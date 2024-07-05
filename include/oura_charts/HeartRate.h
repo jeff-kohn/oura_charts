@@ -26,7 +26,7 @@ namespace oura_charts
       int beatsPerMin() const          {  return m_data.bpm;         }
 
       // Condition HR reading was taken in (awake/asleep/etc)
-      std::string source() const       {  return m_data.source;     }
+      const std::string& source() const       {  return m_data.source;     }
 
       // date and time (UTC) the HR reading was taken.
       local_seconds timestamp() const { return m_data.timestamp; }
@@ -37,7 +37,7 @@ namespace oura_charts
       /// <remarks>
       ///   copies by default, pass rvalue-ref to move instead.
       /// </remarks>
-      explicit HeartRate(StorageType data) : m_data(std::move(data)) {}
+      explicit HeartRate(StorageType data) noexcept : m_data(std::move(data)) {}
       HeartRate(const HeartRate&) = default;
       HeartRate& operator=(const HeartRate&) = default;
       HeartRate& operator=(HeartRate&&) = default;

@@ -85,7 +85,16 @@ namespace oura_charts
       template <rg::forward_range RangeT> requires JsonStructRange<RangeT, ElementT>
       explicit DataSeries(RangeT data_series)
       {
-         base::insert(end(), std::make_move_iterator(data_series.begin()), std::make_move_iterator(data_series.end()));
+         // stupid clang doesn't actually call ElementT(StorageType&&) like it should ,instead it default constructs and calls operator=(StorageType&&) 
+         // which doesn't exist. So even though this would be faster, we have to use a ranged for loop and emplace() each element. pretty fucking lame
+         // if you ask me.
+         //base::insert(end(), std::make_move_iterator(data_series.begin()), std::make_move_iterator(data_series.end()));
+
+         base::reserve(data_series.size());
+         for (auto& data : data_series)
+         {
+            base::emplace_back(data);
+         }
       }
 
 
@@ -200,7 +209,7 @@ namespace oura_charts
          }
 
          // finally move the accumulated data into a new DataSeries to return
-         return DataSeries<ElementT>( std::move(buf) );
+         return DataSeries<ElementT>{std::move(buf) };
       }
 
    } // namespace detail
