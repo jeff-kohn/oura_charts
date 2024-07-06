@@ -145,6 +145,23 @@ namespace oura_charts
       }
    };
 
+   
+   // template alias for map of DataSeriesElements grouped by day of week
+   template <DataSeriesElement ElementT, template <typename, typename, typename> typename MapT = std::multimap>
+   using MapByWeekdayT = MapT<weekday, ElementT, weekday_compare_less>;
+
+   // template alias for map of DataSeriesElements grouped by month of the year (not a specific year, just month)
+   template <DataSeriesElement ElementT, template <typename, typename> typename MapT = std::multimap>
+   using MapByMonthT = MapT<month, ElementT>;
+
+   // template alias for map of DataSeriesElements grouped by year and month
+   template <DataSeriesElement ElementT, template <typename, typename> typename MapT = std::multimap>
+   using MapByYearMonthT = MapT<year_month, ElementT>;
+
+   // template alias for map of DataSeriesElements grouped by year
+   template <DataSeriesElement ElementT, template <typename, typename> typename MapT = std::multimap>
+   using MapByYearT = MapT<year, ElementT>;
+
 
 
    /// <summary>

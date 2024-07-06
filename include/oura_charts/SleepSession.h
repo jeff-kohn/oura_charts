@@ -82,9 +82,9 @@ namespace oura_charts
       }
    };
 
+
    /// <summary>
-   ///   This unary predicate will return true for any SleepSessions
-   ///   of type 'long_sleep'
+   ///   unary predicates to filter SleepSession objects based on sleep type
    /// </summary>
    static constexpr SleepTypeFilter long_sleep_filter{SleepType::long_sleep};
 
@@ -114,31 +114,17 @@ namespace oura_charts
       };
 
 
-   //
-   // These aliases make the syntax for specifing the map type for grouping cleaner. 
-   // The first alias allows you to specify the container type, while the second allows
-   // using the default std::multimap without having to use/remember the trailing <>'s
-   //
-
    // map to group sessions by day of the week
-   template <template <typename, typename, typename> typename MapT = std::multimap> 
-   using SleepByWeekdayT = MapT<weekday, SleepSession, weekday_compare_less>;
-   using SleepByWeekday = SleepByWeekdayT<>;
+   using SleepByWeekday = MapByWeekdayT<SleepSession>;
 
    // map to group sessions by month of the year (not a specific year, just month)
-   template <template <typename, typename> typename MapT = std::multimap>
-   using SleepByMonthT = MapT<month, SleepSession>;
-   using SleepByMonth = SleepByMonthT<>;
+   using SleepByMonth = MapByMonthT<SleepSession>;
 
    // map to group sessions by year and month
-   template <template <typename, typename> typename MapT = std::multimap>
-   using SleepByYearMonthT = MapT<year_month, SleepSession>;
-   using SleepByYearMonth = SleepByYearMonthT<>;
+   using SleepByYearMonth = MapByYearMonthT<SleepSession>;
 
    // map to group sessions by year
-   template <template <typename, typename> typename MapT = std::multimap>
-   using SleepByYearT = MapT<year, SleepSession>;
-   using SleepByYear = SleepByYearT<>;
+   using SleepByYear = MapByYearT<SleepSession>;
 
 
    /// <summary>

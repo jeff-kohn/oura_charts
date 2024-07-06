@@ -49,6 +49,32 @@ namespace oura_charts
 
    using HeartRateDataSeries = DataSeries<HeartRate>;
 
+
+   ///
+   /// functors for converting timestamp to various calendar types for grouping/aggregation
+   ///
+   static constexpr auto HeartRateWeekday = [] (const HeartRate& hr) -> weekday
+      {
+         return weekday{ floor<days>(hr.timestamp()) };
+      };
+
+   static constexpr auto HeartRateYearMonthDay = [] (const HeartRate& hr) -> year_month_day
+      {
+         return getCalendarDate(hr.timestamp());
+      };
+
+   static constexpr auto HeartRateYear = [] (const HeartRate& hr) -> year
+      {
+         return getCalendarDate(hr.timestamp()).year();
+      };
+
+   static constexpr auto HeartRateYearMonth = [] (const HeartRate& hr) -> year_month
+      {
+         auto ymd = getCalendarDate(hr.timestamp());
+         return year_month{ ymd.year(), ymd.month() };
+      };
+
+
    /// <summary>
    ///   custom format() support for HeartRate
    /// </summary>

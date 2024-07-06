@@ -29,9 +29,11 @@ namespace oura_charts::test
    {
       TestDataProvider provider{ constants::UNIT_TEST_DATA_DIR };
 
+
+
       auto sleep_sessions = getDataSeries<SleepSession>(provider, detail::SortedPropertyMap{});
 
-      //auto by_weekday = group<SleepByWeekday>(SleepSessionSeries{ sleep_sessions }, SessionWeekday);
-//      auto by_year_month = groupByYearMonth(SleepSessionSeries{ sleep_sessions }, SleepTypeFilter{});
+      auto by_weekday = group<SleepByWeekday>(SleepSessionSeries{ sleep_sessions }, SessionWeekday);
+      auto by_year_month = group<SleepByYearMonth>(SleepSessionSeries{ sleep_sessions }, SessionYearMonth);
    }
 } // namespace oura_charts::test
