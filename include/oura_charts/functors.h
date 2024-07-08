@@ -216,7 +216,7 @@ namespace oura_charts
    /// <summary>
    ///   Functor to calculate an average.
    /// </summary>
-   template<typename T, typename ResultTypeT = double >
+   template<typename T, typename ResultTypeT = double>
    class AvgCalc
    {
    public:
@@ -228,7 +228,7 @@ namespace oura_charts
          ++m_count;
       }
 
-      ResultType result() const noexcept
+      ResultTypeT result() const noexcept
       {
          assert(m_count);
          return static_cast<ResultType>(m_sum.result()) / m_count;
@@ -239,12 +239,52 @@ namespace oura_charts
          return m_count;
       }
 
+      bool hasResult() const noexcept
+      {
+         return m_count > 0;
+      }
+
    private:
       SumCalc<T, ResultTypeT>  m_sum{};
       size_t      m_count{};
    };
 
 
+   template<NullableNumeric ValueTypeT, NullableNumeric ResultTypeT>
+   class AvgCalc<ValueTypeT, ResultTypeT>
+   {
+   public:
+      void operator()(const ValueTypeT& val) noexcept
+      {
+         if (val.has_value())
+         {
+            m_sum(val);
+            ++m_count;
+         }
+      }
+
+      ResultTypeT result() const noexcept
+      {
+         assert(m_count);
+         return static_cast<ResultTypeT>(m_sum.result()) / m_count;
+      }
+
+      size_t count() const noexcept
+      {
+         return m_count;
+      }
+
+      bool hasResult() const noexcept
+      {
+         return m_count > 0;
+      }
+
+   private:
+      SumCalc<ValueTypeT, ResultTypeT>  m_sum{};
+      size_t      m_count{};
+   };
+
+   
 
 
 
