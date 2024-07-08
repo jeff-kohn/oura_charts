@@ -21,6 +21,9 @@ namespace oura_charts::detail
    // will choke on if you try to map it directly to a string or built-in type.
    using nullable_string = std::optional<std::string>;
    using nullable_double = std::optional<double>;
+   using nullable_int    = std::optional<int32_t>;
+   using nullable_uint   = std::optional<uint32_t>;
+
 
    /// <summary>
    ///   JSON struct for personal info profile from Oura
@@ -88,14 +91,14 @@ namespace oura_charts::detail
       nullable_double average_heart_rate{};
       nullable_double average_hrv{};
 
-      nullable_double lowest_heart_rate{};
+      nullable_uint lowest_heart_rate{};
 
       chrono::seconds latency{};
       chrono::seconds awake_time{};
       chrono::seconds deep_sleep_duration{};
       chrono::seconds light_sleep_duration{};
       chrono::seconds rem_sleep_duration{};
-      nullable_double restless_periods{};
+      nullable_uint restless_periods{};
       chrono::seconds total_sleep_duration{};
       chrono::seconds time_in_bed{};
       SleepType type{};

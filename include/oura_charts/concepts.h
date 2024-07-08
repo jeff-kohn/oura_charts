@@ -11,6 +11,7 @@
 #include <concepts>
 #include <string_view>
 #include <fmt/format.h>
+#include <optional>
 #include <ranges>
 
 namespace oura_charts
@@ -92,5 +93,28 @@ namespace oura_charts
       jr = dp.getJsonData("");
    };
 
+
+   /// <summary>
+   ///   concept for type that can represent a null value (in other worsds, std::optional<>) 
+   /// </summary>
+   template <typename T>
+   concept NullableType = std::same_as<T, std::optional<typename T::value_type>>;
+
+
+   /// <summary>
+   ///   concept for type that can represent a null value (in other worsds, std::optional<>) 
+   /// </summary>
+   template <typename T>
+   concept NullableNumeric = NullableType<T>
+      && (std::integral<typename T::value_type> || std::floating_point<typename T::value_type>)
+      && !std::same_as<typename T::value_type, char>
+      && !std::same_as<typename T::value_type, unsigned char>;
+
+
+   /// <summary>
+   ///   concept requiring that a type NOT be nullable
+   /// </summary>
+   template <typename T>
+   concept NotNullable = not NullableType<T>;
 
 } // namespace oura_charts

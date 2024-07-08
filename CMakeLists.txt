@@ -77,7 +77,7 @@ elseif (LINUX)
 
     set(OURACHARTS_COMPILE_OPTIONS "$<$<CONFIG:Debug>:-Og;>"
                                    "$<$<CONFIG:Release,RelWithDebInfo>:-O3>"
-                                   "-g;-fstack-clash-protection;-fstack-protector-strong;-fexceptions;-fpie;-grecord-gcc-switches;-fcf-protection;-pipe;-Werror=format-security;-frelaxed-template-template-args;"
+                                   "-g;-fstack-clash-protection;-fstack-protector-strong;-fexceptions;-fpie;-grecord-gcc-switches;-fcf-protection;-pipe;-Werror=format-security;-frelaxed-template-template-args;-fno-strict-overflow;-Wstrict-overflow"
                                    CACHE STRING "Default global compile options for oura_charts project")
 
     set(OURACHARTS_LINK_OPTIONS "-pie;" CACHE STRING "Default global linker options for oura_charts project")

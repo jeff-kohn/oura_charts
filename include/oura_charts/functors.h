@@ -13,6 +13,7 @@
 #include <concepts>
 #include <algorithm>
 #include <optional>
+#include <cassert>
 
 namespace oura_charts
 {
@@ -50,32 +51,67 @@ namespace oura_charts
 
    /// <summary>
    ///   accumulate a minimum value. make sure to pass std::ref() to algorithms
-   ///   that take callables by value.
+   ///   that take callables by value, or you'll end up with an empty value.
    /// </summary>
+   /// <remarks>
+   ///   note that if you never actually call operator(), the result() function
+   ///   will return an empty/null optional<>
+   /// <remarks>
    template <typename T>
    class MinCalc
    {
-   public:
-      using ResultType = T;
 
-      template<typename ValT>
-      void operator()(ValT&& val) noexcept
+   public:
+      void operator()(const T& val) noexcept
       {
           m_result = m_result.has_value() ? std::min(*m_result, val) : val;
       }
 
-      const std::optional<ResultType>& result() const noexcept
+      const std::optional<T>& result() const noexcept
       {
          return m_result;
       }
 
+      bool hasResult() const noexcept
+      {
+         return m_result.has_value();
+      }
+
    private:
-      std::optional<ResultType> m_result{};
+      std::optional<T> m_result{};
    };
 
 
    /// <summary>
-   ///   accumulate a minimum value. make sure to pass std::ref() to algorithms
+   ///   MinCalc specializatin that can handle nullable types (std::optional)
+   /// </summary>
+   template <NullableNumeric T>
+   class MinCalc<T>
+   {
+   public:
+      void operator()(const T& val) noexcept
+      {
+         if (val.has_value())
+            m_result = m_result.has_value() ? std::min(*m_result, *val) : *val;
+      }
+
+      const T& result() const noexcept
+      {
+         return m_result;
+      }
+
+      bool hasResult() const noexcept
+      {
+         return m_result.has_value();
+      }
+
+   private:
+      T m_result{};
+   };
+
+
+   /// <summary>
+   ///   accumulate a maximum value. make sure to pass std::ref() to algorithms
    ///   that take callables by value.
    /// </summary>
    template <typename T>
@@ -84,8 +120,7 @@ namespace oura_charts
    public:
       using ResultType = T;
 
-      template<typename ValT>
-      void operator()(ValT&& val) noexcept
+      void operator()(const T& val) noexcept
       {
          m_result = m_result.has_value() ? std::max(*m_result, val) : val;
       }
@@ -101,26 +136,80 @@ namespace oura_charts
 
 
    /// <summary>
+   ///   specialization of MaxCalc for nullable types (std::optional)
+   /// </summary>
+   template <NullableNumeric T>
+   class MaxCalc<T>
+   {
+   public:
+      void operator()(const T& val) noexcept
+      {
+         if (val.has_value())
+            m_result = m_result.has_value() ? std::max(*m_result, *val) : *val;
+      }
+
+      const T& result() const noexcept
+      {
+         return m_result;
+      }
+
+      bool hasResult() const noexcept
+      {
+         return m_result.has_value();
+      }
+
+   private:
+      T m_result{};
+   };
+
+
+   /// <summary>
    ///   Functor to calculate a sum.
    /// </summary>
-   template<typename T, typename ResultTypeT = T>
+   /// <remarks>
+   ///   if you get a compiler error about constraint not met, it means you're using a nullable type and
+   ///   forgot to specify the result type (which is not specified in the specialization for nullable types)
+   /// <remarks>
+   template<typename ValueTypeT, typename ResultTypeT>
    class SumCalc
    {
    public:
-      using ResultType = ResultTypeT;
-
-      void operator()(const T& val) noexcept
+      void operator()(const ValueTypeT& val) noexcept
       {
          m_sum += val;
       }
 
-      ResultType result() const noexcept
+      ResultTypeT result() const noexcept
       {
          return m_sum;
       }
 
    private:
-      ResultType m_sum{};
+      ResultTypeT m_sum{};
+   };
+
+
+   /// <summary>
+   ///   SumCalc specialization for nullable types. Unfortunately we can't provide default for
+   ///   ResultTypeT in a partial specialization
+   /// </summary>
+   template<NullableNumeric ValueTypeT, NullableNumeric ResultTypeT>
+   class SumCalc<ValueTypeT, ResultTypeT>
+   {
+   public:
+      void operator()(const ValueTypeT& val) noexcept
+      {
+         if (val.has_value())
+            m_sum += *val;
+      }
+
+      ResultTypeT result() const noexcept
+      {
+         return m_sum;
+      }
+
+   private:
+      ResultTypeT m_sum{};
    };
 
 
@@ -141,6 +230,7 @@ namespace oura_charts
 
       ResultType result() const noexcept
       {
+         assert(m_count);
          return static_cast<ResultType>(m_sum.result()) / m_count;
       }
 
@@ -150,22 +240,27 @@ namespace oura_charts
       }
 
    private:
-      SumCalc<T>  m_sum{};
+      SumCalc<T, ResultTypeT>  m_sum{};
       size_t      m_count{};
    };
 
 
+
+
+
+   //
    // Helper template for deducing return type of a class method.
+   //
    template<typename T>
-   struct method_return_type;
+   struct MethodReturnType;
 
    template<typename R, typename C, typename... Args>
-   struct method_return_type<R(C::*)(Args...)> {
+   struct MethodReturnType<R(C::*)(Args...)> {
        using type = R;
    };
 
    template<typename MethodT>
-   using method_return_type_t = typename method_return_type<MethodT>::type;
+   using MethodReturnType_t = typename MethodReturnType<MethodT>::type;
 
 
 }  // namespace oura_charts

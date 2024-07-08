@@ -15,6 +15,9 @@
 namespace oura_charts
 {
    using detail::nullable_double;
+   using detail::nullable_string;
+   using detail::nullable_int;
+   using detail::nullable_uint;
 
    /// <summary>
    ///   encapsulates data for a single sleep session from the Oura API.
@@ -36,7 +39,7 @@ namespace oura_charts
       nullable_double avgBreathingRate() const     {  return m_data.average_breath;       }
       nullable_double avgHeartRate() const         {  return m_data.average_heart_rate;   }
       nullable_double avgHRV() const               {  return m_data.average_hrv;          }
-      nullable_double restingHeartRate() const     {  return m_data.lowest_heart_rate;    }
+      nullable_uint restingHeartRate() const       {  return m_data.lowest_heart_rate;    }
 
       chrono::seconds latency() const              {  return m_data.latency;              }
       chrono::seconds timeAwake() const            {  return m_data.awake_time;           }
@@ -46,7 +49,7 @@ namespace oura_charts
       chrono::seconds sleepTimeTotal() const       {  return m_data.total_sleep_duration; }
       chrono::seconds timeInBed() const            {  return m_data.time_in_bed;          }
                                                
-      nullable_double restless_periods() const     {  return m_data.restless_periods;     }
+      std::optional<uint32_t> restlessPeriods() const       {  return m_data.restless_periods;     }
 
       /// <summary>
       ///   constructor accepts data by value, pass && to move instead of copy
