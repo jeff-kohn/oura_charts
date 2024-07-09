@@ -318,6 +318,11 @@ namespace oura_charts
        using type = R;
    };
 
+   /// <summary>
+   ///   helper template for deducing return type of a class method.
+   ///   example usage: MethodReturnType_t<decltype(&IObject::foo)>
+   /// </summary>
+   /// <typeparam name="MethodT"></typeparam>
    template<typename MethodT>
    using MethodReturnType_t = typename MethodReturnType<MethodT>::type;
 
