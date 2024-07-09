@@ -11,11 +11,7 @@ namespace oura_charts::test
    using namespace std::literals;
    using namespace detail;
 
-   auto clone(const auto& rng)
-   {
-      return rng;
-   }
-
+   // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
 
    TEST_CASE("test_DataSeries_paging", "[parsing][binding]")
    {
@@ -48,8 +44,10 @@ namespace oura_charts::test
          for (unsigned int d = 1; d <= num_days; ++d)
          {
             auto ymd = this_year / m / d;
-            hr_structs.emplace_back(hr_data{ 60, src, local_days{ymd} });
-            hr_structs.emplace_back(hr_data{ 70, src, local_days{ymd} });
+            for (bpm : bpm_values())
+            {
+               hr_structs.emplace_back(hr_data{ bpm, src, local_days{ymd} });
+            }
          }
       }
       return HeartRateDataSeries{ hr_structs };
@@ -136,5 +134,6 @@ namespace oura_charts::test
       }
    }
 
+   // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
 } // namespace oura_charts::test

@@ -15,6 +15,8 @@
 
 namespace oura_charts::test
 {
+   // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers) 
+
    namespace rg = std::ranges;
    namespace vw = rg::views;
    using namespace std::literals;
@@ -45,9 +47,6 @@ namespace oura_charts::test
    } // namespace
 
 
-   // These functors will never have empty optional<> result because we never pass empty ranges to them. Any
-   // invalid access to an empty optional would be a bug requiring a fix to the test, so we WANT that to throw.
-   // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, bugprone-unchecked-optional-access) 
 
 
    // helper function that uses our functors on a range of various element types to
@@ -167,8 +166,7 @@ namespace oura_charts::test
       REQUIRE(avg == testFunctor(nullable_range, AvgCalc<int, double>{}));
    }
 
-   // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, bugprone-unchecked-optional-access)
-
+   // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
 }  // namespace oura_charts::test
 
