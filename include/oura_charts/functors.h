@@ -51,62 +51,45 @@ namespace oura_charts
 
    /// <summary>
    ///   accumulate a minimum value. make sure to pass std::ref() to algorithms
-   ///   that take callables by value, or you'll end up with an empty value.
+   ///   that take callables by value, or you'll end up with an empty result.
    /// </summary>
-   /// <remarks>
-   ///   note that if you never actually call operator(), the result() function
-   ///   will return an empty/null optional<>
+   /// </summary>
+   ///   Since we support null input values, it's possible that the result could be null/empty; so
+   ///   the default/initial return value is an empty std::optional<> instead of 0 until you pass in
+   ///   at least one non-null value.
    /// <remarks>
    template <typename T>
    class MinCalc
    {
 
    public:
-      void operator()(const T& val) noexcept
+      using InputType = T;
+      using NullableInputType = std::optional<InputType>;
+      using ResultType = std::optional<InputType>;
+
+      void operator()(const InputType& val) noexcept
       {
           m_result = m_result.has_value() ? std::min(*m_result, val) : val;
       }
 
-      const std::optional<T>& result() const noexcept
-      {
-         return m_result;
-      }
-
-      bool hasResult() const noexcept
-      {
-         return m_result.has_value();
-      }
-
-   private:
-      std::optional<T> m_result{};
-   };
-
-
-   /// <summary>
-   ///   MinCalc specializatin that can handle nullable types (std::optional)
-   /// </summary>
-   template <NullableNumeric T>
-   class MinCalc<T>
-   {
-   public:
-      void operator()(const T& val) noexcept
+      void operator()(const NullableInputType& val) noexcept
       {
          if (val.has_value())
-            m_result = m_result.has_value() ? std::min(*m_result, *val) : *val;
-      }
-
-      const T& result() const noexcept
-      {
-         return m_result;
-      }
+            (*this)(val.value());
+      };
 
       bool hasResult() const noexcept
       {
          return m_result.has_value();
       }
 
+      const ResultType& result() const noexcept
+      {
+         return m_result;
+      } 
+
    private:
-      T m_result{};
+      ResultType m_result{};
    };
 
 
@@ -114,178 +97,158 @@ namespace oura_charts
    ///   accumulate a maximum value. make sure to pass std::ref() to algorithms
    ///   that take callables by value.
    /// </summary>
+   /// </summary>
+   ///   Since we support null input values, it's possible that the result could be null/empty; so
+   ///   the default/initial return value is an empty std::optional<> instead of 0 until you pass in
+   ///   at least one non-null value.
+   /// <remarks>
    template <typename T>
    class MaxCalc
    {
    public:
-      using ResultType = T;
+      using InputType = T;
+      using NullableInputType = std::optional<InputType>;
+      using ResultType = std::optional<InputType>;
+
 
       void operator()(const T& val) noexcept
       {
          m_result = m_result.has_value() ? std::max(*m_result, val) : val;
       }
 
-      const std::optional<ResultType>& result() const noexcept
-      {
-         return m_result;
-      }
-
-   private:
-      std::optional<ResultType> m_result{};
-   };
-
-
-   /// <summary>
-   ///   specialization of MaxCalc for nullable types (std::optional)
-   /// </summary>
-   template <NullableNumeric T>
-   class MaxCalc<T>
-   {
-   public:
-      void operator()(const T& val) noexcept
+      void operator()(const NullableInputType& val) noexcept
       {
          if (val.has_value())
-            m_result = m_result.has_value() ? std::max(*m_result, *val) : *val;
-      }
-
-      const T& result() const noexcept
-      {
-         return m_result;
-      }
+            (*this)(val.value());
+      };
 
       bool hasResult() const noexcept
       {
          return m_result.has_value();
       }
 
+      const ResultType& result() const noexcept
+      {
+         return m_result;
+      }
+
    private:
-      T m_result{};
+      ResultType m_result{};
    };
 
 
    /// <summary>
    ///   Functor to calculate a sum.
    /// </summary>
+   /// </summary>
+   ///   Since we support null input values, it's possible that the result could be null/empty; so
+   ///   the default/initial return value is an empty std::optional<> instead of 0 until you pass in
+   ///   at least one non-null value.
    /// <remarks>
-   ///   if you get a compiler error about constraint not met, it means you're using a nullable type and
-   ///   forgot to specify the result type (which is not specified in the specialization for nullable types)
-   /// <remarks>
-   template<typename ValueTypeT, typename ResultTypeT>
+   template<typename ValueTypeT, typename ResultTypeT = ValueTypeT>
    class SumCalc
    {
    public:
-      void operator()(const ValueTypeT& val) noexcept
+      using InputType = ValueTypeT;
+      using NullableInputType = std::optional<InputType>;
+      using ResultType = std::optional<ResultTypeT>;
+
+
+      void operator()(const InputType& val) noexcept
       {
-         m_sum += val;
+         if (m_result.has_value())
+            *m_result += val;
+         else
+            m_result = val;
       }
 
-      ResultTypeT result() const noexcept
-      {
-         return m_sum;
-      }
-
-   private:
-      ResultTypeT m_sum{};
-   };
-
-
-   /// <summary>
-   ///   SumCalc specialization for nullable types. Unfortunately we can't provide default for
-   ///   ResultTypeT in a partial specialization
-   /// </summary>
-   template<NullableNumeric ValueTypeT, NullableNumeric ResultTypeT>
-   class SumCalc<ValueTypeT, ResultTypeT>
-   {
-   public:
-      void operator()(const ValueTypeT& val) noexcept
+      void operator()(const NullableInputType& val) noexcept
       {
          if (val.has_value())
-            m_sum += *val;
+            (*this)(val.value());
+      };
+
+      bool hasResult() const noexcept
+      {
+         return m_result.has_value();
       }
 
-      ResultTypeT result() const noexcept
+      const ResultType& result() const noexcept
       {
-         return m_sum;
+         return m_result;
       }
 
    private:
-      ResultTypeT m_sum{};
+      ResultType m_result{};
    };
+
 
 
    /// <summary>
    ///   Functor to calculate an average.
    /// </summary>
-   template<typename T, typename ResultTypeT = double>
+   /// </summary>
+   ///   Since we support null input values, it's possible that the result could be null/empty; so
+   ///   the default/initial return value is an empty std::optional<> instead of 0 until you pass in
+   ///   at least one non-null value.
+   /// <remarks>
+   template<typename InputTypeT, typename ResultTypeT = double>
    class AvgCalc
    {
    public:
-      using ResultType = ResultTypeT;
+      using InputType = InputTypeT;
+      using NullableInputType = std::optional<InputType>;
+      using ResultType = std::optional<ResultTypeT>;
 
-      void operator()(const T& val) noexcept
+
+      void operator()(const InputType& val) noexcept
       {
          m_sum(val);
          ++m_count;
       }
 
-      ResultTypeT result() const noexcept
-      {
-         assert(m_count);
-         return static_cast<ResultType>(m_sum.result()) / m_count;
-      }
-
-      size_t count()const noexcept
-      {
-         return m_count;
-      }
-
-      bool hasResult() const noexcept
-      {
-         return m_count > 0;
-      }
-
-   private:
-      SumCalc<T, ResultTypeT>  m_sum{};
-      size_t      m_count{};
-   };
-
-
-   template<NullableNumeric ValueTypeT, NullableNumeric ResultTypeT>
-   class AvgCalc<ValueTypeT, ResultTypeT>
-   {
-   public:
-      void operator()(const ValueTypeT& val) noexcept
+      void operator()(const NullableInputType& val) noexcept
       {
          if (val.has_value())
+            (*this)(val.value());
+      };
+
+      ResultType result() const noexcept
+      {
+         assert(m_count);
+         if (m_sum.hasResult())
          {
-            m_sum(val);
-            ++m_count;
+            auto sum = m_sum.result().value();
+            ResultTypeT result_val = static_cast<ResultTypeT>(sum) / m_count;
+            return ResultType{ result_val };
+         }
+         else
+         {
+            return ResultType{};
          }
       }
 
-      ResultTypeT result() const noexcept
-      {
-         assert(m_count);
-         return static_cast<ResultTypeT>(m_sum.result()) / m_count;
-      }
-
+      /// <summary>
+      ///   returns the count of values used in the calculation, which does NOT
+      ///   include any null values that were passed.
+      /// </summary>
+      /// <returns></returns>
       size_t count() const noexcept
       {
          return m_count;
       }
 
+      // returns true if a non-null/empty value has been calculated. If this returns
+      // false result() will return an empty std::optional<>
       bool hasResult() const noexcept
       {
          return m_count > 0;
       }
 
    private:
-      SumCalc<ValueTypeT, ResultTypeT>  m_sum{};
-      size_t      m_count{};
+      SumCalc<InputType, ResultTypeT>  m_sum{};
+      size_t  m_count{0};
    };
-
-   
-
 
 
    //

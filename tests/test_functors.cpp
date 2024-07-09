@@ -72,7 +72,7 @@ namespace oura_charts::test
 
    TEST_CASE("test_MinCalc_nullable")
    {
-      auto val = testFunctor(nullable_range, MinCalc<nullable_int>{}).value();
+      auto val = testFunctor(nullable_range, MinCalc<int>{}).value();
       REQUIRE(val == 1);
    }
 
@@ -106,7 +106,7 @@ namespace oura_charts::test
 
    TEST_CASE("test_MaxCalc_nullable")
    {
-      REQUIRE(testFunctor(nullable_range, MaxCalc<nullable_int>{}).value() == 5);
+      REQUIRE(testFunctor(nullable_range, MaxCalc<int>{}).value() == 5);
    }
 
 
@@ -140,18 +140,18 @@ namespace oura_charts::test
       auto sum = std::accumulate(double_range.begin(), double_range.end(), 0.0);
       auto avg = sum / double_range.size();
 
-      REQUIRE(sum == testFunctor(double_range, SumCalc<double, double>{}) );
-      REQUIRE(avg == testFunctor(double_range, AvgCalc<double, double>{}) );
+      REQUIRE(sum == testFunctor(double_range, SumCalc<double>{}).value_or(0) );
+      REQUIRE(avg == testFunctor(double_range, AvgCalc<double>{}).value_or(0) );
    }
 
 
    TEST_CASE("test_SumCalc_AvgCalc_nullable")
    {
-      //auto sum = std::accumulate(int_range.begin(), int_range.end(), 0);
-      //auto avg = static_cast<double>(sum) / int_range.size();
+      auto sum = std::accumulate(int_range.begin(), int_range.end(), 0);
+      auto avg = static_cast<double>(sum) / int_range.size();
 
-      //REQUIRE(sum == testFunctor(nullable_range, SumCalc<nullable_int, double>{}));
-//      REQUIRE(avg == testFunctor(nullable_range, AvgCalc<nullable_int, double>{}));
+      REQUIRE(sum == testFunctor(nullable_range, SumCalc<int, uint64_t>{}));
+      REQUIRE(avg == testFunctor(nullable_range, AvgCalc<int, double>{}));
    }
 
    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, bugprone-unchecked-optional-access)
