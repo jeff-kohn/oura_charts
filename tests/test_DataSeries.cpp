@@ -44,7 +44,7 @@ namespace oura_charts::test
          for (unsigned int d = 1; d <= num_days; ++d)
          {
             auto ymd = this_year / m / d;
-            for (bpm : bpm_values())
+            for (auto bpm : bpm_values())
             {
                hr_structs.emplace_back(hr_data{ bpm, src, local_days{ymd} });
             }
