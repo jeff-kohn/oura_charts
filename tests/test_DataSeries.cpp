@@ -81,9 +81,15 @@ namespace oura_charts::test
          AvgCalc<int> avg_calc{};
          MinCalc<int> min_calc{};
          MaxCalc<int> max_calc{};
-         rg::for_each( hr_month | vw::values, std::ref(avg_calc), &HeartRate::beatsPerMin );
-         rg::for_each( hr_month | vw::values, std::ref(min_calc), &HeartRate::beatsPerMin );
-         rg::for_each( hr_month | vw::values, std::ref(max_calc), &HeartRate::beatsPerMin );
+         rg::for_each(hr_month | vw::values,
+                      [&] (const auto& hr)
+                      {
+                         avg_calc(hr);
+                         min_calc(hr);
+                         max_calc(hr);
+                      },
+                      &HeartRate::beatsPerMin);
+
          REQUIRE(avg_calc.hasResult());
          REQUIRE(min_calc.hasResult());
          REQUIRE(max_calc.hasResult());
@@ -122,9 +128,16 @@ namespace oura_charts::test
          AvgCalc<int> avg_calc{};
          MinCalc<int> min_calc{};
          MaxCalc<int> max_calc{};
-         rg::for_each(hr_weekday | vw::values, std::ref(avg_calc), &HeartRate::beatsPerMin);
-         rg::for_each(hr_weekday | vw::values, std::ref(min_calc), &HeartRate::beatsPerMin);
-         rg::for_each(hr_weekday | vw::values, std::ref(max_calc), &HeartRate::beatsPerMin);
+
+         rg::for_each(hr_weekday | vw::values,
+                      [&] (const auto& hr)
+                      {
+                         avg_calc(hr);
+                         min_calc(hr);
+                         max_calc(hr);
+                      },
+                      &HeartRate::beatsPerMin);
+
          REQUIRE(avg_calc.hasResult());
          REQUIRE(min_calc.hasResult());
          REQUIRE(max_calc.hasResult());
