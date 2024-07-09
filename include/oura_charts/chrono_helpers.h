@@ -300,7 +300,13 @@ namespace oura_charts
    }
 
 
-   /// Partial specialization with concept to make AvgCalc work with duration types
+   /// <summary>
+   ///   AvgCalc<> specialization for chrono duration types
+   ///  
+   ///   if you get compile error trying to pass this object type to an algorithm, it's because
+   ///   this functor is move-only, you need to use std::ref() with algorithms that accept their
+   ///   functor by-value.
+   /// </summary>
    template<detail::ChronoDuration DurationT>
    class AvgCalc<DurationT, double>
    {

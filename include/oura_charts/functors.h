@@ -57,6 +57,10 @@ namespace oura_charts
    ///   Since we support null input values, it's possible that the result could be null/empty; so
    ///   the default/initial return value is an empty std::optional<> instead of 0 until you pass in
    ///   at least one non-null value.
+   ///
+   ///   if you get compile error trying to pass this object type to an algorithm, it's because
+   ///   this functor is move-only, you need to use std::ref() with algorithms that accept their
+   ///   functor by-value.
    /// <remarks>
    template <typename T>
    class MinCalc
@@ -88,6 +92,14 @@ namespace oura_charts
          return m_result;
       } 
 
+      // object is move-only, because a lot of algorithms take functor by value which means
+      // we'd lose the result unless we wrap in std::ref()
+      MinCalc() = default;
+      MinCalc(const MinCalc&) = delete;
+      MinCalc(MinCalc&&) = default;
+      MinCalc& operator=(const MinCalc&) = delete;
+      MinCalc& operator=(MinCalc&&) = default;
+
    private:
       ResultType m_result{};
    };
@@ -101,6 +113,10 @@ namespace oura_charts
    ///   Since we support null input values, it's possible that the result could be null/empty; so
    ///   the default/initial return value is an empty std::optional<> instead of 0 until you pass in
    ///   at least one non-null value.
+   ///
+   ///   if you get compile error trying to pass this object type to an algorithm, it's because
+   ///   this functor is move-only, you need to use std::ref() with algorithms that accept their
+   ///   functor by-value.
    /// <remarks>
    template <typename T>
    class MaxCalc
@@ -132,6 +148,14 @@ namespace oura_charts
          return m_result;
       }
 
+      // object is move-only, because a lot of algorithms take functor by value which means
+      // we'd lose the result unless we wrap in std::ref()
+      MaxCalc() = default;
+      MaxCalc(const MaxCalc&) = delete;
+      MaxCalc(MaxCalc&&) = default;
+      MaxCalc& operator=(const MaxCalc&) = delete;
+      MaxCalc& operator=(MaxCalc&&) = default;
+
    private:
       ResultType m_result{};
    };
@@ -144,6 +168,10 @@ namespace oura_charts
    ///   Since we support null input values, it's possible that the result could be null/empty; so
    ///   the default/initial return value is an empty std::optional<> instead of 0 until you pass in
    ///   at least one non-null value.
+   ///
+   ///   if you get compile error trying to pass this object type to an algorithm, it's because
+   ///   this functor is move-only, you need to use std::ref() with algorithms that accept their
+   ///   functor by-value.
    /// </remarks>
    template<typename ValueTypeT, typename ResultTypeT = ValueTypeT>
    class SumCalc
@@ -181,6 +209,14 @@ namespace oura_charts
          return m_result;
       }
 
+      // object is move-only, because a lot of algorithms take functor by value which means
+      // we'd lose the result unless we wrap in std::ref()
+      SumCalc() = default;
+      SumCalc(const SumCalc&) = delete;
+      SumCalc(SumCalc&&) = default;
+      SumCalc& operator=(const SumCalc&) = delete;
+      SumCalc& operator=(SumCalc&&) = default;
+
    private:
       ResultType m_result{};
    };
@@ -194,6 +230,10 @@ namespace oura_charts
    ///   Since we support null input values, it's possible that the result could be null/empty; so
    ///   the default/initial return value is an empty std::optional<> instead of 0 until you pass in
    ///   at least one non-null value.
+   ///
+   ///   if you get compile error trying to pass this object type to an algorithm, it's because
+   ///   this functor is move-only, you need to use std::ref() with algorithms that accept their
+   ///   functor by-value.
    /// <remarks>
    template<typename InputTypeT, typename ResultTypeT = double>
    class AvgCalc
@@ -252,6 +292,14 @@ namespace oura_charts
       {
          return m_count > 0;
       }
+
+      // object is move-only, because a lot of algorithms take functor by value which means
+      // we'd lose the result unless we wrap in std::ref()
+      AvgCalc() = default;
+      AvgCalc(const AvgCalc&) = delete;
+      AvgCalc(AvgCalc&&) = default;
+      AvgCalc& operator=(const AvgCalc&) = delete;
+      AvgCalc& operator=(AvgCalc&&) = default;
 
    private:
       SumCalc<InputType, ResultTypeT>  m_sum{};
