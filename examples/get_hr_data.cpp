@@ -70,7 +70,9 @@ int main(int argc, char* argv[])
          auto end_time = start_time + 1h;
 
          // output the average to the console
-         fmt::println("{:%I:%M%p}-{:%I:%M%p} average heart rate = {:.1f} bpm", start_time, end_time, avg_calc.result());
+         auto result = avg_calc.result();
+         if (result.has_value())
+            fmt::println("{:%I:%M%p}-{:%I:%M%p} average heart rate = {:.1f} bpm", start_time, end_time, result.value());
 
          // move to next hour range if we're not already at the last.
          it = end;
