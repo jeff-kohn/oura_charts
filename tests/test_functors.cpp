@@ -40,6 +40,8 @@ namespace oura_charts::test
 
       constexpr std::array nullable_range = { nullable_int{}, nullable_int{5}, nullable_int{4}, nullable_int{1}, nullable_int{2}, nullable_int{3}, nullable_int{} };
 
+      constexpr std::array all_null = { nullable_int{},nullable_int{},nullable_int{},nullable_int{} };
+
    } // namespace
 
 
@@ -150,7 +152,18 @@ namespace oura_charts::test
       auto sum = std::accumulate(int_range.begin(), int_range.end(), 0);
       auto avg = static_cast<double>(sum) / int_range.size();
 
-      REQUIRE(sum == testFunctor(nullable_range, SumCalc<int, uint64_t>{}));
+      auto null_result = testFunctor(all_null, SumCalc<int>{});
+      REQUIRE(null_result.has_value() == false);
+      REQUIRE(nullable_int{} == null_result);
+
+      null_result = testFunctor(std::vector<int>{}, SumCalc<int>{});
+      REQUIRE(null_result.has_value() == false);
+      REQUIRE(nullable_int{} == null_result);
+
+      SumCalc<int, uint64_t> sum_calc{};
+      REQUIRE(not sum_calc.hasResult());
+      REQUIRE(sum == testFunctor(nullable_range, sum_calc));
+
       REQUIRE(avg == testFunctor(nullable_range, AvgCalc<int, double>{}));
    }
 
