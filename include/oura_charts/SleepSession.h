@@ -116,18 +116,24 @@ namespace oura_charts
          return year_month{ ymd.year(), ymd.month() };
       };
 
+   static constexpr auto SessionMonth = [] (const SleepSession& session) -> month
+      {
+         return session.sessionDate().month();
+      };
+
+
 
    // map to group sessions by day of the week
-   using SleepByWeekday = MapByWeekdayT<SleepSession>;
+   using SleepByWeekday = MapByWeekday<SleepSession>;
 
    // map to group sessions by month of the year (not a specific year, just month)
-   using SleepByMonth = MapByMonthT<SleepSession>;
+   using SleepByMonth = MapByMonth<SleepSession>;
 
    // map to group sessions by year and month
-   using SleepByYearMonth = MapByYearMonthT<SleepSession>;
+   using SleepByYearMonth = MapByYearMonth<SleepSession>;
 
    // map to group sessions by year
-   using SleepByYear = MapByYearT<SleepSession>;
+   using SleepByYear = MapByYear<SleepSession>;
 
 
    /// <summary>

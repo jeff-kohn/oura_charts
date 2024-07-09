@@ -25,7 +25,7 @@ add_executable(${THIS_TARGET}
    "TestDataProvider.h"
    "TestDataProvider.cpp"
    "test_bindings.cpp"
-   "test_datetime_helpers.cpp"
+   "test_chrono_helpers.cpp"
    "test_json_data.cpp"
    "test_oura_exception.cpp"
    "test_DataSeries.cpp"

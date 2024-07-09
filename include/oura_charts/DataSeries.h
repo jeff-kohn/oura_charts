@@ -85,7 +85,7 @@ namespace oura_charts
       template <rg::forward_range RangeT> requires JsonStructRange<RangeT, ElementT>
       explicit DataSeries(RangeT data_series)
       {
-         // stupid clang doesn't actually call ElementT(StorageType&&) like it should ,instead it default constructs and calls operator=(StorageType&&) 
+         // stupid libstdc++ doesn't actually call ElementT(StorageType&&) like it should ,instead it default constructs and calls operator=(StorageType&&) 
          // which doesn't exist. So even though this would be faster, we have to use a ranged for loop and emplace() each element. pretty fucking lame
          // if you ask me.
          //base::insert(end(), std::make_move_iterator(data_series.begin()), std::make_move_iterator(data_series.end()));
@@ -148,19 +148,19 @@ namespace oura_charts
    
    // template alias for map of DataSeriesElements grouped by day of week
    template <DataSeriesElement ElementT, template <typename, typename, typename> typename MapT = std::multimap>
-   using MapByWeekdayT = MapT<weekday, ElementT, weekday_compare_less>;
+   using MapByWeekday = MapT<weekday, ElementT, weekday_compare_less>;
 
    // template alias for map of DataSeriesElements grouped by month of the year (not a specific year, just month)
    template <DataSeriesElement ElementT, template <typename, typename> typename MapT = std::multimap>
-   using MapByMonthT = MapT<month, ElementT>;
+   using MapByMonth = MapT<month, ElementT>;
 
    // template alias for map of DataSeriesElements grouped by year and month
    template <DataSeriesElement ElementT, template <typename, typename> typename MapT = std::multimap>
-   using MapByYearMonthT = MapT<year_month, ElementT>;
+   using MapByYearMonth = MapT<year_month, ElementT>;
 
    // template alias for map of DataSeriesElements grouped by year
    template <DataSeriesElement ElementT, template <typename, typename> typename MapT = std::multimap>
-   using MapByYearT = MapT<year, ElementT>;
+   using MapByYear = MapT<year, ElementT>;
 
 
 

@@ -269,6 +269,18 @@ namespace oura_charts
 
 
    /// <summary>
+   ///   small helper to generate a sorted array containing the days of the week
+   /// </summary>
+   [[nodiscard]] inline constexpr auto getMonths()
+   {
+      using namespace chrono;
+      constexpr std::array months{ January, February, March, April, May, June, July, August, September, October, November, December};
+      return months;
+   }
+
+
+
+   /// <summary>
    ///   convert a year_month_day into a year_month. trivial convesion, but doing it
    ///   'inline' will often be ugly/tedious.
    /// </summary>
@@ -288,36 +300,65 @@ namespace oura_charts
    }
 
 
-   /// Use parttial specialization with concept to make AvgCalc work with duration types
+   /// Partial specialization with concept to make AvgCalc work with duration types
    template<detail::ChronoDuration DurationT>
-   class AvgCalc<DurationT>
+   class AvgCalc<DurationT, double>
    {
    public:
-      using Duration = DurationT;
-      using Rep = Duration::rep;
+      using Rep = DurationT::rep;
+      using InputType = DurationT;
+      using NullableInputType = std::optional<InputType>;
+      using ResultType = std::optional<InputType>;
       
-      void operator()(const Duration& val) noexcept
+      void operator()(const InputType& val) noexcept
       {
-         m_sum += val.count();
+         m_sum(val.count());
          ++m_count;
       }
 
-      Duration result() const noexcept
+      void operator()(const NullableInputType& val) noexcept
       {
-         // Hitting this means you either averaged an empty range, or you forgot to
-         // use std::ref() when passing the functor to a std:: algorithm.
-         assert(m_sum != 0);
+         if (val.has_value())
+            (*this)(val.value());
+      };
 
-         return Duration{ static_cast<Rep>( m_sum / m_count) };
+
+      /// <summary>
+      ///   return the result that was calculated. may be a null/empty optional if operator() was
+      ///   never called with a non-empty value.
+      /// </summary>
+      ResultType result() const noexcept
+      {
+         // Hitting this means you either averaged an empty/null-only range, or you forgot to
+         // use std::ref() when passing the functor to a std:: algorithm.
+         assert(m_count != 0);
+
+         if (m_sum.hasResult())
+         {
+            auto sum = m_sum.result().value();
+            InputType result_val{ static_cast<Rep>(sum / m_count) };
+            return ResultType{ result_val };
+         }
+         else
+         {
+            return ResultType{};
+         }
       }
 
-      size_t count()const noexcept
+      size_t count() const noexcept
       {
          return m_count;
       }
 
+      // returns true if a non-null/empty value has been calculated. If this returns
+      // false result() will return an empty std::optional<>
+      bool hasResult() const noexcept
+      {
+         return m_sum.hasResult();
+      }
+
    private:
-      double m_sum{};
+      SumCalc<Rep, double> m_sum{};
       size_t m_count{};
    };
 

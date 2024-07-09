@@ -23,13 +23,13 @@ namespace oura_charts
       static constexpr std::string_view REST_PATH = constants::REST_PATH_HEART_RATE;
 
       // Heart rate in BPM
-      int beatsPerMin() const          {  return m_data.bpm;         }
+      int beatsPerMin() const             {  return m_data.bpm;         }
 
       // Condition HR reading was taken in (awake/asleep/etc)
-      const std::string& source() const       {  return m_data.source;     }
+      const std::string& source() const   {  return m_data.source;     }
 
       // date and time (UTC) the HR reading was taken.
-      local_seconds timestamp() const { return m_data.timestamp; }
+      local_seconds timestamp() const     { return m_data.timestamp; }
 
       /// <summary>
       ///   HeartRate constructor
@@ -73,6 +73,12 @@ namespace oura_charts
          auto ymd = getCalendarDate(hr.timestamp());
          return year_month{ ymd.year(), ymd.month() };
       };
+
+   static constexpr auto HeartRateMonth = [] (const HeartRate& hr) -> month
+      {
+         return getCalendarDate(hr.timestamp()).month();
+      };
+
 
 
    /// <summary>

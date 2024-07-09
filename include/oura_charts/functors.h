@@ -140,11 +140,11 @@ namespace oura_charts
    /// <summary>
    ///   Functor to calculate a sum.
    /// </summary>
-   /// </summary>
+   /// <remarks>
    ///   Since we support null input values, it's possible that the result could be null/empty; so
    ///   the default/initial return value is an empty std::optional<> instead of 0 until you pass in
    ///   at least one non-null value.
-   /// <remarks>
+   /// </remarks>
    template<typename ValueTypeT, typename ResultTypeT = ValueTypeT>
    class SumCalc
    {
@@ -156,10 +156,11 @@ namespace oura_charts
 
       void operator()(const InputType& val) noexcept
       {
+         // Cast is needed to prevent warnings when input type is integral and result type is floating point
          if (m_result.has_value())
-            *m_result += val;
+            *m_result += static_cast<ResultTypeT>(val);
          else
-            m_result = val;
+            m_result = static_cast<ResultTypeT>(val);
       }
 
       void operator()(const NullableInputType& val) noexcept
@@ -168,11 +169,13 @@ namespace oura_charts
             (*this)(val.value());
       };
 
+      // returns true if we have a non-null/empty result
       bool hasResult() const noexcept
       {
          return m_result.has_value();
       }
 
+      // returns the result of the calculation. may be be an empty/null value, so check before dereferencing
       const ResultType& result() const noexcept
       {
          return m_result;
@@ -213,6 +216,11 @@ namespace oura_charts
             (*this)(val.value());
       };
 
+
+      /// <summary>
+      ///   return the result that was calculated. may be a null/empty optional if operator() was
+      ///   never called with a non-empty value.
+      /// </summary>
       ResultType result() const noexcept
       {
          assert(m_count);

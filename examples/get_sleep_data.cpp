@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
          rg::for_each(sleep_range | vw::values, std::ref(avg_sleep_time), &SleepSession::sleepTimeTotal);
 
          // note we decrement the weekday, because the date is actually the following moring.
-         std::println("{} ({}): {} sleep on average", --wd, avg_sleep_time.count(), hh_mm_ss{avg_sleep_time.result()});
+         std::println("{} ({}): {} sleep on average", --wd, avg_sleep_time.count(), hh_mm_ss{ avg_sleep_time.result().value() });
       }
 
    }
