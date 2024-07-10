@@ -11,7 +11,9 @@ namespace oura_charts::test
    using namespace std::literals;
    using namespace detail;
 
-   // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+   // These tests SHOULD crash if they improperly access an empty optional<>
+   // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, bugprone-unchecked-optional-access)
+
 
    TEST_CASE("test_DataSeries_paging", "[parsing][binding]")
    {
@@ -30,7 +32,7 @@ namespace oura_charts::test
 
       // generate range containing the specified bpm values for the first 28 days
       // of each month.
-   auto generateHeartRateSeries(rg::input_range auto&& bpm_values, uint32_t num_days = 7)
+   auto generateHeartRateSeries(rg::input_range auto&& bpm_values, int num_days = 7)
    {
       const auto today = getCalendarDate(localNow());
       const auto this_year = today.year();
@@ -41,7 +43,7 @@ namespace oura_charts::test
       auto months = getMonths();
       for (month m : months)
       {
-         for (unsigned int d = 1; d <= num_days; ++d)
+         for (auto d = 1; d <= num_days; ++d)
          {
             auto ymd = this_year / m / d;
             for (auto bpm : bpm_values)
@@ -75,7 +77,7 @@ namespace oura_charts::test
          auto [beg, end] = hr_by_month.equal_range(month);
          rg::subrange hr_month{ beg, end };
 
-         REQUIRE(rg::distance(hr_month) == 2 * num_days); // we created 2x/per day
+         REQUIRE(static_cast<int>(rg::distance(hr_month)) == 2 * num_days); // we created 2x/per day
 
          // get the average for this month's sub-range
          AvgCalc<int> avg_calc{};
@@ -147,6 +149,6 @@ namespace oura_charts::test
       }
    }
 
-   // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+   // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, bugprone-unchecked-optional-access)
 
 } // namespace oura_charts::test

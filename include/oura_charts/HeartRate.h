@@ -38,6 +38,7 @@ namespace oura_charts
       ///   copies by default, pass rvalue-ref to move instead.
       /// </remarks>
       explicit HeartRate(StorageType data) noexcept : m_data(std::move(data)) {}
+      HeartRate(HeartRate&&) = default;
       HeartRate(const HeartRate&) = default;
       HeartRate& operator=(const HeartRate&) = default;
       HeartRate& operator=(HeartRate&&) = default;

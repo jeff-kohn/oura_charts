@@ -12,7 +12,7 @@
 
 namespace oura_charts::test
 {
-   // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+   // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, bugprone-unchecked-optional-access)
    using namespace std::literals;
 
    namespace
@@ -101,6 +101,6 @@ namespace oura_charts::test
       REQUIRE(avg_calc.result().value() == 35s);
    }
 
-   // NOLINTEND(cppcoreguidelines-avoid-magic-numbers) 
+   // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, bugprone-unchecked-optional-access) 
 
 } // namespace oura_charts::test
