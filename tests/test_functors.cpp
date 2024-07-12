@@ -15,7 +15,7 @@
 
 namespace oura_charts::test
 {
-   // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers) 
+   // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, bugprone-unchecked-optional-access) 
 
    namespace rg = std::ranges;
    namespace vw = rg::views;
@@ -166,7 +166,7 @@ namespace oura_charts::test
       REQUIRE(avg == testFunctor(nullable_range, AvgCalc<int, double>{}));
    }
 
-   // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+   // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, bugprone-unchecked-optional-access)
 
 }  // namespace oura_charts::test
 
