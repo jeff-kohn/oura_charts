@@ -18,18 +18,18 @@ namespace oura_charts::test
       TestDataProvider provider{ constants::UNIT_TEST_DATA_DIR };
 
       // retreive the default test data for HR
-      HeartRateDataSeries non_paged{ detail::getDataSeries<HeartRate>(provider, detail::SortedPropertyMap{}) };
+      HeartRateSeries non_paged{ detail::getDataSeries<HeartRate>(provider, detail::SortedPropertyMap{}) };
 
       // paginate the data, tripling it to 3 pages and retrieve again
       REQUIRE_NOTHROW(provider.paginateDataSource(constants::REST_PATH_HEART_RATE, 3));
 
-      HeartRateDataSeries paged{ detail::getDataSeries<HeartRate>(provider, detail::SortedPropertyMap{}) };
+      HeartRateSeries paged{ detail::getDataSeries<HeartRate>(provider, detail::SortedPropertyMap{}) };
       REQUIRE(paged.size() == non_paged.size() * 3);
    }
 
 
-      // generate range containing the specified bpm values for the first 28 days
-      // of each month.
+   // generate range containing the specified bpm values for the first 28 days
+   // of each month.
    auto generateHeartRateSeries(rg::input_range auto&& bpm_values, uint32_t num_days = 7)
    {
       const auto today = getCalendarDate(localNow());
@@ -50,7 +50,7 @@ namespace oura_charts::test
             }
          }
       }
-      return HeartRateDataSeries{ hr_structs };
+      return HeartRateSeries{ hr_structs };
    }
 
 

@@ -8,17 +8,54 @@
 
 #pragma once
 
-#include <functional>
 #include <oura_charts/oura_charts.h>
-#include <concepts>
 #include <algorithm>
-#include <optional>
 #include <cassert>
+#include <concepts>
+#include <optional>
+#include <variant>
 
 namespace oura_charts
 {
-   //template <auto T>
-   //constexpr auto projectionFunc = [] (auto&&... args) -> decltype(auto) { return std::invoke(T, std::forward<auto>(args)...); };
+
+   //
+   // Helper template for deducing return type of a class method.
+   //
+   template<typename T>
+   struct MemberFunctionReturnType;
+
+   template<typename R, typename C, typename... Args>
+   struct MemberFunctionReturnType<R(C::*)(Args...)>
+   {
+      using type = R;
+   };
+
+   /// <summary>
+   ///   helper template for deducing return type of a class method.
+   ///   example usage: MemberFunctionReturnType_t<decltype(&IObject::foo)>
+   /// </summary>
+   template<typename MemberFunctionT>
+   using MemberFunctionReturnType_t = typename MemberFunctionReturnType<MemberFunctionT>::type;
+
+
+   //
+   // Helper template for deducing class type of a class method.
+   //
+   template<typename T>
+   struct MemberFunctionClassType;
+
+   template<typename R, typename C, typename... Args>
+   struct MemberFunctionClassType<R(C::*)(Args...)>
+   {
+      using type = C;
+   };
+
+   /// <summary>
+   ///   helper template for deducing class type of a class method.
+   ///   example usage: MemberFunctionReturnType_t<decltype(&IObject::foo)>
+   /// </summary>
+   template<typename MemberFunctionT>
+   using MemberFunctionClassType_t = typename MemberFunctionClassType<MemberFunctionT>::type;
 
 
    /// <summary>
@@ -60,7 +97,8 @@ namespace oura_charts
    ///
    ///   if you get compile error trying to pass this object type to an algorithm, it's because
    ///   this functor is move-only, you need to use std::ref() with algorithms that accept their
-   ///   functor by-value.
+   ///   functor by-value. Since this functor has side-effects (stateful), it is not compatible
+   ///   with some stl algorithms such as tranform()
    /// <remarks>
    template <typename T>
    class MinCalc
@@ -116,7 +154,8 @@ namespace oura_charts
    ///
    ///   if you get compile error trying to pass this object type to an algorithm, it's because
    ///   this functor is move-only, you need to use std::ref() with algorithms that accept their
-   ///   functor by-value.
+   ///   functor by-value. Since this functor has side-effects (stateful), it is not compatible
+   ///   with some stl algorithms such as tranform()
    /// <remarks>
    template <typename T>
    class MaxCalc
@@ -171,7 +210,8 @@ namespace oura_charts
    ///
    ///   if you get compile error trying to pass this object type to an algorithm, it's because
    ///   this functor is move-only, you need to use std::ref() with algorithms that accept their
-   ///   functor by-value.
+   ///   functor by-value. Since this functor has side-effects (stateful), it is not compatible
+   ///   with some stl algorithms such as tranform()
    /// </remarks>
    template<typename ValueTypeT, typename ResultTypeT = ValueTypeT>
    class SumCalc
@@ -188,7 +228,7 @@ namespace oura_charts
          if (m_result.has_value())
             *m_result += static_cast<ResultTypeT>(val);
          else
-            m_result = static_cast<ResultTypeT>(val);
+            m_result = ResultType{ static_cast<ResultTypeT>(val) };
       }
 
       void operator()(const NullableInputType& val) noexcept
@@ -233,7 +273,8 @@ namespace oura_charts
    ///
    ///   if you get compile error trying to pass this object type to an algorithm, it's because
    ///   this functor is move-only, you need to use std::ref() with algorithms that accept their
-   ///   functor by-value.
+   ///   functor by-value. Since this functor has side-effects (stateful), it is not compatible
+   ///   with some stl algorithms such as tranform()
    /// <remarks>
    template<typename InputTypeT, typename ResultTypeT = double>
    class AvgCalc
@@ -305,26 +346,5 @@ namespace oura_charts
       SumCalc<InputType, ResultTypeT>  m_sum{};
       size_t  m_count{0};
    };
-
-
-   //
-   // Helper template for deducing return type of a class method.
-   //
-   template<typename T>
-   struct MethodReturnType;
-
-   template<typename R, typename C, typename... Args>
-   struct MethodReturnType<R(C::*)(Args...)> {
-       using type = R;
-   };
-
-   /// <summary>
-   ///   helper template for deducing return type of a class method.
-   ///   example usage: MethodReturnType_t<decltype(&IObject::foo)>
-   /// </summary>
-   /// <typeparam name="MethodT"></typeparam>
-   template<typename MethodT>
-   using MethodReturnType_t = typename MethodReturnType<MethodT>::type;
-
 
 }  // namespace oura_charts

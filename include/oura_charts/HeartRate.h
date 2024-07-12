@@ -47,7 +47,7 @@ namespace oura_charts
       StorageType m_data;
    };
 
-   using HeartRateDataSeries = DataSeries<HeartRate>;
+   using HeartRateSeries = DataSeries<HeartRate>;
 
 
    ///

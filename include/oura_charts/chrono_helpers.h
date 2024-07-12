@@ -259,7 +259,7 @@ namespace oura_charts
    /// <summary>
    ///   small helper to generate a sorted array containing the days of the week
    /// </summary>
-   [[nodiscard]] inline constexpr auto getWeekdays(weekday sortFirst = {chrono::Monday})
+   [[nodiscard]] inline constexpr auto getWeekdays(weekday sortFirst = {chrono::Sunday})
    {
          constexpr int weekday_count = 7;
          std::array<weekday, weekday_count> weekdays{};
