@@ -6,13 +6,13 @@
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
 #include "helpers.h"
+#include "oura_charts/chrono_helpers.h"
+#include "oura_charts/detail/logging.h"
 #include "oura_charts/concepts.h"
 #include "oura_charts/DataSeries.h"
 #include "oura_charts/RestDataProvider.h"
 #include "oura_charts/SleepSession.h"
 #include "oura_charts/TokenAuth.h"
-#include "oura_charts/chrono_helpers.h"
-#include "oura_charts/detail/logging.h"
 #include "oura_charts/functors.h"
 #include <fmt/format.h>
 #include <tabulate/table.hpp>
@@ -38,7 +38,7 @@ auto getWeekdayTable()
                                                       });
    Table weekdays{};
    Table::Row_t row{ "" }; // First column will have row headers 
-   row.append_range(weekday_names);
+   row.insert(row.end(), weekday_names.begin(), weekday_names.end());
    weekdays.add_row(row);
    return weekdays;
 }
@@ -50,7 +50,7 @@ auto format_value(std::optional<T> value, std::string_view default_val)
 
    if (value.has_value())
    {
-      overload overloaded([] (seconds secs) -> std::string
+      overload overloaded{[] (seconds secs) -> std::string
                          {
                             return std::format("{:%R}", hh_mm_ss{ secs });
                          },
@@ -61,7 +61,7 @@ auto format_value(std::optional<T> value, std::string_view default_val)
                          [] (double val)
                          {
                             return std::format("{:.1f}", val);
-                         });
+                         }};
       return overloaded(value.value());
    }
    else
@@ -81,7 +81,7 @@ auto createRow(std::string_view row_header, const std::vector<T>& col_data, std:
                                                             });
 
    Table::Row_t row{ row_header };
-   row.append_range(col_text_values);
+   row.insert(row.end(), col_text_values.begin(), col_text_values.end());
    return row;
 }
 
@@ -152,7 +152,7 @@ int main(int argc, char* argv[])
          AvgCalc<seconds> calc_light_sleep{};
          AvgCalc<seconds> calc_rem_sleep{};
 
-         rg::for_each(sleep_range | vw::values, [&] (SleepSession session)
+         rg::for_each(sleep_range | vw::values, [&] (const SleepSession& session)
                       {
                          calc_hrv(session.avgHRV());
                          calc_resting_heart_rate(session.restingHeartRate());

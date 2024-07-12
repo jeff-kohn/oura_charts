@@ -11,6 +11,7 @@ Checks: "*,\
   -readability-*, \
   -google-build-using-namespace, \
   -llvm-else-after-return, \
+  -llvm-include-order, \
   -llvmlibc-*,\
   -modernize-use-trailing-return-type, \
   -modernize-use-nodiscard,\
