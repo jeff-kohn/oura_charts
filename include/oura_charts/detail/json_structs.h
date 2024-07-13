@@ -9,11 +9,11 @@
 #pragma once
 
 #include "oura_charts/oura_charts.h"
-#include "oura_charts/datetime_helpers.h"
+#include "oura_charts/chrono_helpers.h"
+#include <glaze/glaze.hpp>
+#include <optional>
 #include <string>
 #include <vector>
-#include <optional>
-#include <glaze/glaze.hpp>
 
 namespace oura_charts::detail
 {
@@ -21,6 +21,9 @@ namespace oura_charts::detail
    // will choke on if you try to map it directly to a string or built-in type.
    using nullable_string = std::optional<std::string>;
    using nullable_double = std::optional<double>;
+   using nullable_int    = std::optional<int32_t>;
+   using nullable_uint   = std::optional<uint32_t>;
+
 
    /// <summary>
    ///   JSON struct for personal info profile from Oura
@@ -70,6 +73,15 @@ namespace oura_charts::detail
    /// </summary>
    struct sleep_data
    {
+      enum class SleepType
+      {
+         any = 0,
+         rest,
+         late_nap,
+         sleep,
+         long_sleep,
+      };
+
       std::string id{};
       year_month_day day{};
       local_seconds bedtime_start{};
@@ -79,15 +91,17 @@ namespace oura_charts::detail
       nullable_double average_heart_rate{};
       nullable_double average_hrv{};
 
-      nullable_double lowest_heart_rate{};
+      nullable_uint lowest_heart_rate{};
 
       chrono::seconds latency{};
       chrono::seconds awake_time{};
       chrono::seconds deep_sleep_duration{};
       chrono::seconds light_sleep_duration{};
       chrono::seconds rem_sleep_duration{};
-
-      nullable_double restless_periods{};
+      nullable_uint restless_periods{};
+      chrono::seconds total_sleep_duration{};
+      chrono::seconds time_in_bed{};
+      SleepType type{};
 
       struct glaze
       {
@@ -106,9 +120,14 @@ namespace oura_charts::detail
             &T::deep_sleep_duration,
             &T::light_sleep_duration,
             &T::rem_sleep_duration,
-            &T::restless_periods);
+            &T::restless_periods,
+            &T::total_sleep_duration,
+            &T::time_in_bed,
+            &T::type
+         );
       };
    };
+
 
 
    /// <summary>
@@ -202,4 +221,17 @@ namespace glz::detail
             value = oc::chrono::seconds{ sec_count };
       }
    };
-}
+
+} // namespace oura_charts::detail
+
+template <>
+struct glz::meta<oura_charts::detail::sleep_data::SleepType>
+{
+   using enum oura_charts::detail::sleep_data::SleepType;
+   static constexpr auto value = enumerate(
+         rest,
+         late_nap,
+         sleep,
+         long_sleep
+   );
+};

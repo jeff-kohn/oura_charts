@@ -2,11 +2,9 @@ name: Static Code Analysis and Code Coverage
 
 on:
   push:
-  pull_request:
-    branches:
-      - main
-  schedule:
-    - cron: '26 0 * * 5'
+    paths-ignore:
+      - 'README.md'
+      - '**/.gitignore'
 
 env:
   REPO_DIR: "${{ github.workspace }}"

@@ -66,11 +66,11 @@ namespace oura_charts
    {
       auto json_res = provider.getJsonData(UserProfile::REST_PATH);
       if (!json_res)
-         throw json_res.error();
+         throw oura_exception{ json_res.error() };
 
       auto udt_res = detail::readJson<detail::profile_data>(json_res.value());
       if (!udt_res)
-         throw udt_res.error();
+         throw oura_exception{ udt_res.error() };
 
       return UserProfile{ *udt_res };
    }

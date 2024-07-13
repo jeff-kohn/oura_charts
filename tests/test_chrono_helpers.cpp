@@ -1,27 +1,25 @@
 //---------------------------------------------------------------------------------------------------------------------
-// test_datetime_helpers.h
+// test_chrono_helpers.cpp
 //
-// unit tests for datetime_helpers.h
+// unit tests for chrono_helpers.h
 //
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
 
 
-#include "oura_charts/datetime_helpers.h"
+#include "oura_charts/chrono_helpers.h"
 #include <catch2/catch_test_macros.hpp>
 
 namespace oura_charts::test
 {
+   // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, bugprone-unchecked-optional-access)
    using namespace std::literals;
 
    namespace
    {
-
-      // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
       constexpr year_month_day ymd{ 2024y / 2 / 1 };
       constexpr hh_mm_ss tod_utc{ 12h + 3min + 33s };
       constexpr hh_mm_ss tod_local{ 6h + 3min + 33s };
-      // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
       // NOLINTBEGIN(cert-err58-cpp)
       const sys_seconds sys_secs       = sys_days{ ymd } + tod_utc.to_duration();
@@ -91,5 +89,18 @@ namespace oura_charts::test
       REQUIRE(sys_secs == localToUtc(local_secs, tz));
    }
 
+   TEST_CASE("test_AvgCal_duration")
+   {
+      using namespace std::chrono_literals;
+      std::array sec_durations{ 20s, 30s, 40s, 50s };
+
+      AvgCalc<seconds> avg_calc{};
+      rg::for_each(sec_durations, std::ref(avg_calc));
+      REQUIRE(avg_calc.hasResult());
+      REQUIRE(avg_calc.count() == ssize(sec_durations));
+      REQUIRE(avg_calc.result().value() == 35s);
+   }
+
+   // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, bugprone-unchecked-optional-access) 
 
 } // namespace oura_charts::test

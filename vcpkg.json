@@ -9,11 +9,12 @@
     "catch2",
     "spdlog",
     "glaze",
+    "tabulate",
     "cpr",
     {
       "name": "tl-expected",
       "platform": "linux"
     }
   ],
-  "builtin-baseline": "9fcfb7b48017d65403a8245da656a7b91039156a"
+  "builtin-baseline": "576379156e82da642f8d1834220876759f13534d"
 }

@@ -18,9 +18,12 @@ inline std::string getPersonalToken(cxxopts::ParseResult& options)
    auto pat = options["token"].as<std::string>();
 
    if (pat.empty())
-      return oura_charts::detail::getEnvironmentVariable("OURA_PAT");
-   else
+      pat = oura_charts::detail::getEnvironmentVariable("OURA_PAT");
+
+   if (pat.empty())
       throw std::runtime_error("Personal Access Token not specified. Use the --token parameter or set the OURA_PAT environment variable.");
+
+   return pat;
 }
 
 /// <summary>

@@ -1,26 +1,80 @@
+//---------------------------------------------------------------------------------------------------------------------
+// DataSeries.h
+//
+// defines a template class  and related utility functions for working with a collection of data from the Oura REST API
+//
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
 #pragma once
 
 #include "oura_charts/oura_charts.h"
 #include "oura_charts/detail/json_structs.h"
-#include <vector>
 #include <algorithm>
+#include <map>
 #include <ranges>
+#include <vector>
 
 namespace oura_charts
 {
    /// <summary>
-   ///   template class for constructing and managing a collection of data objects from the Oura API
+   ///   concept for a type that be stored in a DataSeries<> collection
    /// </summary>
-   /// <remarks>
-   ///   this class accepts a vector of json UDT's and constructs an object for each, using move semantics
-   ///   to avoid copying data. The collection is considered static once initialized, so operations that modify
-   ///   its contents are not provided but the usual element access is.
-   /// </remarks>
+   template <typename T>
+   concept DataSeriesElement = requires (T t, T::StorageType data)
+   {
+      t = T{ std::move(data) };
+   };
+
+
+   /// <summary>
+   /// <summary>
+   ///   Concept for a type that is an instantiation of the DataSeries<> template.
+   /// </summary>
+   template <typename T>
+   concept DataSeriesObject = DataSeriesElement<typename T::ElementType> &&
+                              requires (T t, T::ElementType e, T::base base_obj)
+   {
+      base_obj.push_back(e);
+      base_obj.emplace_back(e);
+   };
+
+
+   /// <summary>
+   ///   template class for constructing and managing a series of data objects from the Oura API
+   /// </summary>
    template <DataSeriesElement ElementT>
    class DataSeries : private std::vector<ElementT>
    {
    public:
-      using container = std::vector<ElementT>;
+      using base = std::vector<ElementT>;
+      using ElementType = ElementT;
+
+      // expose the needed base interface from base class. clang insists on teh "typename"
+      // even though I don't think it should be necessary and MSVC doens't need it.
+      using typename base::value_type;
+      using typename base::size_type;
+      using typename base::difference_type;
+      using typename base::reference;
+      using typename base::const_reference;
+      using typename base::pointer;
+      using typename base::const_pointer;
+      using typename base::reverse_iterator;
+      using typename base::const_reverse_iterator;
+
+      using base::begin;
+      using base::end;
+      using base::cbegin;
+      using base::cend;
+      using base::rbegin;
+      using base::rend;
+      using base::crbegin;
+      using base::crend;
+      using base::operator[];
+      using base::size;
+      using base::empty;
+      using base::front;
+      using base::back;
+
 
       /// <summary>
       ///   DataSeries constructor. Note that data_series is passed by value, since
@@ -28,52 +82,110 @@ namespace oura_charts
       ///   the copy, you can pass an rvalue reference if you don't need to preserve
       ///   the source data.
       /// </summary>
-      template <std::ranges::input_range RangeT> requires std::ranges::sized_range<RangeT> &&
-                                                          std::same_as<rgs::range_rvalue_reference_t<RangeT>, typename ElementT::StorageType&&>
+      template <rg::forward_range RangeT> requires JsonStructRange<RangeT, ElementT>
       explicit DataSeries(RangeT data_series)
       {
-         container::reserve(data_series.size());
-         for (auto&& elem : data_series)
-         {
-            container::emplace_back(std::move(elem));
-         };
-      }
-      ~DataSeries() = default;
+         // stupid libstdc++ doesn't actually call ElementT(StorageType&&) like it should ,instead it default constructs and calls operator=(StorageType&&) 
+         // which doesn't exist. So even though this would be faster, we have to use a ranged for loop and emplace() each element. pretty fucking lame
+         // if you ask me.
+         //base::insert(end(), std::make_move_iterator(data_series.begin()), std::make_move_iterator(data_series.end()));
 
-      // move/copy construction and assignment
-      DataSeries(DataSeries&& other) : container(std::move(other)) {}
-      DataSeries(const DataSeries& other) : container(other) {}
+         base::reserve(data_series.size());
+         for (auto& data : data_series)
+         {
+            base::emplace_back(data);
+         }
+      }
+
+
+      /// <summary>
+      ///   remove all elements that don't match the supplied predicate. Unike STL
+      ///   "remove" algorithms, this method actually removes the filtered elements.
+      /// </summary>
+      template<std::predicate<ElementType> PredT>
+      size_t keepIf(PredT pred)
+      {
+         // we need to "negate" the predicate since we're actually specifying what
+         // to remove, not what to keep, when calling remove_if()
+         auto new_end = std::remove_if(begin(), end(), [pred] (const ElementType& t) -> bool { return !pred(t); });
+         auto count = std::distance(new_end, end());
+         base::erase(new_end, end());
+         return count;
+      }
+
+
+      /// <summary>
+      ///   remove all elements that match the supplied predicate. Unike STL
+      ///   "remove" algorithms, this method actually removes the filtered elements.
+      /// </summary>
+      template<std::predicate<ElementType> PredT>
+      size_t removeIf(PredT pred)
+      {
+         // we need to "negate" the predicate since we're actually specifying what
+         // to remove, not what to keep, when calling remove_if()
+         auto new_end = std::remove_if(begin(), end(), pred);
+         auto count = std::distance(new_end, end());
+         base::erase(new_end, end());
+         return count;
+      }
+
+
+      ~DataSeries() = default;
+      DataSeries(DataSeries&& other) : base(std::move(other)) {}
+      DataSeries(const DataSeries& other) : base(other) {}
       DataSeries& operator=(DataSeries&& rhs)
       {
-         container::operator=(std::move(rhs));
+         base::operator=(std::move(rhs));
          return *this;
       }
       DataSeries& operator=(const DataSeries& rhs)
       {
-         container::operator=(rhs);
+         base::operator=(rhs);
          return *this;
       }
-
-      // expose the needed container interface from base class.
-      using container::begin;
-      using container::end;
-      using container::cbegin;
-      using container::cend;
-      using container::rbegin;
-      using container::rend;
-      using container::crbegin;
-      using container::crend;
-      using container::operator[];
-      using container::size;
-      using container::empty;
-      using container::front;
-      using container::back;
-
    };
+
+   
+   // template alias for map of DataSeriesElements grouped by day of week
+   template <DataSeriesElement ElementT, template <typename, typename, typename> typename MapT = std::multimap>
+   using MapByWeekday = MapT<weekday, ElementT, weekday_compare_less>;
+
+   // template alias for map of DataSeriesElements grouped by month of the year (not a specific year, just month)
+   template <DataSeriesElement ElementT, template <typename, typename> typename MapT = std::multimap>
+   using MapByMonth = MapT<month, ElementT>;
+
+   // template alias for map of DataSeriesElements grouped by year and month
+   template <DataSeriesElement ElementT, template <typename, typename> typename MapT = std::multimap>
+   using MapByYearMonth = MapT<year_month, ElementT>;
+
+   // template alias for map of DataSeriesElements grouped by year
+   template <DataSeriesElement ElementT, template <typename, typename> typename MapT = std::multimap>
+   using MapByYear = MapT<year, ElementT>;
+
+
+
+   /// <summary>
+   ///   Groups a data-series into a map that can accept elements grouped/sorted by the value
+   ///   returned by calling the specified projection for each element in the input range.
+   /// </summary>
+   template<DataSeriesObject DataSeriesT, rg::range MapT, std::invocable<typename DataSeriesT::ElementType> KeyProjT>
+      requires CompatibleKeyProjection<std::remove_cvref_t<MapT>, KeyProjT> 
+   void groupBy(DataSeriesT&& series, MapT& map, KeyProjT&& proj)
+   {
+      using ValueType = DataSeriesT::ElementType;
+      using MapValueType = rg::range_value_t<MapT>;
+
+      rg::transform(std::forward<DataSeriesT>(series),
+                    std::inserter(map, map.end()),
+                    [&proj] (ValueType& val) -> auto
+                           {
+                              return MapValueType{ proj(val), std::forward<ValueType>(val) };
+                           });
+   }
+
 
    namespace detail
    {
-      using std::forward;
       using SortedPropertyMap = std::map<std::string, std::string>;
 
       template <DataSeriesElement ElementT, DataProvider ProviderT, KeyValueRange MapT>
@@ -83,17 +195,17 @@ namespace oura_charts
          using CollectionBuffer = std::deque<typename JsonCollectionT::value_type>;
 
          // get JSON from rest server
-         auto&& json_res = provider.getJsonData(ElementT::REST_PATH, std::forward<MapT>(param_map));
+         auto json_res = provider.getJsonData(ElementT::REST_PATH, std::forward<MapT>(param_map));
          if (!json_res)
-            throw json_res.error();
+            throw oura_exception{ json_res.error() };
 
          // parse into structs
-         auto&& data_res = readJson<JsonCollectionT>(json_res.value());
-         if (!data_res)
-            throw json_res.error();
+         auto data_res = readJson<JsonCollectionT>(json_res.value());
+         if (!data_res.has_value())
+            throw oura_exception(data_res.error());
 
          // move the structs into temporary holding so we can accumulate if there's more.
-         auto&& rest_data = data_res.value();
+         auto& rest_data = data_res.value();
          CollectionBuffer buf{ std::make_move_iterator(rest_data.data.begin()), std::make_move_iterator(rest_data.data.end()) };
 
          // as long as we got a non-null "next_token" back from the REST server, there's still more data to get.
@@ -102,11 +214,11 @@ namespace oura_charts
             param_map[constants::REST_PARAM_NEXT_TOKEN] = rest_data.next_token.value();
             json_res = provider.getJsonData(ElementT::REST_PATH, std::forward<MapT>(param_map));
             if (!json_res)
-               throw json_res.error();
+               throw oura_exception{ json_res.error() };
 
             data_res = readJson<JsonCollectionT>(json_res.value());
             if (!data_res)
-               throw json_res.error();
+               throw oura_exception{ json_res.error() };
 
             rest_data = data_res.value();
             // no append_range() in libstdc++ yet
@@ -114,7 +226,7 @@ namespace oura_charts
          }
 
          // finally move the accumulated data into a new DataSeries to return
-         return DataSeries<ElementT>( std::move(buf) );
+         return DataSeries<ElementT>{std::move(buf) };
       }
 
    } // namespace detail

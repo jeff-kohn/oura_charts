@@ -8,7 +8,7 @@
 
 #include "oura_charts/oura_charts.h"
 #include "oura_charts/DataSeries.h"
-#include "oura_charts/datetime_helpers.h"
+#include "oura_charts/chrono_helpers.h"
 
 
 namespace oura_charts
@@ -23,13 +23,13 @@ namespace oura_charts
       static constexpr std::string_view REST_PATH = constants::REST_PATH_HEART_RATE;
 
       // Heart rate in BPM
-      int beatsPerMin() const          {  return m_data.bpm;         }
+      int beatsPerMin() const             {  return m_data.bpm;         }
 
       // Condition HR reading was taken in (awake/asleep/etc)
-      std::string source() const       {  return m_data.source;     }
+      const std::string& source() const   {  return m_data.source;     }
 
       // date and time (UTC) the HR reading was taken.
-      local_seconds timestamp() const { return m_data.timestamp; }
+      local_seconds timestamp() const     { return m_data.timestamp; }
 
       /// <summary>
       ///   HeartRate constructor
@@ -37,7 +37,8 @@ namespace oura_charts
       /// <remarks>
       ///   copies by default, pass rvalue-ref to move instead.
       /// </remarks>
-      explicit HeartRate(StorageType data) : m_data(std::move(data)) {}
+      explicit HeartRate(StorageType data) noexcept : m_data(std::move(data)) {}
+      HeartRate(HeartRate&&) = default;
       HeartRate(const HeartRate&) = default;
       HeartRate& operator=(const HeartRate&) = default;
       HeartRate& operator=(HeartRate&&) = default;
@@ -47,7 +48,39 @@ namespace oura_charts
       StorageType m_data;
    };
 
-   using HeartRateDataSeries = DataSeries<HeartRate>;
+   using HeartRateSeries = DataSeries<HeartRate>;
+
+
+   ///
+   /// functors for converting timestamp to various calendar types for grouping/aggregation
+   ///
+   static constexpr auto HeartRateWeekday = [] (const HeartRate& hr) -> weekday
+      {
+         return weekday{ floor<days>(hr.timestamp()) };
+      };
+
+   static constexpr auto HeartRateYearMonthDay = [] (const HeartRate& hr) -> year_month_day
+      {
+         return getCalendarDate(hr.timestamp());
+      };
+
+   static constexpr auto HeartRateYear = [] (const HeartRate& hr) -> year
+      {
+         return getCalendarDate(hr.timestamp()).year();
+      };
+
+   static constexpr auto HeartRateYearMonth = [] (const HeartRate& hr) -> year_month
+      {
+         auto ymd = getCalendarDate(hr.timestamp());
+         return year_month{ ymd.year(), ymd.month() };
+      };
+
+   static constexpr auto HeartRateMonth = [] (const HeartRate& hr) -> month
+      {
+         return getCalendarDate(hr.timestamp()).month();
+      };
+
+
 
    /// <summary>
    ///   custom format() support for HeartRate

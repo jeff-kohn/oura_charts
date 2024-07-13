@@ -1,7 +1,7 @@
 
 param
 (
-   [string] $Preset
+   [string] $Preset = "win-debug"
 )
 
 $ErrorActionPreference = 'Stop'
