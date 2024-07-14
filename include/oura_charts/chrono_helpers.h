@@ -315,7 +315,7 @@ namespace oura_charts
    template <auto memFunc>
    inline constexpr auto selectAsYear = [](const auto& obj) -> year requires InvocableFor<decltype(memFunc), decltype(obj)>
       {
-         return year_month_day{ std::invoke(memFunc, obj) };
+         return year_month_day{ std::invoke(memFunc, obj) }.year();
       };
 
    template <auto memFunc>
