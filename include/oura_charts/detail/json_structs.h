@@ -266,7 +266,7 @@ template <>
 struct glz::meta<oura_charts::detail::sleep_data::SleepType>
 {
    using enum oura_charts::detail::sleep_data::SleepType;
-   static constexpr auto value = enumerate(
+   static inline constexpr auto value = enumerate(
          rest,
          late_nap,
          sleep,
@@ -278,7 +278,7 @@ template <>
 struct glz::meta<oura_charts::detail::sleep_data::ReadinessContributors>
 {
    using enum oura_charts::detail::sleep_data::ReadinessContributors;
-   static constexpr auto value = enumerate(
+   static inline constexpr auto value = enumerate(
          activity_balance,
          body_temperature,
          hrv_balance,

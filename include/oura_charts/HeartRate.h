@@ -20,7 +20,7 @@ namespace oura_charts
    {
    public:
       using StorageType = detail::hr_data;
-      static constexpr std::string_view REST_PATH = constants::REST_PATH_HEART_RATE;
+      static inline constexpr std::string_view REST_PATH = constants::REST_PATH_HEART_RATE;
 
       // Heart rate in BPM
       int beatsPerMin() const             {  return m_data.bpm;         }
@@ -54,28 +54,28 @@ namespace oura_charts
    ///
    /// functors for converting timestamp to various calendar types for grouping/aggregation
    ///
-   static constexpr auto HeartRateWeekday = [] (const HeartRate& hr) -> weekday
+   inline constexpr auto HeartRateWeekday = [] (const HeartRate& hr) -> weekday
       {
          return weekday{ floor<days>(hr.timestamp()) };
       };
 
-   static constexpr auto HeartRateYearMonthDay = [] (const HeartRate& hr) -> year_month_day
+   inline constexpr auto HeartRateYearMonthDay = [] (const HeartRate& hr) -> year_month_day
       {
          return getCalendarDate(hr.timestamp());
       };
 
-   static constexpr auto HeartRateYear = [] (const HeartRate& hr) -> year
+   inline constexpr auto HeartRateYear = [] (const HeartRate& hr) -> year
       {
          return getCalendarDate(hr.timestamp()).year();
       };
 
-   static constexpr auto HeartRateYearMonth = [] (const HeartRate& hr) -> year_month
+   inline constexpr auto HeartRateYearMonth = [] (const HeartRate& hr) -> year_month
       {
          auto ymd = getCalendarDate(hr.timestamp());
          return year_month{ ymd.year(), ymd.month() };
       };
 
-   static constexpr auto HeartRateMonth = [] (const HeartRate& hr) -> month
+   inline constexpr auto HeartRateMonth = [] (const HeartRate& hr) -> month
       {
          return getCalendarDate(hr.timestamp()).month();
       };
@@ -114,7 +114,7 @@ namespace oura_charts
 /// <summary>
 ///   provide a tuple-like API for class UserProfile for structured bindings:
 /// </summary>
-template <> struct std::tuple_size <oura_charts::HeartRate> { static constexpr int value = 3; };
+template <> struct std::tuple_size <oura_charts::HeartRate> { static inline constexpr int value = 3; };
 template <> struct std::tuple_element<0, oura_charts::HeartRate> { using type = int; };
 template <> struct std::tuple_element<1, oura_charts::HeartRate> { using type = std::string; };
 template <> struct std::tuple_element<2, oura_charts::HeartRate> { using type = oura_charts::local_seconds; };

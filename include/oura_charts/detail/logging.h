@@ -60,19 +60,19 @@ namespace oura_charts::logging
 /// </summary>
 namespace oura_charts::constants
 {
-   static constexpr const char* CONFIG_DEFAULT_LOG_NAME = "DEFAULT";
-   static constexpr const char* CONFIG_DEFAULT_LOG_PATTERN_CONSOLE = "[%Y-%m-%d %H:%M:%S.%e] [TID %t] [%l] %v";
-   static constexpr const char* CONFIG_DEFAULT_LOG_PATTERN_FILE = "[%Y-%m-%d %H:%M:%S.%e] [%s:%#] [%^%l%$] %v";
-   static constexpr const char* CONFIG_DEFAULT_LOG_PATTERN_DEBUGGER = "[%Y-%m-%d %H:%M:%S.%e] [%s:%#] [%^%l%$] %v";
+   inline constexpr const char* CONFIG_DEFAULT_LOG_NAME = "DEFAULT";
+   inline constexpr const char* CONFIG_DEFAULT_LOG_PATTERN_CONSOLE = "[%Y-%m-%d %H:%M:%S.%e] [TID %t] [%l] %v";
+   inline constexpr const char* CONFIG_DEFAULT_LOG_PATTERN_FILE = "[%Y-%m-%d %H:%M:%S.%e] [%s:%#] [%^%l%$] %v";
+   inline constexpr const char* CONFIG_DEFAULT_LOG_PATTERN_DEBUGGER = "[%Y-%m-%d %H:%M:%S.%e] [%s:%#] [%^%l%$] %v";
 
    #if !defined(NDEBUG)
-      static constexpr auto CONFIG_DEFAULT_LOGLEVEL_DAILYFILE = oura_charts::logging::level_enum::trace;
-      static constexpr auto CONFIG_DEFAULT_LOGLEVEL_CONSOLE = oura_charts::logging::level_enum::warn;
-      static constexpr auto CONFIG_DEFAULT_LOGLEVEL_DEBUGGER = oura_charts::logging::level_enum::info;
+      inline constexpr auto CONFIG_DEFAULT_LOGLEVEL_DAILYFILE = oura_charts::logging::level_enum::trace;
+      inline constexpr auto CONFIG_DEFAULT_LOGLEVEL_CONSOLE = oura_charts::logging::level_enum::warn;
+      inline constexpr auto CONFIG_DEFAULT_LOGLEVEL_DEBUGGER = oura_charts::logging::level_enum::info;
    #else
-      static constexpr auto CONFIG_DEFAULT_LOGLEVEL_DAILYFILE = oura_charts::logging::level_enum::warn;
-      static constexpr auto CONFIG_DEFAULT_LOGLEVEL_CONSOLE = oura_charts::logging::level_enum::err;
-      static constexpr auto CONFIG_DEFAULT_LOGLEVEL_DEBUGGER = oura_charts::logging::level_enum::off;
+      inline constexpr auto CONFIG_DEFAULT_LOGLEVEL_DAILYFILE = oura_charts::logging::level_enum::warn;
+      inline constexpr auto CONFIG_DEFAULT_LOGLEVEL_CONSOLE = oura_charts::logging::level_enum::err;
+      inline constexpr auto CONFIG_DEFAULT_LOGLEVEL_DEBUGGER = oura_charts::logging::level_enum::off;
    #endif
 } // namespace oura_charts::constants
 

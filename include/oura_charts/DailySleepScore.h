@@ -21,7 +21,7 @@ namespace oura_charts
       using StorageType = detail::daily_sleep_data;
       using SleepScoreContributors = StorageType::SleepScoreContributors;
 
-      static constexpr std::string_view REST_PATH = constants::REST_PATH_SLEEP_SESSION;
+      inline constexpr std::string_view REST_PATH = constants::REST_PATH_SLEEP_SESSION;
 
       /// <summary>
       ///   returns the id for this DailySleepScore

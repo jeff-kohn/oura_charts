@@ -30,7 +30,7 @@ namespace oura_charts
       using SleepType = StorageType::SleepType;
       using ReadinessContributors = StorageType::ReadinessContributors;
 
-      static constexpr std::string_view REST_PATH = constants::REST_PATH_SLEEP_SESSION;
+      static inline constexpr std::string_view REST_PATH = constants::REST_PATH_SLEEP_SESSION;
 
       const std::string& sleepId() const           {  return m_data.id;                   }
       SleepType sleepType() const                  {  return m_data.type;                 }
@@ -91,7 +91,7 @@ namespace oura_charts
    /// <summary>
    ///   unary predicates to filter SleepSession objects based on sleep type
    /// </summary>
-   static constexpr SleepTypeFilter long_sleep_filter{SleepType::long_sleep};
+   inline constexpr SleepTypeFilter long_sleep_filter{SleepType::long_sleep};
 
 
    //
