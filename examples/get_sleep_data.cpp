@@ -10,6 +10,7 @@
 #include "oura_charts/detail/logging.h"
 #include "oura_charts/concepts.h"
 #include "oura_charts/DataSeries.h"
+#include "oura_charts/DailySleepScore.h"
 #include "oura_charts/RestDataProvider.h"
 #include "oura_charts/SleepSession.h"
 #include "oura_charts/TokenAuth.h"

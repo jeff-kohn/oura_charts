@@ -163,6 +163,7 @@ namespace oura_charts::detail
 
       std::string id{};
       year_month_day day{};
+      int score{};
 
       std::map<SleepScoreContributors, int> contributors{};
       local_seconds timestamp{};

@@ -21,12 +21,12 @@ namespace oura_charts
       using StorageType = detail::daily_sleep_data;
       using SleepScoreContributors = StorageType::SleepScoreContributors;
 
-      inline constexpr std::string_view REST_PATH = constants::REST_PATH_SLEEP_SESSION;
+      static inline constexpr std::string_view REST_PATH = constants::REST_PATH_SLEEP_SESSION;
 
       /// <summary>
       ///   returns the id for this DailySleepScore
       /// </summary>
-      const string& id() const { retrun m_data.id; }
+      const std::string& id() const { return m_data.id; }
 
       /// <summary>
       ///   date for the sleep score. note this date will actually be the
@@ -46,7 +46,7 @@ namespace oura_charts
       /// </summary>
       const std::map<SleepScoreContributors, int>& contributors() const { return m_data.contributors; };
 
-      explicit DailySleepScore(StorageType data) noexcept : m_data(std::move(data)) {}
+      explicit DailySleepScore(const StorageType& data) noexcept : m_data(data) {}
       explicit DailySleepScore(StorageType&& data) noexcept : m_data(std::move(data)) {}
       DailySleepScore(const DailySleepScore&) = default;
       DailySleepScore(DailySleepScore&&) = default;
@@ -55,7 +55,7 @@ namespace oura_charts
       DailySleepScore& operator=(DailySleepScore&&) = default;
 
    private:
-      detail::daily_sleep_data m_data{};
+      StorageType m_data{};
    };
 
 
