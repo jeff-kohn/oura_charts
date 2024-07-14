@@ -8,11 +8,12 @@
 
 #pragma once
 
-#include <concepts>
-#include <string_view>
 #include <fmt/format.h>
+#include <concepts>
+#include <functional>
 #include <optional>
 #include <ranges>
+#include <string_view>
 
 namespace oura_charts
 {
