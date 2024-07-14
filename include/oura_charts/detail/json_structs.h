@@ -11,6 +11,7 @@
 #include "oura_charts/oura_charts.h"
 #include "oura_charts/chrono_helpers.h"
 #include <glaze/glaze.hpp>
+#include <map>
 #include <optional>
 #include <string>
 #include <vector>
@@ -19,6 +20,8 @@ namespace oura_charts::detail
 {
    // REST API may return some values as 'null', which the json parser
    // will choke on if you try to map it directly to a string or built-in type.
+   template <typename T>
+   using nullable = std::optional<T>;
    using nullable_string = std::optional<std::string>;
    using nullable_double = std::optional<double>;
    using nullable_int    = std::optional<int32_t>;
@@ -69,7 +72,7 @@ namespace oura_charts::detail
 
 
    /// <summary>
-   ///   struct that contains information about a single sleep session.
+   ///   aggregate struct that contains information about a single sleep session.
    /// </summary>
    struct sleep_data
    {
@@ -82,53 +85,88 @@ namespace oura_charts::detail
          long_sleep,
       };
 
+      enum class ReadinessContributors
+      {
+         activity_balance,
+         body_temperature,
+         hrv_balance,
+         previous_day_activity,
+         previous_night,
+         recovery_index,
+         resting_heart_rate,
+         sleep_balance
+      };
+
+      struct readiness_data
+      {
+         std::map<ReadinessContributors, int> contributors{};
+         int score{};
+         nullable_double temperature_deviation{};
+         nullable_double temperature_trend_deviation{};
+      };
+
+      struct interval_data
+      {
+         chrono::seconds interval{};
+         std::vector<nullable_double> items;
+         local_seconds timeststamp{};
+      };
+
       std::string id{};
+      SleepType type{};
+      int period{};
+
       year_month_day day{};
       local_seconds bedtime_start{};
       local_seconds bedtime_end{};
 
       nullable_double average_breath{};
-      nullable_double average_heart_rate{};
-      nullable_double average_hrv{};
 
+      nullable<interval_data> heart_rate{};
+      nullable_double average_heart_rate{};
       nullable_uint lowest_heart_rate{};
 
-      chrono::seconds latency{};
-      chrono::seconds awake_time{};
-      chrono::seconds deep_sleep_duration{};
-      chrono::seconds light_sleep_duration{};
-      chrono::seconds rem_sleep_duration{};
-      nullable_uint restless_periods{};
-      chrono::seconds total_sleep_duration{};
-      chrono::seconds time_in_bed{};
-      SleepType type{};
+      nullable<interval_data> hrv{};
+      nullable_double average_hrv{};
+      
 
-      struct glaze
-      {
-         using T = sleep_data;
-         static constexpr auto value = glz::object(
-            &T::id,
-            &T::day,
-            &T::bedtime_start,
-            &T::bedtime_end,
-            &T::average_breath,
-            &T::average_heart_rate,
-            &T::average_hrv,
-            &T::lowest_heart_rate,
-            &T::latency,
-            &T::awake_time,
-            &T::deep_sleep_duration,
-            &T::light_sleep_duration,
-            &T::rem_sleep_duration,
-            &T::restless_periods,
-            &T::total_sleep_duration,
-            &T::time_in_bed,
-            &T::type
-         );
-      };
+      int efficiency{};
+      chrono::seconds latency{};
+      nullable_uint restless_periods{};
+      std::string movement_30_sec{};
+      std::string sleep_phase_5_min{};
+
+      chrono::seconds time_in_bed{};
+      chrono::seconds awake_time{};
+      chrono::seconds total_sleep_duration{};
+      chrono::seconds light_sleep_duration{};
+      chrono::seconds deep_sleep_duration{};
+      chrono::seconds rem_sleep_duration{};
+
+      readiness_data readiness{};
+      nullable_uint readiness_score_delta{};
+      nullable_uint sleep_score_delta{};
    };
 
+   struct daily_sleep_data
+   {
+      enum class SleepScoreContributors
+      {
+         deep_sleep,
+         efficiency,
+         latency,
+         rem_sleep,
+         restfulness,
+         timing,
+         total_sleep
+      };
 
+      std::string id{};
+      year_month_day day{};
+
+      std::map<SleepScoreContributors, int> contributors{};
+      local_seconds timestamp{};
+   };
 
    /// <summary>
    ///   result type used for parsing JSON text into struct data.
@@ -233,5 +271,21 @@ struct glz::meta<oura_charts::detail::sleep_data::SleepType>
          late_nap,
          sleep,
          long_sleep
+   );
+};
+
+template <>
+struct glz::meta<oura_charts::detail::sleep_data::ReadinessContributors>
+{
+   using enum oura_charts::detail::sleep_data::ReadinessContributors;
+   static constexpr auto value = enumerate(
+         activity_balance,
+         body_temperature,
+         hrv_balance,
+         previous_day_activity,
+         previous_night,
+         recovery_index,
+         resting_heart_rate,
+         sleep_balance
    );
 };

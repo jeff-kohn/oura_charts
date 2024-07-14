@@ -14,6 +14,7 @@
 #include <fmt/chrono.h>
 #include <cassert>
 #include <chrono>
+#include <functional>
 #include <ranges>
 #include <spanstream>
 #include <string>
@@ -298,6 +299,43 @@ namespace oura_charts
    {
       return year{ val.year() };
    }
+
+
+
+   //
+   // These lambda's can be used as projections for converting member functions that return year_month_day (or compatible)
+   // to various calandar types.
+   //
+   template <auto memFunc>
+   inline constexpr auto selectAsYearMonthDay = [] (const auto& obj) -> year_month_day requires InvocableFor<decltype(memFunc), decltype(obj)>
+      {
+         return year_month_day{ std::invoke(memFunc, obj) };
+      };
+
+   template <auto memFunc>
+   inline constexpr auto selectAsYear = [](const auto& obj) -> year requires InvocableFor<decltype(memFunc), decltype(obj)>
+      {
+         return year_month_day{ std::invoke(memFunc, obj) };
+      };
+
+   template <auto memFunc>
+   inline constexpr auto selectAsYearMonth = [](const auto& obj) -> year_month requires InvocableFor<decltype(memFunc), decltype(obj)>
+      {
+         return year_month{ std::invoke(memFunc, obj) };
+      };
+
+   template <auto memFunc>
+   inline constexpr auto selectAsMonth = [] (const auto& obj) -> month requires InvocableFor<decltype(memFunc), decltype(obj)>
+      {
+         return year_month_day{ std::invoke(memFunc, obj) }.month();
+      };
+
+   template <auto memFunc>
+   inline constexpr auto selectAsWeekday = [] (const auto& obj) -> weekday requires InvocableFor<decltype(memFunc), decltype(obj)>
+      {
+         return sys_days{ std::invoke(memFunc, obj) };
+      };
+
 
 
    /// <summary>

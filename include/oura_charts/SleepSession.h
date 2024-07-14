@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------------------------------------------------7
-// SleepDataSeries.h
+// SleepSession.h
 //
 // Declaration for class SleepDataSeriers, which encapsulates a series of sleep data 
 // 
@@ -14,6 +14,7 @@
 
 namespace oura_charts
 {
+   using detail::nullable;
    using detail::nullable_double;
    using detail::nullable_string;
    using detail::nullable_int;
@@ -27,6 +28,7 @@ namespace oura_charts
    public:
       using StorageType = detail::sleep_data;
       using SleepType = StorageType::SleepType;
+      using ReadinessContributors = StorageType::ReadinessContributors;
 
       static constexpr std::string_view REST_PATH = constants::REST_PATH_SLEEP_SESSION;
 
@@ -65,8 +67,8 @@ namespace oura_charts
       StorageType m_data;
    };
 
-
    using SleepType = SleepSession::SleepType;
+   using ReadinessContributors = SleepSession::ReadinessContributors;
    using SleepSessionSeries = DataSeries<SleepSession>;
 
 
@@ -95,34 +97,13 @@ namespace oura_charts
    //
    // These lambda's can be used as projections for converting sessionDate() to various calandar types.
    //
-   static constexpr auto SessionWeekday = [] (const SleepSession& session) -> weekday
-      {
-         return sys_days{ session.sessionDate() };
-      };
+   inline constexpr auto sessionYearMonthDay = selectAsYearMonthDay<&SleepSession::sessionDate>;
+   inline constexpr auto sessionYear         = selectAsYear<&SleepSession::sessionDate>;
+   inline constexpr auto sessionYearMonth    = selectAsYearMonth<&SleepSession::sessionDate>;
+   inline constexpr auto sessionMonth        = selectAsMonth<&SleepSession::sessionDate>;
+   inline constexpr auto sessionWeekday      = selectAsWeekday<&SleepSession::sessionDate>;
 
-   static constexpr auto SessionYearMonthDay = [] (const SleepSession& session) -> year_month_day
-      {
-         return session.sessionDate();
-      };
-
-   static constexpr auto SessionYear = [] (const SleepSession& session) -> year
-      {
-         return session.sessionDate().year();
-      };
-
-   static constexpr auto SessionYearMonth = [] (const SleepSession& session) -> year_month
-      {
-         auto ymd = session.sessionDate();
-         return year_month{ ymd.year(), ymd.month() };
-      };
-
-   static constexpr auto SessionMonth = [] (const SleepSession& session) -> month
-      {
-         return session.sessionDate().month();
-      };
-
-
-
+    
    // map to group sessions by day of the week
    using SleepByWeekday = MapByWeekday<SleepSession>;
 

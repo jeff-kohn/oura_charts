@@ -6,21 +6,22 @@
 set(THIS_TARGET "oura_rest")
 
 add_library(${THIS_TARGET} STATIC
-   "../include/oura_charts/oura_charts.h"
-	"../include/oura_charts/constants.h"
-	"../include/oura_charts/concepts.h"
-	"../include/oura_charts/oura_exception.h"
-   "../include/oura_charts/chrono_helpers.h"
-	"../include/oura_charts/TokenAuth.h"
-	"../include/oura_charts/UserProfile.h"
-   "../include/oura_charts/HeartRate.h"
-   "../include/oura_charts/RestDataProvider.h"
-   "../include/oura_charts/DataSeries.h"
-   "../include/oura_charts/SleepSession.h"
-   "../include/oura_charts/functors.h"
 	"../include/oura_charts/detail/utility.h"
 	"../include/oura_charts/detail/json_structs.h"
 	"../include/oura_charts/detail/logging.h"
+	"../include/oura_charts/constants.h"
+	"../include/oura_charts/concepts.h"
+   "../include/oura_charts/chrono_helpers.h"
+   "../include/oura_charts/DataSeries.h"
+   "../include/oura_charts/DailySleepScore.h"
+   "../include/oura_charts/functors.h"
+   "../include/oura_charts/HeartRate.h"
+   "../include/oura_charts/oura_charts.h"
+	"../include/oura_charts/oura_exception.h"
+   "../include/oura_charts/RestDataProvider.h"
+   "../include/oura_charts/SleepSession.h"
+	"../include/oura_charts/TokenAuth.h"
+	"../include/oura_charts/UserProfile.h"
 
    "utility.cpp"
    "logging.cpp"
@@ -48,6 +49,7 @@ target_link_libraries(${THIS_TARGET}
    PUBLIC
       cpr::cpr
       fmt::fmt
+      glaze::glaze
 )
 
 # Need these for now due to incomplete libstdc++

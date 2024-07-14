@@ -18,6 +18,7 @@ namespace oura_charts::constants
    static constexpr const char* REST_PATH_PERSONAL_INFO = "personal_info";
    static constexpr const char* REST_PATH_HEART_RATE = "heartrate";
    static constexpr const char* REST_PATH_SLEEP_SESSION = "sleep";
+   static constexpr const char* REST_PATH_DAILY_SLEEP = "daily_sleep";
 
    static constexpr const char* REST_HEADER_XCLIENT = "X-Client";
    static constexpr const char* REST_HEADER_XCLIENT_VALUE = "cpr";
@@ -30,8 +31,6 @@ namespace oura_charts::constants
    static constexpr const char* REST_PARAM_NEXT_TOKEN = "next_token";
 
    static constexpr const char* JSON_KEY_DATA = "data";
-
-   //static constexpr int REST_DEFAULT_DATA_LIMIT{ 1024 * 1024 }; // 1MB
 
    static constexpr int MAX_ENV_VAR_LENGTH = 1024;
 

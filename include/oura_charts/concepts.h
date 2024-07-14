@@ -45,6 +45,15 @@ namespace oura_charts
 
 
    /// <summary>
+   ///   concept requiring that a functor can be called with the given arguments. Since the
+   ///   concept tests using std::invoke(), this will work for member functions, free
+   ///   functions, any Callable really.
+   /// </summary>
+   template <typename A, typename... Args>
+   concept InvocableFor = requires (A a, Args... args) { std::invoke(a, args...); };
+
+
+   /// <summary>
    ///   concept for a range/view over a map where both the key and value type are
    ///   compatible with std::string_view
    /// </summary>

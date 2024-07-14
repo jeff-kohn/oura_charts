@@ -124,7 +124,7 @@ int main(int argc, char* argv[])
 
       // create a filter to only get "long" sleep sessions (don't include naps/rest)
       // and group by day of week.
-      auto sleep_by_weekday = group<SleepByWeekday>(std::move(sleep_data), SessionWeekday, long_sleep_filter);
+         auto sleep_by_weekday = group<SleepByWeekday>(std::move(sleep_data), sessionWeekday, long_sleep_filter);
 
       // calculate various averages by day of week.
       constexpr auto weekdays = getWeekdays();
