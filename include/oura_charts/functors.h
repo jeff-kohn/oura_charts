@@ -304,7 +304,6 @@ namespace oura_charts
       /// </summary>
       ResultType result() const noexcept
       {
-         assert(m_count);
          if (m_sum.hasResult())
          {
             auto sum = m_sum.result().value();

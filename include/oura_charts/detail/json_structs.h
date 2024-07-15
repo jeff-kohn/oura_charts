@@ -150,22 +150,21 @@ namespace oura_charts::detail
 
    struct daily_sleep_data
    {
-      enum class SleepScoreContributors
+      struct SleepScoreContributors
       {
-         deep_sleep,
-         efficiency,
-         latency,
-         rem_sleep,
-         restfulness,
-         timing,
-         total_sleep
+         int deep_sleep{};
+         int efficiency{};
+         int latency{};
+         int rem_sleep{};
+         int restfulness{};
+         int timing{};
+         int total_sleep{};
       };
 
       std::string id{};
       year_month_day day{};
       int score{};
-
-      std::map<SleepScoreContributors, int> contributors{};
+      SleepScoreContributors contributors{};
       local_seconds timestamp{};
    };
 
