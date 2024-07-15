@@ -33,7 +33,7 @@ namespace oura_charts
       ///   morning after the sleep, eg Monday's sleep score is for Sunday
       ///   night's sleep.
       /// </summary>
-      chrono::year_month_day sleepDate() const { return m_data.day; }
+      chrono::year_month_day date() const { return m_data.day; }
 
       /// <summary>
       ///   the sleep score, a value from 1-100 taking various sleep factors
@@ -66,21 +66,33 @@ namespace oura_charts
    //
    // These lambda's can be used as projections for converting sessionDate() to various calandar types.
    //
-   inline constexpr auto sleepScoreYearMonthDay = selectAsYearMonthDay<&DailySleepScore::sleepDate>;
-   inline constexpr auto sleepScoreYear         = selectAsYear<&DailySleepScore::sleepDate>;
-   inline constexpr auto sleepScoreYearMonth    = selectAsYearMonth<&DailySleepScore::sleepDate>;
-   inline constexpr auto sleepScoreMonth        = selectAsMonth<&DailySleepScore::sleepDate>;
-   inline constexpr auto sleepScoreWeekday      = selectAsWeekday<&DailySleepScore::sleepDate>;
+   inline constexpr auto sleepScoreYearMonthDay = selectAsYearMonthDay<&DailySleepScore::date>;
+   inline constexpr auto sleepScoreYear         = selectAsYear<&DailySleepScore::date>;
+   inline constexpr auto sleepScoreYearMonth    = selectAsYearMonth<&DailySleepScore::date>;
+   inline constexpr auto sleepScoreMonth        = selectAsMonth<&DailySleepScore::date>;
+   inline constexpr auto sleepScoreWeekday      = selectAsWeekday<&DailySleepScore::date>;
 
-   // map to group sessions by day of the week
-   using SleepScoreByWeekday = MapByWeekday<DailySleepScore>;
+   //
+   // aliases for grouping maps
+   //
+   using SleepScoreByWeekday    = MapByWeekday<DailySleepScore>;
+   using SleepScoreByMonth      = MapByMonth<DailySleepScore>;
+   using SleepScoreByYearMonth  = MapByYearMonth<DailySleepScore>;
+   using SleepScoreByYear       = MapByYear<DailySleepScore>;
 
-   // map to group sessions by month of the year (not a specific year, just month)
-   using SleepScoreByMonth = MapByMonth<DailySleepScore>;
 
-   // map to group sessions by year and month
-   using SleepScoreByYearMonth = MapByYearMonth<DailySleepScore>;
+   /// <summary>
+   ///   concept for a map that can hold SleepSession objects.
+   /// </summary>
+   template <typename T>
+   concept SleepScoreMap = std::same_as<std::remove_cvref_t<typename T::mapped_type>, DailySleepScore>;
 
-   // map to group sessions by year
-   using SleepScoreByYear = MapByYear<DailySleepScore>;
+
+   template <SleepScoreMap MapT, std::invocable<DailySleepScore> KeyProjT>  requires CompatibleKeyProjection <MapT, KeyProjT>
+   inline auto group(DailySleepScoreSeries&& series, KeyProjT&& proj)
+   {
+      MapT map{};
+      groupBy(std::move(series), map, proj);
+      return map;
+   }
 }

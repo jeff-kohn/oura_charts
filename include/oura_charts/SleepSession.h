@@ -104,17 +104,13 @@ namespace oura_charts
    inline constexpr auto sessionWeekday      = selectAsWeekday<&SleepSession::sessionDate>;
 
     
-   // map to group sessions by day of the week
-   using SleepByWeekday = MapByWeekday<SleepSession>;
-
-   // map to group sessions by month of the year (not a specific year, just month)
-   using SleepByMonth = MapByMonth<SleepSession>;
-
-   // map to group sessions by year and month
+   //
+   // aliases for grouping maps
+   //
+   using SleepByWeekday   = MapByWeekday<SleepSession>;
+   using SleepByMonth     = MapByMonth<SleepSession>;
    using SleepByYearMonth = MapByYearMonth<SleepSession>;
-
-   // map to group sessions by year
-   using SleepByYear = MapByYear<SleepSession>;
+   using SleepByYear      = MapByYear<SleepSession>;
 
 
    /// <summary>

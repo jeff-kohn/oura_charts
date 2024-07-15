@@ -64,7 +64,7 @@ namespace oura_charts::test
 
       // group by month
       MapByMonth<HeartRate> hr_by_month{};
-      groupBy(std::move(hr_series), hr_by_month, HeartRateMonth);
+      groupBy(std::move(hr_series), hr_by_month, heartRateMonth);
 
       // make sure we got a subrange for each month
       constexpr auto months = getMonths();
@@ -109,7 +109,7 @@ namespace oura_charts::test
 
       // group by weekday
       MapByWeekday<HeartRate> hr_by_weekday{};
-      groupBy(std::move(hr_series), hr_by_weekday, HeartRateWeekday);
+      groupBy(std::move(hr_series), hr_by_weekday, heartRateWeekday);
 
       // make sure we got a subrange for each month
       constexpr auto weekdays = getWeekdays();
