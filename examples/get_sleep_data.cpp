@@ -134,9 +134,6 @@ int main(int argc, char* argv[])
       vector<nullable_double> avg_resting_heart_rate(weekdays.size());
       vector<nullable_double> avg_score(weekdays.size());
       vector<optional<seconds>> avg_total_sleep(weekdays.size());
-      vector<optional<seconds>> avg_deep_sleep(weekdays.size());
-      vector<optional<seconds>> avg_light_sleep(weekdays.size());
-      vector<optional<seconds>> avg_rem_sleep(weekdays.size());
 
       for (auto wd : weekdays)
       {
@@ -204,7 +201,6 @@ int main(int argc, char* argv[])
       result_table.column(0).format()
          .font_align(FontAlign::left)
          .font_style({ FontStyle::bold });
-         //.font_color(Color::cyan);
 
       result_table.print(std::cout);
       std::cout << std::endl;
