@@ -117,20 +117,22 @@ int main(int argc, char* argv[])
       }
       auto pat{ getPersonalToken(args) };
 
-      // Get sleep date for the past year.
+      // Get sleep data for the past year. score is a separate data source
       auto today = stripTimeOfDay(localNow());
       auto last_week = today - months{ 12 };
       RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
       auto sleep_data = getDataSeries<SleepSession>(rest_server, getCalendarDate(last_week), getCalendarDate(today));
+      auto score_data = getDataSeries<DailySleepScore>(rest_server, getCalendarDate(last_week), getCalendarDate(today));
 
-      // create a filter to only get "long" sleep sessions (don't include naps/rest)
-      // and group by day of week.
-         auto sleep_by_weekday = group<SleepByWeekday>(std::move(sleep_data), sessionWeekday, long_sleep_filter);
+      // group by day of week. in case of sleep we filter for only "long" sleep (no naps)
+      auto sleep_by_weekday = group<SleepByWeekday>(std::move(sleep_data), sessionWeekday, long_sleep_filter);
+      auto score_by_weekday = group<SleepScoreByWeekday>(std::move(score_data), sleepScoreWeekday);
 
       // calculate various averages by day of week.
       constexpr auto weekdays = getWeekdays();
       vector<nullable_double> avg_hrv(weekdays.size());
       vector<nullable_double> avg_resting_heart_rate(weekdays.size());
+      vector<nullable_double> avg_score(weekdays.size());
       vector<optional<seconds>> avg_total_sleep(weekdays.size());
       vector<optional<seconds>> avg_deep_sleep(weekdays.size());
       vector<optional<seconds>> avg_light_sleep(weekdays.size());
@@ -138,11 +140,9 @@ int main(int argc, char* argv[])
 
       for (auto wd : weekdays)
       {
-         // get the sub range representing all the data for the current weekday.
+         // get the sub range representing all the data for the current weekday. could be an empty range,
+         // but that won't cause any problems we'll just get null result.
          auto [beg, end] = sleep_by_weekday.equal_range(wd);
-         if (beg == end)
-            continue;
-
          std::ranges::subrange sleep_range{ beg, end };
 
          // get the average for this weekday sub-range
@@ -163,9 +163,19 @@ int main(int argc, char* argv[])
                          calc_rem_sleep(session.sleepTimeREM());
                       });
 
+         // now do same for sleep score.
+         auto [score_beg, score_end] = score_by_weekday.equal_range(wd);
+         std::ranges::subrange score_range{ score_beg, score_end };
+         AvgCalc<uint32_t> calc_score{};
+         rg::for_each(score_range | vw::values, [&] (const DailySleepScore& score)
+                      {
+                        calc_score(score.score());
+                      });
+
 
          avg_hrv[wd.c_encoding()] = calc_hrv.result();  
          avg_resting_heart_rate[wd.c_encoding()] = calc_resting_heart_rate.result();
+         avg_score[wd.c_encoding()] = calc_score.result();
          avg_total_sleep[wd.c_encoding()] = calc_total_sleep.result();
          avg_deep_sleep[wd.c_encoding()] = calc_deep_sleep.result();
          avg_light_sleep[wd.c_encoding()] = calc_light_sleep.result();
@@ -176,6 +186,7 @@ int main(int argc, char* argv[])
       auto result_table = getWeekdayTable();
       result_table.add_row(createRow("Avg HRV", avg_hrv, "??"));
       result_table.add_row(createRow("Avg Heart Rate", avg_resting_heart_rate, "??"));
+      result_table.add_row(createRow("Avg Sleep Score", avg_score, "??"));
       result_table.add_row(createRow("Avg Total Sleep", avg_total_sleep, "??"));
       result_table.add_row(createRow("Avg Deep Sleep", avg_deep_sleep, "??"));
       result_table.add_row(createRow("Avg Light Sleep", avg_light_sleep, "??"));
