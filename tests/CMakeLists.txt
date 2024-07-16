@@ -24,7 +24,7 @@ add_executable(${THIS_TARGET}
    # these are test-specific
    "TestDataProvider.h"
    "TestDataProvider.cpp"
-   "test_chrono_Helpers.cpp"
+   "test_chrono_helpers.cpp"
    "test_DailySleepScore.cpp"
    "test_functors.cpp"
    "test_HeartRate.cpp"

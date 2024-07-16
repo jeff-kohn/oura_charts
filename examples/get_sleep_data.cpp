@@ -146,9 +146,6 @@ int main(int argc, char* argv[])
          AvgCalc<double> calc_hrv{};
          AvgCalc<uint32_t> calc_resting_heart_rate{};
          AvgCalc<seconds> calc_total_sleep{};
-         AvgCalc<seconds> calc_deep_sleep{};
-         AvgCalc<seconds> calc_light_sleep{};
-         AvgCalc<seconds> calc_rem_sleep{};
 
          rg::for_each(sleep_range | vw::values, [&] (const SleepSession& session)
                       {
