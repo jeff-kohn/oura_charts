@@ -12,9 +12,11 @@
 
 namespace oura_charts::test
 {
+   // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+
    using namespace constants;
 
-   auto json = R"({
+   constexpr inline auto json = R"({
          "id": "1",
          "age" : 10,
          "weight" : 1.1,
@@ -51,7 +53,6 @@ namespace oura_charts::test
       REQUIRE(email == profile.email());
    }
 
-
-
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
 } // namespace oura_charts::test
