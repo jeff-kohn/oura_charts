@@ -33,7 +33,7 @@ namespace oura_charts
       ///   morning after the sleep, eg Monday's sleep score is for Sunday
       ///   night's sleep.
       /// </summary>
-      chrono::year_month_day date() const { return m_data.day; }
+      const chrono::year_month_day& date() const { return m_data.day; }
 
       /// <summary>
       ///   the sleep score, a value from 1-100 taking various sleep factors
@@ -45,6 +45,11 @@ namespace oura_charts
       ///   map indicating the contribution of various factors to the sleeps score.
       /// </summary>
       const SleepScoreContributors& contributors() const { return m_data.contributors; };
+
+      /// <summary>
+      ///   timestamp for this object
+      /// </summary>
+      local_seconds timestamp() const { return m_data.timestamp; }
 
       explicit DailySleepScore(const StorageType& data) noexcept : m_data(data) {}
       explicit DailySleepScore(StorageType&& data) noexcept : m_data(std::move(data)) {}
@@ -88,6 +93,9 @@ namespace oura_charts
    concept SleepScoreMap = std::same_as<std::remove_cvref_t<typename T::mapped_type>, DailySleepScore>;
 
 
+   /// <summary>
+   ///   helper function for efficiently using the groupBy() functionality of DataSeries object for sleep scores.
+   /// </summary>
    template <SleepScoreMap MapT, std::invocable<DailySleepScore> KeyProjT>  requires CompatibleKeyProjection <MapT, KeyProjT>
    inline auto group(DailySleepScoreSeries&& series, KeyProjT&& proj)
    {
@@ -95,4 +103,43 @@ namespace oura_charts
       groupBy(std::move(series), map, proj);
       return map;
    }
+
+   /// <summary>
+   ///   get() overload for structured binding support for the DailySleepScore class.
+   /// </summary>
+   template < std::size_t index > auto get(const oura_charts::DailySleepScore& score)
+   {
+      static_assert(index < 5);
+
+      if constexpr (index == 0)
+      {
+         return score.id();
+      }
+      else if constexpr (index == 1)
+      {
+         return score.date();
+      }
+      else if constexpr (index == 2)
+      {
+         return score.score();
+      }
+      else if constexpr (index == 3)
+      {
+         return score.contributors();
+      }
+      else // 4
+      {
+         return score.timestamp();
+      }
+   }
 }
+
+/// <summary>
+///   provide a tuple-like API for class DailySleepScore for structured bindings:
+/// </summary>
+template <> struct std::tuple_size <oura_charts::DailySleepScore> { static inline constexpr int value = 5; };
+template <> struct std::tuple_element<0, oura_charts::DailySleepScore> { using type = std::string; };
+template <> struct std::tuple_element<1, oura_charts::DailySleepScore> { using type = oura_charts::year_month_day; };
+template <> struct std::tuple_element<2, oura_charts::DailySleepScore> { using type = int; };
+template <> struct std::tuple_element<3, oura_charts::DailySleepScore> { using type = oura_charts::SleepScoreContributors; };
+template <> struct std::tuple_element<4, oura_charts::DailySleepScore> { using type = oura_charts::local_seconds; };

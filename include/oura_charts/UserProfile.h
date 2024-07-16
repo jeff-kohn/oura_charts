@@ -31,17 +31,17 @@ namespace oura_charts
       // path that will be used with base URL for REST call.
       static inline constexpr std::string_view REST_PATH = constants::REST_PATH_PERSONAL_INFO;
 
-      std::string id() const     { return m_data.id;    }
-      std::string email() const  { return m_data.email; }
-      int age() const            { return m_data.age;   }
+      const std::string& id() const     { return m_data.id;    }
+      const std::string& email() const  { return m_data.email; }
+      int age() const                   { return m_data.age;   }
 
       /// Weight in kg
-      double weight() const      { return m_data.weight; }
+      double weight() const             { return m_data.weight; }
 
       /// Height in meters
-      double height() const      { return m_data.height; }
+      double height() const             { return m_data.height; }
 
-      std::string biologicalSex() const { return m_data.biological_sex; }
+      const std::string& biologicalSex() const { return m_data.biological_sex; }
 
       explicit UserProfile(detail::profile_data data) noexcept : m_data(std::move(data)) {}
       ~UserProfile() = default;

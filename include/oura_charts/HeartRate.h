@@ -23,16 +23,16 @@ namespace oura_charts
       static inline constexpr std::string_view REST_PATH = constants::REST_PATH_HEART_RATE;
 
       // Heart rate in BPM
-      int beatsPerMin() const             {  return m_data.bpm;               }
+      int beatsPerMin() const                    {  return m_data.bpm;                    }
 
       // Condition HR reading was taken in (awake/asleep/etc)
-      const std::string& source() const   {  return m_data.source;            }
+      const std::string& source() const          {  return m_data.source;                 }
 
       // date and time (UTC) the HR reading was taken.
-      local_seconds timestamp() const     { return m_data.timestamp;          }
+      const local_seconds& timestamp() const     {  return m_data.timestamp;              }
 
       // calendar date for this reading
-      year_month_day date() const         { return getCalendarDate(timestamp());  }
+      year_month_day date() const                {  return getCalendarDate(timestamp());  }
 
 
       explicit HeartRate(const StorageType& data) noexcept : m_data(data) {}
@@ -99,7 +99,7 @@ namespace oura_charts
 } // namespace oura_charts
 
 /// <summary>
-///   provide a tuple-like API for class UserProfile for structured bindings:
+///   provide a tuple-like API for class HeartRate for structured bindings:
 /// </summary>
 template <> struct std::tuple_size <oura_charts::HeartRate> { static inline constexpr int value = 3; };
 template <> struct std::tuple_element<0, oura_charts::HeartRate> { using type = int; };

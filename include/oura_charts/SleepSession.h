@@ -34,24 +34,24 @@ namespace oura_charts
 
       const std::string& sleepId() const           {  return m_data.id;                   }
       SleepType sleepType() const                  {  return m_data.type;                 }
-      chrono::year_month_day sessionDate() const   {  return m_data.day;                  }
-      local_seconds bedtimeStart() const           {  return m_data.bedtime_start;        }
-      local_seconds bedtimeEnd() const             {  return m_data.bedtime_end;          }
+      const chrono::year_month_day& sessionDate() const   {  return m_data.day;                  }
+      const local_seconds& bedtimeStart() const           {  return m_data.bedtime_start;        }
+      const local_seconds& bedtimeEnd() const             {  return m_data.bedtime_end;          }
 
-      nullable_double avgBreathingRate() const     {  return m_data.average_breath;       }
-      nullable_double avgHeartRate() const         {  return m_data.average_heart_rate;   }
-      nullable_double avgHRV() const               {  return m_data.average_hrv;          }
-      nullable_uint restingHeartRate() const       {  return m_data.lowest_heart_rate;    }
+      const nullable_double& avgBreathingRate() const     {  return m_data.average_breath;       }
+      const nullable_double& avgHeartRate() const         {  return m_data.average_heart_rate;   }
+      const nullable_double& avgHRV() const               {  return m_data.average_hrv;          }
+      const nullable_uint& restingHeartRate() const       {  return m_data.lowest_heart_rate;    }
 
-      chrono::seconds latency() const              {  return m_data.latency;              }
-      chrono::seconds timeAwake() const            {  return m_data.awake_time;           }
-      chrono::seconds sleepTimeDeep() const        {  return m_data.deep_sleep_duration;  }
-      chrono::seconds sleepTimeLight() const       {  return m_data.light_sleep_duration; }
-      chrono::seconds sleepTimeREM() const         {  return m_data.rem_sleep_duration;   }
-      chrono::seconds sleepTimeTotal() const       {  return m_data.total_sleep_duration; }
-      chrono::seconds timeInBed() const            {  return m_data.time_in_bed;          }
+      const chrono::seconds& latency() const              {  return m_data.latency;              }
+      const chrono::seconds& timeAwake() const            {  return m_data.awake_time;           }
+      const chrono::seconds& sleepTimeDeep() const        {  return m_data.deep_sleep_duration;  }
+      const chrono::seconds& sleepTimeLight() const       {  return m_data.light_sleep_duration; }
+      const chrono::seconds& sleepTimeREM() const         {  return m_data.rem_sleep_duration;   }
+      const chrono::seconds& sleepTimeTotal() const       {  return m_data.total_sleep_duration; }
+      const chrono::seconds& timeInBed() const            {  return m_data.time_in_bed;          }
                                                
-      std::optional<uint32_t> restlessPeriods() const       {  return m_data.restless_periods;     }
+      const std::optional<uint32_t>& restlessPeriods() const       {  return m_data.restless_periods;     }
 
       /// <summary>
       ///   constructor accepts data by value, pass && to move instead of copy

@@ -148,6 +148,7 @@ namespace oura_charts::detail
       nullable_uint sleep_score_delta{};
    };
 
+
    struct daily_sleep_data
    {
       struct SleepScoreContributors

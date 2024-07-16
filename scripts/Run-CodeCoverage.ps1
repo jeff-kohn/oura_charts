@@ -25,6 +25,7 @@ try
       --excluded_sources "D:\a\_work\1"                              `
       --excluded_sources $env:VCPKG_INSTALLATION_ROOT                `
       --excluded_sources $BinDir\vcpkg_installed                     `
+      --excluded_sources $BinDir\_deps                               `
       --export_type=cobertura:"..\code_coverage.xml"                 `
       --export_type=html:"..\code_coverage_html"                     `
       -- tests.exe

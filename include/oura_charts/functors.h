@@ -18,9 +18,10 @@
 namespace oura_charts
 {
 
-   //
-   // Helper template for deducing return type of a class method.
-   //
+   /// <summary>
+   ///   helper template for deducing return type of a class method.
+   ///   example usage: MemberFunctionReturnType_t<decltype(&IObject::foo)>
+   /// </summary>
    template<typename T>
    struct MemberFunctionReturnType;
 
@@ -30,17 +31,14 @@ namespace oura_charts
       using type = R;
    };
 
-   /// <summary>
-   ///   helper template for deducing return type of a class method.
-   ///   example usage: MemberFunctionReturnType_t<decltype(&IObject::foo)>
-   /// </summary>
    template<typename MemberFunctionT>
    using MemberFunctionReturnType_t = typename MemberFunctionReturnType<MemberFunctionT>::type;
 
 
-   //
-   // Helper template for deducing class type of a class method.
-   //
+   /// <summary>
+   ///   helper template for deducing class type of a class method.
+   ///   example usage: MemberFunctionClassType_t<decltype(&IObject::foo)>
+   /// </summary>
    template<typename T>
    struct MemberFunctionClassType;
 
@@ -50,10 +48,6 @@ namespace oura_charts
       using type = C;
    };
 
-   /// <summary>
-   ///   helper template for deducing class type of a class method.
-   ///   example usage: MemberFunctionReturnType_t<decltype(&IObject::foo)>
-   /// </summary>
    template<typename MemberFunctionT>
    using MemberFunctionClassType_t = typename MemberFunctionClassType<MemberFunctionT>::type;
 
