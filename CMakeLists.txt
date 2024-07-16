@@ -50,7 +50,7 @@ if (WIN32)
                                        "$<$<CONFIG:Release,RelWithDebInfo>:NDEBUG;>"
                                        CACHE STRING "Default global preprocessor definitions for oura_charts project")
 
-    set(OURACHARTS_WARNING_FLAGS "/W4;/w14263;/w14265;/w14296;/w14311;/w14545;/w14547;/w14549;/w14555;/w14640;/w14826;/w14905;/w14906;/w14928;/wd4100;/external:anglebrackets;/external:W0;/WX"
+    set(OURACHARTS_WARNING_FLAGS "/W4;/w14186;/w14263;/w14265;/w14296;/w14311;/w14545;/w14547;/w14549;/w14555;/w14640;/w14826;/w14905;/w14906;/w14928;/wd4100;/external:anglebrackets;/external:W0;/WX"
                                  CACHE STRING "Default global warning options for oura_charts project")
 
     set(OURACHARTS_COMPILE_OPTIONS "/MP;/cgthreads8;/bigobj;/sdl;/GS;/Zc:wchar_t;/Zc:inline;/permissive-;/utf-8;/EHsc;/Zf;/Zi;/Zc:__cplusplus;/Zc:strictStrings;/Zf;/Zc:templateScope;/Zc:throwingNew;"
@@ -114,6 +114,17 @@ if (TOP_LEVEL_PROJECT)
   endif()
 
 endif()
+
+include(FetchContent)
+
+FetchContent_Declare(
+  glaze
+  GIT_REPOSITORY https://github.com/stephenberry/glaze.git
+  GIT_TAG main
+  GIT_SHALLOW TRUE
+)
+
+FetchContent_MakeAvailable(glaze)
 
 find_package(Boost REQUIRED)
 find_package(fmt CONFIG REQUIRED)

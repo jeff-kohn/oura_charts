@@ -8,7 +8,6 @@
     "fmt",
     "catch2",
     "spdlog",
-    "glaze",
     "tabulate",
     "cpr",
     {

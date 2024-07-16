@@ -73,7 +73,7 @@ namespace oura_charts
    class oura_exception final : public std::exception
    {
    public:
-      static constexpr int64_t ERROR_CODE_GENERAL_FAILURE = -1;
+      static inline constexpr int64_t ERROR_CODE_GENERAL_FAILURE = -1;
 
       /// <summary>
       ///   any error code associated with this error, zero if unspecified

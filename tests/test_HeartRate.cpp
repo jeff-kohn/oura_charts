@@ -1,21 +1,61 @@
+//---------------------------------------------------------------------------------------------------------------------
+// test_HeartRate.cpp
+//
+// unit tests for HeartRate data object
+//
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
+#include "oura_charts/oura_charts.h"
 #include "TestDataProvider.h"
-#include "oura_charts/DataSeries.h"
 #include "oura_charts/HeartRate.h"
-#include "oura_charts/chrono_helpers.h"
+#include "oura_charts/detail/json_structs.h"
 #include <catch2/catch_test_macros.hpp>
-#include <fmt/format.h>
 #include <set>
 
 namespace oura_charts::test
 {
-   using namespace std::literals;
-   using namespace detail;
-
-   // These tests SHOULD crash if they improperly access an empty optional<>
    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, bugprone-unchecked-optional-access)
 
+   using namespace constants;
+   using namespace detail;
+   using namespace std::literals;
 
-   TEST_CASE("test_DataSeries_paging", "[parsing][binding]")
+
+   TEST_CASE("test_parse_heart_rate", "[parsing]")
+   {
+
+      auto data_prov = TestDataProvider{ fs::path{ UNIT_TEST_DATA_DIR } };
+
+      auto json_res = data_prov.getJsonData(HeartRate::REST_PATH);
+      REQUIRE(json_res.has_value());
+
+      auto data_res = readJson<RestDataCollection<HeartRate::StorageType>>(*json_res);
+      REQUIRE(data_res.has_value());
+
+      auto hr_data{ *data_res };
+      REQUIRE(hr_data.data.size() > 1);
+   }
+
+
+   TEST_CASE("test_HeartRate_bindings", "[binding]")
+   {
+      // data provider for unit tests that gets json from disk files.
+      auto data_prov = TestDataProvider{ fs::path{ UNIT_TEST_DATA_DIR } };
+
+      HeartRateSeries hr_data{ detail::getDataSeries<HeartRate>(data_prov, detail::SortedPropertyMap{}) };
+
+      REQUIRE(hr_data.size() > 0);
+
+      auto&& hr = hr_data[0];
+      auto& [bpm, source, timestamp] = hr;
+
+      REQUIRE(bpm == hr.beatsPerMin());
+      REQUIRE(source == hr.source());
+      REQUIRE(timestamp == hr.timestamp());
+   }
+  
+
+   TEST_CASE("test_HeartRateSeries_paging", "[parsing][binding]")
    {
       TestDataProvider provider{ constants::UNIT_TEST_DATA_DIR };
 
@@ -30,8 +70,8 @@ namespace oura_charts::test
    }
 
 
-      // generate range containing the specified bpm values for the first 28 days
-      // of each month.
+   // generate range containing the specified bpm values for the first 28 days
+   // of each month.
    auto generateHeartRateSeries(rg::input_range auto&& bpm_values, int num_days = 7)
    {
       const auto today = getCalendarDate(localNow());
@@ -64,12 +104,12 @@ namespace oura_charts::test
 
       // group by month
       MapByMonth<HeartRate> hr_by_month{};
-      groupBy(std::move(hr_series), hr_by_month, HeartRateMonth);
+      groupBy(std::move(hr_series), hr_by_month, heartRateMonth);
 
       // make sure we got a subrange for each month
       constexpr auto months = getMonths();
       std::set<month> key_list{ vw::keys(hr_by_month) | rg::to<std::set<month>>() };
-      REQUIRE( ssize(months) == ssize(key_list) );
+      REQUIRE(ssize(months) == ssize(key_list));
 
       // make sure we got the expected number of entries with the expected min/max/average
       for (const auto& month : months)
@@ -101,6 +141,7 @@ namespace oura_charts::test
       }
    }
 
+
    TEST_CASE("test_HeartRateSeries_group_by_weekday")
    {
       // generate some data. 2 measurements per day, 28 days per month.
@@ -109,12 +150,12 @@ namespace oura_charts::test
 
       // group by weekday
       MapByWeekday<HeartRate> hr_by_weekday{};
-      groupBy(std::move(hr_series), hr_by_weekday, HeartRateWeekday);
+      groupBy(std::move(hr_series), hr_by_weekday, heartRateWeekday);
 
       // make sure we got a subrange for each month
       constexpr auto weekdays = getWeekdays();
       using WeekdaySet = std::set<weekday, weekday_compare_less>;
-      WeekdaySet key_list{ hr_by_weekday | vw::keys  | rg::to<WeekdaySet>()};
+      WeekdaySet key_list{ hr_by_weekday | vw::keys | rg::to<WeekdaySet>() };
 
       REQUIRE(ssize(weekdays) == ssize(key_list));
 
@@ -151,4 +192,5 @@ namespace oura_charts::test
 
    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, bugprone-unchecked-optional-access)
 
-} // namespace oura_charts::test
+
+}// namespace oura_charts::test

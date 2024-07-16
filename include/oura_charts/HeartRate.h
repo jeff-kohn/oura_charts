@@ -20,24 +20,23 @@ namespace oura_charts
    {
    public:
       using StorageType = detail::hr_data;
-      static constexpr std::string_view REST_PATH = constants::REST_PATH_HEART_RATE;
+      static inline constexpr std::string_view REST_PATH = constants::REST_PATH_HEART_RATE;
 
       // Heart rate in BPM
-      int beatsPerMin() const             {  return m_data.bpm;         }
+      int beatsPerMin() const                    {  return m_data.bpm;                    }
 
       // Condition HR reading was taken in (awake/asleep/etc)
-      const std::string& source() const   {  return m_data.source;     }
+      const std::string& source() const          {  return m_data.source;                 }
 
       // date and time (UTC) the HR reading was taken.
-      local_seconds timestamp() const     { return m_data.timestamp; }
+      const local_seconds& timestamp() const     {  return m_data.timestamp;              }
 
-      /// <summary>
-      ///   HeartRate constructor
-      /// </summary>
-      /// <remarks>
-      ///   copies by default, pass rvalue-ref to move instead.
-      /// </remarks>
-      explicit HeartRate(StorageType data) noexcept : m_data(std::move(data)) {}
+      // calendar date for this reading
+      year_month_day date() const                {  return getCalendarDate(timestamp());  }
+
+
+      explicit HeartRate(const StorageType& data) noexcept : m_data(data) {}
+      explicit HeartRate(StorageType&& data) noexcept : m_data(std::move(data)) {}
       HeartRate(HeartRate&&) = default;
       HeartRate(const HeartRate&) = default;
       HeartRate& operator=(const HeartRate&) = default;
@@ -51,36 +50,24 @@ namespace oura_charts
    using HeartRateSeries = DataSeries<HeartRate>;
 
 
-   ///
-   /// functors for converting timestamp to various calendar types for grouping/aggregation
-   ///
-   static constexpr auto HeartRateWeekday = [] (const HeartRate& hr) -> weekday
-      {
-         return weekday{ floor<days>(hr.timestamp()) };
-      };
-
-   static constexpr auto HeartRateYearMonthDay = [] (const HeartRate& hr) -> year_month_day
-      {
-         return getCalendarDate(hr.timestamp());
-      };
-
-   static constexpr auto HeartRateYear = [] (const HeartRate& hr) -> year
-      {
-         return getCalendarDate(hr.timestamp()).year();
-      };
-
-   static constexpr auto HeartRateYearMonth = [] (const HeartRate& hr) -> year_month
-      {
-         auto ymd = getCalendarDate(hr.timestamp());
-         return year_month{ ymd.year(), ymd.month() };
-      };
-
-   static constexpr auto HeartRateMonth = [] (const HeartRate& hr) -> month
-      {
-         return getCalendarDate(hr.timestamp()).month();
-      };
+   //
+   // These lambda's can be used as projections for converting sessionDate() to various calandar types.
+   //
+   inline constexpr auto heartRateYearMonthDay = selectAsYearMonthDay<&HeartRate::date>;
+   inline constexpr auto heartRateYear         = selectAsYear<&HeartRate::date>;
+   inline constexpr auto heartRateYearMonth    = selectAsYearMonth<&HeartRate::date>;
+   inline constexpr auto heartRateMonth        = selectAsMonth<&HeartRate::date>;
+   inline constexpr auto heartRateWeekday      = selectAsWeekday<&HeartRate::date>;
 
 
+   //
+   // aliases for grouping maps
+   //
+   using HeartRateByWeekday    = MapByWeekday<HeartRate>;
+   using HeartRateByMonth      = MapByMonth<HeartRate>;
+   using HeartRateByYearMonth  = MapByYearMonth<HeartRate>;
+   using HeartRateByYear       = MapByYear<HeartRate>;
+   
 
    /// <summary>
    ///   custom format() support for HeartRate
@@ -112,9 +99,9 @@ namespace oura_charts
 } // namespace oura_charts
 
 /// <summary>
-///   provide a tuple-like API for class UserProfile for structured bindings:
+///   provide a tuple-like API for class HeartRate for structured bindings:
 /// </summary>
-template <> struct std::tuple_size <oura_charts::HeartRate> { static constexpr int value = 3; };
+template <> struct std::tuple_size <oura_charts::HeartRate> { static inline constexpr int value = 3; };
 template <> struct std::tuple_element<0, oura_charts::HeartRate> { using type = int; };
 template <> struct std::tuple_element<1, oura_charts::HeartRate> { using type = std::string; };
 template <> struct std::tuple_element<2, oura_charts::HeartRate> { using type = oura_charts::local_seconds; };

@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------------------------------------------------7
-// SleepDataSeries.h
+// SleepSession.h
 //
 // Declaration for class SleepDataSeriers, which encapsulates a series of sleep data 
 // 
@@ -14,6 +14,7 @@
 
 namespace oura_charts
 {
+   using detail::nullable;
    using detail::nullable_double;
    using detail::nullable_string;
    using detail::nullable_int;
@@ -27,29 +28,30 @@ namespace oura_charts
    public:
       using StorageType = detail::sleep_data;
       using SleepType = StorageType::SleepType;
+      using ReadinessContributors = StorageType::ReadinessContributors;
 
-      static constexpr std::string_view REST_PATH = constants::REST_PATH_SLEEP_SESSION;
+      static inline constexpr std::string_view REST_PATH = constants::REST_PATH_SLEEP_SESSION;
 
       const std::string& sleepId() const           {  return m_data.id;                   }
       SleepType sleepType() const                  {  return m_data.type;                 }
-      chrono::year_month_day sessionDate() const   {  return m_data.day;                  }
-      local_seconds bedtimeStart() const           {  return m_data.bedtime_start;        }
-      local_seconds bedtimeEnd() const             {  return m_data.bedtime_end;          }
+      const chrono::year_month_day& sessionDate() const   {  return m_data.day;                  }
+      const local_seconds& bedtimeStart() const           {  return m_data.bedtime_start;        }
+      const local_seconds& bedtimeEnd() const             {  return m_data.bedtime_end;          }
 
-      nullable_double avgBreathingRate() const     {  return m_data.average_breath;       }
-      nullable_double avgHeartRate() const         {  return m_data.average_heart_rate;   }
-      nullable_double avgHRV() const               {  return m_data.average_hrv;          }
-      nullable_uint restingHeartRate() const       {  return m_data.lowest_heart_rate;    }
+      const nullable_double& avgBreathingRate() const     {  return m_data.average_breath;       }
+      const nullable_double& avgHeartRate() const         {  return m_data.average_heart_rate;   }
+      const nullable_double& avgHRV() const               {  return m_data.average_hrv;          }
+      const nullable_uint& restingHeartRate() const       {  return m_data.lowest_heart_rate;    }
 
-      chrono::seconds latency() const              {  return m_data.latency;              }
-      chrono::seconds timeAwake() const            {  return m_data.awake_time;           }
-      chrono::seconds sleepTimeDeep() const        {  return m_data.deep_sleep_duration;  }
-      chrono::seconds sleepTimeLight() const       {  return m_data.light_sleep_duration; }
-      chrono::seconds sleepTimeREM() const         {  return m_data.rem_sleep_duration;   }
-      chrono::seconds sleepTimeTotal() const       {  return m_data.total_sleep_duration; }
-      chrono::seconds timeInBed() const            {  return m_data.time_in_bed;          }
+      const chrono::seconds& latency() const              {  return m_data.latency;              }
+      const chrono::seconds& timeAwake() const            {  return m_data.awake_time;           }
+      const chrono::seconds& sleepTimeDeep() const        {  return m_data.deep_sleep_duration;  }
+      const chrono::seconds& sleepTimeLight() const       {  return m_data.light_sleep_duration; }
+      const chrono::seconds& sleepTimeREM() const         {  return m_data.rem_sleep_duration;   }
+      const chrono::seconds& sleepTimeTotal() const       {  return m_data.total_sleep_duration; }
+      const chrono::seconds& timeInBed() const            {  return m_data.time_in_bed;          }
                                                
-      std::optional<uint32_t> restlessPeriods() const       {  return m_data.restless_periods;     }
+      const std::optional<uint32_t>& restlessPeriods() const       {  return m_data.restless_periods;     }
 
       /// <summary>
       ///   constructor accepts data by value, pass && to move instead of copy
@@ -65,8 +67,8 @@ namespace oura_charts
       StorageType m_data;
    };
 
-
    using SleepType = SleepSession::SleepType;
+   using ReadinessContributors = SleepSession::ReadinessContributors;
    using SleepSessionSeries = DataSeries<SleepSession>;
 
 
@@ -89,51 +91,26 @@ namespace oura_charts
    /// <summary>
    ///   unary predicates to filter SleepSession objects based on sleep type
    /// </summary>
-   static constexpr SleepTypeFilter long_sleep_filter{SleepType::long_sleep};
+   inline constexpr SleepTypeFilter long_sleep_filter{SleepType::long_sleep};
 
 
    //
    // These lambda's can be used as projections for converting sessionDate() to various calandar types.
    //
-   static constexpr auto SessionWeekday = [] (const SleepSession& session) -> weekday
-      {
-         return sys_days{ session.sessionDate() };
-      };
+   inline constexpr auto sessionYearMonthDay = selectAsYearMonthDay<&SleepSession::sessionDate>;
+   inline constexpr auto sessionYear         = selectAsYear<&SleepSession::sessionDate>;
+   inline constexpr auto sessionYearMonth    = selectAsYearMonth<&SleepSession::sessionDate>;
+   inline constexpr auto sessionMonth        = selectAsMonth<&SleepSession::sessionDate>;
+   inline constexpr auto sessionWeekday      = selectAsWeekday<&SleepSession::sessionDate>;
 
-   static constexpr auto SessionYearMonthDay = [] (const SleepSession& session) -> year_month_day
-      {
-         return session.sessionDate();
-      };
-
-   static constexpr auto SessionYear = [] (const SleepSession& session) -> year
-      {
-         return session.sessionDate().year();
-      };
-
-   static constexpr auto SessionYearMonth = [] (const SleepSession& session) -> year_month
-      {
-         auto ymd = session.sessionDate();
-         return year_month{ ymd.year(), ymd.month() };
-      };
-
-   static constexpr auto SessionMonth = [] (const SleepSession& session) -> month
-      {
-         return session.sessionDate().month();
-      };
-
-
-
-   // map to group sessions by day of the week
-   using SleepByWeekday = MapByWeekday<SleepSession>;
-
-   // map to group sessions by month of the year (not a specific year, just month)
-   using SleepByMonth = MapByMonth<SleepSession>;
-
-   // map to group sessions by year and month
+    
+   //
+   // aliases for grouping maps
+   //
+   using SleepByWeekday   = MapByWeekday<SleepSession>;
+   using SleepByMonth     = MapByMonth<SleepSession>;
    using SleepByYearMonth = MapByYearMonth<SleepSession>;
-
-   // map to group sessions by year
-   using SleepByYear = MapByYear<SleepSession>;
+   using SleepByYear      = MapByYear<SleepSession>;
 
 
    /// <summary>

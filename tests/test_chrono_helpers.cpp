@@ -26,10 +26,10 @@ namespace oura_charts::test
       const local_seconds local_secs   = local_days{ ymd } + tod_local.to_duration();
       // NOLINTEND(cert-err58-cpp)
 
-      static constexpr auto datetime_str          = "2024-02-01T12:03:33Z"sv;
-      static constexpr auto date_str              = "2024-02-01"sv;
-      static constexpr auto local_datetime_str    = "2024-02-01T06:03:33-6:00"sv;
-      static constexpr auto tz_str                = "America/Chicago"sv;
+      inline constexpr auto datetime_str          = "2024-02-01T12:03:33Z"sv;
+      inline constexpr auto date_str              = "2024-02-01"sv;
+      inline constexpr auto local_datetime_str    = "2024-02-01T06:03:33-6:00"sv;
+      inline constexpr auto tz_str                = "America/Chicago"sv;
 
    }  // namespace
 

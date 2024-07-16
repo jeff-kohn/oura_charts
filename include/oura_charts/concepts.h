@@ -8,11 +8,12 @@
 
 #pragma once
 
-#include <concepts>
-#include <string_view>
 #include <fmt/format.h>
+#include <concepts>
+#include <functional>
 #include <optional>
 #include <ranges>
+#include <string_view>
 
 namespace oura_charts
 {
@@ -42,6 +43,15 @@ namespace oura_charts
    /// </summary>
    template <typename T>
    concept StringViewCompatible = std::convertible_to<T, std::string_view>;
+
+
+   /// <summary>
+   ///   concept requiring that a functor can be called with the given arguments. Since the
+   ///   concept tests using std::invoke(), this will work for member functions, free
+   ///   functions, any Callable really.
+   /// </summary>
+   template <typename A, typename... Args>
+   concept InvocableFor = requires (A a, Args... args) { std::invoke(a, args...); };
 
 
    /// <summary>
