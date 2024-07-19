@@ -60,7 +60,7 @@ if (WIN32)
 
     set(OURACHARTS_LINK_OPTIONS "/DYNAMICBASE;/NXCOMPAT;/CGTHREADS:8;"
                                 "$<$<CONFIG:DEBUG>:/INCREMENTAL;/OPT:NOICF;>"
-                                "$<$<CONFIG:Release,RelWithDebInfo>:/Gw;/Gy;/OPT:ICF;/OPT:REF;/LTCG:incremental;>"
+                                "$<$<CONFIG:Release,RelWithDebInfo>:/OPT:ICF;/OPT:REF;/LTCG:incremental;>"
                                 CACHE STRING "Default global linker options for oura_charts project")
 
     set(OURACHARTS_MSVCRT_DEBUG "MultiThreadedDebug" CACHE STRING "MSVC runtime library version used for debug builds")
@@ -132,7 +132,8 @@ find_package(cxxopts CONFIG REQUIRED)
 find_package(cpr CONFIG REQUIRED)
 
 # Include sub-projects.
-add_subdirectory("src")
+add_subdirectory("lib")
+add_subdirectory("app")
 add_subdirectory("examples")
 
 cmake_print_variables(OURACHARTS_CXX_STANDARD)

@@ -1,9 +1,9 @@
 
 ###############################################################################
-# Target oura_rest
+# Target oura_lib
 ###############################################################################
 
-set(THIS_TARGET "oura_rest")
+set(THIS_TARGET "oura_lib")
 
 add_library(${THIS_TARGET} STATIC
 	"../include/oura_charts/detail/utility.h"
@@ -45,6 +45,8 @@ target_include_directories( ${THIS_TARGET}
 		${Boost_INCLUDE_DIRS}
 )
 
+# Since this is a static lib, we make all our dependencies public because
+# users of lib will need to link against them 
 target_link_libraries(${THIS_TARGET}
    PUBLIC
       cpr::cpr
@@ -52,7 +54,7 @@ target_link_libraries(${THIS_TARGET}
       glaze::glaze
 )
 
-# Need these for now due to incomplete libstdc++
+# Need this for now due to incomplete libstdc++
 if (LINUX)
    target_link_libraries(${THIS_TARGET} PRIVATE tl::expected)
 endif()
@@ -61,3 +63,5 @@ target_compile_features(${THIS_TARGET} PUBLIC ${OURACHARTS_CXX_STANDARD})
 target_compile_options(${THIS_TARGET} PRIVATE ${OURACHARTS_COMPILE_OPTIONS})
 target_compile_options(${THIS_TARGET} PRIVATE ${OURACHARTS_WARNING_FLAGS})
 target_compile_definitions(${THIS_TARGET} PRIVATE ${OURACHARTS_COMPILE_DEFINITIONS})
+
+

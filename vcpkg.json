@@ -2,18 +2,23 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "oura-charts",
   "version": "1.0.0",
-  "dependencies": [
-    "boost-algorithm",
-    "cxxopts",
-    "fmt",
-    "catch2",
-    "spdlog",
-    "tabulate",
-    "cpr",
-    {
-      "name": "tl-expected",
-      "platform": "linux"
-    }
-  ],
+   "dependencies": [
+      "boost-algorithm",
+      "cxxopts",
+      "fmt",
+      "catch2",
+      "spdlog",
+      "tabulate",
+      "cpr",
+      "wxcharts",
+      {
+         "name": "wxwidgets",
+         "features": [ "example", "fonts", "media", "secretstore" ]
+      },
+      {
+         "name": "tl-expected",
+         "platform": "linux"
+      }
+   ],
   "builtin-baseline": "576379156e82da642f8d1834220876759f13534d"
 }
