@@ -40,13 +40,13 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        sudo apt install cppcheck -y
-        sudo curl -sSL https://github.com/psastras/sarif-rs/releases/download/clang-tidy-sarif-latest/clang-tidy-sarif-x86_64-unknown-linux-gnu -o /usr/local/bin/clang-tidy-sarif
-        sudo chmod +x /usr/local/bin/clang-tidy-sarif
-        sudo curl -sSL https://github.com/psastras/sarif-rs/releases/download/sarif-fmt-latest/sarif-fmt-x86_64-unknown-linux-gnu -o /usr/local/bin/sarif-fmt
-        sudo chmod +x /usr/local/bin/sarif-fmt
-        dotnet tool install --global Sarif.Multitool
-
+         sudo apt update && sudo apt-get install -y cppcheck autoconf automake libtool pkg-config bison flex nasm libx11-dev libxft-dev libxext-dev libxrandr-dev libltdl-dev libwayland-dev libxkbcommon-dev libegl1-mesa-dev libxtst-dev
+         sudo curl -sSL https://github.com/psastras/sarif-rs/releases/download/clang-tidy-sarif-latest/clang-tidy-sarif-x86_64-unknown-linux-gnu -o /usr/local/bin/clang-tidy-sarif
+         sudo chmod +x /usr/local/bin/clang-tidy-sarif
+         sudo curl -sSL https://github.com/psastras/sarif-rs/releases/download/sarif-fmt-latest/sarif-fmt-x86_64-unknown-linux-gnu -o /usr/local/bin/sarif-fmt
+         sudo chmod +x /usr/local/bin/sarif-fmt
+         dotnet tool install --global Sarif.Multitool
+    
       # Setup Cmake, Ninja, and VCPKG
     - uses: lukka/get-cmake@latest
     - uses: lukka/run-vcpkg@v11.5
