@@ -11,7 +11,7 @@ namespace oura_charts
    	SetTopWindow(main_frame);
    	return true;
    }
-
-   wxIMPLEMENT_APP(OuraChartsApp);
-
 }
+
+// this needs to be outside the namespace for Linux but now Windows, go figure
+wxIMPLEMENT_APP(oura_charts::OuraChartsApp);
