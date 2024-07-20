@@ -8,7 +8,7 @@ namespace oura_charts
    class OuraChartsApp : public wxApp
    {
    public:
-      OuraChartsApp() = default;
+      OuraChartsApp();
 
       bool OnInit() override;
    };

@@ -2,6 +2,9 @@
 # Target OuraCharts
 ###############################################################################
 set(THIS_TARGET "OuraCharts")
+
+include(wx_generated_source.cmake)
+
 add_executable(${THIS_TARGET} WIN32
 	AboutDialog.cpp
 	AboutDialog.h
@@ -11,9 +14,7 @@ add_executable(${THIS_TARGET} WIN32
 	OuraChartsApp.cpp
 	PreferencesDialog.cpp
 	PreferencesDialog.h
-	generated/AboutDialogBase.cpp
-	generated/MainFrameBase.cpp
-	generated/PreferencesDialogBase.cpp
+	${wx_generated_files}
 )
 
 set_target_properties(${THIS_TARGET}

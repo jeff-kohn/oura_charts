@@ -3,6 +3,10 @@
 
 namespace oura_charts
 {
+   OuraChartsApp::OuraChartsApp()
+   {
+      SetUseBestVisual(true);
+   }
 
    bool OuraChartsApp::OnInit()
    {

@@ -117,7 +117,7 @@
             label="&amp;About"
             stock_id="wxID_ABOUT"
             var_name="menu_item3"
-            wxEVT_MENU="OnMenuHelpAbout" />
+            wxEVT_MENU="onMenuHelpAbout" />
         </node>
       </node>
       <node

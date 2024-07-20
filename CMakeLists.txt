@@ -133,7 +133,7 @@ find_package(cpr CONFIG REQUIRED)
 
 # Include sub-projects.
 add_subdirectory("lib")
-add_subdirectory("app")
+add_subdirectory("src")
 add_subdirectory("examples")
 
 cmake_print_variables(OURACHARTS_CXX_STANDARD)

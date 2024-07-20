@@ -51,8 +51,8 @@ bool MainFrameBase::Create(wxWindow* parent, wxWindowID id, const wxString& titl
     Centre(wxBOTH);
 
     // Event handlers
-    Bind(wxEVT_MENU, &MainFrameBase::OnMenuHelpAbout, this, wxID_ABOUT);
     Bind(wxEVT_MENU, &MainFrameBase::onMenuFilePreferences, this, wxID_PREFERENCES);
+    Bind(wxEVT_MENU, &MainFrameBase::onMenuHelpAbout, this, wxID_ABOUT);
 
     return true;
 }

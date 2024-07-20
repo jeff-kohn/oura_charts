@@ -12,7 +12,7 @@ namespace oura_charts
         PreferencesDialog();  
 
         // construct the dialog as a child window of the specified parent
-        PreferencesDialog(wxWindow* parent)  { Create(parent); }
+        explicit PreferencesDialog(wxWindow* parent)  { Create(parent); }
     };
 
 

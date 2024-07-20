@@ -7,26 +7,20 @@
 #pragma once
 
 #include "generated/AboutDialogBase.h"
+#include "oura_charts/UserProfile.h"
+
 
 namespace oura_charts
 {
-
     class AboutDialog : public AboutDialogBase
     {
     public:
         // If you use this constructor, you must call Create(parent)
-        AboutDialog() = default;  
-        
-        AboutDialog(wxWindow* parent);
-    };
+        AboutDialog() = default;
 
-// ************* End of generated code ***********
-// DO NOT EDIT THIS COMMENT BLOCK!
-//
-// Code below this comment block will be preserved
-// if the code for this class is re-generated.
-//
-// clang-format on
-// ***********************************************
+        AboutDialog(const UserProfile& profile, wxWindow* parent);
+        
+        explicit AboutDialog(wxWindow* parent);
+    };
 
 }  // namespace oura_charts
