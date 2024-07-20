@@ -30,7 +30,7 @@ namespace oura_charts
       /// <summary>
       ///   The PAT that the user generated on the Oura website.
       /// </summary>
-      const std::string& getToken() const          { return m_token;                    }
+      const std::string& getToken() const   { return m_token;                    }
       void setToken(std::string_view token) { m_token = std::string{ token };    }
       void setToken(std::string&& token)    { m_token = std::move(token);        }
 
