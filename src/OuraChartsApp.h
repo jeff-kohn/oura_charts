@@ -24,7 +24,7 @@ namespace oura_charts
       wxConfigBase& getConfig() noexcept(false);
       const wxConfigBase& getConfig() const noexcept(false);
 
-      using TokenResult = std::expected<TokenAuth, oura_exception>;
+      using TokenResult = expected<TokenAuth, oura_exception>;
       TokenResult getRestToken() const;
 
    private:
