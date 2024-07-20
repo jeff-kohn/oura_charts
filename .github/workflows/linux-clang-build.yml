@@ -54,7 +54,7 @@ jobs:
         if: always()
         with:
           name: vcpkg_logs
-          path: ${{ github.workspace }}/oura_charts/vcpkg/buildtrees/**/*.log
+          path: ${{ github.workspace }}/vcpkg/buildtrees/**/*.log
           retention-days: 3
 
       - name: Publish Test Results
