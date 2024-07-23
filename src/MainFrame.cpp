@@ -29,12 +29,14 @@ namespace oura_charts
       }
    }
 
-   void MainFrame::OnMenuFileQuit(wxCommandEvent& event)
+
+   void MainFrame::OnMenuFileQuit(wxCommandEvent&)
    {
       Close(true);
    }
 
-   void MainFrame::OnMenuHelpAboutWx(wxCommandEvent& event)
+
+   void MainFrame::OnMenuHelpAboutWx(wxCommandEvent&)
    {
       wxInfoMessageBox(this);
    }

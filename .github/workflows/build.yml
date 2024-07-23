@@ -1,0 +1,123 @@
+name: Build
+on:
+  push:
+    paths-ignore:
+      - 'README.md'
+      - '**/.gitignore'
+  
+
+env:
+  VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}\\vcpkg"
+
+
+permissions:
+  contents: write
+  checks: write
+
+jobs:
+  windows_build:
+    name: "Window MSVC Build"
+    runs-on: windows-latest
+    env:
+      PRESET_NAME: "win-release"
+      BUILD_DIR: "build/out/win-release"
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    - name: 'Set vcvars'
+      uses: ilammy/msvc-dev-cmd@v1
+
+    - name: "Setup CMake/ninja"
+      uses: lukka/get-cmake@latest
+
+    - name: "Run Vcpkg"
+      uses: lukka/run-vcpkg@v11.5
+      with:
+        vcpkgJsonGlob: 'vcpkg.json'
+
+    - name: Install winget
+      uses: Cyberboss/install-winget@v1
+
+    - name: Install pre-reqs
+      run: |
+        winget install CppCheck --verbose --disable-interactivity  --accept-source-agreements --accept-package-agreements
+        choco install OpenCppCoverage -y
+
+    - name: configure
+      run: |
+        cmake --preset=$env:PRESET_NAME
+
+    - name: build
+      run: |
+        cmake --build --preset=$env:PRESET_NAME --target=all
+
+    - name: tests
+      run: |
+        ctest --preset $env:PRESET_NAME --output-on-failure --output-junit "test_results.xml"
+
+    - name: Publish Test Artifacts
+      uses: EnricoMi/publish-unit-test-result-action/windows@v2
+      if: always()
+      with:
+          files: |
+            ${{ env.BUILD_DIR }}/test_results.xml
+
+  linux_build:
+    name: "Linux Clang Build"
+    runs-on: ubuntu-24.04
+    env:
+      PRESET_NAME: "linux-release"
+      BUILD_DIR: "build/out/linux-release"
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Install Dependencies
+        run: |
+          sudo apt update && sudo apt-get install -y cppcheck autoconf automake libtool pkg-config bison flex nasm libx11-dev libxft-dev libxext-dev libxrandr-dev libltdl-dev libwayland-dev libxkbcommon-dev libegl1-mesa-dev libxtst-dev libsecret-1-dev libselinux1-dev
+
+      - name: "Setup cmake/ninja"
+        uses: lukka/get-cmake@latest
+
+      - name: run-vcpkg
+        uses: lukka/run-vcpkg@v11.5
+        with:
+          vcpkgJsonGlob: 'vcpkg.json'
+
+      - name: configure
+        run: |
+          cmake --preset=$PRESET_NAME
+
+      - name: build
+        run: |
+          cmake --build --preset=$PRESET_NAME --target=all
+
+      - name: tests
+        run: |
+          ctest --preset $PRESET_NAME --output-on-failure --output-junit "test_results.xml"
+
+      - name: Upload vcpkg logs
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vcpkg_logs
+          path: ${{ github.workspace }}/vcpkg/buildtrees/**/*.log
+          retention-days: 3
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+            files: |
+              ${{ env.BUILD_DIR }}/test_results.xml
+
+
+
+
+
+

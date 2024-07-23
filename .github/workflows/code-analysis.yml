@@ -20,7 +20,7 @@ jobs:
   analyze:
     name: 'Static Code Analysis'
     runs-on: 'ubuntu-24.04'
-    timeout-minutes: 45
+    timeout-minutes: 75
     env:
       VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}/vcpkg"
       VCPKG_FEATURE_FLAGS: "dependencygraph"
