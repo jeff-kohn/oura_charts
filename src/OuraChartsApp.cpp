@@ -14,20 +14,24 @@ namespace oura_charts
       // Set up config object to use file even on windows (registry is yuck)
       wxStandardPaths::Get().SetFileLayout(wxStandardPaths::FileLayout::FileLayout_XDG);
       wxConfigBase::DontCreateOnDemand();
-      wxConfigBase::Set(new wxFileConfig{ constants::APP_NAME_NOSPACE, wxEmptyString, wxEmptyString,  wxEmptyString,  wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_SUBDIR });
-   }
+      wxConfigBase::Set(new wxFileConfig{ constants::APP_NAME_NOSPACE, // NOLINT(cppcoreguidelines-owning-memory)
+                                          wxEmptyString, 
+                                          wxEmptyString,  
+                                          wxEmptyString,  
+                                          wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_SUBDIR }); 
+   } // NOLINT(cppcoreguidelines-owning-memory)
 
    bool OuraChartsApp::OnInit()
    {
-   	auto *main_frame = new MainFrame(nullptr);
+   	auto *main_frame = new MainFrame(nullptr); // NOLINT(cppcoreguidelines-owning-memory)
    	main_frame->Show(true);
    	SetTopWindow(main_frame);
    	return true;
-   }
+   } // NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
 
    wxConfigBase& OuraChartsApp::getConfig() noexcept(false)
    {
-      auto config = wxConfigBase::Get(false);
+      auto *config = wxConfigBase::Get(false);
       if (nullptr == config)
          throw oura_exception{ "No configuration object available" };
 
@@ -36,7 +40,7 @@ namespace oura_charts
 
    const wxConfigBase& OuraChartsApp::getConfig() const noexcept(false)
    {
-      auto config = wxConfigBase::Get(false);
+      auto *config = wxConfigBase::Get(false);
       if (nullptr == config)
          throw oura_exception{ "No configuration object available" };
 
@@ -61,7 +65,8 @@ namespace oura_charts
 
       return TokenAuth{ pat.ToStdString() };
    }
-}
+
+}  // namespace oura_charts
 
 // this needs to be outside the namespace for Linux but not Windows, go figure
 wxIMPLEMENT_APP(oura_charts::OuraChartsApp);
