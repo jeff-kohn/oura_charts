@@ -12,15 +12,14 @@
 
 namespace oura_charts
 {
-    class AboutDialog : public AboutDialogBase
-    {
-    public:
-        // If you use this constructor, you must call Create(parent)
-        AboutDialog() = default;
+   class AboutDialog : public AboutDialogBase
+   {
+   public:
+      AboutDialog(const UserProfile& profile, wxWindow* parent);
+      AboutDialog(const std::string& profile_text, wxWindow* parent);
 
-        AboutDialog(const UserProfile& profile, wxWindow* parent);
-        
-        explicit AboutDialog(wxWindow* parent);
-    };
+   private:
+      void Init(const std::string& profile_text, wxWindow* parent);
+   };
 
 }  // namespace oura_charts

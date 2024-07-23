@@ -8,8 +8,8 @@
 // clang-format off
 
 #include <wx/button.h>
-#include <wx/sizer.h>
-#include <wx/statline.h>
+#include <wx/font.h>
+#include <wx/valgen.h>
 
 #include "AboutDialogBase.h"
 
@@ -18,38 +18,51 @@ using namespace oura_charts;
 bool AboutDialogBase::Create(wxWindow* parent, wxWindowID id, const wxString& title,
     const wxPoint& pos, const wxSize& size, long style, const wxString &name)
 {
-    if (!wxDialog::Create(parent, id, title, pos, size, style, name))
+    if (!wxDialog::Create(parent, id, title, pos, ConvertDialogToPixels(size), style, name))
         return false;
 
-    auto* box_sizer = new wxBoxSizer(wxVERTICAL);
+    m_main_sizer = new wxBoxSizer(wxVERTICAL);
 
     auto* static_text = new wxStaticText(this, wxID_ANY, "Oura Charts 0.1");
-    box_sizer->Add(static_text, wxSizerFlags().Center().Border(wxALL));
+    {
+        wxFontInfo font_info(14);
+        font_info.FaceName("Segoe UI Variable Text");
+        static_text->SetFont(wxFont(font_info));
+    }
+    m_main_sizer->Add(static_text, wxSizerFlags().Center().Border(wxALL));
 
     auto* static_text2 = new wxStaticText(this, wxID_ANY, "Copyright (c) Jeff Kohn 2024. ");
-    box_sizer->Add(static_text2, wxSizerFlags().Center().Border(wxALL));
+    m_main_sizer->Add(static_text2,
+        wxSizerFlags().Center().Border(wxLEFT|wxRIGHT, wxSizerFlags::GetDefaultBorder()));
 
     auto* static_text4 = new wxStaticText(this, wxID_ANY, "All Rights Reserved.");
-    box_sizer->Add(static_text4, wxSizerFlags().Center().Border(wxALL));
+    m_main_sizer->Add(static_text4,
+        wxSizerFlags().Center().Border(wxLEFT|wxRIGHT, wxSizerFlags::GetDefaultBorder()));
 
-    auto* static_line = new wxStaticLine(this, wxID_ANY, wxDefaultPosition,
-        ConvertDialogToPixels(wxSize(45, -1)), wxLI_HORIZONTAL);
-    box_sizer->Add(static_line, wxSizerFlags(5).Center().Border(wxALL));
+    m_main_sizer->AddStretchSpacer(1);
 
-    auto* box_sizer2 = new wxBoxSizer(wxHORIZONTAL);
+    auto* profile_sizer = new wxBoxSizer(wxHORIZONTAL);
 
-    auto* static_text3 = new wxStaticText(this, wxID_ANY, "User Info:");
-    box_sizer2->Add(static_text3, wxSizerFlags().Border(wxALL));
+    profile_sizer->AddStretchSpacer(1);
 
-    m_lbl_user_profile = new wxStaticText(this, wxID_ANY, "(not available)");
-    box_sizer2->Add(m_lbl_user_profile, wxSizerFlags().Border(wxALL));
+    auto* static_text3 = new wxStaticText(this, wxID_ANY, "UserInfo:", wxDefaultPosition, wxDefaultSize,
+        wxALIGN_RIGHT);
+    profile_sizer->Add(static_text3, wxSizerFlags().Border(wxALL));
 
-    box_sizer->Add(box_sizer2, wxSizerFlags().Border(wxALL));
+    m_lbl_user_profile = new wxStaticText(this, wxID_ANY, "(not available)", wxDefaultPosition, wxDefaultSize,
+        wxALIGN_LEFT);
+    m_lbl_user_profile->Wrap(80);
+    m_lbl_user_profile->SetValidator(wxGenericValidator(&m_profile_text));
+    profile_sizer->Add(m_lbl_user_profile, wxSizerFlags(1).Border(wxALL));
+
+    profile_sizer->AddStretchSpacer(1);
+
+    m_main_sizer->Add(profile_sizer, wxSizerFlags(2).Center().Border(wxALL));
 
     auto* std_btn = CreateStdDialogButtonSizer(wxOK);
-    box_sizer->Add(CreateSeparatedSizer(std_btn), wxSizerFlags().Center().Border(wxALL));
+    m_main_sizer->Add(std_btn, wxSizerFlags().Center().Border(wxALL));
 
-    SetSizerAndFit(box_sizer);
+    SetSizer(m_main_sizer);
     Centre(wxBOTH);
 
     return true;

@@ -14,6 +14,7 @@ add_executable(${THIS_TARGET} WIN32
 	OuraChartsApp.cpp
 	PreferencesDialog.cpp
 	PreferencesDialog.h
+   utf8.manifest
 	${wx_generated_files}
 )
 
@@ -22,6 +23,7 @@ set_target_properties(${THIS_TARGET}
 		OUTPUT_NAME ${THIS_TARGET}
 		COMPILE_PDB_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 		COMPILE_PDB_NAME ${THIS_TARGET}
+      VS_DPI_AWARE "PerMonitor"
       MSVC_RUNTIME_LIBRARY "$<$<CONFIG:Debug>:${OURACHARTS_MSVCRT_DEBUG}>$<$<CONFIG:Release,RelWithDebInfo>:${OURACHARTS_MSVCRT_RELEASE}>"
 )
 

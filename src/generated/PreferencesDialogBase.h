@@ -43,6 +43,10 @@ namespace oura_charts
 
         // Virtual event handlers -- override them in your derived class
 
+        virtual void OnAccessTokenTextChanged(wxCommandEvent& event) { event.Skip(); }
+        virtual void OnAccessTokenTextSetFocus(wxFocusEvent& event) { event.Skip(); }
+        virtual void OnSaveUpdateUI(wxUpdateUIEvent& event) { event.Skip(); }
+        virtual void OnTestUpdateUI(wxUpdateUIEvent& event) { event.Skip(); }
         virtual void onSaveClicked(wxCommandEvent& event) { event.Skip(); }
         virtual void onTestClicked(wxCommandEvent& event) { event.Skip(); }
 

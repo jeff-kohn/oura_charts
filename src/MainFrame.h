@@ -2,6 +2,7 @@
 #pragma once
 
 #include "generated/MainFrameBase.h"
+#include "constants.h"
 
 namespace oura_charts
 {
@@ -10,7 +11,7 @@ namespace oura_charts
     public:
         // If you use this constructor, you must call Create(parent)
         MainFrame() = default;
-        explicit MainFrame(wxWindow* parent) : MainFrameBase(parent) {};
+        explicit MainFrame(wxWindow* parent) : MainFrameBase(parent, wxID_ANY, constants::APP_NAME) {};
 
     protected:
         void onMenuHelpAbout(wxCommandEvent& event) override;

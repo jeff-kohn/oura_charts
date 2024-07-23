@@ -2,6 +2,7 @@
 #include "MainFrame.h"
 #include "AboutDialog.h"
 #include "OuraChartsApp.h"
+#include "PreferencesDialog.h"
 
 #include "oura_charts/RestDataProvider.h"
 #include "oura_charts/UserProfile.h"
@@ -24,7 +25,7 @@ namespace oura_charts
          }
          else
          {
-            AboutDialog dlg(this);
+            AboutDialog dlg(auth_res.error().message.c_str() , this);
             dlg.ShowModal();
          }
       }
@@ -32,11 +33,27 @@ namespace oura_charts
       {
          wxLogError(e.message.c_str());
       }
+      catch (std::exception& e)
+      {
+         wxLogError(e.what());
+      }
    }
 
-   void MainFrame::onMenuFilePreferences(wxCommandEvent& event)
+   void MainFrame::onMenuFilePreferences(wxCommandEvent&)
    {
-
+      try
+      {
+         PreferencesDialog dlg(this);
+         dlg.ShowModal();
+      }
+      catch (oura_exception& e)
+      {
+         wxLogError(e.message.c_str());
+      }
+      catch (std::exception& e)
+      {
+         wxLogError(e.what());
+      }
    }
 
 }  // namespace oura_charts

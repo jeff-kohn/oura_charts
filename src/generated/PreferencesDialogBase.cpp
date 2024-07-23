@@ -28,19 +28,22 @@ bool PreferencesDlgBase::Create(wxWindow* parent, wxWindowID id, const wxString&
 
     auto* hyperlink = new wxHyperlinkCtrl(this, wxID_ANY, "Personal Access Token:",
         "https://cloud.ouraring.com/docs/authentication#personal-access-tokens");
-    box_sizer2->Add(hyperlink, wxSizerFlags().Center().Border(wxALL));
+    box_sizer2->Add(hyperlink, wxSizerFlags().Border(wxALL));
 
     m_access_token_txt = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
-        ConvertDialogToPixels(wxSize(142, -1)));
+        ConvertDialogToPixels(wxSize(142, -1)), wxTE_PASSWORD);
     m_access_token_txt->SetHint("Enter the token for your Oura Ring Account");
     m_access_token_txt->SetMaxLength(32);
     m_access_token_txt->SetValidator(wxTextValidator(wxFILTER_ALPHANUMERIC, &m_access_token_val));
     box_sizer2->Add(m_access_token_txt, wxSizerFlags(10).Center().Border(wxALL));
 
+    box_sizer2->AddSpacer(0);
+
     box_sizer->Add(box_sizer2,
     wxSizerFlags(5).Bottom().Border(wxLEFT|wxRIGHT|wxTOP, wxSizerFlags::GetDefaultBorder()));
 
     m_btn_test = new wxButton(this, wxID_ANY, "&Test");
+    m_btn_test->Enable(false);
     box_sizer->Add(m_btn_test, wxSizerFlags().Bottom().Border(wxALL));
 
     dlg_sizer->Add(box_sizer, wxSizerFlags().Expand().Border(wxALL));
@@ -55,8 +58,12 @@ bool PreferencesDlgBase::Create(wxWindow* parent, wxWindowID id, const wxString&
     Centre(wxBOTH);
 
     // Event handlers
+    Bind(wxEVT_UPDATE_UI, &PreferencesDlgBase::OnSaveUpdateUI, this, wxID_SAVE);
     Bind(wxEVT_BUTTON, &PreferencesDlgBase::onSaveClicked, this, wxID_SAVE);
     m_btn_test->Bind(wxEVT_BUTTON, &PreferencesDlgBase::onTestClicked, this);
+    m_access_token_txt->Bind(wxEVT_SET_FOCUS, &PreferencesDlgBase::OnAccessTokenTextSetFocus, this);
+    m_access_token_txt->Bind(wxEVT_TEXT, &PreferencesDlgBase::OnAccessTokenTextChanged, this);
+    m_btn_test->Bind(wxEVT_UPDATE_UI, &PreferencesDlgBase::OnTestUpdateUI, this);
 
     return true;
 }

@@ -40,6 +40,8 @@ bool MainFrameBase::Create(wxWindow* parent, wxWindowID id, const wxString& titl
     menubar->Append(m_file_menu, wxGetStockLabel(wxID_FILE));
 
     auto* m_menu = new wxMenu();
+    auto* menu_item4 = new wxMenuItem(m_menu, wxID_ANY, "wx&Widgets Info");
+    m_menu->Append(menu_item4);
     auto* menu_item3 = new wxMenuItem(m_menu, wxID_ABOUT);
     m_menu->Append(menu_item3);
     menubar->Append(m_menu, "&Help");
@@ -51,6 +53,7 @@ bool MainFrameBase::Create(wxWindow* parent, wxWindowID id, const wxString& titl
     Centre(wxBOTH);
 
     // Event handlers
+    Bind(wxEVT_MENU, &MainFrameBase::OnMenuHelpAboutWx, this, menu_item4->GetId());
     Bind(wxEVT_MENU, &MainFrameBase::onMenuFilePreferences, this, wxID_PREFERENCES);
     Bind(wxEVT_MENU, &MainFrameBase::onMenuHelpAbout, this, wxID_ABOUT);
 
