@@ -17,3 +17,4 @@ jobs:
       with:
         save_period: 14
         save_min_runs_number: 3
+        token: "${{ secrets.GITHUB_TOKEN }}"
