@@ -11,33 +11,6 @@
 namespace oura_charts
 {
 
-   void MainFrame::onMenuHelpAbout(wxCommandEvent&) 
-   {
-      try
-      {
-         auto auth_res = wxGetApp().getRestToken();
-         if (auth_res)
-         {
-            RestDataProvider provider{ *auth_res, constants::REST_DEFAULT_BASE_URL };
-            auto profile = getUserProfile(provider);
-            AboutDialog dlg(profile, this);
-            dlg.ShowModal();
-         }
-         else
-         {
-            AboutDialog dlg(auth_res.error().message.c_str() , this);
-            dlg.ShowModal();
-         }
-      }
-      catch (oura_exception& e)
-      {
-         wxLogError(e.message.c_str());
-      }
-      catch (std::exception& e)
-      {
-         wxLogError(e.what());
-      }
-   }
 
    void MainFrame::onMenuFilePreferences(wxCommandEvent&)
    {
@@ -56,4 +29,42 @@ namespace oura_charts
       }
    }
 
+   void MainFrame::OnMenuFileQuit(wxCommandEvent& event)
+   {
+      Close(true);
+   }
+
+   void MainFrame::OnMenuHelpAboutWx(wxCommandEvent& event)
+   {
+      wxInfoMessageBox(this);
+   }
+
+
+   void MainFrame::onMenuHelpAbout(wxCommandEvent&)
+   {
+      try
+      {
+         auto auth_res = wxGetApp().getRestToken();
+         if (auth_res)
+         {
+            RestDataProvider provider{ *auth_res, constants::REST_DEFAULT_BASE_URL };
+            auto profile = getUserProfile(provider);
+            AboutDialog dlg(profile, this);
+            dlg.ShowModal();
+         }
+         else
+         {
+            AboutDialog dlg(auth_res.error().message.c_str(), this);
+            dlg.ShowModal();
+         }
+      }
+      catch (oura_exception& e)
+      {
+         wxLogError(e.message.c_str());
+      }
+      catch (std::exception& e)
+      {
+         wxLogError(e.what());
+      }
+   }
 }  // namespace oura_charts
