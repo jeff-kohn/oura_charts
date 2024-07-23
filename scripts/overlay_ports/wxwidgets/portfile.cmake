@@ -91,6 +91,9 @@ vcpkg_cmake_configure(
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_GSPELL
         CMAKE_DISABLE_FIND_PACKAGE_MSPACK
+        wxUSE_STD_STRING
+        wxUSE_STL_BASED_WXSTRING
+        wxUSE_UNICODE_WCHAR
 )
 
 vcpkg_cmake_install()
