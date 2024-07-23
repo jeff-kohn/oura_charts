@@ -19,7 +19,7 @@ namespace oura_charts
                                           wxEmptyString,  
                                           wxEmptyString,  
                                           wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_SUBDIR }); 
-   } // NOLINT(cppcoreguidelines-owning-memory)
+   } // NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
 
    bool OuraChartsApp::OnInit()
    {
