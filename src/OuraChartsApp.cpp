@@ -57,7 +57,7 @@ namespace oura_charts
       }
 
       if (pat.empty())
-         return std::unexpected{ oura_exception{ ErrorCategory::REST, constants::ERROR_MSG_FMT_NO_PAT, constants::CONFIG_VALUE_PAT_VAR } };
+         return unexpected{ oura_exception{ ErrorCategory::REST, constants::ERROR_MSG_FMT_NO_PAT, constants::CONFIG_VALUE_PAT_VAR } };
 
       return TokenAuth{ pat.ToStdString() };
    }

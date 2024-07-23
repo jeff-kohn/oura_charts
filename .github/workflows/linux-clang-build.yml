@@ -27,7 +27,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          sudo apt update && sudo apt-get install -y cppcheck autoconf automake libtool pkg-config bison flex nasm libx11-dev libxft-dev libxext-dev libxrandr-dev libltdl-dev libwayland-dev libxkbcommon-dev libegl1-mesa-dev libxtst-dev
+          sudo apt update && sudo apt-get install -y cppcheck autoconf automake libtool pkg-config bison flex nasm libx11-dev libxft-dev libxext-dev libxrandr-dev libltdl-dev libwayland-dev libxkbcommon-dev libegl1-mesa-dev libxtst-dev libsecret-1-dev
 
       - name: "Setup cmake/ninja"
         uses: lukka/get-cmake@latest

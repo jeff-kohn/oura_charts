@@ -11,7 +11,7 @@
 namespace oura_charts
 {
 
-   void MainFrame::onMenuHelpAbout(wxCommandEvent& event) 
+   void MainFrame::onMenuHelpAbout(wxCommandEvent&) 
    {
       try
       {

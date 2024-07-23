@@ -16,7 +16,8 @@
       "features": [
         "fonts",
         "media",
-        "secretstore"
+        "secretstore",
+        "example"
       ]
     },
     {
@@ -24,5 +25,5 @@
       "platform": "linux"
     }
   ],
-  "builtin-baseline": "198d68dbcc6c907cb3d0b9b1d93c3df6ecf93c62"
+  "builtin-baseline": "7a57b42f959ad138a5283477fe2e6c97a7cb852f"
 }

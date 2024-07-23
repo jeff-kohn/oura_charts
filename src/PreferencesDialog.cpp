@@ -4,6 +4,7 @@
 #include "oura_charts/RestDataProvider.h"
 #include "oura_charts/UserProfile.h"
 #include <wx/msgdlg.h>
+#include <wx/secretstore.h>
 
 namespace oura_charts
 {
@@ -34,7 +35,7 @@ namespace oura_charts
    }
 
 
-   void PreferencesDialog::onSaveClicked(wxCommandEvent& event)
+   void PreferencesDialog::onSaveClicked(wxCommandEvent&)
    {
       try
       {
@@ -58,7 +59,7 @@ namespace oura_charts
    }
 
 
-   void PreferencesDialog::onTestClicked(wxCommandEvent& event)
+   void PreferencesDialog::onTestClicked(wxCommandEvent&)
    {
       if (!Validate() or !TransferDataFromWindow())
          return;
@@ -90,7 +91,7 @@ namespace oura_charts
    }
 
 
-   void PreferencesDialog::OnAccessTokenTextChanged(wxCommandEvent& event)
+   void PreferencesDialog::OnAccessTokenTextChanged(wxCommandEvent&)
    {
       // reset test state, since the PAT value changed.
       m_successful_test = false;
