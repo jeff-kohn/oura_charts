@@ -45,10 +45,18 @@ if (WIN32)
     set(CMAKE_FIND_LIBRARY_PREFIXES "")
     set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib" ".dll")
 
-    set(OURACHARTS_COMPILE_DEFINITIONS "_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;_WIN32_WINNT=_WIN32_WINNT_WIN7;WIN32_LEAN_AND_MEAN;"
-                                       "$<$<CONFIG:DEBUG>:_DEBUG;_ALLOW_RTCc_IN_STL>"
-                                       "$<$<CONFIG:Release,RelWithDebInfo>:NDEBUG;>"
-                                       CACHE STRING "Default global preprocessor definitions for oura_charts project")
+    set(OURACHARTS_COMPILE_DEFINITIONS "_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;_WIN32_WINNT=_WIN32_WINNT_WIN10;WIN32_LEAN_AND_MEAN;wxUSE_UNICODE_UTF8=1;wxUSE_UNICODE_WCHAR=0"
+                                        "wxUSE_UNICODE_UTF8=1"
+                                        "wxUSE_UNICODE_WCHAR=0"
+                                        "wxUSE_CONFIG_NATIVE=0"
+                                        "wxUSE_STL=1"
+                                        "wxUSE_STD_CONTAINERS=1"
+                                        "wxUSE_STD_STRING=1"
+                                        "wxUSE_STL_BASED_WXSTRING=1"
+                                        "wxUSE_UNSAFE_WXSTRING_CONV=1"
+                                        "$<$<CONFIG:DEBUG>:_DEBUG;_ALLOW_RTCc_IN_STL>"
+                                        "$<$<CONFIG:Release,RelWithDebInfo>:NDEBUG;>"
+                                        CACHE STRING "Default global preprocessor definitions for oura_charts project")
 
     set(OURACHARTS_WARNING_FLAGS "/W4;/w14186;/w14263;/w14265;/w14296;/w14311;/w14545;/w14547;/w14549;/w14555;/w14640;/w14826;/w14905;/w14906;/w14928;/wd4100;/external:anglebrackets;/external:W0;/WX"
                                  CACHE STRING "Default global warning options for oura_charts project")
@@ -60,7 +68,7 @@ if (WIN32)
 
     set(OURACHARTS_LINK_OPTIONS "/DYNAMICBASE;/NXCOMPAT;/CGTHREADS:8;"
                                 "$<$<CONFIG:DEBUG>:/INCREMENTAL;/OPT:NOICF;>"
-                                "$<$<CONFIG:Release,RelWithDebInfo>:/Gw;/Gy;/OPT:ICF;/OPT:REF;/LTCG:incremental;>"
+                                "$<$<CONFIG:Release,RelWithDebInfo>:/OPT:ICF;/OPT:REF;/LTCG:incremental;>"
                                 CACHE STRING "Default global linker options for oura_charts project")
 
     set(OURACHARTS_MSVCRT_DEBUG "MultiThreadedDebug" CACHE STRING "MSVC runtime library version used for debug builds")
@@ -68,7 +76,7 @@ if (WIN32)
 
 elseif (LINUX)
 
-    set(OURACHARTS_COMPILE_DEFINITIONS "_GLIBCXX_ASSERTION;"
+    set(OURACHARTS_COMPILE_DEFINITIONS "_GLIBCXX_ASSERTION;wxUSE_UNICODE_UTF8=1;wxUSE_UNICODE_WCHAR=0"
                                        "$<$<CONFIG:DEBUG>:_DEBUG;>"
                                        "$<$<CONFIG:Release,RelWithDebInfo>:NDEBUG;>"
                                        CACHE STRING "Default global preprocessor definitions for oura_charts project")
@@ -132,6 +140,7 @@ find_package(cxxopts CONFIG REQUIRED)
 find_package(cpr CONFIG REQUIRED)
 
 # Include sub-projects.
+add_subdirectory("lib")
 add_subdirectory("src")
 add_subdirectory("examples")
 

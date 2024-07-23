@@ -4,7 +4,8 @@
 set(THIS_TARGET "get_profile")
 add_executable(${THIS_TARGET}
    "get_profile.cpp"
- "helpers.h")
+   "helpers.h"
+)
 
 set_target_properties(${THIS_TARGET}
 	PROPERTIES
@@ -24,7 +25,7 @@ target_include_directories( ${THIS_TARGET}
 
 target_link_libraries(${THIS_TARGET}
    PUBLIC
-      oura_rest
+      oura_lib
 )
 
 target_compile_features(${THIS_TARGET} PUBLIC ${OURACHARTS_CXX_STANDARD})
@@ -61,7 +62,7 @@ target_include_directories( ${THIS_TARGET}
 
 target_link_libraries(${THIS_TARGET}
    PUBLIC
-      oura_rest
+      oura_lib
 )
 
 target_compile_features(${THIS_TARGET} PUBLIC ${OURACHARTS_CXX_STANDARD})
@@ -98,7 +99,7 @@ target_include_directories( ${THIS_TARGET}
 
 target_link_libraries(${THIS_TARGET}
    PUBLIC
-      oura_rest
+      oura_lib
 )
 
 target_compile_features(${THIS_TARGET} PUBLIC ${OURACHARTS_CXX_STANDARD})

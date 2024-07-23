@@ -1,0 +1,221 @@
+<?xml version="1.0"?>
+<wxUiEditorData
+  data_version="16">
+  <node
+    class="Project"
+    art_directory="res"
+    base_directory="generated"
+    cmake_file="wx_generated_source.cmake"
+    cmake_varname="wx_generated_files"
+    generate_cmake="1"
+    name_space="oura_charts"
+    wxWidgets_version="3.2"
+    combine_all_forms="0">
+    <node
+      class="wxDialog"
+      class_name="AboutDialogBase"
+      title="About Oura Charts"
+      size="250,175d"
+      base_file="AboutDialogBase"
+      name_space="oura_charts"
+      generate_const_values="1"
+      derived_class_name="AboutDialog"
+      derived_file="AboutDialog">
+      <node
+        class="wxBoxSizer"
+        class_access="protected:"
+        orientation="wxVERTICAL"
+        var_name="m_main_sizer"
+        flags="wxEXPAND">
+        <node
+          class="wxStaticText"
+          class_access="none"
+          label="Oura Charts 0.1"
+          var_name="static_text"
+          font="Segoe UI Variable Text,14"
+          alignment="wxALIGN_CENTER_HORIZONTAL" />
+        <node
+          class="wxStaticText"
+          class_access="none"
+          label="Copyright (c) Jeff Kohn 2024. "
+          var_name="static_text2"
+          alignment="wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL"
+          borders="wxLEFT|wxRIGHT" />
+        <node
+          class="wxStaticText"
+          class_access="none"
+          label="All Rights Reserved."
+          var_name="static_text4"
+          alignment="wxALIGN_CENTER_HORIZONTAL"
+          borders="wxLEFT|wxRIGHT" />
+        <node
+          class="spacer"
+          proportion="1" />
+        <node
+          class="wxBoxSizer"
+          var_name="profile_sizer"
+          alignment="wxALIGN_CENTER_HORIZONTAL"
+          proportion="2">
+          <node
+            class="spacer"
+            width="10"
+            proportion="1" />
+          <node
+            class="wxStaticText"
+            class_access="none"
+            label="UserInfo:"
+            style="wxALIGN_RIGHT"
+            var_name="static_text3"
+            wrap="0" />
+          <node
+            class="wxStaticText"
+            label="(not available)"
+            style="wxALIGN_LEFT"
+            var_name="m_lbl_user_profile"
+            wrap="80"
+            minimum_size="-1,-1d"
+            set_function="setProfileText"
+            validator_variable="m_profile_text"
+            proportion="1" />
+          <node
+            class="spacer"
+            proportion="1" />
+        </node>
+        <node
+          class="wxStdDialogButtonSizer"
+          Cancel="0"
+          static_line="0"
+          var_name="std_btn"
+          minimum_size="-1,-1d"
+          alignment="wxALIGN_CENTER_HORIZONTAL" />
+      </node>
+    </node>
+    <node
+      class="wxFrame"
+      class_name="MainFrameBase"
+      base_file="generated/MainFrameBase"
+      name_space="oura_charts"
+      generate_const_values="1"
+      system_hdr_includes="wx/stockitem.h"
+      derived_class_name="MainFrame"
+      derived_file="MainFrame">
+      <node
+        class="wxToolBar"
+        var_name="m_toolbar" />
+      <node
+        class="wxMenuBar"
+        class_access="none"
+        var_name="menubar">
+        <node
+          class="wxMenu"
+          class_access="none"
+          label="&amp;File"
+          stock_id="wxID_FILE"
+          var_name="m_file_menu">
+          <node
+            class="wxMenuItem"
+            id="wxID_PREFERENCES"
+            label="&amp;Preferences"
+            stock_id="wxID_PREFERENCES"
+            var_name="menu_item2"
+            wxEVT_MENU="onMenuFilePreferences" />
+          <node
+            class="separator" />
+          <node
+            class="wxMenuItem"
+            bitmap="Art;wxART_QUIT|wxART_MENU"
+            help="Quit this program"
+            id="wxID_EXIT"
+            label="&amp;Quit"
+            stock_id="wxID_EXIT"
+            wxEVT_MENU="OnMenuFileQuit" />
+        </node>
+        <node
+          class="wxMenu"
+          class_access="none"
+          label="&amp;Help">
+          <node
+            class="wxMenuItem"
+            label="wx&amp;Widgets Info"
+            var_name="menu_item4"
+            wxEVT_MENU="OnMenuHelpAboutWx" />
+          <node
+            class="wxMenuItem"
+            help="Show about dialog"
+            id="wxID_ABOUT"
+            label="&amp;About"
+            stock_id="wxID_ABOUT"
+            var_name="menu_item3"
+            wxEVT_MENU="onMenuHelpAbout" />
+        </node>
+      </node>
+      <node
+        class="wxStatusBar" />
+    </node>
+    <node
+      class="wxDialog"
+      class_name="PreferencesDlgBase"
+      title="Preferences"
+      base_file="PreferencesDialogBase"
+      name_space="oura_charts"
+      generate_const_values="1"
+      derived_class_name="PreferencesDialog"
+      derived_file="PreferencesDialog">
+      <node
+        class="wxBoxSizer"
+        orientation="wxVERTICAL"
+        var_name="dlg_sizer"
+        flags="wxEXPAND">
+        <node
+          class="wxBoxSizer"
+          flags="wxEXPAND">
+          <node
+            class="wxBoxSizer"
+            orientation="wxVERTICAL"
+            var_name="box_sizer2"
+            alignment="wxALIGN_BOTTOM"
+            borders="wxTOP|wxRIGHT|wxLEFT"
+            proportion="5">
+            <node
+              class="wxHyperlinkCtrl"
+              class_access="none"
+              label="Personal Access Token:"
+              url="https://cloud.ouraring.com/docs/authentication#personal-access-tokens"
+              var_name="hyperlink" />
+            <node
+              class="wxTextCtrl"
+              hint="Enter the token for your Oura Ring Account"
+              maxlength="32"
+              style="wxTE_PASSWORD"
+              var_name="m_access_token_txt"
+              validator_style="wxFILTER_ALPHANUMERIC"
+              validator_variable="m_access_token_val"
+              size="142,-1d"
+              alignment="wxALIGN_CENTER_VERTICAL"
+              proportion="10"
+              wxEVT_TEXT="OnAccessTokenTextChanged"
+              wxEVT_SET_FOCUS="OnAccessTokenTextSetFocus" />
+            <node
+              class="spacer" />
+          </node>
+          <node
+            class="wxButton"
+            label="&amp;Test"
+            var_name="m_btn_test"
+            disabled="1"
+            alignment="wxALIGN_BOTTOM"
+            wxEVT_BUTTON="onTestClicked"
+            wxEVT_UPDATE_UI="OnTestUpdateUI" />
+        </node>
+        <node
+          class="wxStdDialogButtonSizer"
+          OK="0"
+          Save="1"
+          default_button="none"
+          flags="wxEXPAND"
+          SaveButton="OnSaveUpdateUI"
+          SaveButtonClicked="onSaveClicked" />
+      </node>
+    </node>
+  </node>
+</wxUiEditorData>

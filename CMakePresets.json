@@ -21,7 +21,7 @@
             "ENABLE_UNIT_TESTS": "ON",
             "ENABLE_CPP_CHECK": "ON",
             "ENABLE_CLANG_TIDY": "OFF",
-            "VCPKG_TARGET_TRIPLET": "x64-windows-static"
+            "VCPKG_TARGET_TRIPLET": "x64-windows-static-wxwindows"
          },
          "condition": {
             "type": "equals",
@@ -78,7 +78,7 @@
             "ENABLE_UNIT_TESTS": "ON",
             "ENABLE_CPP_CHECK": "ON",
             "ENABLE_CLANG_TIDY": "ON",
-            "VCPKG_TARGET_TRIPLET": "x64-linux"
+            "VCPKG_TARGET_TRIPLET": "x64-linux-wxwindows"
          },
          "condition": {
             "type": "equals",

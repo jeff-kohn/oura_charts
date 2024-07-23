@@ -10,10 +10,20 @@
     "spdlog",
     "tabulate",
     "cpr",
+    "wxcharts",
+    {
+      "name": "wxwidgets",
+      "features": [
+        "fonts",
+        "media",
+        "secretstore",
+        "example"
+      ]
+    },
     {
       "name": "tl-expected",
       "platform": "linux"
     }
   ],
-  "builtin-baseline": "576379156e82da642f8d1834220876759f13534d"
+  "builtin-baseline": "7a57b42f959ad138a5283477fe2e6c97a7cb852f"
 }

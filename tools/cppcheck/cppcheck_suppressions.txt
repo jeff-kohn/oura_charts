@@ -5,3 +5,4 @@ missingIncludeSystem
 missingInclude
 unusedFunction
 unmatchedSuppression
+*:*\generated\*.*
