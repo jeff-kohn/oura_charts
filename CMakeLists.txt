@@ -136,7 +136,6 @@ FetchContent_MakeAvailable(glaze)
 
 find_package(Boost REQUIRED)
 find_package(fmt CONFIG REQUIRED)
-find_package(cxxopts CONFIG REQUIRED)
 find_package(cpr CONFIG REQUIRED)
 
 # Include sub-projects.
