@@ -9,7 +9,7 @@
 #include "oura_charts/RestDataProvider.h"
 #include "oura_charts/UserProfile.h"
 
-#include <wxcharts/wx/charts/wxcharts.h> // fix this dumb include path
+#include <wxcharts/wx/charts/wxcharts.h>
 
 #include <algorithm>
 #include <chrono>

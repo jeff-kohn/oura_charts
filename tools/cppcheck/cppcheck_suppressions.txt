@@ -5,4 +5,5 @@ missingIncludeSystem
 missingInclude
 unusedFunction
 unmatchedSuppression
+useStlAlgorithm
 *:*\generated\*.*
