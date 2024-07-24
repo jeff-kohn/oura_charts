@@ -15,6 +15,7 @@ namespace oura_charts
 
    protected:
       void onMenuFilePreferences(wxCommandEvent& event) override;
+      void onMenuFileTestChart(wxCommandEvent& event) override;
       void OnMenuFileQuit(wxCommandEvent& event) override;
       void onMenuHelpAbout(wxCommandEvent& event) override;
       void OnMenuHelpAboutWx(wxCommandEvent& event) override;

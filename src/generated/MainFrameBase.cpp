@@ -30,6 +30,9 @@ bool MainFrameBase::Create(wxWindow* parent, wxWindowID id, const wxString& titl
     auto* menubar = new wxMenuBar();
 
     auto* m_file_menu = new wxMenu();
+    auto* menu_item5 = new wxMenuItem(m_file_menu, wxID_ANY, "Test Chart");
+    m_file_menu->Append(menu_item5);
+    m_file_menu->AppendSeparator();
     auto* menu_item2 = new wxMenuItem(m_file_menu, wxID_PREFERENCES);
     m_file_menu->Append(menu_item2);
     m_file_menu->AppendSeparator();
@@ -50,12 +53,27 @@ bool MainFrameBase::Create(wxWindow* parent, wxWindowID id, const wxString& titl
 
     m_statusBar = CreateStatusBar();
 
+    m_chart_panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
+
+    auto* panel_sizer = new wxBoxSizer(wxVERTICAL);
+
+    auto* box_sizer = new wxBoxSizer(wxHORIZONTAL);
+
+    m_chart_sizer = new wxBoxSizer(wxVERTICAL);
+    m_chart_sizer->SetMinSize(640, 480);
+
+    box_sizer->Add(m_chart_sizer, wxSizerFlags(1).Expand().Border(wxALL));
+
+    panel_sizer->Add(box_sizer, wxSizerFlags(1).Expand().Border(wxALL));
+    m_chart_panel->SetSizerAndFit(panel_sizer);
+
     Centre(wxBOTH);
 
     // Event handlers
     Bind(wxEVT_MENU, &MainFrameBase::OnMenuFileQuit, this, wxID_EXIT);
     Bind(wxEVT_MENU, &MainFrameBase::OnMenuHelpAboutWx, this, menu_item4->GetId());
     Bind(wxEVT_MENU, &MainFrameBase::onMenuFilePreferences, this, wxID_PREFERENCES);
+    Bind(wxEVT_MENU, &MainFrameBase::onMenuFileTestChart, this, menu_item5->GetId());
     Bind(wxEVT_MENU, &MainFrameBase::onMenuHelpAbout, this, wxID_ABOUT);
 
     return true;

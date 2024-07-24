@@ -12,6 +12,8 @@
 #include <wx/event.h>
 #include <wx/frame.h>
 #include <wx/gdicmn.h>
+#include <wx/panel.h>
+#include <wx/sizer.h>
 #include <wx/statusbr.h>
 #include <wx/toolbar.h>
 
@@ -47,10 +49,13 @@ namespace oura_charts
         virtual void OnMenuFileQuit(wxCommandEvent& event) { event.Skip(); }
         virtual void OnMenuHelpAboutWx(wxCommandEvent& event) { event.Skip(); }
         virtual void onMenuFilePreferences(wxCommandEvent& event) { event.Skip(); }
+        virtual void onMenuFileTestChart(wxCommandEvent& event) { event.Skip(); }
         virtual void onMenuHelpAbout(wxCommandEvent& event) { event.Skip(); }
 
         // Class member variables
 
+        wxBoxSizer* m_chart_sizer;
+        wxPanel* m_chart_panel;
         wxStatusBar* m_statusBar;
         wxToolBar* m_toolbar;
     };

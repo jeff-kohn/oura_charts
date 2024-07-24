@@ -28,12 +28,14 @@ set_target_properties(${THIS_TARGET}
 )
 
 find_package(wxWidgets CONFIG REQUIRED)
+find_package(wxcharts CONFIG REQUIRED)
 
 target_link_libraries(${THIS_TARGET}
    PRIVATE
       oura_lib
 		wx::core 
 		wx::base
+      wxcharts::wxcharts
 )
 
 target_compile_features(${THIS_TARGET} PUBLIC ${OURACHARTS_CXX_STANDARD})

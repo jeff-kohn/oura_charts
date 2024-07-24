@@ -114,13 +114,21 @@
           var_name="m_file_menu">
           <node
             class="wxMenuItem"
+            label="Test Chart"
+            var_name="menu_item5"
+            wxEVT_MENU="onMenuFileTestChart" />
+          <node
+            class="separator" />
+          <node
+            class="wxMenuItem"
             id="wxID_PREFERENCES"
             label="&amp;Preferences"
             stock_id="wxID_PREFERENCES"
             var_name="menu_item2"
             wxEVT_MENU="onMenuFilePreferences" />
           <node
-            class="separator" />
+            class="separator"
+            var_name="separator2" />
           <node
             class="wxMenuItem"
             bitmap="Art;wxART_QUIT|wxART_MENU"
@@ -151,6 +159,31 @@
       </node>
       <node
         class="wxStatusBar" />
+      <node
+        class="wxPanel"
+        class_access="protected:"
+        var_name="m_chart_panel"
+        window_style="wxTAB_TRAVERSAL">
+        <node
+          class="wxBoxSizer"
+          orientation="wxVERTICAL"
+          var_name="panel_sizer"
+          flags="wxEXPAND">
+          <node
+            class="wxBoxSizer"
+            flags="wxEXPAND"
+            proportion="1">
+            <node
+              class="wxBoxSizer"
+              class_access="protected:"
+              orientation="wxVERTICAL"
+              var_name="m_chart_sizer"
+              minimum_size="640,480d"
+              flags="wxEXPAND"
+              proportion="1" />
+          </node>
+        </node>
+      </node>
     </node>
     <node
       class="wxDialog"
