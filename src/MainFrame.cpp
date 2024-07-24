@@ -37,7 +37,7 @@ namespace oura_charts
       }
    }
 
-   void MainFrame::onMenuFileTestChart(wxCommandEvent& event)
+   void MainFrame::onMenuFileTestChart(wxCommandEvent&)
    {
       try
       {
