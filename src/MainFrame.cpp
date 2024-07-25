@@ -18,6 +18,9 @@
 
 namespace oura_charts
 {
+   // Disable this warning, non-virtual Create() is a pretty standard idiom since it's
+   // called from ctor in most cases.
+   // cppcheck-suppress duplInheritedMember
    bool MainFrame::Create(wxWindow* parent, wxWindowID id, const wxString& title,
                           const wxPoint& pos, const wxSize& size, long style, const wxString& name)
    {

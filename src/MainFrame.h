@@ -20,6 +20,7 @@ namespace oura_charts
          Create(parent);
       }
 
+      // cppcheck-suppress duplInheritedMember
       bool Create(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = constants::APP_NAME,
                   const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
                   long style = wxDEFAULT_FRAME_STYLE, const wxString& name = wxFrameNameStr);

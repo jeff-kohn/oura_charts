@@ -7,7 +7,7 @@ param
 $ErrorActionPreference = 'Stop'
 
 $RepoDir = Split-Path $PSScriptRoot
-$BinDir = Join-Path $RepoDir  "build\out\$Preset"
+$BinDir = Join-Path $RepoDir  "build\$Preset"
 $TestsDir = Join-Path $BinDir "tests"
 
 $saved_location = Get-Location

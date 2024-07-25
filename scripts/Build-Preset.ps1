@@ -60,7 +60,7 @@ try
 
    if (!$Configure -and !$Build -and !$Rebuild -and !$Tests)
    {
-      if (Test-Path "$RepoDir/build/out/$Preset")
+      if (Test-Path "$RepoDir/build/$Preset")
       {
          $Build = $true
          $Tests = $true
