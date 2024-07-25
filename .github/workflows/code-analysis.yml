@@ -119,7 +119,6 @@ jobs:
       BUILD_DIR: "build/win-debug"
       VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}\\vcpkg"
 
-
     steps:
     - name: 'Checkout repository'
       uses: actions/checkout@v4
@@ -153,7 +152,7 @@ jobs:
     - name: "Publish Coverage Report"
       uses: 5monkeys/cobertura-action@master
       with:
-        path: ${{ env.REPO_DIR }}\build\out\${{ env.PRESET_NAME }}\code_coverage.xml
+        path: ${{ env.REPO_DIR }}\build\${{ env.PRESET_NAME }}\code_coverage.xml
         minimum_coverage: 50
 
     - name: Upload Coverage Artifact
@@ -162,6 +161,6 @@ jobs:
         name: coverage-results
         retention-days: 10
         path: |
-          ${{ env.REPO_DIR }}\build\out\${{ env.PRESET_NAME }}\code_coverage.xml
-          ${{ env.REPO_DIR }}\build\out\${{ env.PRESET_NAME }}\code_coverage_html
+          ${{ env.REPO_DIR }}\build\${{ env.PRESET_NAME }}\code_coverage.xml
+          ${{ env.REPO_DIR }}\build\${{ env.PRESET_NAME }}\code_coverage_html
 
