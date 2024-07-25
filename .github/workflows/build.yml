@@ -20,7 +20,7 @@ jobs:
     runs-on: windows-latest
     env:
       PRESET_NAME: "win-release"
-      BUILD_DIR: "build/out/win-release"
+      BUILD_DIR: "build/win-release"
 
     steps:
     - uses: actions/checkout@v4
@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-24.04
     env:
       PRESET_NAME: "linux-release"
-      BUILD_DIR: "build/out/linux-release"
+      BUILD_DIR: "build/linux-release"
 
     steps:
       - uses: actions/checkout@v4

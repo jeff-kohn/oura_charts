@@ -43,3 +43,12 @@ target_compile_definitions(${THIS_TARGET} PRIVATE ${OURACHARTS_COMPILE_DEFINITIO
 target_compile_options(${THIS_TARGET} PRIVATE ${OURACHARTS_COMPILE_OPTIONS})
 target_compile_options(${THIS_TARGET} PRIVATE ${OURACHARTS_WARNING_FLAGS})
 target_link_options(${THIS_TARGET} PRIVATE ${OURACHARTS_LINK_OPTIONS})
+
+# this is a workaround for run-clang-tidy scanning Fetched content.
+add_custom_command(
+   TARGET ${THIS_TARGET} POST_BUILD
+   COMMAND ${CMAKE_COMMAND} -E copy
+            ${CMAKE_CURRENT_SOURCE_DIR}/generated/.clang-tidy
+            ${CMAKE_BINARY_DIR}/_deps/.clang-tidy
+)
+            
