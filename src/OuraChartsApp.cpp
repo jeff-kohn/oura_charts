@@ -4,6 +4,7 @@
 #include <wx/stdpaths.h>
 
 #include "oura_charts/detail/utility.h"
+#include <chrono>
 
 namespace oura_charts
 {
@@ -28,6 +29,17 @@ namespace oura_charts
    	SetTopWindow(main_frame);
    	return true;
    } // NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
+
+   int OuraChartsApp::OnExit()
+   {
+
+   #ifdef _DEBUG
+      // to prevent the tzdb allocations from being reported as memory leaks
+      std::chrono::get_tzdb_list().~tzdb_list();
+   #endif
+
+      return wxApp::OnExit();
+   }
 
    wxConfigBase& OuraChartsApp::getConfig() noexcept(false)
    {

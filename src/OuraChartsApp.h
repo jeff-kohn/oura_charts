@@ -16,6 +16,7 @@ namespace oura_charts
       OuraChartsApp();
 
       bool OnInit() override;
+      int OnExit() override;
 
       /// <summary>
       ///   Get the current config object. Calling this will throw an exception

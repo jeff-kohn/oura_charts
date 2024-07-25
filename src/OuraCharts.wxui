@@ -160,28 +160,23 @@
       <node
         class="wxStatusBar" />
       <node
-        class="wxPanel"
-        class_access="protected:"
-        var_name="m_chart_panel"
-        window_style="wxTAB_TRAVERSAL">
+        class="wxBoxSizer"
+        minimum_size="-1,-1d"
+        flags="wxEXPAND">
         <node
           class="wxBoxSizer"
           orientation="wxVERTICAL"
-          var_name="panel_sizer"
-          flags="wxEXPAND">
+          var_name="box_sizer2"
+          minimum_size="-1,-1d"
+          flags="wxEXPAND"
+          proportion="3">
           <node
             class="wxBoxSizer"
+            class_access="protected:"
+            var_name="m_chart_sizer"
+            minimum_size="600,400d"
             flags="wxEXPAND"
-            proportion="1">
-            <node
-              class="wxBoxSizer"
-              class_access="protected:"
-              orientation="wxVERTICAL"
-              var_name="m_chart_sizer"
-              minimum_size="640,480d"
-              flags="wxEXPAND"
-              proportion="1" />
-          </node>
+            proportion="3" />
         </node>
       </node>
     </node>

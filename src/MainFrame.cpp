@@ -18,8 +18,6 @@
 
 namespace oura_charts
 {
-
-
    void MainFrame::onMenuFilePreferences(wxCommandEvent&)
    {
       try
@@ -90,9 +88,11 @@ namespace oura_charts
          wxChartsCategoricalData::ptr chartData = wxChartsCategoricalData::make_shared(weekday_labels);
          chartData->AddDataset(wxChartsDoubleDataset::ptr{ new wxChartsDoubleDataset("Avg. Sleep Score", sleep_scores) });
 
-         // Create the chart control and add it to our sizer in our main panel.
-         m_chart_sizer->Add(new wxColumnChartCtrl(m_chart_panel, wxID_ANY, chartData), wxSizerFlags(1).Expand().Border(wxALL));
+         // Create the column chart widget
+         wxColumnChartCtrl* columnChartCtrl = new wxColumnChartCtrl(this, wxID_ANY, chartData);
+         m_chart_sizer->Add(columnChartCtrl, wxSizerFlags(1).Expand().Border(wxALL));
          m_chart_sizer->Layout();
+         m_chart_sizer->SetSizeHints(this);
       }
       catch (std::exception& e)
       {

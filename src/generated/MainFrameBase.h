@@ -12,7 +12,6 @@
 #include <wx/event.h>
 #include <wx/frame.h>
 #include <wx/gdicmn.h>
-#include <wx/panel.h>
 #include <wx/sizer.h>
 #include <wx/statusbr.h>
 #include <wx/toolbar.h>
@@ -55,7 +54,6 @@ namespace oura_charts
         // Class member variables
 
         wxBoxSizer* m_chart_sizer;
-        wxPanel* m_chart_panel;
         wxStatusBar* m_statusBar;
         wxToolBar* m_toolbar;
     };

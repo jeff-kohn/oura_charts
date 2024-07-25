@@ -53,19 +53,17 @@ bool MainFrameBase::Create(wxWindow* parent, wxWindowID id, const wxString& titl
 
     m_statusBar = CreateStatusBar();
 
-    m_chart_panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
-
-    auto* panel_sizer = new wxBoxSizer(wxVERTICAL);
-
     auto* box_sizer = new wxBoxSizer(wxHORIZONTAL);
 
-    m_chart_sizer = new wxBoxSizer(wxVERTICAL);
-    m_chart_sizer->SetMinSize(640, 480);
+    auto* box_sizer2 = new wxBoxSizer(wxVERTICAL);
 
-    box_sizer->Add(m_chart_sizer, wxSizerFlags(1).Expand().Border(wxALL));
+    m_chart_sizer = new wxBoxSizer(wxHORIZONTAL);
+    m_chart_sizer->SetMinSize(600, 400);
 
-    panel_sizer->Add(box_sizer, wxSizerFlags(1).Expand().Border(wxALL));
-    m_chart_panel->SetSizerAndFit(panel_sizer);
+    box_sizer2->Add(m_chart_sizer, wxSizerFlags(3).Expand().Border(wxALL));
+
+    box_sizer->Add(box_sizer2, wxSizerFlags(3).Expand().Border(wxALL));
+    SetSizerAndFit(box_sizer);
 
     Centre(wxBOTH);
 
