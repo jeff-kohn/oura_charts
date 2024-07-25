@@ -136,7 +136,7 @@
             id="wxID_EXIT"
             label="&amp;Quit"
             stock_id="wxID_EXIT"
-            wxEVT_MENU="OnMenuFileQuit" />
+            wxEVT_MENU="onMenuFileQuit" />
         </node>
         <node
           class="wxMenu"
@@ -146,7 +146,7 @@
             class="wxMenuItem"
             label="wx&amp;Widgets Info"
             var_name="menu_item4"
-            wxEVT_MENU="OnMenuHelpAboutWx" />
+            wxEVT_MENU="onMenuHelpAboutWx" />
           <node
             class="wxMenuItem"
             help="Show about dialog"

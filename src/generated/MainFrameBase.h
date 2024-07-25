@@ -45,11 +45,11 @@ namespace oura_charts
 
         // Virtual event handlers -- override them in your derived class
 
-        virtual void OnMenuFileQuit(wxCommandEvent& event) { event.Skip(); }
-        virtual void OnMenuHelpAboutWx(wxCommandEvent& event) { event.Skip(); }
         virtual void onMenuFilePreferences(wxCommandEvent& event) { event.Skip(); }
+        virtual void onMenuFileQuit(wxCommandEvent& event) { event.Skip(); }
         virtual void onMenuFileTestChart(wxCommandEvent& event) { event.Skip(); }
         virtual void onMenuHelpAbout(wxCommandEvent& event) { event.Skip(); }
+        virtual void onMenuHelpAboutWx(wxCommandEvent& event) { event.Skip(); }
 
         // Class member variables
 

@@ -18,6 +18,30 @@
 
 namespace oura_charts
 {
+   bool MainFrame::Create(wxWindow* parent, wxWindowID id, const wxString& title,
+                          const wxPoint& pos, const wxSize& size, long style, const wxString& name)
+   {
+      if (not MainFrameBase::Create(parent, id, title, pos, size, style, name))
+         return false;
+
+      assert(!m_data);
+
+      // get weekday names and use to create dataset for our chart label.
+      auto weekday_names = getWeekdayNames() | vw::transform([] (const std::string& str) { return wxString{ str }; })
+                                             | rg::to<std::vector>();
+
+      m_data = wxChartsCategoricalData::make_shared(weekday_names);
+
+      // Create the column chart widget
+      auto* columnChartCtrl = new wxColumnChartCtrl(this, wxID_ANY, m_data);  // NOLINT(cppcoreguidelines-owning-memory)
+      m_chart_sizer->Add(columnChartCtrl, wxSizerFlags(1).Expand().Border(wxALL));
+      m_chart_sizer->Layout();
+      m_chart_sizer->SetSizeHints(this);
+
+      return true;
+   }
+
+
    void MainFrame::onMenuFilePreferences(wxCommandEvent&)
    {
       try
@@ -34,6 +58,7 @@ namespace oura_charts
          wxLogError(e.what());
       }
    }
+
 
    void MainFrame::onMenuFileTestChart(wxCommandEvent&)
    {
@@ -84,15 +109,10 @@ namespace oura_charts
          auto weekday_labels = getWeekdayNames() | vw::transform([] (const std::string& str) { return wxString{ str }; })
                                                  | rg::to<std::vector>();
 
-         // create the chart
-         wxChartsCategoricalData::ptr chartData = wxChartsCategoricalData::make_shared(weekday_labels);
-         chartData->AddDataset(wxChartsDoubleDataset::ptr{ new wxChartsDoubleDataset("Avg. Sleep Score", sleep_scores) });
+         // Add the data to the chart
+         m_data->AddDataset(wxChartsDoubleDataset::ptr{ new wxChartsDoubleDataset("Avg. Sleep Score", sleep_scores) });
+         CallAfter([this] { this->Refresh(); });
 
-         // Create the column chart widget
-         auto* columnChartCtrl = new wxColumnChartCtrl(this, wxID_ANY, chartData);  // NOLINT(cppcoreguidelines-owning-memory)
-         m_chart_sizer->Add(columnChartCtrl, wxSizerFlags(1).Expand().Border(wxALL));
-         m_chart_sizer->Layout();
-         m_chart_sizer->SetSizeHints(this);
       }
       catch (std::exception& e)
       {
@@ -101,13 +121,13 @@ namespace oura_charts
    }
 
 
-   void MainFrame::OnMenuFileQuit(wxCommandEvent&)
+   void MainFrame::onMenuFileQuit(wxCommandEvent&)
    {
       Close(true);
    }
 
 
-   void MainFrame::OnMenuHelpAboutWx(wxCommandEvent&)
+   void MainFrame::onMenuHelpAboutWx(wxCommandEvent&)
    {
       wxInfoMessageBox(this);
    }

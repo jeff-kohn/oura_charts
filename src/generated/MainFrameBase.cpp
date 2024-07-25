@@ -68,11 +68,11 @@ bool MainFrameBase::Create(wxWindow* parent, wxWindowID id, const wxString& titl
     Centre(wxBOTH);
 
     // Event handlers
-    Bind(wxEVT_MENU, &MainFrameBase::OnMenuFileQuit, this, wxID_EXIT);
-    Bind(wxEVT_MENU, &MainFrameBase::OnMenuHelpAboutWx, this, menu_item4->GetId());
     Bind(wxEVT_MENU, &MainFrameBase::onMenuFilePreferences, this, wxID_PREFERENCES);
+    Bind(wxEVT_MENU, &MainFrameBase::onMenuFileQuit, this, wxID_EXIT);
     Bind(wxEVT_MENU, &MainFrameBase::onMenuFileTestChart, this, menu_item5->GetId());
     Bind(wxEVT_MENU, &MainFrameBase::onMenuHelpAbout, this, wxID_ABOUT);
+    Bind(wxEVT_MENU, &MainFrameBase::onMenuHelpAboutWx, this, menu_item4->GetId());
 
     return true;
 }
