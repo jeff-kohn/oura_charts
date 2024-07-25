@@ -46,9 +46,9 @@ namespace oura_charts
       
          // Get sleep scores for the past year
          auto today = stripTimeOfDay(localNow());
-         auto last_week = today - months{ 12 };
+         auto last_year = today - months{ 12 };
          RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
-         auto score_data = getDataSeries<DailySleepScore>(rest_server, getCalendarDate(last_week), getCalendarDate(today));
+         auto score_data = getDataSeries<DailySleepScore>(rest_server, getCalendarDate(last_year), getCalendarDate(today));
 
          // group by day of week. in case of sleep we filter for only "long" sleep (no naps)
          auto score_by_weekday = group<SleepScoreByWeekday>(std::move(score_data), sleepScoreWeekday);
@@ -89,7 +89,7 @@ namespace oura_charts
          chartData->AddDataset(wxChartsDoubleDataset::ptr{ new wxChartsDoubleDataset("Avg. Sleep Score", sleep_scores) });
 
          // Create the column chart widget
-         wxColumnChartCtrl* columnChartCtrl = new wxColumnChartCtrl(this, wxID_ANY, chartData);
+         auto* columnChartCtrl = new wxColumnChartCtrl(this, wxID_ANY, chartData);  // NOLINT(cppcoreguidelines-owning-memory)
          m_chart_sizer->Add(columnChartCtrl, wxSizerFlags(1).Expand().Border(wxALL));
          m_chart_sizer->Layout();
          m_chart_sizer->SetSizeHints(this);
