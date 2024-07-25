@@ -80,6 +80,7 @@ jobs:
         patterns: |
           -**/vcpkg*/**/*
           -**/CMakeFiles/CMakeScratch/**/*
+          -**/_deps/**/*
         input: $SARIF_DIR/cpp.sarif
         output: $SARIF_DIR/cpp.sarif
 
