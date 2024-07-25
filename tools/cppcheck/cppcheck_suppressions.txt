@@ -7,3 +7,4 @@ unusedFunction
 unmatchedSuppression
 useStlAlgorithm
 *:*\generated\*.*
+*:*\_deps\*.*
