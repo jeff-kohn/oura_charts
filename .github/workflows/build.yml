@@ -18,7 +18,7 @@ jobs:
     runs-on: windows-latest
     env:
       CONFIGURE_PRESET: "win-msvc"
-      BUILD_PRESET: "release"
+      BUILD_PRESET: "release-win"
       BUILD_DIR: "builds"
 
     steps:
@@ -69,8 +69,8 @@ jobs:
     name: "Linux Clang Build"
     runs-on: ubuntu-24.04
     env:
-      CONFIGURE_PRESET: "win-msvc"
-      BUILD_PRESET: "release"
+      CONFIGURE_PRESET: "linux-clang"
+      BUILD_PRESET: "release-linux"
       BUILD_DIR: "builds"
 
     steps:

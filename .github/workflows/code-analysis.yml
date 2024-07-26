@@ -26,7 +26,7 @@ jobs:
       VCPKG_FEATURE_FLAGS: "dependencygraph"
       DOTNET_ROLL_FORWARD: "latestMajor"
       CONFIGURE_PRESET: "linux-clang"
-      BUILD_PRESET: "release"
+      BUILD_PRESET: "release-linux"
       BUILD_DIR: "${{ github.workspace }}/builds"
       SARIF_DIR: "${{ github.workspace }}/sarif-results"
 
@@ -118,7 +118,7 @@ jobs:
     env:
       VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}\\vcpkg"
       CONFIGURE_PRESET: "win-msvc"
-      BUILD_PRESET: "release"
+      BUILD_PRESET: "release-windows"
       BUILD_DIR: "${{ github.workspace }}/builds"
       SARIF_DIR: "${{ github.workspace }}/sarif-results"
 
