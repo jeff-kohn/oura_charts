@@ -2,12 +2,11 @@
    "version": 3,
    "configurePresets": [
       {
-         "name": "win-base",
-         "description": "Contains all the common settings that should be used by default for all windows configuration presets",
-         "hidden": true,
-         "generator": "Ninja",
-         "binaryDir": "${sourceDir}/build/${presetName}",
-         "installDir": "${sourceDir}/build/${presetName}/install",
+         "name": "win-msvc",
+         "description": "Contains all the common settings that should be used by default for windows builds",
+         "generator": "Ninja Multi-Config",
+         "binaryDir": "${sourceDir}/builds",
+         "installDir": "${sourceDir}/builds/install",
          "architecture": {
             "value": "x64",
             "strategy": "external"
@@ -18,6 +17,7 @@
                "value": "$env{VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake",
                "type": "FILEPATH"
             },
+            "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
             "ENABLE_UNIT_TESTS": "ON",
             "ENABLE_CPP_CHECK": "ON",
             "ENABLE_CLANG_TIDY": "OFF",
@@ -36,35 +36,11 @@
          }
       },
       {
-         "name": "win-release",
-         "displayName": "win-release",
-         "description": "release build for windows",
-         "inherits": [
-            "win-base"
-         ],
-         "cacheVariables": {
-            "CMAKE_BUILD_TYPE": "RelWithDebInfo",
-            "CMAKE_POSITION_INDEPENDENT_CODE": "ON"
-         }
-      },
-      {
-         "name": "win-debug",
-         "displayName": "win-debug",
-         "description": "Provides settings that should be used by all Windows Debug configurations",
-         "inherits": [
-            "win-base"
-         ],
-         "cacheVariables": {
-            "CMAKE_BUILD_TYPE": "Debug"
-         }
-      },
-      {
-         "name": "linux-base",
-         "description": "Contains all the common settings that should be used by default for all linux configuration presets",
-         "hidden": true,
-         "generator": "Ninja",
-         "binaryDir": "${sourceDir}/build/${presetName}",
-         "installDir": "${sourceDir}/build/${presetName}/install",
+         "name": "linux-clang",
+         "description": "Contains all the common settings that should be used by default for linux (Clang) builds",
+         "generator": "Ninja Multi-Config",
+         "binaryDir": "${sourceDir}/builds",
+         "installDir": "${sourceDir}/builds/install",
          "architecture": {
             "value": "x64",
             "strategy": "external"
@@ -90,83 +66,62 @@
                "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
             }
          }
-      },
-      {
-         "name": "linux-release",
-         "displayName": "linux-release",
-         "description": "release build for linux",
-         "inherits": [
-            "linux-base"
-         ],
-         "cacheVariables": {
-            "CMAKE_BUILD_TYPE": "RelWithDebInfo",
-            "CMAKE_POSITION_INDEPENDENT_CODE": "ON"
-         }
-      },
-      {
-         "name": "linux-debug",
-         "displayName": "linux-debug",
-         "description": "debug build for linux",
-         "inherits": [
-            "linux-base"
-         ],
-         "cacheVariables": {
-            "ENABLE_CPP_CHECK": "OFF",
-            "ENABLE_CLANG_TIDY": "OFF",
-            "CMAKE_BUILD_TYPE": "Debug"
-         }
       }
    ],
    "buildPresets": [
       {
-         "name": "win-debug",
-         "description": "Windows Debug",
-         "displayName": "win-debug",
-         "configurePreset": "win-debug"
+         "name": "debug",
+         "description": "Debug (Windows)",
+         "displayName": "Debug",
+         "configurePreset": "win-msvc",
+         "configuration": "Debug"
       },
       {
-         "name": "win-release",
-         "description": "Windows Release",
-         "displayName": "win-release",
-         "configurePreset": "win-release"
+         "name": "release",
+         "description": "Release (Windows)",
+         "displayName": "Release",
+         "configurePreset": "win-msvc",
+         "configuration": "RelWithDebInfo"
       },
       {
          "name": "linux-debug",
          "description": "Linux Debug",
-         "displayName": "linux-debug",
-         "configurePreset": "linux-debug"
+         "displayName": "debug",
+         "configurePreset": "linux-clang",
+         "configuration": "Debug"
       },
       {
          "name": "linux-release",
-         "description": "Linux Release",
-         "displayName": "linux-release",
-         "configurePreset": "linux-release"
+         "description": "Linux Release w/symbols",
+         "displayName": "release",
+         "configurePreset": "linux-clang",
+         "configuration": "RelWithDebInfo"
       }
    ],
    "testPresets": [
       {
-         "name": "win-debug",
-         "description": "Windows Debug",
-         "displayName": "win-debug",
-         "configurePreset": "win-debug"
+         "name": "debug",
+         "displayName": "Tests (Debug)",
+         "configurePreset": "win-msvc",
+         "configuration": "debug"
       },
       {
-         "name": "win-release",
-         "description": "Windows Release",
-         "displayName": "win-release",
-         "configurePreset": "win-release"
+         "name": "release",
+         "displayName": "Tests (Release)",
+         "configurePreset": "win-msvc",
+         "configuration": "RelWithDebInfo"
       },
       {
-         "name": "linux-debug",
-         "description": "Linux Debug",
-         "displayName": "linux-debug",
-         "configurePreset": "linux-debug"
+         "name": "debug",
+         "displayName": "Tests (Debug)",
+         "configurePreset": "linux-clang",
+         "configuration": "debug"
       },
       {
-         "name": "linux-release",
-         "description": "Linux Release",
-         "displayName": "linux-release",
-         "configurePreset": "linux-release"
+         "name": "release",
+         "displayName": "Tests (Release)",
+         "configurePreset": "linux-clang",
+         "configuration": "RelWithDebInfo"
       }
    ]
 }
