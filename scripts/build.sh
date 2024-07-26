@@ -7,7 +7,7 @@
 show_help() {
   printf "\nUsage: %s [options]\n" "$0"
     echo "Options:"
-    echo "  --preset <name>        Specifies the build preset to use. Defaults to \"linux-clang\", "
+    echo "  --preset <name>        Specifies the build preset to use. Defaults to \"release-linux\", "
     echo "                         see CMakePresets.json for the full list."
     echo "  --target <name>        Specifies the target to build (case-sensitive), defaults to \"all\","
     echo "                         can also be \"install\" or a specific project target."
@@ -18,9 +18,8 @@ show_help() {
   exit 1
 }
 
-preset_name="linux-release"
+preset_name="release-linux"
 target="all"
-run_configure=false
 rebuild=false
 run_tests=false
 
@@ -66,7 +65,7 @@ echo "Building preset $preset_name using repo dir $repo_dir..."
 
 if $rebuild; then
    cmake --build --preset=$preset_name --target=$target --clean-first
-el
+else
    cmake --build --preset=$preset_name --target=$target
 fi
 

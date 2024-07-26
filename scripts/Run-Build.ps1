@@ -31,7 +31,7 @@
 
 param
 (
-   [string] $Preset = "release",
+   [string] $Preset = "release-win",
    [string] $Target = "all",
    [switch] $Rebuild,
    [switch] $RunTests
