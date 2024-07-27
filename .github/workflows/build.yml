@@ -19,7 +19,7 @@ jobs:
     env:
       CONFIGURE_PRESET: "win-msvc"
       BUILD_PRESET: "win-msvc"
-      BUILD_CONFIG: "Release"
+      BUILD_CONFIG: "Debug"
       BUILD_DIR: "builds"
 
     steps:

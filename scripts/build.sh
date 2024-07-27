@@ -7,7 +7,9 @@
 show_help() {
   printf "\nUsage: %s [options]\n" "$0"
     echo "Options:"
-    echo "  --preset <name>        Specifies the build preset to use. Defaults to \"release-linux\", "
+    echo "  --preset <name>        Specifies the build preset to use. Defaults to \"linux-clang\", "
+    echo "                         see CMakePresets.json for the full list."
+    echo "  --config <name>        Specifies the build configure to use. Defaults to \"Release\", "
     echo "                         see CMakePresets.json for the full list."
     echo "  --target <name>        Specifies the target to build (case-sensitive), defaults to \"all\","
     echo "                         can also be \"install\" or a specific project target."
@@ -19,6 +21,9 @@ show_help() {
 }
 
 preset_name="release-linux"
+config_name=""
+config_param=""
+clean_param=""
 target="all"
 rebuild=false
 run_tests=false
@@ -39,8 +44,12 @@ while [ $# -gt 0 ]; do
       target=$2
       shift
       ;;
+    --config)
+      config_name=$2
+      shift
+      ;;
     --rebuild)
-      rebuild=true
+      clean_param="--clean-first"
       ;;
     --tests)
       run_tests=true
@@ -61,15 +70,16 @@ repo_dir=$(dirname "$script_folder")
 saved_location=$(pwd)
 cd "$repo_dir" || exit
 
-echo "Building preset $preset_name using repo dir $repo_dir..."
-
-if $rebuild; then
-   cmake --build --preset=$preset_name --target=$target --clean-first
-else
-   cmake --build --preset=$preset_name --target=$target
+if ($config_name)
+   $config_param="--config=$config_name"
 fi
+echo "Building preset $preset_name $config_name using repo dir $repo_dir..."
+
+cmake --build --preset=$preset_name $config_param --target=$target $clean_param
+
 
 if $run_tests; then
+   config_param="--build-config $config_name"
    ctest --preset $preset_name --output-on-failure --output-junit "$preset_name.test_results.xml"
 fi
 cd "$saved_location"
