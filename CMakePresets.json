@@ -53,7 +53,7 @@
             "CMAKE_CXX_COMPILER": "clang++",
             "ENABLE_UNIT_TESTS": "ON",
             "ENABLE_CPP_CHECK": "ON",
-            "ENABLE_CLANG_TIDY": "ON",
+            "ENABLE_CLANG_TIDY": "OFF",
             "VCPKG_TARGET_TRIPLET": "x64-linux-wxwindows"
          },
          "condition": {

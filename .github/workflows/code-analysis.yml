@@ -150,7 +150,7 @@ jobs:
     
     - name: "Run Code Coverage"
       run: |
-        scripts/Run-CodeCoverage.ps1 -Preset $env:BUILD_PRESET
+        scripts/Run-CodeCoverage.ps1 -Config $env:BUILD_PRESET
 
     - name: "Publish Coverage Report"
       uses: 5monkeys/cobertura-action@master

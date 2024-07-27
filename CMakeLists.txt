@@ -123,20 +123,21 @@ if (TOP_LEVEL_PROJECT)
 
 endif()
 
-include(FetchContent)
-
-FetchContent_Declare(
-  glaze
-  GIT_REPOSITORY https://github.com/stephenberry/glaze.git
-  GIT_TAG main
-  GIT_SHALLOW TRUE
-)
-
-FetchContent_MakeAvailable(glaze)
+#include(FetchContent)
+#
+#FetchContent_Declare(
+#  glaze
+#  GIT_REPOSITORY https://github.com/stephenberry/glaze.git
+#  GIT_TAG main
+#  GIT_SHALLOW TRUE
+#)
+#
+# FetchContent_MakeAvailable(glaze)
 
 find_package(Boost REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 find_package(cpr CONFIG REQUIRED)
+find_package(glaze CONFIG REQUIRED)
 
 # Include sub-projects.
 add_subdirectory("lib")
