@@ -92,7 +92,7 @@ jobs:
 
       - name: configure
         run: |
-          cmake --preset=CONFIGURE_PRESET
+          cmake --preset=$CONFIGURE_PRESET
 
       - name: build
         run: |

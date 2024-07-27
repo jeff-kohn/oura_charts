@@ -43,6 +43,7 @@ add_custom_command(
    TARGET ${THIS_TARGET} POST_BUILD
    COMMAND ${CMAKE_COMMAND} -E copy_directory
             ${CMAKE_CURRENT_SOURCE_DIR}/test_data/
-            $<TARGET_FILE_DIR:${THIS_TARGET}>/test_data/
+            ${CMAKE_CURRENT_BINARY_DIR}/test_data/
+            #$<TARGET_FILE_DIR:${THIS_TARGET}>/test_data/
 )
 
