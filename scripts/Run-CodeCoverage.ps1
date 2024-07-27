@@ -1,14 +1,15 @@
 
 param
 (
-   [string] $Preset = "win-debug"
+   [string] $Config = "Debug"
 )
 
 $ErrorActionPreference = 'Stop'
 
 $RepoDir = Split-Path $PSScriptRoot
-$BinDir = Join-Path $RepoDir  "builds
-$TestsDir = Join-Path $BinDir "tests"
+$TestsDir = Join-Path $RepoDir "builds/tests"
+$ExeDir = Join-Path $TestsDir $Config
+$TestExe = Join-Path $ExeDir "tests.exe"
 
 $saved_location = Get-Location
 Set-Location $TestsDir
@@ -18,7 +19,7 @@ try
    Write-Host "running OpenCppCoverage with the folllowing values: RepoDir=$RepoDir, BinDir=$BinDir, TestsDir=$TestsDir"
    
    & $env:ProgramFiles\OpenCppCoverage\opencppcoverage.exe --verbose `
-      --modules $BinDir\tests\tests.exe                              `
+      --modules $TestExe                              `
       --sources $RepoDir\src                                         `
       --sources $ReporDir\include                                    `
       --excluded_sources $env:ProgramFiles                           `
@@ -28,7 +29,7 @@ try
       --excluded_sources $BinDir\_deps                               `
       --export_type=cobertura:"..\code_coverage.xml"                 `
       --export_type=html:"..\code_coverage_html"                     `
-      -- tests.exe
+      -- $TestExe
 }
 finally
 {
