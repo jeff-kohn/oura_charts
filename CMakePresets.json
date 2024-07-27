@@ -70,58 +70,26 @@
    ],
    "buildPresets": [
       {
-         "name": "debug-win",
-         "description": "Debug (Windows)",
-         "displayName": "Debug",
-         "configurePreset": "win-msvc",
-         "configuration": "Debug"
+         "name": "win-msvc",
+         "displayName": "Windows MSVC",
+         "configurePreset": "win-msvc"
       },
       {
-         "name": "release-win",
-         "description": "Release (Windows)",
-         "displayName": "Release",
-         "configurePreset": "win-msvc",
-         "configuration": "RelWithDebInfo"
-      },
-      {
-         "name": "debug-linux",
-         "description": "Linux Debug",
-         "displayName": "debug",
-         "configurePreset": "linux-clang",
-         "configuration": "Debug"
-      },
-      {
-         "name": "release-linux",
-         "description": "Linux Release w/symbols",
-         "displayName": "release",
-         "configurePreset": "linux-clang",
-         "configuration": "RelWithDebInfo"
+         "name": "linux-clang",
+         "displayName": "Linux Clang",
+         "configurePreset": "linux-clang"
       }
    ],
    "testPresets": [
       {
-         "name": "debug-win",
-         "displayName": "Tests (Debug)",
-         "configurePreset": "win-msvc",
-         "configuration": "debug"
+         "name": "win-msvc",
+         "displayName": "Tests (Windows MSVC)",
+         "configurePreset": "win-msvc"
       },
       {
-         "name": "release-win",
-         "displayName": "Tests (Release)",
-         "configurePreset": "win-msvc",
-         "configuration": "RelWithDebInfo"
-      },
-      {
-         "name": "debug-linux",
-         "displayName": "Tests (Debug)",
-         "configurePreset": "linux-clang",
-         "configuration": "debug"
-      },
-      {
-         "name": "release-linux",
-         "displayName": "Tests (Release)",
-         "configurePreset": "linux-clang",
-         "configuration": "RelWithDebInfo"
+         "name": "linux-clang",
+         "displayName": "Tests (Linux Clang)",
+         "configurePreset": "linux-clang"
       }
    ]
 }

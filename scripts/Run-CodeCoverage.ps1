@@ -16,7 +16,7 @@ Set-Location $TestsDir
 
 try
 {
-   Write-Host "running OpenCppCoverage with the folllowing values: RepoDir=$RepoDir, BinDir=$BinDir, TestsDir=$TestsDir"
+   Write-Host "running OpenCppCoverage with the folllowing values: RepoDir=$RepoDir, ExeDir=$ExeDir, TestsDir=$TestsDir, TestExe=$TestExe"
    
    & $env:ProgramFiles\OpenCppCoverage\opencppcoverage.exe --verbose `
       --modules $TestExe                              `

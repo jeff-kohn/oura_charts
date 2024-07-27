@@ -26,7 +26,8 @@ jobs:
       VCPKG_FEATURE_FLAGS: "dependencygraph"
       DOTNET_ROLL_FORWARD: "latestMajor"
       CONFIGURE_PRESET: "linux-clang"
-      BUILD_PRESET: "release-linux"
+      BUILD_PRESET: "linux-clang"
+      BUILD_CONFIG: "Release"
       BUILD_DIR: "${{ github.workspace }}/builds"
       SARIF_DIR: "${{ github.workspace }}/sarif-results"
 
@@ -66,7 +67,7 @@ jobs:
       shell: bash
       run: |
         cmake --preset=$CONFIGURE_PRESET
-        cmake --build --preset=$BUILD_PRESET --target=all
+        cmake --build --preset=$BUILD_PRESET --config=$BUILD_CONFIG --target=all
 
     - name: 'Perform CodeQL Analysis'
       uses: github/codeql-action/analyze@v3
@@ -87,7 +88,7 @@ jobs:
 
     - name: 'Run clang-tidy and CppCheck'
       run: |
-        scripts/build.sh --preset $BUILD_PRESET --target code_analysis 
+        scripts/build.sh --preset $BUILD_PRESET --config $BUILD_CONFIG --target code_analysis 
 
     - name: 'Convert CppCheck XML to SARIF'
       run: |
@@ -118,7 +119,8 @@ jobs:
     env:
       VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}\\vcpkg"
       CONFIGURE_PRESET: "win-msvc"
-      BUILD_PRESET: "release-win"
+      BUILD_PRESET: "win-msvc"
+      BUILD_CONFIG: "Debug"
       BUILD_DIR: "${{ github.workspace }}/builds"
       SARIF_DIR: "${{ github.workspace }}/sarif-results"
 
@@ -145,12 +147,12 @@ jobs:
 
     - name: 'Run Build'
       run: |
-        cmake --preset=$env:CONFIGURE_PRESET
-        cmake --build --preset=$env:BUILD_PRESET --target=all
+        scripts/Run-Configure -Preset $env:CONFIGURE_PRESET
+        scripts/Run-Build -Config $env:BUILD_CONFIG
     
     - name: "Run Code Coverage"
       run: |
-        scripts/Run-CodeCoverage.ps1 -Config $env:BUILD_PRESET
+        scripts/Run-CodeCoverage.ps1 -Config $env:BUILD_CONFIG
 
     - name: "Publish Coverage Report"
       uses: 5monkeys/cobertura-action@master

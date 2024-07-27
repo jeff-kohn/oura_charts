@@ -8,30 +8,35 @@
    Command Prompt.
 
   .PARAMETER Preset
-  Specifies the CMake preset to use. Defaults to "win-msvc", currently the only windows preset
+  Specifies the CMake build preset to use. Defaults to "win-msvc".
 
-  .PARAMETER Clean
-  If this switch is supplied, the --clean-first build will be passed to cmake to for a clean build
+  .PARAMETER Config
+  Optionally specify the build configuration for multi-config presets that don't specify
+  one. No default supplied since some presets will already specify a build configuration.
+
+  .PARAMETER Rebuild
+  If this switch is supplied, the --clean-first build will be passed to cmake for a clean build.
   Clean build DOES not delete CMake cache or re-run configure, it just deletes existing build binaries.
 
   .PARAMETER Tests
   This switch causes cmake to run unit tests
 
   .EXAMPLE
-  PS> scripts/Build-Preset.ps1 -Config="win-release"
+  PS> scripts/Build-Preset.ps1 -Preset="win-msvc" -Config="Release"
 
   .EXAMPLE
-  PS> scripts/Build-Preset.ps1 win-debug -Configure -Build
+  PS> scripts/Build-Preset.ps1 win-debug 
 
   .EXAMPLE
-  PS> scripts/Build-Preset.ps1 win-release -Rebuild -Tests
+  PS> scripts/Build-Preset.ps1 -Config="Debug" -Rebuild -Tests
 
 #>
 
 
 param
 (
-   [string] $Preset = "release-win",
+   [string] $Preset = "win-msvc",
+   [string] $Config = "",
    [string] $Target = "all",
    [switch] $Rebuild,
    [switch] $RunTests
@@ -49,22 +54,27 @@ try
 
    if ( !(Test-Path "$RepoDir/builds/CMakeCache.txt") )
    {
-      Write-Host "`r`nBuild directory not found. Use  the '-Configure' switch to run configure before building.`r`n"
+      Write-Host "`r`nBuild directory not found. Run configure before building.`r`n"
       exit (-1)
+   }
+
+   if ($Config)
+   {
+      $Config = "--config=$Config"
    }
 
    if ( $Rebuild )
    {
-      cmake --build --preset=$Preset --target=$Target --clean-first
+      cmake --build --preset=$Preset $Config --target=$Target --clean-first
    }
    else
    {
-      cmake --build --preset=$Preset --target=$Target
+      cmake --build --preset=$Preset  $Config --target=$Target
    }
 
    if ( $Tests )
    {
-      ctest --preset $Preset --output-on-failure --output-junit "$Preset.test_results.xml"
+      ctest --preset $Preset $Config --output-on-failure --output-junit "$Preset.test_results.xml"
    }
 }
 finally
