@@ -20,12 +20,11 @@ show_help() {
   exit 1
 }
 
-preset_name="release-linux"
+preset_name="linux-clang"
 config_name=""
-config_param=""
+use_config=false
 clean_param=""
 target="all"
-rebuild=false
 run_tests=false
 
 if [ $# -gt 0 ]; then
@@ -46,6 +45,7 @@ while [ $# -gt 0 ]; do
       ;;
     --config)
       config_name=$2
+      use_config=true
       shift
       ;;
     --rebuild)
@@ -70,11 +70,13 @@ repo_dir=$(dirname "$script_folder")
 saved_location=$(pwd)
 cd "$repo_dir" || exit
 
-if ($config_name)
-   $config_param="--config=$config_name"
+config_param=""
+if $use_config; then
+   config_param="--config=$config_name"
 fi
 echo "Building preset $preset_name $config_name using repo dir $repo_dir..."
 
+echo 
 cmake --build --preset=$preset_name $config_param --target=$target $clean_param
 
 
