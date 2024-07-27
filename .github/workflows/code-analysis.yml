@@ -87,7 +87,7 @@ jobs:
 
     - name: 'Run clang-tidy and CppCheck'
       run: |
-        scripts/build.sh --preset $BUILD_PRESET --target code_analysis --build
+        scripts/build.sh --preset $BUILD_PRESET --target code_analysis 
 
     - name: 'Convert CppCheck XML to SARIF'
       run: |
@@ -118,7 +118,7 @@ jobs:
     env:
       VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}\\vcpkg"
       CONFIGURE_PRESET: "win-msvc"
-      BUILD_PRESET: "release-windows"
+      BUILD_PRESET: "release-win"
       BUILD_DIR: "${{ github.workspace }}/builds"
       SARIF_DIR: "${{ github.workspace }}/sarif-results"
 
