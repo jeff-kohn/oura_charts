@@ -54,10 +54,10 @@ jobs:
       run: |
         cmake --build --preset=$env:BUILD_PRESET --config=$env:BUILD_CONFIG --target=all
 
-      # Note test preset name should be same as build preset name
+      # Note test preset name should be same as configure preset name
     - name: tests
       run: |
-        ctest --preset $BUILD_PRESET --build-config=$BUILD_CONFIG --output-on-failure --output-junit "test_results.xml"
+        ctest --preset $CONFIGURE_PRESET --build-config $BUILD_CONFIG --output-on-failure --output-junit "test_results.xml"
 
     - name: Publish Test Artifacts
       uses: EnricoMi/publish-unit-test-result-action/windows@v2
@@ -100,10 +100,10 @@ jobs:
         run: |
           cmake --build --preset=$BUILD_PRESET --config=$BUILD_CONFIG --target=all
 
-      # Note test preset name should be same as build preset name
+      # Note test preset name should be same as configure preset name
       - name: tests
         run: |
-          ctest --preset $BUILD_PRESET --build-config=$BUILD_CONFIG --output-on-failure --output-junit "test_results.xml"
+          ctest --preset CONFIGURE_PREST --build-config $BUILD_CONFIG --output-on-failure --output-junit "test_results.xml"
 
       - name: Upload vcpkg logs
         uses: actions/upload-artifact@v4
