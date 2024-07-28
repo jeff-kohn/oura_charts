@@ -113,8 +113,9 @@ namespace oura_charts
                                                  | rg::to<std::vector>();
 
          // Add the data to the chart
-         m_data->AddDataset(wxChartsDoubleDataset::ptr{ new wxChartsDoubleDataset("Avg. Sleep Score", sleep_scores) });
-         CallAfter([this] { this->Refresh(); });
+         m_data->AddDataset(wxChartsDoubleDataset::ptr{ new wxChartsDoubleDataset("Avg. Sleep Score", sleep_scores) });;
+         
+         CallAfter([this] { this->Refresh(); this->Update(); });
 
       }
       catch (std::exception& e)

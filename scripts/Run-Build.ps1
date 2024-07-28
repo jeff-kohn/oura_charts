@@ -18,7 +18,7 @@
   If this switch is supplied, the --clean-first build will be passed to cmake for a clean build.
   Clean build DOES not delete CMake cache or re-run configure, it just deletes existing build binaries.
 
-  .PARAMETER Tests
+  .PARAMETER RunTests
   This switch causes cmake to run unit tests
 
   .EXAMPLE
@@ -60,20 +60,30 @@ try
 
    if ($Config)
    {
-      $Config = "--config=$Config"
+      $ConfigArg = "--config=$Config"
    }
 
    if ( $Rebuild )
    {
-      cmake --build --preset=$Preset $Config --target=$Target --clean-first
+      cmake --build --preset=$Preset $ConfigArg --target=$Target --clean-first
    }
    else
    {
-      cmake --build --preset=$Preset  $Config --target=$Target
+      cmake --build --preset=$Preset  $ConfigArg --target=$Target
    }
 
-   if ( $Tests )
+   if ( $RunTests )
    {
+      if ($Config)
+      {
+         $ConfigArg = "-C $Config"
+      }
+      else{
+         $ConfigArg = ""
+      }
+      # $ConfigArg = "-C $Config"
+      # Write-Host "`r`nConfigArg=$ConfigArg, command-line is:"
+      Write-Host "`r`n`tctest --preset $Preset $ConfigArg --output-on-failure --output-junit `"$Preset.test_results.xml`"`r`n"
       ctest --preset $Preset $Config --output-on-failure --output-junit "$Preset.test_results.xml"
    }
 }
