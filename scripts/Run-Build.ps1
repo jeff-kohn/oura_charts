@@ -81,8 +81,6 @@ try
       else{
          $ConfigArg = ""
       }
-      # $ConfigArg = "-C $Config"
-      # Write-Host "`r`nConfigArg=$ConfigArg, command-line is:"
       Write-Host "`r`n`tctest --preset $Preset $ConfigArg --output-on-failure --output-junit `"$Preset.test_results.xml`"`r`n"
       ctest --preset $Preset $Config --output-on-failure --output-junit "$Preset.test_results.xml"
    }

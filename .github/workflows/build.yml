@@ -57,7 +57,7 @@ jobs:
       # Note test preset name should be same as configure preset name
     - name: tests
       run: |
-        ctest --preset $CONFIGURE_PRESET --build-config $BUILD_CONFIG --output-on-failure --output-junit "test_results.xml"
+        ctest --preset $env:CONFIGURE_PRESET --build-config $env:BUILD_CONFIG --output-on-failure --output-junit "test_results.xml"
 
     - name: Publish Test Artifacts
       uses: EnricoMi/publish-unit-test-result-action/windows@v2
