@@ -30,8 +30,23 @@ bool MainFrameBase::Create(wxWindow* parent, wxWindowID id, const wxString& titl
     auto* menubar = new wxMenuBar();
 
     auto* m_file_menu = new wxMenu();
-    auto* menu_item5 = new wxMenuItem(m_file_menu, wxID_ANY, "Test Chart");
+    auto* menu_item6 = new wxMenuItem(m_file_menu, wxID_NEW);
+    menu_item6->SetBitmap(wxArtProvider::GetBitmapBundle(wxART_NEW, wxART_MENU));
+
+    m_file_menu->Append(menu_item6);
+    auto* menu_item7 = new wxMenuItem(m_file_menu, wxID_OPEN);
+    menu_item7->SetBitmap(wxArtProvider::GetBitmapBundle(wxART_FILE_OPEN, wxART_MENU));
+
+    m_file_menu->Append(menu_item7);
+    m_file_menu->AppendSeparator();
+    auto* menu_item5 = new wxMenuItem(m_file_menu, wxID_SAVE);
+    menu_item5->SetBitmap(wxArtProvider::GetBitmapBundle(wxART_FILE_SAVE, wxART_MENU));
+
     m_file_menu->Append(menu_item5);
+    auto* menu_item8 = new wxMenuItem(m_file_menu, wxID_SAVEAS);
+    menu_item8->SetBitmap(wxArtProvider::GetBitmapBundle(wxART_FILE_SAVE_AS, wxART_MENU));
+
+    m_file_menu->Append(menu_item8);
     m_file_menu->AppendSeparator();
     auto* menu_item2 = new wxMenuItem(m_file_menu, wxID_PREFERENCES);
     m_file_menu->Append(menu_item2);
@@ -53,24 +68,11 @@ bool MainFrameBase::Create(wxWindow* parent, wxWindowID id, const wxString& titl
 
     m_statusBar = CreateStatusBar();
 
-    auto* box_sizer = new wxBoxSizer(wxHORIZONTAL);
-
-    auto* box_sizer2 = new wxBoxSizer(wxVERTICAL);
-
-    m_chart_sizer = new wxBoxSizer(wxHORIZONTAL);
-    m_chart_sizer->SetMinSize(600, 400);
-
-    box_sizer2->Add(m_chart_sizer, wxSizerFlags(3).Expand().Border(wxALL));
-
-    box_sizer->Add(box_sizer2, wxSizerFlags(3).Expand().Border(wxALL));
-    SetSizerAndFit(box_sizer);
-
     Centre(wxBOTH);
 
     // Event handlers
     Bind(wxEVT_MENU, &MainFrameBase::onMenuFilePreferences, this, wxID_PREFERENCES);
     Bind(wxEVT_MENU, &MainFrameBase::onMenuFileQuit, this, wxID_EXIT);
-    Bind(wxEVT_MENU, &MainFrameBase::onMenuFileTestChart, this, menu_item5->GetId());
     Bind(wxEVT_MENU, &MainFrameBase::onMenuHelpAbout, this, wxID_ABOUT);
     Bind(wxEVT_MENU, &MainFrameBase::onMenuHelpAboutWx, this, menu_item4->GetId());
 

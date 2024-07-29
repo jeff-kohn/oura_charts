@@ -1,5 +1,7 @@
 #include "OuraChartsApp.h"
+#include "ChartDocTemplate.h"
 #include "MainFrame.h"
+
 #include <wx/fileconf.h>
 #include <wx/stdpaths.h>
 
@@ -8,6 +10,9 @@
 
 namespace oura_charts
 {
+   using std::unique_ptr;
+   using std::make_unique;
+
    OuraChartsApp::OuraChartsApp()
    {
       SetUseBestVisual(true);
@@ -15,20 +20,33 @@ namespace oura_charts
       // Set up config object to use file even on windows (registry is yuck)
       wxStandardPaths::Get().SetFileLayout(wxStandardPaths::FileLayout::FileLayout_XDG);
       wxConfigBase::DontCreateOnDemand();
-      wxConfigBase::Set(new wxFileConfig{ constants::APP_NAME_NOSPACE, // NOLINT(cppcoreguidelines-owning-memory)
-                                          wxEmptyString, 
-                                          wxEmptyString,  
-                                          wxEmptyString,  
-                                          wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_SUBDIR }); 
-   } // NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
+      auto cfg = make_unique<wxFileConfig>(constants::APP_NAME_NOSPACE, 
+                                           wxEmptyString, 
+                                           wxEmptyString,  
+                                           wxEmptyString,  
+                                           wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_SUBDIR);
+      wxConfigBase::Set(cfg.release());
+   } 
+
 
    bool OuraChartsApp::OnInit()
    {
-   	auto *main_frame = new MainFrame(nullptr); // NOLINT(cppcoreguidelines-owning-memory)
-   	main_frame->Show(true);
-   	SetTopWindow(main_frame);
-   	return true;
-   } // NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
+      assert(!m_doc_mgr);
+      m_doc_mgr = std::make_shared<wxDocManager>();
+      m_doc_mgr->SetMaxDocsOpen(1);
+
+      new ChartDocTemplate(m_doc_mgr.get(), "Oura Charts Document",
+                           "*.occhart", wxEmptyString, "occhart",
+                           "OC Chart Doc", "OC Chart View");
+
+      auto main_frame = std::make_unique<MainFrame>(m_doc_mgr, nullptr);
+      main_frame->Center();
+      main_frame->Show();
+      SetTopWindow(main_frame.release());
+
+      return true;
+   } 
+
 
    int OuraChartsApp::OnExit()
    {
@@ -41,6 +59,7 @@ namespace oura_charts
       return wxApp::OnExit();
    }
 
+
    wxConfigBase& OuraChartsApp::getConfig() noexcept(false)
    {
       auto *config = wxConfigBase::Get(false);
@@ -49,6 +68,7 @@ namespace oura_charts
 
       return *config;
    }
+
 
    const wxConfigBase& OuraChartsApp::getConfig() const noexcept(false)
    {

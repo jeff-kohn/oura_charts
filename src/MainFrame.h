@@ -1,36 +1,49 @@
 
 #pragma once
 
-#include "generated/MainFrameBase.h"
 #include "constants.h"
 
+#include <wx/event.h>
+#include <wx/docview.h>
 #include <wx/sharedptr.h>
+#include <wx/sizer.h>
+#include <wx/statusbr.h>
+#include <wx/toolbar.h>
+
+#include <memory>
+
+
 
 class wxChartsCategoricalData;
 
 namespace oura_charts
 {
-   class MainFrame : public MainFrameBase
+
+   class MainFrame : public wxDocParentFrame
    {
    public:
       // If you use default constructor, you must call Create(parent*)
       MainFrame() = default;
-      explicit MainFrame(wxWindow* parent)
+      explicit MainFrame(std::weak_ptr<wxDocManager> doc_mgr, wxFrame* parent)
       {
-         Create(parent);
+         Create(doc_mgr, parent);
       }
 
       // cppcheck-suppress duplInheritedMember
-      bool Create(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = constants::APP_NAME,
-                  const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
-                  long style = wxDEFAULT_FRAME_STYLE, const wxString& name = wxFrameNameStr);
+      bool Create(std::weak_ptr<wxDocManager> doc_mgr, wxFrame* parent,
+                  wxWindowID id = wxID_ANY, const wxString& title = constants::APP_NAME);
 
-   private:
-      void onMenuFilePreferences(wxCommandEvent& event) override;
-      void onMenuFileTestChart(wxCommandEvent& event) override;
-      void onMenuFileQuit(wxCommandEvent& event) override;
-      void onMenuHelpAbout(wxCommandEvent& event) override;
-      void onMenuHelpAboutWx(wxCommandEvent& event) override;
+   protected:
+      wxBoxSizer* m_chart_sizer{};
+      wxStatusBar* m_statusBar{};
+      wxToolBar* m_toolbar{};
+
+      void initControls();
+      void onMenuFilePreferences(wxCommandEvent& event);
+      void onMenuFileTestChart(wxCommandEvent& event);
+      void onMenuFileQuit(wxCommandEvent& event);
+      void onMenuHelpAbout(wxCommandEvent& event);
+      void onMenuHelpAboutWx(wxCommandEvent& event);
 
       wxSharedPtr<wxChartsCategoricalData> m_data{};
    };

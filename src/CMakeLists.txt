@@ -15,6 +15,12 @@ add_executable(${THIS_TARGET} WIN32
 	PreferencesDialog.cpp
 	PreferencesDialog.h
    utf8.manifest
+   "ChartDocument.h"
+   "ChartDocument.cpp"
+   "ChartDocTemplate.h"
+   "ChartDocTemplate.cpp"
+   "ChartView.h"
+   "ChartView.cpp"
 	${wx_generated_files}
 )
 

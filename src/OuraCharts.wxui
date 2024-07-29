@@ -114,11 +114,41 @@
           var_name="m_file_menu">
           <node
             class="wxMenuItem"
-            label="Test Chart"
-            var_name="menu_item5"
-            wxEVT_MENU="onMenuFileTestChart" />
+            bitmap="Art;wxART_NEW|wxART_MENU"
+            help="Create new document"
+            id="wxID_NEW"
+            label="&amp;New"
+            stock_id="wxID_NEW"
+            var_name="menu_item6" />
+          <node
+            class="wxMenuItem"
+            bitmap="Art;wxART_FILE_OPEN|wxART_MENU"
+            help="Open an existing document"
+            id="wxID_OPEN"
+            label="&amp;Open..."
+            stock_id="wxID_OPEN"
+            var_name="menu_item7" />
           <node
             class="separator" />
+          <node
+            class="wxMenuItem"
+            bitmap="Art;wxART_FILE_SAVE|wxART_MENU"
+            help="Save current document"
+            id="wxID_SAVE"
+            label="&amp;Save"
+            stock_id="wxID_SAVE"
+            var_name="menu_item5" />
+          <node
+            class="wxMenuItem"
+            bitmap="Art;wxART_FILE_SAVE_AS|wxART_MENU"
+            help="Save current document with a different filename"
+            id="wxID_SAVEAS"
+            label="Save &amp;As..."
+            stock_id="wxID_SAVEAS"
+            var_name="menu_item8" />
+          <node
+            class="separator"
+            var_name="separator3" />
           <node
             class="wxMenuItem"
             id="wxID_PREFERENCES"
@@ -159,26 +189,6 @@
       </node>
       <node
         class="wxStatusBar" />
-      <node
-        class="wxBoxSizer"
-        minimum_size="-1,-1d"
-        flags="wxEXPAND">
-        <node
-          class="wxBoxSizer"
-          orientation="wxVERTICAL"
-          var_name="box_sizer2"
-          minimum_size="-1,-1d"
-          flags="wxEXPAND"
-          proportion="3">
-          <node
-            class="wxBoxSizer"
-            class_access="protected:"
-            var_name="m_chart_sizer"
-            minimum_size="600,400d"
-            flags="wxEXPAND"
-            proportion="3" />
-        </node>
-      </node>
     </node>
     <node
       class="wxDialog"
