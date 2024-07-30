@@ -5,22 +5,23 @@ namespace oura_charts
 {
 
 
-   void ChartView::OnDraw(wxDC* )
+   void ChartView::OnDraw([[maybe_unused]] wxDC* dc)
    {
    }
 
-   void ChartView::OnUpdate(wxView* , wxObject* )
+   void ChartView::OnUpdate([[maybe_unused]] wxView* , [[maybe_unused]] wxObject* )
    {
    }
 
-   bool ChartView::OnClose(bool deleteWindow)
+   bool ChartView::OnClose([[maybe_unused]] bool deleteWindow)
    {
       if (!GetDocument()->Close())
       {
          return false;
       }
-      SetFrame(NULL);
+      SetFrame(nullptr);
       Activate(false);
       return true;
    }
-}
+   
+}  // namespace oura_charts

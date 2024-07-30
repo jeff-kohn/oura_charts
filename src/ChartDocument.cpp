@@ -3,18 +3,18 @@
 namespace oura_charts
 {
 
-   void ChartDocument::OnDraw(wxDC* [[maybe_unused]] dc)
+   void ChartDocument::OnDraw([[maybe_unused]]wxDC*  dc)
    {
 
    }
 
 
-   void ChartDocument::OnUpdate(wxView* [[maybe_unused]] sender, wxObject* [[maybe_unused]] hint)
+   void ChartDocument::OnUpdate([[maybe_unused]] wxView* sender, [[maybe_unused]] wxObject* hint)
    {
    }
 
 
-   bool ChartDocument::OnClose(bool [[maybe_unused]] deleteWindow)
+   bool ChartDocument::OnClose([[maybe_unused]] bool deleteWindow)
    {
       return true;
    }

@@ -11,7 +11,7 @@ namespace oura_charts
 
    protected:
       void OnDraw(wxDC* dc) override;
-      void OnUpdate(wxView* sender, wxObject* hint = (wxObject*)NULL) override;
+      void OnUpdate(wxView* sender, wxObject* hint = nullptr) override;
       bool OnClose(bool deleteWindow = true) override;
    };
 

@@ -24,13 +24,13 @@ namespace oura_charts
    public:
       // If you use default constructor, you must call Create(parent*)
       MainFrame() = default;
-      explicit MainFrame(std::weak_ptr<wxDocManager> doc_mgr, wxFrame* parent)
+      explicit MainFrame(const std::weak_ptr<wxDocManager>& doc_mgr, wxFrame* parent)
       {
          Create(doc_mgr, parent);
       }
 
       // cppcheck-suppress duplInheritedMember
-      bool Create(std::weak_ptr<wxDocManager> doc_mgr, wxFrame* parent,
+      bool Create(const std::weak_ptr<wxDocManager>&, wxFrame* parent,
                   wxWindowID id = wxID_ANY, const wxString& title = constants::APP_NAME);
 
    protected:

@@ -25,7 +25,7 @@ namespace oura_charts
    // Disable this warning, non-virtual Create() is a pretty standard idiom since it's
    // called from ctor in most cases.
    // cppcheck-suppress duplInheritedMember
-   bool MainFrame::Create(std::weak_ptr<wxDocManager> doc_mgr, wxFrame* parent,
+   bool MainFrame::Create(const std::weak_ptr<wxDocManager>& doc_mgr, wxFrame* parent,
                           wxWindowID id, const wxString& title)
    {
       auto doc = doc_mgr.lock();
@@ -53,6 +53,7 @@ namespace oura_charts
 
    void MainFrame::initControls()
    {
+      // NOLINTBEGIN(*)  generated code copy pasted from derived class we can't use until bug in wxUiDesigner is fixed.
       m_toolbar = CreateToolBar();
       m_toolbar->Realize();
 
@@ -99,6 +100,8 @@ namespace oura_charts
 
       Centre(wxBOTH);
 
+      // NOLINTEND(*)
+      
       // Event handlers
       Bind(wxEVT_MENU, &MainFrame::onMenuFilePreferences, this, wxID_PREFERENCES);
       Bind(wxEVT_MENU, &MainFrame::onMenuFileQuit, this, wxID_EXIT);

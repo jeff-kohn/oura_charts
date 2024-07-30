@@ -10,7 +10,6 @@
 
 namespace oura_charts
 {
-   using std::unique_ptr;
    using std::make_unique;
 
    OuraChartsApp::OuraChartsApp()
@@ -26,7 +25,7 @@ namespace oura_charts
                                            wxEmptyString,  
                                            wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_SUBDIR);
       wxConfigBase::Set(cfg.release());
-   } 
+   } // NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks) unfortunately no way around it with wxWindows
 
 
    bool OuraChartsApp::OnInit()
