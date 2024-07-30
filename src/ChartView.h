@@ -10,9 +10,9 @@ namespace oura_charts
    public:
 
    protected:
-      virtual void OnDraw(wxDC* dc);
-      virtual void OnUpdate(wxView* sender, wxObject* hint = (wxObject*)NULL);
-      virtual bool OnClose(bool deleteWindow = true);
+      void OnDraw(wxDC* dc) override;
+      void OnUpdate(wxView* sender, wxObject* hint = (wxObject*)NULL) override;
+      bool OnClose(bool deleteWindow = true) override;
    };
 
 } // namespace oura_charts

@@ -11,8 +11,9 @@
 
 #include <wx/artprov.h>
 #include <wx/stockitem.h>
+#include <wx/menu.h>
 
-#include <wxcharts/wx/charts/wxcharts.h>
+//#include <wxcharts/wx/charts/wxcharts.h>
 
 //#include <algorithm>
 //#include <chrono>
