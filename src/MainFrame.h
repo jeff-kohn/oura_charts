@@ -14,7 +14,6 @@
 
 
 
-class wxChartsCategoricalData;
 
 namespace oura_charts
 {
@@ -40,12 +39,9 @@ namespace oura_charts
 
       void initControls();
       void onMenuFilePreferences(wxCommandEvent& event);
-      void onMenuFileTestChart(wxCommandEvent& event);
       void onMenuFileQuit(wxCommandEvent& event);
       void onMenuHelpAbout(wxCommandEvent& event);
       void onMenuHelpAboutWx(wxCommandEvent& event);
-
-      wxSharedPtr<wxChartsCategoricalData> m_data{};
    };
 
 

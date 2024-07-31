@@ -10,7 +10,6 @@
     "spdlog",
     "tabulate",
     "cpr",
-    "wxcharts",
     "glaze",
     {
       "name": "wxwidgets",

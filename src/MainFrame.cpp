@@ -53,7 +53,8 @@ namespace oura_charts
 
    void MainFrame::initControls()
    {
-      // NOLINTBEGIN(*)  generated code copy pasted from derived class we can't use until bug in wxUiDesigner is fixed.
+      // NOLINTBEGIN(*)  generated code copy pasted from derived class, so don't lint
+      // (we can get rid of this when code generation bug in wxUiDesigner is fixed).
       m_toolbar = CreateToolBar();
       m_toolbar->Realize();
 
@@ -128,68 +129,6 @@ namespace oura_charts
    }
 
 
-   void MainFrame::onMenuFileTestChart(wxCommandEvent&)
-   {
-      try
-      {
-         using std::vector;
-         using std::optional;
-
-         //auto pat{ wxGetApp().getRestToken().transform_error([] (auto&& e) -> std::decay_t<decltype(e)> { throw e; }).value() };
-      
-         //// Get sleep scores for the past year
-         //auto today = stripTimeOfDay(localNow());
-         //auto last_year = today - months{ 12 };
-         //RestDataProvider rest_server{ TokenAuth{pat}, constants::REST_DEFAULT_BASE_URL };
-         //auto score_data = getDataSeries<DailySleepScore>(rest_server, getCalendarDate(last_year), getCalendarDate(today));
-
-         //// group by day of week. in case of sleep we filter for only "long" sleep (no naps)
-         //auto score_by_weekday = group<SleepScoreByWeekday>(std::move(score_data), sleepScoreWeekday);
-
-         //// calculate average score per weekday.
-         //constexpr auto weekdays = getWeekdays();
-         //vector<nullable_double> avg_score(weekdays.size() );
-
-         //for (auto wd : weekdays)
-         //{
-         //   // get the sub range representing all the data for the current weekday. could be an empty range,
-         //   // but that won't cause any problems we'll just get null result.
-         //   auto [score_beg, score_end] = score_by_weekday.equal_range(wd);
-         //   std::ranges::subrange score_range{ score_beg, score_end };
-
-         //   AvgCalc<uint32_t> calc_score{};
-         //   rg::for_each(score_range | vw::values, [&] (const DailySleepScore& score)
-         //                {
-         //                  calc_score(score.score());
-         //                });
-
-         //   avg_score[wd.c_encoding()] = calc_score.result();
-         //}
-
-         //// transform the nullable scores into double's, using 0 for null (for now).
-         //auto sleep_scores = vw::all(avg_score) | vw::transform([] (const nullable_double& score) -> double
-         //                                                       {
-         //                                                          return score.value_or(0);
-         //                                                       })
-         //                                       | rg::to<vector>();
-
-         //// get the weekday names for our chart label.
-         //auto weekday_labels = getWeekdayNames() | vw::transform([] (const std::string& str) { return wxString{ str }; })
-         //                                        | rg::to<std::vector>();
-
-         //// Add the data to the chart
-         //m_data->AddDataset(wxChartsDoubleDataset::ptr{ new wxChartsDoubleDataset("Avg. Sleep Score", sleep_scores) });;
-         
-         CallAfter([this] { this->Refresh(); this->Update(); });
-
-      }
-      catch (std::exception& e)
-      {
-         wxLogError(e.what());
-      }
-   }
-
-
    void MainFrame::onMenuFileQuit(wxCommandEvent&)
    {
       Close(true);
@@ -229,4 +168,5 @@ namespace oura_charts
          wxLogError(e.what());
       }
    }
+
 }  // namespace oura_charts
