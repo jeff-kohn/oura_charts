@@ -14,8 +14,8 @@ namespace oura_charts
 
 
    private:
-      year_month_day m_from_date{};
-      year_month_day m_until_date{};
+      //year_month_day m_from_date{};
+      //year_month_day m_until_date{};
    };
 
 } // namespace oura_charts

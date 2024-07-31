@@ -226,13 +226,13 @@
               maxlength="32"
               style="wxTE_PASSWORD"
               var_name="m_access_token_txt"
-              validator_style="wxFILTER_ALPHANUMERIC"
+              validator_style="wxFILTER_ASCII"
               validator_variable="m_access_token_val"
               size="142,-1d"
               alignment="wxALIGN_CENTER_VERTICAL"
               proportion="10"
-              wxEVT_TEXT="OnAccessTokenTextChanged"
-              wxEVT_SET_FOCUS="OnAccessTokenTextSetFocus" />
+              wxEVT_TEXT="onAccessTokenTextChanged"
+              wxEVT_SET_FOCUS="onAccessTokenTextSetFocus" />
             <node
               class="spacer" />
           </node>
@@ -243,7 +243,7 @@
             disabled="1"
             alignment="wxALIGN_BOTTOM"
             wxEVT_BUTTON="onTestClicked"
-            wxEVT_UPDATE_UI="OnTestUpdateUI" />
+            wxEVT_UPDATE_UI="onTestUpdateUI" />
         </node>
         <node
           class="wxStdDialogButtonSizer"
@@ -251,7 +251,7 @@
           Save="1"
           default_button="none"
           flags="wxEXPAND"
-          SaveButton="OnSaveUpdateUI"
+          SaveButton="onSaveUpdateUI"
           SaveButtonClicked="onSaveClicked" />
       </node>
     </node>

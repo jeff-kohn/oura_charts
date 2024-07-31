@@ -34,7 +34,7 @@ bool PreferencesDlgBase::Create(wxWindow* parent, wxWindowID id, const wxString&
         ConvertDialogToPixels(wxSize(142, -1)), wxTE_PASSWORD);
     m_access_token_txt->SetHint("Enter the token for your Oura Ring Account");
     m_access_token_txt->SetMaxLength(32);
-    m_access_token_txt->SetValidator(wxTextValidator(wxFILTER_ALPHANUMERIC, &m_access_token_val));
+    m_access_token_txt->SetValidator(wxTextValidator(wxFILTER_ASCII, &m_access_token_val));
     box_sizer2->Add(m_access_token_txt, wxSizerFlags(10).Center().Border(wxALL));
 
     box_sizer2->AddSpacer(0);
@@ -58,12 +58,12 @@ bool PreferencesDlgBase::Create(wxWindow* parent, wxWindowID id, const wxString&
     Centre(wxBOTH);
 
     // Event handlers
-    Bind(wxEVT_UPDATE_UI, &PreferencesDlgBase::OnSaveUpdateUI, this, wxID_SAVE);
+    Bind(wxEVT_UPDATE_UI, &PreferencesDlgBase::onSaveUpdateUI, this, wxID_SAVE);
     Bind(wxEVT_BUTTON, &PreferencesDlgBase::onSaveClicked, this, wxID_SAVE);
     m_btn_test->Bind(wxEVT_BUTTON, &PreferencesDlgBase::onTestClicked, this);
-    m_access_token_txt->Bind(wxEVT_SET_FOCUS, &PreferencesDlgBase::OnAccessTokenTextSetFocus, this);
-    m_access_token_txt->Bind(wxEVT_TEXT, &PreferencesDlgBase::OnAccessTokenTextChanged, this);
-    m_btn_test->Bind(wxEVT_UPDATE_UI, &PreferencesDlgBase::OnTestUpdateUI, this);
+    m_access_token_txt->Bind(wxEVT_SET_FOCUS, &PreferencesDlgBase::onAccessTokenTextSetFocus, this);
+    m_access_token_txt->Bind(wxEVT_TEXT, &PreferencesDlgBase::onAccessTokenTextChanged, this);
+    m_btn_test->Bind(wxEVT_UPDATE_UI, &PreferencesDlgBase::onTestUpdateUI, this);
 
     return true;
 }

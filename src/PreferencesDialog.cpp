@@ -13,12 +13,12 @@ namespace oura_charts
       try
       {
          auto secret_store = wxSecretStore::GetDefault();
-         wxString unused{};
+         wxString user{};
          wxSecretValue token{};
-         if (secret_store.Load(constants::APP_NAME_NOSPACE, unused, token))
+         if (secret_store.Load(constants::CONFIG_VALUE_PAT_VAR, user, token))
          {
             m_has_saved_token = true;
-            m_access_token_val = constants::EMPTY_PASSWORD_DISPLAY;
+            m_access_token_val = constants::PASSWORD_DISPLAY;
          }
       }
       catch (std::exception& e)
@@ -39,9 +39,21 @@ namespace oura_charts
    {
       try
       {
-         // save PAT to secret store and dismiss dialog.
          auto secret_store = wxSecretStore::GetDefault();
-         secret_store.Save(constants::APP_NAME_NOSPACE, wxEmptyString, wxSecretValue{ m_access_token_val });
+
+         if (m_has_saved_token and m_access_token_val.empty())
+         {
+            // Confirm user really wants to delete saved value.
+            if (wxID_YES != wxMessageBox(constants::MSG_RESET_TOKEN_PROMPT, constants::TITLE_RESET_TOKEN_PROMPT, wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION))
+               return;
+
+            // Delete the saved value.
+            secret_store.Delete(constants::CONFIG_VALUE_PAT_VAR);
+         }
+         else
+         {
+            secret_store.Save(constants::CONFIG_VALUE_PAT_VAR, wxString{}, wxSecretValue{ m_access_token_val });
+         }
          EndDialog(wxID_SAVE);
       }
       catch(std::exception& e)
@@ -52,10 +64,11 @@ namespace oura_charts
    }
 
 
-   void PreferencesDialog::OnSaveUpdateUI(wxUpdateUIEvent& event)
+   void PreferencesDialog::onSaveUpdateUI(wxUpdateUIEvent& event)
    {
       // Make sure user has successfully tested a valid PAT
-      event.Enable(m_successful_test && event.GetText() != constants::EMPTY_PASSWORD_DISPLAY);
+      std::string text = event.GetText().ToStdString();
+      event.Enable( (text.empty() and m_has_saved_token) or (m_successful_test && text != constants::PASSWORD_DISPLAY) );
    }
 
 
@@ -83,15 +96,15 @@ namespace oura_charts
    }
 
 
-   void PreferencesDialog::OnTestUpdateUI(wxUpdateUIEvent& event)
+   void PreferencesDialog::onTestUpdateUI(wxUpdateUIEvent& event)
    {
       // Don't enable test button unless user has entered a value.
       auto str = m_access_token_txt->GetLineText(0);
-      event.Enable(!str.empty() && str != constants::EMPTY_PASSWORD_DISPLAY);
+      event.Enable(!str.empty() and str != constants::PASSWORD_DISPLAY);
    }
 
 
-   void PreferencesDialog::OnAccessTokenTextChanged(wxCommandEvent&)
+   void PreferencesDialog::onAccessTokenTextChanged(wxCommandEvent&)
    {
       // reset test state, since the PAT value changed.
       m_successful_test = false;

@@ -13,12 +13,12 @@ namespace oura_charts
       explicit PreferencesDialog(wxWindow* parent);
 
       void onSaveClicked(wxCommandEvent& event) override;
-      void OnSaveUpdateUI(wxUpdateUIEvent& event) override;
+      void onSaveUpdateUI(wxUpdateUIEvent& event) override;
 
       void onTestClicked(wxCommandEvent& event) override;
-      void OnTestUpdateUI(wxUpdateUIEvent& event) override;
+      void onTestUpdateUI(wxUpdateUIEvent& event) override;
 
-      void OnAccessTokenTextChanged(wxCommandEvent& event) override;
+      void onAccessTokenTextChanged(wxCommandEvent& event) override;
 
    private:
       bool m_has_saved_token{ false };

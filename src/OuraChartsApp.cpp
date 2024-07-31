@@ -4,6 +4,7 @@
 
 #include <wx/fileconf.h>
 #include <wx/stdpaths.h>
+#include <wx/secretstore.h>
 
 #include "oura_charts/detail/utility.h"
 #include <chrono>
@@ -81,18 +82,20 @@ namespace oura_charts
 
    OuraChartsApp::TokenResult OuraChartsApp::getRestToken() const
    {
-      auto& config = getConfig();
-      wxConfigPathChanger changer(&config, constants::CONFIG_SECTION_REST);
-
-      wxString pat{};
-      if (!config.Read(constants::CONFIG_VALUE_REST_PAT, &pat, wxEmptyString))
+      auto secret_store = wxSecretStore::GetDefault();
+      wxString user{}, pat{};
+      wxSecretValue token{};
+      if (secret_store.Load(constants::CONFIG_VALUE_PAT_VAR, user, token))
       {
-         // try to get it from enviroment variable.
+         pat = token.GetAsString();
+      }
+      else{
+         // try to get it from environment variable.
          pat = detail::getEnvironmentVariable(constants::CONFIG_VALUE_PAT_VAR);
       }
 
       if (pat.empty())
-         return unexpected{ oura_exception{ ErrorCategory::REST, constants::ERROR_MSG_FMT_NO_PAT, constants::CONFIG_VALUE_PAT_VAR } };
+         return unexpected{ oura_exception{ ErrorCategory::REST, constants::FMT_MSG_ERROR_NO_PAT, constants::CONFIG_VALUE_PAT_VAR } };
 
       return TokenAuth{ pat.ToStdString() };
    }

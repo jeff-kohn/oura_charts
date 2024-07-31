@@ -28,7 +28,7 @@ namespace oura_charts
 
       /// <summary>
       ///   Gets the REST auth token to use for calls to Oura REST API. Returned
-      ///   value may contain an error if not token could be retrieved.
+      ///   value may contain an error if no token could be retrieved.
       /// </summary>
       using TokenResult = expected<TokenAuth, oura_exception>;
       TokenResult getRestToken() const;
