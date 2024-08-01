@@ -45,7 +45,11 @@ if (WIN32)
     set(CMAKE_FIND_LIBRARY_PREFIXES "")
     set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib" ".dll")
 
-    set(OURACHARTS_COMPILE_DEFINITIONS "_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;_WIN32_WINNT=_WIN32_WINNT_WIN10;WIN32_LEAN_AND_MEAN;wxUSE_UNICODE_UTF8=1;wxUSE_UNICODE_WCHAR=0"
+    set(OURACHARTS_COMPILE_DEFINITIONS "_WINSOCK_DEPRECATED_NO_WARNINGS"
+                                        "NOMINMAX"
+                                        "_WIN32_WINNT=_WIN32_WINNT_WIN10"
+                                        "_MBCS"
+                                        "WIN32_LEAN_AND_MEAN"
                                         "wxUSE_UNICODE_UTF8=1"
                                         "wxUSE_UNICODE_WCHAR=0"
                                         "wxUSE_CONFIG_NATIVE=0"
@@ -53,7 +57,7 @@ if (WIN32)
                                         "wxUSE_STD_CONTAINERS=1"
                                         "wxUSE_STD_STRING=1"
                                         "wxUSE_STL_BASED_WXSTRING=1"
-                                        "wxUSE_UNSAFE_WXSTRING_CONV=1"
+                                        "wxUSE_UNSAFE_WXSTRING_CONV=0"
                                         "$<$<CONFIG:DEBUG>:_DEBUG;_ALLOW_RTCc_IN_STL>"
                                         "$<$<CONFIG:Release,RelWithDebInfo>:NDEBUG;>"
                                         CACHE STRING "Default global preprocessor definitions for oura_charts project")
@@ -76,7 +80,15 @@ if (WIN32)
 
 elseif (LINUX)
 
-    set(OURACHARTS_COMPILE_DEFINITIONS "_GLIBCXX_ASSERTION;wxUSE_UNICODE_UTF8=1;wxUSE_UNICODE_WCHAR=0"
+    set(OURACHARTS_COMPILE_DEFINITIONS "_GLIBCXX_ASSERTION"
+                                        "wxUSE_UNICODE_UTF8=1"
+                                        "wxUSE_UNICODE_WCHAR=0"
+                                        "wxUSE_CONFIG_NATIVE=0"
+                                        "wxUSE_STL=1"
+                                        "wxUSE_STD_CONTAINERS=1"
+                                        "wxUSE_STD_STRING=1"
+                                        "wxUSE_STL_BASED_WXSTRING=1"
+                                        "wxUSE_UNSAFE_WXSTRING_CONV=0"
                                        "$<$<CONFIG:DEBUG>:_DEBUG;>"
                                        "$<$<CONFIG:Release,RelWithDebInfo>:NDEBUG;>"
                                        CACHE STRING "Default global preprocessor definitions for oura_charts project")
@@ -123,16 +135,6 @@ if (TOP_LEVEL_PROJECT)
 
 endif()
 
-#include(FetchContent)
-#
-#FetchContent_Declare(
-#  glaze
-#  GIT_REPOSITORY https://github.com/stephenberry/glaze.git
-#  GIT_TAG main
-#  GIT_SHALLOW TRUE
-#)
-#
-# FetchContent_MakeAvailable(glaze)
 
 find_package(Boost REQUIRED)
 find_package(fmt CONFIG REQUIRED)

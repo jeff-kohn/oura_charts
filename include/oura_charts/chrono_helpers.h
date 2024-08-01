@@ -278,7 +278,9 @@ namespace oura_charts
       return days | vw::transform([] (weekday day)
                                  {
                                     return fmt::format("{}", day);
-                                 });
+                                 })
+                  | vw::as_rvalue
+                  | rg::to<std::vector>();
    }
 
    /// <summary>

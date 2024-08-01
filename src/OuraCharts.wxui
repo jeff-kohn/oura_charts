@@ -151,10 +151,15 @@
             var_name="separator3" />
           <node
             class="wxMenuItem"
+            label="&amp;Test Chart"
+            var_name="menu_item2"
+            wxEVT_MENU="onMenuFileTestChart" />
+          <node
+            class="wxMenuItem"
             id="wxID_PREFERENCES"
             label="&amp;Preferences"
             stock_id="wxID_PREFERENCES"
-            var_name="menu_item2"
+            var_name="menu_item9"
             wxEVT_MENU="onMenuFilePreferences" />
           <node
             class="separator"

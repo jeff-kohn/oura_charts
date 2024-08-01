@@ -10,6 +10,7 @@
 #include <wx/statusbr.h>
 #include <wx/toolbar.h>
 
+
 #include <memory>
 
 
@@ -17,6 +18,7 @@
 
 namespace oura_charts
 {
+
 
    class MainFrame : public wxDocParentFrame
    {
@@ -40,6 +42,7 @@ namespace oura_charts
       void initControls();
       void onMenuFilePreferences(wxCommandEvent& event);
       void onMenuFileQuit(wxCommandEvent& event);
+      void onMenuFileTestChart(wxCommandEvent& event);
       void onMenuHelpAbout(wxCommandEvent& event);
       void onMenuHelpAboutWx(wxCommandEvent& event);
    };

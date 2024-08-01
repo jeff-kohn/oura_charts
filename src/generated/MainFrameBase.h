@@ -46,6 +46,7 @@ namespace oura_charts
 
         virtual void onMenuFilePreferences(wxCommandEvent& event) { event.Skip(); }
         virtual void onMenuFileQuit(wxCommandEvent& event) { event.Skip(); }
+        virtual void onMenuFileTestChart(wxCommandEvent& event) { event.Skip(); }
         virtual void onMenuHelpAbout(wxCommandEvent& event) { event.Skip(); }
         virtual void onMenuHelpAboutWx(wxCommandEvent& event) { event.Skip(); }
 

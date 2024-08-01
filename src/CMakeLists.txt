@@ -34,10 +34,12 @@ set_target_properties(${THIS_TARGET}
 )
 
 find_package(wxWidgets CONFIG REQUIRED)
+find_package(Matplot++ CONFIG REQUIRED)
 
 target_link_libraries(${THIS_TARGET}
    PRIVATE
       oura_lib
+      Matplot++::matplot
 		wx::core 
 		wx::base
 )
