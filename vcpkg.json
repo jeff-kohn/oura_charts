@@ -12,7 +12,6 @@
       {
          "name": "matplotplusplus"
       },
-      "libpng",
       "spdlog",
       "tabulate",
       {
