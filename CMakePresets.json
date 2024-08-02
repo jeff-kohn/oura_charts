@@ -54,7 +54,7 @@
             "ENABLE_UNIT_TESTS": "ON",
             "ENABLE_CPP_CHECK": "ON",
             "ENABLE_CLANG_TIDY": "OFF",
-            "VCPKG_TARGET_TRIPLET": "x64-linux-wxwindows"
+            "VCPKG_TARGET_TRIPLET": "x64-linux-wxwidgets"
          },
          "condition": {
             "type": "equals",
