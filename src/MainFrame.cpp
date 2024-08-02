@@ -16,8 +16,6 @@
 #include <matplot/matplot.h>
 
 
-
-
 namespace oura_charts
 {
    // Disable this warning, non-virtual Create() is a pretty standard idiom since it's
@@ -32,19 +30,6 @@ namespace oura_charts
          return false;
 
       initControls();
-
-      //// get weekday names and use to create dataset for our chart label.
-      //auto weekday_names = getWeekdayNames() | vw::transform([] (const std::string& str) { return wxString{ str }; })
-      //                                       | rg::to<std::vector>();
-
-      //assert(!m_data);
-      //m_data = wxChartsCategoricalData::make_shared(weekday_names);
-
-      //// Create the column chart widget
-      //auto* columnChartCtrl = new wxColumnChartCtrl(this, wxID_ANY, m_data);  // NOLINT(cppcoreguidelines-owning-memory)
-      //m_chart_sizer->Add(columnChartCtrl, wxSizerFlags(1).Expand().Border(wxALL));
-      //m_chart_sizer->Layout();
-      //m_chart_sizer->SetSizeHints(this);
 
       return true;
    }
@@ -114,10 +99,10 @@ namespace oura_charts
                                                 })
                                 | rg::to<vector>());
 
-         auto weekday_names = getWeekdayNames();
-         matplot::gca()->x_axis().ticklabels(weekday_names);
-
+         matplot::gca()->x_axis().ticklabels(getWeekdayNames());
          matplot::show();
+
+
       }
       catch (std::exception& e)
       {
