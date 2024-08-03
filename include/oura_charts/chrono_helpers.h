@@ -268,6 +268,20 @@ namespace oura_charts
          return weekdays;
    }
 
+   /// <summary>
+   ///   small helper to generate a sorted array containing the names of the days of the week
+   /// </summary>
+   [[nodiscard]] inline constexpr auto getWeekdayNames(weekday sortFirst = { chrono::Sunday })
+   {
+      auto days = getWeekdays(sortFirst);
+
+      return days | vw::transform([] (weekday day)
+                                 {
+                                    return fmt::format("{}", day);
+                                 })
+                  | vw::as_rvalue
+                  | rg::to<std::vector>();
+   }
 
    /// <summary>
    ///   small helper to generate a sorted array containing the days of the week

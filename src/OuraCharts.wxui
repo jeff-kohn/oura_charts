@@ -114,13 +114,56 @@
           var_name="m_file_menu">
           <node
             class="wxMenuItem"
+            bitmap="Art;wxART_NEW|wxART_MENU"
+            help="Create new document"
+            id="wxID_NEW"
+            label="&amp;New"
+            stock_id="wxID_NEW"
+            var_name="menu_item6" />
+          <node
+            class="wxMenuItem"
+            bitmap="Art;wxART_FILE_OPEN|wxART_MENU"
+            help="Open an existing document"
+            id="wxID_OPEN"
+            label="&amp;Open..."
+            stock_id="wxID_OPEN"
+            var_name="menu_item7" />
+          <node
+            class="separator" />
+          <node
+            class="wxMenuItem"
+            bitmap="Art;wxART_FILE_SAVE|wxART_MENU"
+            help="Save current document"
+            id="wxID_SAVE"
+            label="&amp;Save"
+            stock_id="wxID_SAVE"
+            var_name="menu_item5" />
+          <node
+            class="wxMenuItem"
+            bitmap="Art;wxART_FILE_SAVE_AS|wxART_MENU"
+            help="Save current document with a different filename"
+            id="wxID_SAVEAS"
+            label="Save &amp;As..."
+            stock_id="wxID_SAVEAS"
+            var_name="menu_item8" />
+          <node
+            class="separator"
+            var_name="separator3" />
+          <node
+            class="wxMenuItem"
+            label="&amp;Test Chart"
+            var_name="menu_item2"
+            wxEVT_MENU="onMenuFileTestChart" />
+          <node
+            class="wxMenuItem"
             id="wxID_PREFERENCES"
             label="&amp;Preferences"
             stock_id="wxID_PREFERENCES"
-            var_name="menu_item2"
+            var_name="menu_item9"
             wxEVT_MENU="onMenuFilePreferences" />
           <node
-            class="separator" />
+            class="separator"
+            var_name="separator2" />
           <node
             class="wxMenuItem"
             bitmap="Art;wxART_QUIT|wxART_MENU"
@@ -128,7 +171,7 @@
             id="wxID_EXIT"
             label="&amp;Quit"
             stock_id="wxID_EXIT"
-            wxEVT_MENU="OnMenuFileQuit" />
+            wxEVT_MENU="onMenuFileQuit" />
         </node>
         <node
           class="wxMenu"
@@ -138,7 +181,7 @@
             class="wxMenuItem"
             label="wx&amp;Widgets Info"
             var_name="menu_item4"
-            wxEVT_MENU="OnMenuHelpAboutWx" />
+            wxEVT_MENU="onMenuHelpAboutWx" />
           <node
             class="wxMenuItem"
             help="Show about dialog"
@@ -173,9 +216,11 @@
             class="wxBoxSizer"
             orientation="wxVERTICAL"
             var_name="box_sizer2"
-            alignment="wxALIGN_BOTTOM"
-            borders="wxTOP|wxRIGHT|wxLEFT"
+            border_size="1"
             proportion="5">
+            <node
+              class="spacer"
+              height="7" />
             <node
               class="wxHyperlinkCtrl"
               class_access="none"
@@ -183,29 +228,44 @@
               url="https://cloud.ouraring.com/docs/authentication#personal-access-tokens"
               var_name="hyperlink" />
             <node
-              class="wxTextCtrl"
-              hint="Enter the token for your Oura Ring Account"
-              maxlength="32"
-              style="wxTE_PASSWORD"
-              var_name="m_access_token_txt"
-              validator_style="wxFILTER_ALPHANUMERIC"
-              validator_variable="m_access_token_val"
-              size="142,-1d"
-              alignment="wxALIGN_CENTER_VERTICAL"
-              proportion="10"
-              wxEVT_TEXT="OnAccessTokenTextChanged"
-              wxEVT_SET_FOCUS="OnAccessTokenTextSetFocus" />
+              class="wxBoxSizer"
+              var_name="box_sizer3"
+              border_size="0"
+              borders="wxTOP|wxBOTTOM|wxRIGHT"
+              flags="wxEXPAND">
+              <node
+                class="wxTextCtrl"
+                hint="Enter the token for your Oura Ring Account"
+                maxlength="32"
+                style="wxTE_PASSWORD"
+                var_name="m_access_token_txt"
+                validator_style="wxFILTER_ASCII"
+                validator_variable="m_access_token_val"
+                size="142,-1d"
+                proportion="2"
+                wxEVT_TEXT="onAccessTokenTextChanged"
+                wxEVT_SET_FOCUS="onAccessTokenTextSetFocus" />
+              <node
+                class="wxButton"
+                label="&amp;Test"
+                var_name="m_btn_test"
+                disabled="1"
+                size="25,-1d"
+                alignment="wxALIGN_LEFT|wxALIGN_BOTTOM"
+                wxEVT_BUTTON="onTestClicked"
+                wxEVT_UPDATE_UI="onTestUpdateUI" />
+            </node>
             <node
-              class="spacer" />
+              class="spacer"
+              height="10" />
+            <node
+              class="wxStaticText"
+              class_access="none"
+              label="This application needs a personal access token for connecting to Oura's server to retrieve your data. You can configure one here, or by setting the OURA_PAT environment variable to the token value."
+              var_name="static_text"
+              wrap="326"
+              proportion="1" />
           </node>
-          <node
-            class="wxButton"
-            label="&amp;Test"
-            var_name="m_btn_test"
-            disabled="1"
-            alignment="wxALIGN_BOTTOM"
-            wxEVT_BUTTON="onTestClicked"
-            wxEVT_UPDATE_UI="OnTestUpdateUI" />
         </node>
         <node
           class="wxStdDialogButtonSizer"
@@ -213,7 +273,8 @@
           Save="1"
           default_button="none"
           flags="wxEXPAND"
-          SaveButton="OnSaveUpdateUI"
+          proportion="1"
+          SaveButton="onSaveUpdateUI"
           SaveButtonClicked="onSaveClicked" />
       </node>
     </node>

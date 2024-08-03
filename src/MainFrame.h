@@ -1,24 +1,50 @@
 
 #pragma once
 
-#include "generated/MainFrameBase.h"
 #include "constants.h"
+
+#include <wx/event.h>
+#include <wx/docview.h>
+#include <wx/sharedptr.h>
+#include <wx/sizer.h>
+#include <wx/statusbr.h>
+#include <wx/toolbar.h>
+
+
+#include <memory>
+
+
+
 
 namespace oura_charts
 {
-   class MainFrame : public MainFrameBase
+
+
+   class MainFrame : public wxDocParentFrame
    {
    public:
-      // If you use this constructor, you must call Create(parent)
+      // If you use default constructor, you must call Create(parent*)
       MainFrame() = default;
-      explicit MainFrame(wxWindow* parent) : MainFrameBase(parent, wxID_ANY, constants::APP_NAME) {};
+      explicit MainFrame(const std::weak_ptr<wxDocManager>& doc_mgr, wxFrame* parent)
+      {
+         Create(doc_mgr, parent);
+      }
+
+      // cppcheck-suppress duplInheritedMember
+      bool Create(const std::weak_ptr<wxDocManager>&, wxFrame* parent,
+                  wxWindowID id = wxID_ANY, const wxString& title = constants::APP_NAME);
 
    protected:
-      void onMenuFilePreferences(wxCommandEvent& event) override;
-      void OnMenuFileQuit(wxCommandEvent& event) override;
-      void onMenuHelpAbout(wxCommandEvent& event) override;
-      void OnMenuHelpAboutWx(wxCommandEvent& event) override;
+      wxBoxSizer* m_chart_sizer{};
+      wxStatusBar* m_statusBar{};
+      wxToolBar* m_toolbar{};
 
+      void initControls();
+      void onMenuFilePreferences(wxCommandEvent& event);
+      void onMenuFileQuit(wxCommandEvent& event);
+      void onMenuFileTestChart(wxCommandEvent& event);
+      void onMenuHelpAbout(wxCommandEvent& event);
+      void onMenuHelpAboutWx(wxCommandEvent& event);
    };
 
 

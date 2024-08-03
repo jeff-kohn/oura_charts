@@ -20,13 +20,15 @@ jobs:
   analyze:
     name: 'Static Code Analysis'
     runs-on: 'ubuntu-24.04'
-    timeout-minutes: 75
+    timeout-minutes: 120
     env:
       VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}/vcpkg"
       VCPKG_FEATURE_FLAGS: "dependencygraph"
       DOTNET_ROLL_FORWARD: "latestMajor"
-      PRESET_NAME: "linux-debug"
-      BUILD_DIR: "build/out/linux-debug"
+      CONFIGURE_PRESET: "linux-clang"
+      BUILD_PRESET: "linux-clang"
+      BUILD_CONFIG: "Release"
+      BUILD_DIR: "${{ github.workspace }}/builds"
       SARIF_DIR: "${{ github.workspace }}/sarif-results"
 
     permissions:
@@ -40,7 +42,7 @@ jobs:
 
     - name: Install Dependencies
       run: |
-         sudo apt update && sudo apt-get install -y cppcheck autoconf automake libtool pkg-config bison flex nasm libx11-dev libxft-dev libxext-dev libxrandr-dev libltdl-dev libwayland-dev libxkbcommon-dev libegl1-mesa-dev libxtst-dev libselinux1-dev
+         sudo apt update && sudo apt-get install -y cppcheck autoconf automake libtool pkg-config bison flex nasm libx11-dev libxft-dev libxext-dev libxrandr-dev libltdl-dev libwayland-dev libxkbcommon-dev libegl1-mesa-dev libxtst-dev libselinux1-dev libsecret-1-dev
          sudo curl -sSL https://github.com/psastras/sarif-rs/releases/download/clang-tidy-sarif-latest/clang-tidy-sarif-x86_64-unknown-linux-gnu -o /usr/local/bin/clang-tidy-sarif
          sudo chmod +x /usr/local/bin/clang-tidy-sarif
          sudo curl -sSL https://github.com/psastras/sarif-rs/releases/download/sarif-fmt-latest/sarif-fmt-x86_64-unknown-linux-gnu -o /usr/local/bin/sarif-fmt
@@ -64,8 +66,8 @@ jobs:
     - name: 'Run Build'
       shell: bash
       run: |
-        cmake --preset=$PRESET_NAME
-        cmake --build --preset=$PRESET_NAME --target=all
+        cmake --preset=$CONFIGURE_PRESET
+        cmake --build --preset=$BUILD_PRESET --config=$BUILD_CONFIG --target=all
 
     - name: 'Perform CodeQL Analysis'
       uses: github/codeql-action/analyze@v3
@@ -80,12 +82,13 @@ jobs:
         patterns: |
           -**/vcpkg*/**/*
           -**/CMakeFiles/CMakeScratch/**/*
+          -**/_deps/**/*
         input: $SARIF_DIR/cpp.sarif
         output: $SARIF_DIR/cpp.sarif
 
     - name: 'Run clang-tidy and CppCheck'
       run: |
-        scripts/build_preset.sh --preset $PRESET_NAME --target code_analysis --build
+        scripts/build.sh --preset $BUILD_PRESET --config $BUILD_CONFIG --target code_analysis 
 
     - name: 'Convert CppCheck XML to SARIF'
       run: |
@@ -114,10 +117,12 @@ jobs:
     runs-on: 'windows-latest'
     timeout-minutes: 20
     env:
-      PRESET_NAME: "win-debug"
-      BUILD_DIR: "build/out/win-debug"
       VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}\\vcpkg"
-
+      CONFIGURE_PRESET: "win-msvc"
+      BUILD_PRESET: "win-msvc"
+      BUILD_CONFIG: "Debug"
+      BUILD_DIR: "${{ github.workspace }}/builds"
+      SARIF_DIR: "${{ github.workspace }}/sarif-results"
 
     steps:
     - name: 'Checkout repository'
@@ -130,7 +135,7 @@ jobs:
     - uses: lukka/get-cmake@latest
     - uses: lukka/run-vcpkg@v11.5
       with:
-        vcpkgJsonGlob: '**/vcpkg.json'
+        vcpkgJsonGlob: 'vcpkg.json'
 
     - name: Install winget
       uses: Cyberboss/install-winget@v1
@@ -142,17 +147,17 @@ jobs:
 
     - name: 'Run Build'
       run: |
-        cmake --preset=$env:PRESET_NAME
-        cmake --build --preset=$env:PRESET_NAME --target=all
+        scripts/Run-Configure -Preset $env:CONFIGURE_PRESET
+        scripts/Run-Build -Config $env:BUILD_CONFIG
     
     - name: "Run Code Coverage"
       run: |
-        scripts/Run-CodeCoverage.ps1 -Preset $env:PRESET_NAME
+        scripts/Run-CodeCoverage.ps1 -Config $env:BUILD_CONFIG
 
     - name: "Publish Coverage Report"
       uses: 5monkeys/cobertura-action@master
       with:
-        path: ${{ env.REPO_DIR }}\build\out\${{ env.PRESET_NAME }}\code_coverage.xml
+        path: ${{ env.REPO_DIR }}\builds\code_coverage.xml
         minimum_coverage: 50
 
     - name: Upload Coverage Artifact
@@ -161,6 +166,6 @@ jobs:
         name: coverage-results
         retention-days: 10
         path: |
-          ${{ env.REPO_DIR }}\build\out\${{ env.PRESET_NAME }}\code_coverage.xml
-          ${{ env.REPO_DIR }}\build\out\${{ env.PRESET_NAME }}\code_coverage_html
+          ${{ env.REPO_DIR }}\builds\code_coverage.xml
+          ${{ env.REPO_DIR }}\builds\code_coverage_html
 

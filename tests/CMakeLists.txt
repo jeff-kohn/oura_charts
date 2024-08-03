@@ -36,6 +36,7 @@ target_compile_options(${THIS_TARGET} PRIVATE ${OURACHARTS_WARNING_FLAGS})
 target_link_options(${THIS_TARGET} PRIVATE ${OURACHARTS_LINK_OPTIONS})
 
 # This needs to be in CMakeLists of the directory containing the test target, not project root.
+set(CMAKE_CATCH_DISCOVER_TESTS_DISCOVERY_MODE "PRE_TEST")
 catch_discover_tests(${THIS_TARGET})
 
 # copy test data for unit tests to outut dir.
@@ -43,6 +44,7 @@ add_custom_command(
    TARGET ${THIS_TARGET} POST_BUILD
    COMMAND ${CMAKE_COMMAND} -E copy_directory
             ${CMAKE_CURRENT_SOURCE_DIR}/test_data/
-            $<TARGET_FILE_DIR:${THIS_TARGET}>/test_data/
+            ${CMAKE_CURRENT_BINARY_DIR}/test_data/
+            #$<TARGET_FILE_DIR:${THIS_TARGET}>/test_data/
 )
 

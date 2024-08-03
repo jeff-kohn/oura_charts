@@ -7,26 +7,24 @@
 show_help() {
   printf "\nUsage: %s [options]\n" "$0"
     echo "Options:"
-    echo "  --preset <name>        Specifies the build preset to use. Defaults to \"linux-release\", "
+    echo "  --preset <name>        Specifies the build preset to use. Defaults to \"linux-clang\", "
+    echo "                         see CMakePresets.json for the full list."
+    echo "  --config <name>        Specifies the build configure to use. Defaults to \"Release\", "
     echo "                         see CMakePresets.json for the full list."
     echo "  --target <name>        Specifies the target to build (case-sensitive), defaults to \"all\","
     echo "                         can also be \"install\" or a specific project target."
-    echo "  --configure            If set, causes the 'configure' step to be run before any building (or alone)"
     echo "  --rebuild              If this switch is supplied, the --clean-first parameter will be used to"
   printf "                         run a clean re-build.\n\n"
-    echo "  --build                If this switch is supplied a regular build will be run."
   printf "  --tests                If this switch is supplied tests will be run.\n\n"
-  printf "If some combination of configure/build/rebuild/test is not specified, the default will be to run\n"
-  printf "a regular build and execute tests".
 
   exit 1
 }
 
-preset_name="linux-release"
+preset_name="linux-clang"
+config_name=""
+use_config=false
+clean_param=""
 target="all"
-run_configure=false
-run_build=false
-run_clean_build=false
 run_tests=false
 
 if [ $# -gt 0 ]; then
@@ -45,14 +43,13 @@ while [ $# -gt 0 ]; do
       target=$2
       shift
       ;;
-    --configure)
-      run_configure=true
-      ;;
-    --build)
-      run_build=true
+    --config)
+      config_name=$2
+      use_config=true
+      shift
       ;;
     --rebuild)
-      run_clean_build=true
+      clean_param="--clean-first"
       ;;
     --tests)
       run_tests=true
@@ -68,29 +65,23 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-if [ ! $run_configure ] && [ ! $run_build ] && [ ! $run_clean_build ] && [ ! $run_tests ] ; then
-   run_build=true
-   run_tests=true
-fi
-
 script_folder=$(dirname "$(readlink -f $0)")
 repo_dir=$(dirname "$script_folder")
 saved_location=$(pwd)
 cd "$repo_dir" || exit
 
-echo "Building project or preset $preset_name... using repo dir $repo_dir"
-
-if $run_configure; then
-   cmake --preset=$preset_name
+config_param=""
+if $use_config; then
+   config_param="--config=$config_name"
 fi
+echo "Building preset $preset_name $config_name using repo dir $repo_dir..."
 
-if $run_clean_build; then
-   cmake --build --preset=$preset_name --target=$target --clean-first
-elif $run_build; then
-   cmake --build --preset=$preset_name --target=$target
-fi
+echo 
+cmake --build --preset=$preset_name $config_param --target=$target $clean_param
+
 
 if $run_tests; then
+   config_param="--build-config $config_name"
    ctest --preset $preset_name --output-on-failure --output-junit "$preset_name.test_results.xml"
 fi
 cd "$saved_location"

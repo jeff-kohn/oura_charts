@@ -2,12 +2,11 @@
    "version": 3,
    "configurePresets": [
       {
-         "name": "win-base",
-         "description": "Contains all the common settings that should be used by default for all windows configuration presets",
-         "hidden": true,
-         "generator": "Ninja",
-         "binaryDir": "${sourceDir}/build/out/${presetName}",
-         "installDir": "${sourceDir}/build/install/windows",
+         "name": "win-msvc",
+         "description": "Contains all the common settings that should be used by default for windows builds",
+         "generator": "Ninja Multi-Config",
+         "binaryDir": "${sourceDir}/builds",
+         "installDir": "${sourceDir}/builds/install",
          "architecture": {
             "value": "x64",
             "strategy": "external"
@@ -18,10 +17,11 @@
                "value": "$env{VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake",
                "type": "FILEPATH"
             },
+            "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
             "ENABLE_UNIT_TESTS": "ON",
             "ENABLE_CPP_CHECK": "ON",
             "ENABLE_CLANG_TIDY": "OFF",
-            "VCPKG_TARGET_TRIPLET": "x64-windows-static-wxwindows"
+            "VCPKG_TARGET_TRIPLET": "x64-wxwindows-static"
          },
          "condition": {
             "type": "equals",
@@ -36,35 +36,11 @@
          }
       },
       {
-         "name": "win-release",
-         "displayName": "win-release",
-         "description": "release build for windows",
-         "inherits": [
-            "win-base"
-         ],
-         "cacheVariables": {
-            "CMAKE_BUILD_TYPE": "RelWithDebInfo",
-            "CMAKE_POSITION_INDEPENDENT_CODE": "ON"
-         }
-      },
-      {
-         "name": "win-debug",
-         "displayName": "win-debug",
-         "description": "Provides settings that should be used by all Windows Debug configurations",
-         "inherits": [
-            "win-base"
-         ],
-         "cacheVariables": {
-            "CMAKE_BUILD_TYPE": "Debug"
-         }
-      },
-      {
-         "name": "linux-base",
-         "description": "Contains all the common settings that should be used by default for all linux configuration presets",
-         "hidden": true,
-         "generator": "Ninja",
-         "binaryDir": "${sourceDir}/build/out/${presetName}",
-         "installDir": "${sourceDir}/build/install/linux",
+         "name": "linux-clang",
+         "description": "Contains all the common settings that should be used by default for linux (Clang) builds",
+         "generator": "Ninja Multi-Config",
+         "binaryDir": "${sourceDir}/builds",
+         "installDir": "${sourceDir}/builds/install",
          "architecture": {
             "value": "x64",
             "strategy": "external"
@@ -77,8 +53,8 @@
             "CMAKE_CXX_COMPILER": "clang++",
             "ENABLE_UNIT_TESTS": "ON",
             "ENABLE_CPP_CHECK": "ON",
-            "ENABLE_CLANG_TIDY": "ON",
-            "VCPKG_TARGET_TRIPLET": "x64-linux-wxwindows"
+            "ENABLE_CLANG_TIDY": "OFF",
+            "VCPKG_TARGET_TRIPLET": "x64-linux-wxwidgets"
          },
          "condition": {
             "type": "equals",
@@ -90,83 +66,36 @@
                "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
             }
          }
-      },
-      {
-         "name": "linux-release",
-         "displayName": "linux-release",
-         "description": "release build for linux",
-         "inherits": [
-            "linux-base"
-         ],
-         "cacheVariables": {
-            "CMAKE_BUILD_TYPE": "RelWithDebInfo",
-            "CMAKE_POSITION_INDEPENDENT_CODE": "ON"
-         }
-      },
-      {
-         "name": "linux-debug",
-         "displayName": "linux-debug",
-         "description": "debug build for linux",
-         "inherits": [
-            "linux-base"
-         ],
-         "cacheVariables": {
-            "ENABLE_CPP_CHECK": "OFF",
-            "ENABLE_CLANG_TIDY": "OFF",
-            "CMAKE_BUILD_TYPE": "Debug"
-         }
       }
    ],
    "buildPresets": [
       {
-         "name": "win-debug",
-         "description": "Windows Debug",
-         "displayName": "win-debug",
-         "configurePreset": "win-debug"
+         "name": "win-msvc",
+         "displayName": "Windows MSVC",
+         "configurePreset": "win-msvc"
       },
       {
-         "name": "win-release",
-         "description": "Windows Release",
-         "displayName": "win-release",
-         "configurePreset": "win-release"
+         "name": "dev-debug",
+         "displayName": "Dev-Debug (VS Sucks!)",
+         "configurePreset": "win-msvc",
+         "configuration": "Debug"
       },
       {
-         "name": "linux-debug",
-         "description": "Linux Debug",
-         "displayName": "linux-debug",
-         "configurePreset": "linux-debug"
-      },
-      {
-         "name": "linux-release",
-         "description": "Linux Release",
-         "displayName": "linux-release",
-         "configurePreset": "linux-release"
+         "name": "linux-clang",
+         "displayName": "Linux Clang",
+         "configurePreset": "linux-clang"
       }
    ],
    "testPresets": [
       {
-         "name": "win-debug",
-         "description": "Windows Debug",
-         "displayName": "win-debug",
-         "configurePreset": "win-debug"
+         "name": "win-msvc",
+         "displayName": "Tests (Windows MSVC)",
+         "configurePreset": "win-msvc"
       },
       {
-         "name": "win-release",
-         "description": "Windows Release",
-         "displayName": "win-release",
-         "configurePreset": "win-release"
-      },
-      {
-         "name": "linux-debug",
-         "description": "Linux Debug",
-         "displayName": "linux-debug",
-         "configurePreset": "linux-debug"
-      },
-      {
-         "name": "linux-release",
-         "description": "Linux Release",
-         "displayName": "linux-release",
-         "configurePreset": "linux-release"
+         "name": "linux-clang",
+         "displayName": "Tests (Linux Clang)",
+         "configurePreset": "linux-clang"
       }
    ]
 }

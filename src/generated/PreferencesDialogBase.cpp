@@ -8,6 +8,7 @@
 // clang-format off
 
 #include <wx/sizer.h>
+#include <wx/stattext.h>
 #include <wx/valtext.h>
 
 #include "PreferencesDialogBase.h"
@@ -26,25 +27,36 @@ bool PreferencesDlgBase::Create(wxWindow* parent, wxWindowID id, const wxString&
 
     auto* box_sizer2 = new wxBoxSizer(wxVERTICAL);
 
+    box_sizer2->AddSpacer(7);
+
     auto* hyperlink = new wxHyperlinkCtrl(this, wxID_ANY, "Personal Access Token:",
         "https://cloud.ouraring.com/docs/authentication#personal-access-tokens");
     box_sizer2->Add(hyperlink, wxSizerFlags().Border(wxALL));
+
+    auto* box_sizer3 = new wxBoxSizer(wxHORIZONTAL);
 
     m_access_token_txt = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
         ConvertDialogToPixels(wxSize(142, -1)), wxTE_PASSWORD);
     m_access_token_txt->SetHint("Enter the token for your Oura Ring Account");
     m_access_token_txt->SetMaxLength(32);
-    m_access_token_txt->SetValidator(wxTextValidator(wxFILTER_ALPHANUMERIC, &m_access_token_val));
-    box_sizer2->Add(m_access_token_txt, wxSizerFlags(10).Center().Border(wxALL));
+    m_access_token_txt->SetValidator(wxTextValidator(wxFILTER_ASCII, &m_access_token_val));
+    box_sizer3->Add(m_access_token_txt, wxSizerFlags(2).Border(wxALL));
 
-    box_sizer2->AddSpacer(0);
-
-    box_sizer->Add(box_sizer2,
-    wxSizerFlags(5).Bottom().Border(wxLEFT|wxRIGHT|wxTOP, wxSizerFlags::GetDefaultBorder()));
-
-    m_btn_test = new wxButton(this, wxID_ANY, "&Test");
+    m_btn_test = new wxButton(this, wxID_ANY, "&Test", wxDefaultPosition,
+        ConvertDialogToPixels(wxSize(25, -1)));
     m_btn_test->Enable(false);
-    box_sizer->Add(m_btn_test, wxSizerFlags().Bottom().Border(wxALL));
+    box_sizer3->Add(m_btn_test, wxSizerFlags().Left().Bottom().Border(wxALL));
+
+    box_sizer2->Add(box_sizer3, wxSizerFlags().Expand().Border(wxRIGHT|wxTOP|wxBOTTOM, 0));
+
+    box_sizer2->AddSpacer(10);
+
+    auto* static_text = new wxStaticText(this, wxID_ANY,
+        "This application needs a personal access token for connecting to Oura\'s server to retrieve your data. You can configure one here, or by setting the OURA_PAT environment variable to the token value.");
+    static_text->Wrap(326);
+    box_sizer2->Add(static_text, wxSizerFlags(1).Border(wxALL));
+
+    box_sizer->Add(box_sizer2, wxSizerFlags(5).Border(wxALL, FromDIP(wxSize(1, -1)).x));
 
     dlg_sizer->Add(box_sizer, wxSizerFlags().Expand().Border(wxALL));
 
@@ -52,18 +64,18 @@ bool PreferencesDlgBase::Create(wxWindow* parent, wxWindowID id, const wxString&
     stdBtn->AddButton(new wxButton(this, wxID_SAVE));
     stdBtn->AddButton(new wxButton(this, wxID_CANCEL));
     stdBtn->Realize();
-    dlg_sizer->Add(CreateSeparatedSizer(stdBtn), wxSizerFlags().Expand().Border(wxALL));
+    dlg_sizer->Add(CreateSeparatedSizer(stdBtn), wxSizerFlags(1).Expand().Border(wxALL));
 
     SetSizerAndFit(dlg_sizer);
     Centre(wxBOTH);
 
     // Event handlers
-    Bind(wxEVT_UPDATE_UI, &PreferencesDlgBase::OnSaveUpdateUI, this, wxID_SAVE);
+    Bind(wxEVT_UPDATE_UI, &PreferencesDlgBase::onSaveUpdateUI, this, wxID_SAVE);
     Bind(wxEVT_BUTTON, &PreferencesDlgBase::onSaveClicked, this, wxID_SAVE);
     m_btn_test->Bind(wxEVT_BUTTON, &PreferencesDlgBase::onTestClicked, this);
-    m_access_token_txt->Bind(wxEVT_SET_FOCUS, &PreferencesDlgBase::OnAccessTokenTextSetFocus, this);
-    m_access_token_txt->Bind(wxEVT_TEXT, &PreferencesDlgBase::OnAccessTokenTextChanged, this);
-    m_btn_test->Bind(wxEVT_UPDATE_UI, &PreferencesDlgBase::OnTestUpdateUI, this);
+    m_access_token_txt->Bind(wxEVT_SET_FOCUS, &PreferencesDlgBase::onAccessTokenTextSetFocus, this);
+    m_access_token_txt->Bind(wxEVT_TEXT, &PreferencesDlgBase::onAccessTokenTextChanged, this);
+    m_btn_test->Bind(wxEVT_UPDATE_UI, &PreferencesDlgBase::onTestUpdateUI, this);
 
     return true;
 }
