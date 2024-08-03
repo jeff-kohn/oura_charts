@@ -20,7 +20,7 @@ jobs:
   analyze:
     name: 'Static Code Analysis'
     runs-on: 'ubuntu-24.04'
-    timeout-minutes: 120
+    timeout-minutes: 240
     env:
       VCPKG_INSTALLATION_ROOT: "${{ github.workspace }}/vcpkg"
       VCPKG_FEATURE_FLAGS: "dependencygraph"
@@ -88,7 +88,7 @@ jobs:
 
     - name: 'Run clang-tidy and CppCheck'
       run: |
-        scripts/build.sh --preset $BUILD_PRESET --config $BUILD_CONFIG --target code_analysis 
+        cmake build --preset $BUILD_PRESET --config $BUILD_CONFIG --target code_analysis 
 
     - name: 'Convert CppCheck XML to SARIF'
       run: |
