@@ -3,6 +3,7 @@
 #include "AboutDialog.h"
 #include "OuraChartsApp.h"
 #include "PreferencesDialog.h"
+#include "BasicGLPane.h"
 
 #include "oura_charts/chrono_helpers.h"
 #include "oura_charts/DailySleepScore.h"
@@ -30,6 +31,19 @@ namespace oura_charts
          return false;
 
       initControls();
+
+      wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
+      auto frame = new wxFrame((wxFrame*)NULL, -1, wxT("Hello GL World"), wxPoint(50, 50), wxSize(400, 200));
+
+      int args[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0 };
+
+      auto glPane = new BasicGLPane((wxFrame*)frame, args);
+      sizer->Add(glPane, 1, wxEXPAND);
+
+      frame->SetSizer(sizer);
+      frame->SetAutoLayout(true);
+
+      frame->Show();
 
       return true;
    }
@@ -150,8 +164,6 @@ namespace oura_charts
          wxLogError(e.what());
       }
    }
-
-
 
 
    void MainFrame::initControls()

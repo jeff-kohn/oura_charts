@@ -21,8 +21,10 @@ add_executable(${THIS_TARGET} WIN32
 	"PreferencesDialog.cpp"
 	"PreferencesDialog.h"
    "utf8.manifest"
-	${wx_generated_files}
-)
+	"BasicGLPane.h"
+   "BasicGLPane.cpp"
+   ${wx_generated_files}
+   )
 
 set_target_properties(${THIS_TARGET}
 	PROPERTIES
@@ -35,6 +37,7 @@ set_target_properties(${THIS_TARGET}
 
 find_package(wxWidgets CONFIG REQUIRED)
 find_package(Matplot++ CONFIG REQUIRED)
+find_package(OpenGL REQUIRED)
 
 target_link_libraries(${THIS_TARGET}
    PRIVATE
@@ -42,6 +45,8 @@ target_link_libraries(${THIS_TARGET}
       Matplot++::matplot
 		wx::core 
 		wx::base
+      wx::gl
+      #${OPENGL_LIBRARY}
 )
 
 target_compile_features(${THIS_TARGET} PUBLIC ${OURACHARTS_CXX_STANDARD})
