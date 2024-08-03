@@ -68,6 +68,7 @@ jobs:
 
   linux_build:
     name: "Linux Clang Build"
+    timeout-minutes: 120
     runs-on: ubuntu-24.04
     env:
       CONFIGURE_PRESET: "linux-clang"
