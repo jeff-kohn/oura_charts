@@ -25,7 +25,7 @@ namespace oura_charts
 
 
    BasicGLPane::BasicGLPane(wxFrame* parent, int* args) :
-      wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE)
+      wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize, GetWindowStyleFlag() | wxTRANSPARENT_WINDOW | wxFULL_REPAINT_ON_RESIZE)
    {
       m_context = new wxGLContext(this);
 

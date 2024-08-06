@@ -35,7 +35,8 @@ namespace oura_charts
                   wxWindowID id = wxID_ANY, const wxString& title = constants::APP_NAME);
 
    protected:
-      wxBoxSizer* m_chart_sizer{};
+      wxBoxSizer* m_sizer_horiz{};
+      wxBoxSizer* m_sizer_vert{};
       wxStatusBar* m_statusBar{};
       wxToolBar* m_toolbar{};
 

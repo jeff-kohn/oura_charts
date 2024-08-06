@@ -194,6 +194,19 @@
       </node>
       <node
         class="wxStatusBar" />
+      <node
+        class="wxBoxSizer"
+        class_access="protected:"
+        var_name="m_sizer_horiz"
+        flags="wxEXPAND">
+        <node
+          class="wxBoxSizer"
+          class_access="protected:"
+          orientation="wxVERTICAL"
+          var_name="m_sizer_vert"
+          flags="wxEXPAND"
+          proportion="1" />
+      </node>
     </node>
     <node
       class="wxDialog"

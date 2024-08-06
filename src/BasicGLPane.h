@@ -2,11 +2,10 @@
 
 namespace oura_charts
 {
+   class ChartView;
 
    class BasicGLPane : public wxGLCanvas
    {
-      wxGLContext* m_context;
-
    public:
       BasicGLPane(wxFrame* parent, int* args);
       virtual ~BasicGLPane();
@@ -29,6 +28,10 @@ namespace oura_charts
       void mouseLeftWindow(wxMouseEvent& event);
       void keyPressed(wxKeyEvent& event);
       void keyReleased(wxKeyEvent& event);
+
+   private:
+      wxGLContext* m_context{};
+      ChartView* m_view{};
    };
 
 

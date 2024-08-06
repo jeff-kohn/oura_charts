@@ -32,19 +32,13 @@ namespace oura_charts
 
       initControls();
 
-      wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
-      auto frame = new wxFrame((wxFrame*)NULL, -1, wxT("Hello GL World"), wxPoint(50, 50), wxSize(400, 200));
-
       int args[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0 };
+      auto glPane = new BasicGLPane(this, args);
 
-      auto glPane = new BasicGLPane((wxFrame*)frame, args);
-      sizer->Add(glPane, 1, wxEXPAND);
-
-      frame->SetSizer(sizer);
-      frame->SetAutoLayout(true);
-
-      frame->Show();
-
+      m_sizer_vert->Add(glPane, 1, wxEXPAND);
+      SetSizer(m_sizer_vert);
+      SetAutoLayout(true);
+      Show();
       return true;
    }
 
@@ -170,6 +164,7 @@ namespace oura_charts
    {
       // NOLINTBEGIN(*)  generated code copy pasted from derived class, so don't lint
       // (we can get rid of this when code generation bug in wxUiDesigner is fixed).
+
       m_toolbar = CreateToolBar();
       m_toolbar->Realize();
 
@@ -216,8 +211,14 @@ namespace oura_charts
 
       m_statusBar = CreateStatusBar();
 
-      Centre(wxBOTH);
+      m_sizer_horiz = new wxBoxSizer(wxHORIZONTAL);
 
+      m_sizer_vert = new wxBoxSizer(wxVERTICAL);
+
+      m_sizer_horiz->Add(m_sizer_vert, wxSizerFlags(1).Expand().Border(wxALL));
+      SetSizerAndFit(m_sizer_horiz);
+
+      Centre(wxBOTH);
       // NOLINTEND(*)
 
       // Event handlers

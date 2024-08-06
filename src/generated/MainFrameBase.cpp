@@ -48,8 +48,10 @@ bool MainFrameBase::Create(wxWindow* parent, wxWindowID id, const wxString& titl
 
     m_file_menu->Append(menu_item8);
     m_file_menu->AppendSeparator();
-    auto* menu_item2 = new wxMenuItem(m_file_menu, wxID_PREFERENCES);
+    auto* menu_item2 = new wxMenuItem(m_file_menu, wxID_ANY, "&Test Chart");
     m_file_menu->Append(menu_item2);
+    auto* menu_item9 = new wxMenuItem(m_file_menu, wxID_PREFERENCES);
+    m_file_menu->Append(menu_item9);
     m_file_menu->AppendSeparator();
     auto* menu_item = new wxMenuItem(m_file_menu, wxID_EXIT);
     menu_item->SetBitmap(wxArtProvider::GetBitmapBundle(wxART_QUIT, wxART_MENU));
@@ -68,11 +70,19 @@ bool MainFrameBase::Create(wxWindow* parent, wxWindowID id, const wxString& titl
 
     m_statusBar = CreateStatusBar();
 
+    m_sizer_horiz = new wxBoxSizer(wxHORIZONTAL);
+
+    m_sizer_vert = new wxBoxSizer(wxVERTICAL);
+
+    m_sizer_horiz->Add(m_sizer_vert, wxSizerFlags(1).Expand().Border(wxALL));
+    SetSizerAndFit(m_sizer_horiz);
+
     Centre(wxBOTH);
 
     // Event handlers
     Bind(wxEVT_MENU, &MainFrameBase::onMenuFilePreferences, this, wxID_PREFERENCES);
     Bind(wxEVT_MENU, &MainFrameBase::onMenuFileQuit, this, wxID_EXIT);
+    Bind(wxEVT_MENU, &MainFrameBase::onMenuFileTestChart, this, menu_item2->GetId());
     Bind(wxEVT_MENU, &MainFrameBase::onMenuHelpAbout, this, wxID_ABOUT);
     Bind(wxEVT_MENU, &MainFrameBase::onMenuHelpAboutWx, this, menu_item4->GetId());
 
