@@ -13,7 +13,8 @@ add_executable(${THIS_TARGET}
    "test_oura_exception.cpp"
    "test_SleepSession.cpp"
    "test_UserProfile.cpp"
- )
+   "test_schema.cpp"
+)
 
 set_target_properties(${THIS_TARGET}
 	PROPERTIES

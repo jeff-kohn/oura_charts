@@ -3,7 +3,6 @@
 #include "AboutDialog.h"
 #include "OuraChartsApp.h"
 #include "PreferencesDialog.h"
-#include "BasicGLPane.h"
 
 #include "oura_charts/chrono_helpers.h"
 #include "oura_charts/DailySleepScore.h"
@@ -23,7 +22,8 @@ namespace oura_charts
    // called from ctor in most cases.
    // cppcheck-suppress duplInheritedMember
    bool MainFrame::Create(const std::weak_ptr<wxDocManager>& doc_mgr, wxFrame* parent,
-                          wxWindowID id, const wxString& title)
+                          const wxPoint& pos, const wxSize& size,
+                          long style, wxWindowID id, const wxString& title)
    {
       auto doc = doc_mgr.lock();
       assert(doc);
@@ -32,13 +32,6 @@ namespace oura_charts
 
       initControls();
 
-      int args[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0 };
-      auto glPane = new BasicGLPane(this, args);
-
-      m_sizer_vert->Add(glPane, 1, wxEXPAND);
-      SetSizer(m_sizer_vert);
-      SetAutoLayout(true);
-      Show();
       return true;
    }
 

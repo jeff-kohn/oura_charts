@@ -91,9 +91,9 @@ namespace oura_charts
          //base::insert(end(), std::make_move_iterator(data_series.begin()), std::make_move_iterator(data_series.end()));
 
          base::reserve(data_series.size());
-         for (auto& data : data_series)
+         for (auto&& data : data_series)
          {
-            base::emplace_back(data);
+            base::emplace_back(std::move(data));
          }
       }
 

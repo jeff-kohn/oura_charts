@@ -19,26 +19,38 @@
 namespace oura_charts
 {
 
+   class ChartCanvas;
 
    class MainFrame : public wxDocParentFrame
    {
    public:
       // If you use default constructor, you must call Create(parent*)
       MainFrame() = default;
-      explicit MainFrame(const std::weak_ptr<wxDocManager>& doc_mgr, wxFrame* parent)
+      explicit MainFrame(const std::weak_ptr<wxDocManager>& doc_mgr, wxFrame* parent,
+                         const wxPoint& pos = wxDefaultPosition,
+                         const wxSize& size = wxDefaultSize,
+                         long style = wxDEFAULT_FRAME_STYLE,
+                         wxWindowID id = wxID_ANY,
+                         const wxString& title = constants::APP_NAME)
       {
          Create(doc_mgr, parent);
       }
 
       // cppcheck-suppress duplInheritedMember
-      bool Create(const std::weak_ptr<wxDocManager>&, wxFrame* parent,
-                  wxWindowID id = wxID_ANY, const wxString& title = constants::APP_NAME);
+      bool Create(const std::weak_ptr<wxDocManager>&doc_mgr, wxFrame* parent,
+                  const wxPoint& pos = wxDefaultPosition,
+                  const wxSize& size = wxDefaultSize,
+                  long style = wxDEFAULT_FRAME_STYLE,
+                  wxWindowID id = wxID_ANY,
+                  const wxString& title = constants::APP_NAME);
+
 
    protected:
       wxBoxSizer* m_sizer_horiz{};
       wxBoxSizer* m_sizer_vert{};
       wxStatusBar* m_statusBar{};
       wxToolBar* m_toolbar{};
+      ChartCanvas* m_canvas{};
 
       void initControls();
       void onMenuFilePreferences(wxCommandEvent& event);

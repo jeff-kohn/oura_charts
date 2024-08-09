@@ -70,13 +70,6 @@ bool MainFrameBase::Create(wxWindow* parent, wxWindowID id, const wxString& titl
 
     m_statusBar = CreateStatusBar();
 
-    m_sizer_horiz = new wxBoxSizer(wxHORIZONTAL);
-
-    m_sizer_vert = new wxBoxSizer(wxVERTICAL);
-
-    m_sizer_horiz->Add(m_sizer_vert, wxSizerFlags(1).Expand().Border(wxALL));
-    SetSizerAndFit(m_sizer_horiz);
-
     Centre(wxBOTH);
 
     // Event handlers

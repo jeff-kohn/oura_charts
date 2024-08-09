@@ -8,12 +8,16 @@ include(wx_generated_source.cmake)
 add_executable(${THIS_TARGET} WIN32
 	"AboutDialog.cpp"
 	"AboutDialog.h"
+#   "AddDataFieldDialog.h"
+#   "AddDataFieldDialog.cpp"
    "ChartDocument.h"
    "ChartDocument.cpp"
    "ChartDocTemplate.h"
    "ChartDocTemplate.cpp"
-   "ChartView.h"
-   "ChartView.cpp"
+#   "ChartOptionsView.h"
+#   "ChartOptionsCanvas.cpp"
+#   "ChartOptionsCanvas.h"
+#   "ChartOptionsView.cpp"
 	"MainFrame.cpp"
 	"MainFrame.h"
 	"OuraChartsApp.h"
@@ -21,8 +25,6 @@ add_executable(${THIS_TARGET} WIN32
 	"PreferencesDialog.cpp"
 	"PreferencesDialog.h"
    "utf8.manifest"
-	"BasicGLPane.h"
-   "BasicGLPane.cpp"
    ${wx_generated_files}
    )
 
@@ -45,7 +47,7 @@ target_link_libraries(${THIS_TARGET}
       Matplot++::matplot
 		wx::core 
 		wx::base
-      wx::gl
+      # wx::gl
       #${OPENGL_LIBRARY}
 )
 

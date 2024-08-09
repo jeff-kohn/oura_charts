@@ -11,6 +11,12 @@
 
 namespace oura_charts
 {
+   // forward declare main window type
+   class MainFrame;
+
+   /// <summary>
+   ///   app object for the OuraCharts applicatin.
+   /// </summary>
    class OuraChartsApp : public wxApp
    {
    public:
@@ -33,6 +39,8 @@ namespace oura_charts
       using TokenResult = expected<TokenAuth, oura_exception>;
       TokenResult getRestToken() const;
 
+
+
       /// <summary>
       ///   Get the document manager for the application.
       /// </summary>
@@ -41,6 +49,8 @@ namespace oura_charts
       {
          return m_doc_mgr;
       }
+
+
 
    private:
       std::shared_ptr<wxDocManager> m_doc_mgr{};

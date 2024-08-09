@@ -11,6 +11,12 @@
 
 namespace oura_charts
 {
+   namespace
+   {
+      const wxSize g_default_frame_size{ 400, 600 };
+   }
+
+
    using std::make_unique;
 
    OuraChartsApp::OuraChartsApp()
@@ -31,6 +37,11 @@ namespace oura_charts
 
    bool OuraChartsApp::OnInit()
    {
+      if (!wxApp::OnInit())
+         return false;
+
+      ::wxInitAllImageHandlers();
+
       assert(!m_doc_mgr);
       m_doc_mgr = std::make_shared<wxDocManager>();
       m_doc_mgr->SetMaxDocsOpen(1);
@@ -39,7 +50,11 @@ namespace oura_charts
                            "*.occhart", wxEmptyString, "occhart",
                            "OC Chart Doc", "OC Chart View");
 
-      auto main_frame = std::make_unique<MainFrame>(m_doc_mgr, nullptr);
+      auto main_frame = std::make_unique<MainFrame>(m_doc_mgr,
+                                                    nullptr,
+                                                    wxDefaultPosition,
+                                                    g_default_frame_size);
+
       main_frame->Center();
       main_frame->Show();
       SetTopWindow(main_frame.release());
@@ -50,12 +65,10 @@ namespace oura_charts
 
    int OuraChartsApp::OnExit()
    {
-
-   #ifdef _DEBUG
-      // to prevent the tzdb allocations from being reported as memory leaks
-      std::chrono::get_tzdb_list().~tzdb_list();
-   #endif
-
+#ifdef _DEBUG
+         // to prevent the tzdb allocations from being reported as memory leaks
+         std::chrono::get_tzdb_list().~tzdb_list();
+#endif
       return wxApp::OnExit();
    }
 

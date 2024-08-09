@@ -1,13 +1,13 @@
 #pragma once
 
 #include "ChartDocument.h"
-#include "ChartView.h"
+//#include "ChartView.h"
 
 namespace oura_charts
 {
 
    class ChartDocument;
-   class ChartView;
+   class ChartOptionsView;
 
    class ChartDocTemplate : public wxDocTemplate
    {
@@ -21,7 +21,7 @@ namespace oura_charts
                        const wxString& viewTypeName);
 
       ChartDocument* CreateDocument(const wxString& path, long flags = 0) override;
-      ChartView* CreateView(wxDocument* doc, long flags = 0) override;
+      //ChartOptionsView* CreateView(wxDocument* doc, long flags = 0) override;
    };
 
 } // namespace oura_charts

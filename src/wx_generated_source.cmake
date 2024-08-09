@@ -5,6 +5,8 @@
 set (wx_generated_files
 
     ${CMAKE_CURRENT_LIST_DIR}/generated/AboutDialogBase.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/generated/AddDataFieldBase.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/generated/ChartOptionsBase.cpp
     ${CMAKE_CURRENT_LIST_DIR}/generated/MainFrameBase.cpp
     ${CMAKE_CURRENT_LIST_DIR}/generated/PreferencesDialogBase.cpp
 
