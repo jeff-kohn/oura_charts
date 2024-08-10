@@ -1,5 +1,7 @@
 #pragma once
 
+#include "oura_charts/oura_charts.h"
+
 #include <filesystem>
 #include <map>
 #include <string>
@@ -62,13 +64,31 @@ namespace oura_charts::schema
    class SchemaManager
    {
    public:
-      void LoadSchema();
+      using SchemaMap = std::map<string, ClassSchema, std::less<>>;
+      using Iter = SchemaMap::const_iterator;
 
-      const ClassSchema& getClassSchema(int index) const;
-      const ClassSchema& getClassSchema(std::string_view class_name) const;
+      /// <summary>
+      ///   Iterate over the schema map
+      /// </summary>
+      Iter begin() const { return m_class_schemas.begin(); }
+      Iter end() const   { return m_class_schemas.end();   }
+
+      /// <summary>
+      ///   Load schema information from JSON files on disk. You can pass a single file path,
+      ///   or a folder path in which case all *.json files will be loaded.
+      /// </summary>
+      void loadSchema(const fs::path& schema_path);
+
+      /// <summary>
+      ///   get a specific schema class by name. Will throw exception if the requested
+      ///   class_name is invalid. class names are case-sensitive.
+      /// </summary>
+      const ClassSchema& getClassSchema(std::string_view class_name) const noexcept(false);
 
    private:
-      map<string, ClassSchema> m_class_schemas;
+      SchemaMap m_class_schemas;
+
+      void loadSchemaFile(const fs::path& file_path);
    };
 
 

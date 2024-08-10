@@ -44,6 +44,12 @@ namespace oura_charts::constants
    inline constexpr const char* ERROR_CATEGORY_FILE_IO = "File I/O Error";
    inline constexpr const char* ERROR_CONTEXT_REST_RESPONSE = "REST Response";
 
+   // format strings and messages for error conditions
+   inline constexpr const char* FMT_MSG_ERROR_SCHEMA_CLASS_NOT_FOUND = "The schema class '{}' was not found";
+
+
+   // schema related constants
+   inline constexpr const wchar_t* SCHEMA_FILE_EXT = L"json"; // wide char since it's use with path object.
 
    // these are used for parsing date/time values from string using
    // from_stream()
