@@ -10,20 +10,20 @@
    "fields": [
       {
          "class_member": "score",
-         "long_display_name": "Measurement Source",
-         "short_display_name": "Source",
-         "supported_aggregates": [ "Min", "Max", "Count", "Sum", "Avg" ]
+         "long_display_name": "Sleep Score",
+         "short_display_name": "score",
+         "supported_aggregates": [ "Min", "Max", "Sum", "Avg" ]
       },
       {
          "class_member": "date",
          "long_display_name": "Measurement Date",
-         "short_display_name": "Date",
+         "short_display_name": "date",
          "supported_aggregates": []
       },
       {
          "class_member": "contributors.deep_sleep",
          "long_display_name": "Deep Sleep Contribution",
-         "short_display_name": "deep sleep",
+         "short_display_name": "deep sleep contrib.",
          "supported_aggregates": [ "Min", "Max", "Sum", "Avg" ]
       },
       {

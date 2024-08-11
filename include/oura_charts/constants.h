@@ -49,7 +49,7 @@ namespace oura_charts::constants
 
 
    // schema related constants
-   inline constexpr const wchar_t* SCHEMA_FILE_EXT = L"json"; // wide char since it's use with path object.
+   inline constexpr const char* SCHEMA_FILE_SUFFIX = "schema.json";
 
    // these are used for parsing date/time values from string using
    // from_stream()

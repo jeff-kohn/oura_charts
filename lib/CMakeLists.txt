@@ -24,6 +24,7 @@ add_library(${THIS_TARGET} STATIC
 	"../include/oura_charts/UserProfile.h"
    "../include/oura_charts/SchemaManager.h"
    "../include/oura_charts/schema/heart_rate_schema.json"
+   "../include/oura_charts/schema/daily_sleep_score_schema.json"
    "utility.cpp"
    "logging.cpp"
    "SchemaManager.cpp"

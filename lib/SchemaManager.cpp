@@ -21,7 +21,7 @@ namespace oura_charts::schema
          if (fs::is_regular_file(entry))
          {
             auto file = entry.path();
-            if (boost::iends_with(file.generic_string(), constants::SCHEMA_FILE_EXT))
+            if (boost::iends_with(file.generic_string(), constants::SCHEMA_FILE_SUFFIX))
                loadSchemaFile(entry.path());
          }
       }
