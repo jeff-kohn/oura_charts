@@ -33,7 +33,7 @@ namespace oura_charts
                          wxWindowID id = wxID_ANY,
                          const wxString& title = constants::APP_NAME)
       {
-         Create(doc_mgr, parent);
+         Create(doc_mgr, parent, pos, size, style, id, title);
       }
 
       // cppcheck-suppress duplInheritedMember

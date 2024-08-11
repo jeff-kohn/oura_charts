@@ -27,7 +27,7 @@ namespace oura_charts
    {
       auto doc = doc_mgr.lock();
       assert(doc);
-      if (not wxDocParentFrame::Create(doc.get(), parent, id, title))
+      if (not wxDocParentFrame::Create(doc.get(), parent, id, title, pos, size, style))
          return false;
 
       initControls();
