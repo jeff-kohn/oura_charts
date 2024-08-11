@@ -45,7 +45,15 @@ add_custom_command(
    TARGET ${THIS_TARGET} POST_BUILD
    COMMAND ${CMAKE_COMMAND} -E copy_directory
             ${CMAKE_CURRENT_SOURCE_DIR}/test_data/
-            ${CMAKE_CURRENT_BINARY_DIR}/test_data/
+            ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/test_data/
             #$<TARGET_FILE_DIR:${THIS_TARGET}>/test_data/
 )
 
+# same for schema files
+add_custom_command(
+   TARGET ${THIS_TARGET} POST_BUILD
+   COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_CURRENT_SOURCE_DIR}/../include/oura_charts/schema/
+            ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/schema/
+            #$<TARGET_FILE_DIR:${THIS_TARGET}>/schema/
+)

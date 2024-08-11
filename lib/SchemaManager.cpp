@@ -8,7 +8,7 @@ namespace oura_charts::schema
 
    void SchemaManager::loadSchema(const fs::path& schema_path)
    {
-      if (!fs::is_regular_file(schema_path))
+      if (fs::is_regular_file(schema_path))
       {
          // just load a single file.
          loadSchemaFile(schema_path);

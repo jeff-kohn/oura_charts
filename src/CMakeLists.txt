@@ -57,11 +57,14 @@ target_compile_options(${THIS_TARGET} PRIVATE ${OURACHARTS_COMPILE_OPTIONS})
 target_compile_options(${THIS_TARGET} PRIVATE ${OURACHARTS_WARNING_FLAGS})
 target_link_options(${THIS_TARGET} PRIVATE ${OURACHARTS_LINK_OPTIONS})
 
-# this is a workaround for run-clang-tidy scanning Fetched content.
+
+# copy schema files to build output tree. We'll copy to both Src/ and Tests/, so that
+# they're available when running/debugging either the app or unit tests.
 add_custom_command(
    TARGET ${THIS_TARGET} POST_BUILD
-   COMMAND ${CMAKE_COMMAND} -E copy
-            ${CMAKE_CURRENT_SOURCE_DIR}/generated/.clang-tidy
-            ${CMAKE_BINARY_DIR}/_deps/.clang-tidy
+   COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_CURRENT_SOURCE_DIR}/../include/oura_charts/schema/
+            $<TARGET_FILE_DIR:${THIS_TARGET}>/schema/
 )
-            
+
+
