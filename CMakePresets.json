@@ -21,7 +21,7 @@
             "ENABLE_UNIT_TESTS": "ON",
             "ENABLE_CPP_CHECK": "ON",
             "ENABLE_CLANG_TIDY": "OFF",
-            "VCPKG_TARGET_TRIPLET": "x64-wxwindows-static",
+            "VCPKG_TARGET_TRIPLET": "x64-wxwindows-static"
          },
          "condition": {
             "type": "equals",
