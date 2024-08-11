@@ -47,6 +47,7 @@ namespace oura_charts::schema
    {
       string field{};
       string data_type{};
+      vector<string> group_by;
    };
 
 

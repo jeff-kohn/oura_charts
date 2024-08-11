@@ -23,7 +23,7 @@ add_library(${THIS_TARGET} STATIC
 	"../include/oura_charts/TokenAuth.h"
 	"../include/oura_charts/UserProfile.h"
    "../include/oura_charts/SchemaManager.h"
-   "../include/oura_charts/schema/heart_rate_schema.h"
+   "../include/oura_charts/schema/heart_rate_schema.json"
    "utility.cpp"
    "logging.cpp"
    "SchemaManager.cpp"

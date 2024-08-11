@@ -17,11 +17,11 @@
                "value": "$env{VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake",
                "type": "FILEPATH"
             },
-            "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+            "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
             "ENABLE_UNIT_TESTS": "ON",
             "ENABLE_CPP_CHECK": "ON",
             "ENABLE_CLANG_TIDY": "OFF",
-            "VCPKG_TARGET_TRIPLET": "x64-wxwindows-static"
+            "VCPKG_TARGET_TRIPLET": "x64-wxwindows-static",
          },
          "condition": {
             "type": "equals",
@@ -73,12 +73,6 @@
          "name": "win-msvc",
          "displayName": "Windows MSVC",
          "configurePreset": "win-msvc"
-      },
-      {
-         "name": "dev-debug",
-         "displayName": "Dev-Debug (VS Sucks!)",
-         "configurePreset": "win-msvc",
-         "configuration": "Debug"
       },
       {
          "name": "linux-clang",
