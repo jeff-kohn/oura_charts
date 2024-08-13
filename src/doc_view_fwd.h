@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------------------------------------------------
-// forward_declarations.h
+// doc_view_fwd.h
 //
 // header file for the ChartOptionsView class
 //

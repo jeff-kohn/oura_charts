@@ -19,7 +19,7 @@ add_executable(${THIS_TARGET} WIN32
    "ChartOptionsView.h"
    "ChartOptionsView.cpp"
    "constants.h"
-   "forward_declarations.h"
+   "doc_view_fwd.h"
    "MainFrame.cpp"
 	"MainFrame.h"
 	"OuraChartsApp.cpp"

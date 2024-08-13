@@ -10,7 +10,7 @@
 
 #include "ChartDocument.h"
 #include "ChartOptionsView.h"
-#include "forward_declarations.h"
+#include "doc_view_fwd.h"
 
 
 namespace oura_charts

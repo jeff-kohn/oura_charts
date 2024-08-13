@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "forward_declarations.h"
+#include "doc_view_fwd.h"
 #include "oura_charts/chrono_helpers.h"
 
 #include <wx/docview.h>

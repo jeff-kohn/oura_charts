@@ -9,7 +9,7 @@
 #pragma once
 
 #include "constants.h"
-#include "forward_declarations.h"
+#include "doc_view_fwd.h"
 #include "oura_charts/TokenAuth.h"
 
 #include <wx/app.h>

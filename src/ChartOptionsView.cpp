@@ -17,14 +17,16 @@
 
 namespace oura_charts
 {
-   bool ChartOptionsView::OnCreate(wxDocument* doc, long flags)
+   bool ChartOptionsView::OnCreate([[maybe_unused]] wxDocument* doc, [[maybe_unused]] long flags)
    {
       // Associate the appropriate frame with this view.
-      auto main_frame = wxGetApp().getMainFrame();
-      assert(main_frame);
+      m_main_frame = wxGetApp().getMainFrame();
+      assert(m_main_frame);
+      if (!m_main_frame)
+         return false;
 
-      SetFrame(main_frame);
-      main_frame->getCanvas()->setView(this);
+      SetFrame(m_main_frame);
+      m_main_frame->getCanvas()->setView(this);
 
       // Make sure the document manager knows that this is the
       // current view.
@@ -36,22 +38,29 @@ namespace oura_charts
       return true;
    }
 
-   void ChartOptionsView::OnDraw([[maybe_unused]] wxDC* dc)
-   {
-   }
 
    void ChartOptionsView::OnUpdate([[maybe_unused]] wxView* , [[maybe_unused]] wxObject* )
    {
+      if (m_main_frame and m_main_frame->getCanvas())
+         m_main_frame->getCanvas()->Refresh();
    }
+
 
    bool ChartOptionsView::OnClose([[maybe_unused]] bool deleteWindow)
    {
       if (!GetDocument()->Close())
-      {
          return false;
+
+      assert(m_main_frame);
+      if (m_main_frame)
+      {
+         m_main_frame->getCanvas()->setView(nullptr);
+         m_main_frame->SetTitle(wxGetApp().GetAppDisplayName());
       }
+
       SetFrame(nullptr);
       Activate(false);
+
       return true;
    }
    
