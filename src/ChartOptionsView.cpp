@@ -46,6 +46,11 @@ namespace oura_charts
    }
 
 
+   void ChartOptionsView::OnDraw([[maybe_unused]] wxDC* dc)
+   {
+   }
+
+
    bool ChartOptionsView::OnClose([[maybe_unused]] bool deleteWindow)
    {
       if (!GetDocument()->Close())

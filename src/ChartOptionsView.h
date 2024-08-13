@@ -22,8 +22,9 @@ namespace oura_charts
    public:
 
       bool OnCreate(wxDocument* doc, long flags) override;
-      void OnUpdate(wxView* sender, wxObject* hint = nullptr) override;
       bool OnClose(bool deleteWindow = true) override;
+      void OnDraw(wxDC* dc) override;
+      void OnUpdate(wxView* sender, wxObject* hint = nullptr) override;
 
    private:
       MainFrame* m_main_frame{};

@@ -42,6 +42,9 @@ namespace oura_charts
          return m_view;
       }
 
+      // doesn't really do anything since our canvas is actually a form
+      void OnDraw(wxDC& dc);
+
    protected:
       void onAddClicked(wxCommandEvent& event) override { event.Skip(); }
       void onDeleteClicked(wxCommandEvent& event) override { event.Skip(); }
