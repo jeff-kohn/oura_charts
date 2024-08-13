@@ -19,7 +19,7 @@
 
 namespace oura_charts
 {
-    class ChartOptionsCanvas : public wxPanel
+    class ChartOptionsBase : public wxPanel
     {
     public:
         static const int form_id = wxID_ANY;
@@ -27,8 +27,8 @@ namespace oura_charts
         static const wxPoint form_pos() { return wxDefaultPosition; }
         static const wxSize form_size() { return  wxDefaultSize; }
 
-        ChartOptionsCanvas() {}
-        ChartOptionsCanvas(wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition,
+        ChartOptionsBase() {}
+        ChartOptionsBase(wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition,
             const wxSize& size = wxDefaultSize, long style = wxTAB_TRAVERSAL, const wxString &name = wxPanelNameStr)
         {
             Create(parent, id, pos, size, style, name);
@@ -42,11 +42,14 @@ namespace oura_charts
         // Virtual event handlers -- override them in your derived class
 
         virtual void onAddClicked(wxCommandEvent& event) { event.Skip(); }
-        virtual void onAddUpdateUI(wxUpdateUIEvent& event) { event.Skip(); }
         virtual void onDeleteClicked(wxCommandEvent& event) { event.Skip(); }
         virtual void onDeleteUpdateUI(wxUpdateUIEvent& event) { event.Skip(); }
         virtual void onEditClicked(wxCommandEvent& event) { event.Skip(); }
         virtual void onEditUpdateUI(wxUpdateUIEvent& event) { event.Skip(); }
+        virtual void onEndDateSelected(wxDateEvent& event) { event.Skip(); }
+        virtual void onRunQuery(wxCommandEvent& event) { event.Skip(); }
+        virtual void onRunQueryUpdateUI(wxUpdateUIEvent& event) { event.Skip(); }
+        virtual void onStartDateSelected(wxDateEvent& event) { event.Skip(); }
 
         // Class member variables
 

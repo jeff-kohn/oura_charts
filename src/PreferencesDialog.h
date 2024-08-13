@@ -1,7 +1,16 @@
+//---------------------------------------------------------------------------------------------------------------------
+// PreferencesDialog.h
+//
+// header for the Preferences dialog class
+//
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
+
 #pragma once
 
 #include "generated/PreferencesDialogBase.h"
 #include <wx/secretstore.h>
+
 
 namespace oura_charts
 {

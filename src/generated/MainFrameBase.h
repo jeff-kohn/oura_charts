@@ -12,8 +12,8 @@
 #include <wx/event.h>
 #include <wx/frame.h>
 #include <wx/gdicmn.h>
+#include <wx/menu.h>
 #include <wx/statusbr.h>
-#include <wx/toolbar.h>
 
 #include <wx/stockitem.h>
 
@@ -52,8 +52,8 @@ namespace oura_charts
 
         // Class member variables
 
+        wxMenu* m_edit_menu;
         wxStatusBar* m_statusBar;
-        wxToolBar* m_toolbar;
     };
 } // namespace oura_charts
 

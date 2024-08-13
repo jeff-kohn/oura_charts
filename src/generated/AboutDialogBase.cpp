@@ -15,7 +15,7 @@
 
 using namespace oura_charts;
 
-bool AboutDialogBase::Create(wxWindow* parent, wxWindowID id, const wxString& title,
+bool AboutDlgBase::Create(wxWindow* parent, wxWindowID id, const wxString& title,
     const wxPoint& pos, const wxSize& size, long style, const wxString &name)
 {
     if (!wxDialog::Create(parent, id, title, pos, ConvertDialogToPixels(size), style, name))

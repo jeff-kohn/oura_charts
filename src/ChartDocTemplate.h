@@ -1,13 +1,20 @@
+//---------------------------------------------------------------------------------------------------------------------
+// ChartDocTemplate.h
+//
+// header file for the ChartDocTemplate class
+//
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
+
 #pragma once
 
 #include "ChartDocument.h"
-//#include "ChartView.h"
+#include "ChartOptionsView.h"
+#include "forward_declarations.h"
+
 
 namespace oura_charts
 {
-
-   class ChartDocument;
-   class ChartOptionsView;
 
    class ChartDocTemplate : public wxDocTemplate
    {
@@ -21,7 +28,7 @@ namespace oura_charts
                        const wxString& viewTypeName);
 
       ChartDocument* CreateDocument(const wxString& path, long flags = 0) override;
-      //ChartOptionsView* CreateView(wxDocument* doc, long flags = 0) override;
+      ChartOptionsView* CreateView(wxDocument* doc, long flags = 0) override;
    };
 
 } // namespace oura_charts

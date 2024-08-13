@@ -14,7 +14,6 @@ namespace oura_charts::test
    {
       using namespace schema;
 
-      fs::path cwd = std::filesystem::current_path();
       SchemaManager mgr{};
       mgr.loadSchema("./schema");
 

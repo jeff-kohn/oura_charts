@@ -11,16 +11,17 @@
 
 #include <wx/choice.h>
 #include <wx/dialog.h>
+#include <wx/event.h>
 #include <wx/gdicmn.h>
 #include <wx/listbox.h>
 
 namespace oura_charts
 {
-    class AddDataFieldBase : public wxDialog
+    class AddDataFieldDlgBase : public wxDialog
     {
     public:
-        AddDataFieldBase() {}
-        AddDataFieldBase(wxWindow *parent, wxWindowID id = wxID_ANY, const wxString& title = "Add Data Field",
+        AddDataFieldDlgBase() {}
+        AddDataFieldDlgBase(wxWindow *parent, wxWindowID id = wxID_ANY, const wxString& title = "Add Data Field",
             const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
             long style = wxDEFAULT_DIALOG_STYLE, const wxString &name = wxDialogNameStr)
         {
@@ -32,6 +33,12 @@ namespace oura_charts
             long style = wxDEFAULT_DIALOG_STYLE, const wxString &name = wxDialogNameStr);
 
     protected:
+
+        // Virtual event handlers -- override them in your derived class
+
+        virtual void onDataSourceSelected(wxCommandEvent& event) { event.Skip(); }
+        virtual void onFieldSelected(wxCommandEvent& event) { event.Skip(); }
+        virtual void onOkUpdateUI(wxUpdateUIEvent& event) { event.Skip(); }
 
         // Class member variables
 

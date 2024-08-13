@@ -1,23 +1,32 @@
+//---------------------------------------------------------------------------------------------------------------------
+// OuraChartsApp.cpp
+//
+// source file for the OuraChartsApp class
+//
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
+
 #include "OuraChartsApp.h"
 #include "ChartDocTemplate.h"
 #include "MainFrame.h"
+
+#include "oura_charts/detail/utility.h"
 
 #include <wx/fileconf.h>
 #include <wx/stdpaths.h>
 #include <wx/secretstore.h>
 
-#include "oura_charts/detail/utility.h"
 #include <chrono>
 
 namespace oura_charts
 {
+   using std::make_unique;
+
    namespace
    {
       const wxSize g_default_frame_size{ 400, 600 };
    }
 
-
-   using std::make_unique;
 
    OuraChartsApp::OuraChartsApp()
    {
@@ -46,18 +55,15 @@ namespace oura_charts
       m_doc_mgr = std::make_shared<wxDocManager>();
       m_doc_mgr->SetMaxDocsOpen(1);
 
+      // this is fucked up but it's how wxWidgets works. 
       new ChartDocTemplate(m_doc_mgr.get(), "Oura Charts Document",
                            "*.occhart", wxEmptyString, "occhart",
                            "OC Chart Doc", "OC Chart View");
 
-      auto main_frame = std::make_unique<MainFrame>(m_doc_mgr,
-                                                    nullptr,
-                                                    wxDefaultPosition,
-                                                    g_default_frame_size);
-
-      main_frame->Center();
-      main_frame->Show();
-      SetTopWindow(main_frame.release());
+      m_main_frame = new MainFrame(m_doc_mgr, nullptr, wxDefaultPosition, g_default_frame_size);
+      SetTopWindow(m_main_frame);
+      m_main_frame->Center();
+      m_main_frame->Show();
 
       return true;
    } 
@@ -112,6 +118,19 @@ namespace oura_charts
 
       return TokenAuth{ pat.ToStdString() };
    }
+
+
+   MainFrame* OuraChartsApp::getMainFrame()
+   {
+      return m_main_frame;
+   }
+
+
+   DocManagerPtrWk OuraChartsApp::getDocManager()
+   {
+      return m_doc_mgr;
+   }
+
 
 }  // namespace oura_charts
 

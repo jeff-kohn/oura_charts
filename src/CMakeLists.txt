@@ -8,25 +8,27 @@ include(wx_generated_source.cmake)
 add_executable(${THIS_TARGET} WIN32
 	"AboutDialog.cpp"
 	"AboutDialog.h"
-#   "AddDataFieldDialog.h"
-#   "AddDataFieldDialog.cpp"
-   "ChartDocument.h"
-   "ChartDocument.cpp"
+   "AddDataFieldDialog.h"
+   "AddDataFieldDialog.cpp"
    "ChartDocTemplate.h"
    "ChartDocTemplate.cpp"
-#   "ChartOptionsView.h"
-#   "ChartOptionsCanvas.cpp"
-#   "ChartOptionsCanvas.h"
-#   "ChartOptionsView.cpp"
-	"MainFrame.cpp"
+   "ChartDocument.h"
+   "ChartDocument.cpp"
+   "ChartOptionsCanvas.cpp"
+   "ChartOptionsCanvas.h"
+   "ChartOptionsView.h"
+   "ChartOptionsView.cpp"
+   "constants.h"
+   "forward_declarations.h"
+   "MainFrame.cpp"
 	"MainFrame.h"
-	"OuraChartsApp.h"
 	"OuraChartsApp.cpp"
+	"OuraChartsApp.h"
 	"PreferencesDialog.cpp"
 	"PreferencesDialog.h"
    "utf8.manifest"
    ${wx_generated_files}
-   )
+)
 
 set_target_properties(${THIS_TARGET}
 	PROPERTIES

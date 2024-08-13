@@ -16,7 +16,7 @@
 
 namespace oura_charts
 {
-    class AboutDialogBase : public wxDialog
+    class AboutDlgBase : public wxDialog
     {
     public:
         static const int form_id = wxID_ANY;
@@ -25,8 +25,8 @@ namespace oura_charts
         static const wxSize form_size() { return  wxSize(250, 175); }
         static const wxString form_title() { return wxString::FromUTF8("About Oura Charts"); }
 
-        AboutDialogBase() {}
-        AboutDialogBase(wxWindow *parent, wxWindowID id = wxID_ANY, const wxString& title = "About Oura Charts",
+        AboutDlgBase() {}
+        AboutDlgBase(wxWindow *parent, wxWindowID id = wxID_ANY, const wxString& title = "About Oura Charts",
             const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(250, 175),
             long style = wxDEFAULT_DIALOG_STYLE, const wxString &name = wxDialogNameStr)
         {

@@ -6,6 +6,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <ranges>
 
 //namespace oura_charts::constants
 //{
@@ -74,17 +75,29 @@ namespace oura_charts::schema
       Iter begin() const { return m_class_schemas.begin(); }
       Iter end() const   { return m_class_schemas.end();   }
 
+
       /// <summary>
-      ///   Load schema information from JSON files on disk. You can pass a single file path,
-      ///   or a folder path in which case all *.json files will be loaded.
+      ///   return the schema classes as range of map elements.
       /// </summary>
-      void loadSchema(const fs::path& schema_path);
+      auto getSchemaRange() const
+      {
+         return std::ranges::subrange{ begin(), end() };
+      }
+
 
       /// <summary>
       ///   get a specific schema class by name. Will throw exception if the requested
       ///   class_name is invalid. class names are case-sensitive.
       /// </summary>
       const ClassSchema& getClassSchema(std::string_view class_name) const noexcept(false);
+
+
+      /// <summary>
+      ///   Load schema information from JSON files on disk. You can pass a single file path,
+      ///   or a folder path in which case all *.json files will be loaded.
+      /// </summary>
+      void loadSchema(const fs::path& schema_path);
+
 
    private:
       SchemaMap m_class_schemas;

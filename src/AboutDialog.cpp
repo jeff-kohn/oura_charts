@@ -1,6 +1,15 @@
+//---------------------------------------------------------------------------------------------------------------------
+// AboutDialog.cpp
+//
+// header file for the AboutDialog class
+//
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
 
 #include "AboutDialog.h"
+
 #include "oura_charts/UserProfile.h"
+
 #include <format>
 
 namespace oura_charts

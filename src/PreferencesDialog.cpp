@@ -1,10 +1,20 @@
+//---------------------------------------------------------------------------------------------------------------------
+// PreferencesDialog.cpp
+//
+// source file for the PreferencesDialog class
+//
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
 
 #include "PreferencesDialog.h"
 #include "OuraChartsApp.h"
+
 #include "oura_charts/RestDataProvider.h"
 #include "oura_charts/UserProfile.h"
+
 #include <wx/msgdlg.h>
 #include <wx/secretstore.h>
+
 
 namespace oura_charts
 {

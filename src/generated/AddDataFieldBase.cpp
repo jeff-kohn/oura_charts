@@ -15,7 +15,7 @@
 
 using namespace oura_charts;
 
-bool AddDataFieldBase::Create(wxWindow* parent, wxWindowID id, const wxString& title,
+bool AddDataFieldDlgBase::Create(wxWindow* parent, wxWindowID id, const wxString& title,
     const wxPoint& pos, const wxSize& size, long style, const wxString &name)
 {
     if (!wxDialog::Create(parent, id, title, pos, size, style, name))
@@ -62,6 +62,11 @@ bool AddDataFieldBase::Create(wxWindow* parent, wxWindowID id, const wxString& t
 
     SetSizerAndFit(dlg_sizer);
     Centre(wxBOTH);
+
+    // Event handlers
+    Bind(wxEVT_UPDATE_UI, &AddDataFieldDlgBase::onOkUpdateUI, this, wxID_OK);
+    m_data_source_cbo->Bind(wxEVT_CHOICE, &AddDataFieldDlgBase::onDataSourceSelected, this);
+    m_field_list->Bind(wxEVT_LISTBOX, &AddDataFieldDlgBase::onFieldSelected, this);
 
     return true;
 }

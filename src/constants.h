@@ -1,3 +1,11 @@
+//---------------------------------------------------------------------------------------------------------------------
+// constants.h
+//
+// header file for constants used throughout the client app
+//
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
+
 #pragma once
 
 #include "oura_charts/constants.h"
@@ -20,4 +28,6 @@ namespace oura_charts::constants
    inline constexpr const char*   MSG_RESET_TOKEN_PROMPT = "Are you sure you want to reset the stored Personal Access Token?\r\n\r\nYou won't be able to retrieve data from Oura until you configure a valid token.";
    inline constexpr const char* TITLE_RESET_TOKEN_PROMPT = "Reset PAT";
 
+
+   inline constexpr const char* DLG_TITLE_ADD_DATA_FIELD = "Add Data Field";
 } // namespace oura_charts

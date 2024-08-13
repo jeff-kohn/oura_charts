@@ -13,7 +13,7 @@
     combine_all_forms="0">
     <node
       class="wxDialog"
-      class_name="AboutDialogBase"
+      class_name="AboutDlgBase"
       title="About Oura Charts"
       size="250,175d"
       base_file="AboutDialogBase"
@@ -100,9 +100,6 @@
       derived_class_name="MainFrame"
       derived_file="MainFrame">
       <node
-        class="wxToolBar"
-        var_name="m_toolbar" />
-      <node
         class="wxMenuBar"
         class_access="none"
         var_name="menubar">
@@ -173,6 +170,11 @@
             stock_id="wxID_EXIT"
             wxEVT_MENU="onMenuFileQuit" />
         </node>
+        <node
+          class="wxMenu"
+          label="&amp;Edit"
+          stock_id="wxID_EDIT"
+          var_name="m_edit_menu" />
         <node
           class="wxMenu"
           class_access="none"
@@ -280,7 +282,7 @@
     </node>
     <node
       class="PanelForm"
-      class_name="ChartOptionsCanvas"
+      class_name="ChartOptionsBase"
       mockup_size="400,200d"
       base_file="ChartOptionsBase"
       name_space="oura_charts"
@@ -292,44 +294,78 @@
         orientation="wxVERTICAL"
         flags="wxEXPAND">
         <node
-          class="wxStaticBoxSizer"
-          label="Date Range"
-          orientation="wxHORIZONTAL"
-          border_size="15">
+          class="wxBoxSizer"
+          var_name="box_sizer2"
+          flags="wxEXPAND">
           <node
-            class="spacer"
-            width="6" />
+            class="wxBoxSizer"
+            orientation="wxVERTICAL"
+            var_name="box_sizer7">
+            <node
+              class="wxStaticBoxSizer"
+              label="Date Range"
+              orientation="wxHORIZONTAL"
+              border_size="10">
+              <node
+                class="spacer"
+                width="6" />
+              <node
+                class="wxStaticText"
+                class_access="none"
+                label="Start Date:"
+                var_name="static_text"
+                alignment="wxALIGN_CENTER_VERTICAL" />
+              <node
+                class="wxDatePickerCtrl"
+                style="wxDP_DROPDOWN|wxDP_SHOWCENTURY"
+                var_name="m_start_date"
+                flags="wxEXPAND"
+                proportion="5"
+                wxEVT_DATE_CHANGED="onStartDateSelected" />
+              <node
+                class="wxStaticText"
+                class_access="none"
+                label="End Date:"
+                var_name="static_text2"
+                alignment="wxALIGN_CENTER_VERTICAL" />
+              <node
+                class="wxDatePickerCtrl"
+                style="wxDP_DROPDOWN|wxDP_SHOWCENTURY"
+                var_name="m_end_date"
+                proportion="5"
+                wxEVT_DATE_CHANGED="onEndDateSelected" />
+              <node
+                class="spacer"
+                width="5" />
+            </node>
+          </node>
           <node
-            class="wxStaticText"
-            class_access="none"
-            label="Start Date:"
-            var_name="static_text"
-            alignment="wxALIGN_CENTER_VERTICAL" />
-          <node
-            class="wxDatePickerCtrl"
-            style="wxDP_DROPDOWN|wxDP_SHOWCENTURY"
-            var_name="m_start_date"
-            flags="wxEXPAND"
-            proportion="5" />
-          <node
-            class="wxStaticText"
-            class_access="none"
-            label="End Date:"
-            var_name="static_text2"
-            alignment="wxALIGN_CENTER_VERTICAL" />
-          <node
-            class="wxDatePickerCtrl"
-            style="wxDP_DROPDOWN|wxDP_SHOWCENTURY"
-            var_name="m_end_date"
-            proportion="5" />
-          <node
-            class="spacer"
-            width="5" />
+            class="wxBoxSizer"
+            orientation="wxVERTICAL"
+            var_name="box_sizer5"
+            borders="">
+            <node
+              class="spacer"
+              add_default_border="1"
+              height="18" />
+            <node
+              class="wxButton"
+              class_access="none"
+              label="&amp;Run Query"
+              var_name="btn4"
+              minimum_size="48,-1d"
+              alignment="wxALIGN_CENTER_VERTICAL"
+              border_size="15"
+              borders="wxTOP|wxBOTTOM|wxRIGHT"
+              wxEVT_BUTTON="onRunQuery"
+              wxEVT_UPDATE_UI="onRunQueryUpdateUI" />
+          </node>
         </node>
         <node
           class="wxBoxSizer"
           var_name="box_sizer3"
           border_size="10"
+          borders="wxBOTTOM|wxRIGHT|wxLEFT"
           flags="wxEXPAND"
           proportion="1">
           <node
@@ -340,12 +376,11 @@
               class="wxStaticText"
               label="Data Fields:"
               var_name="m_static_text"
-              borders="wxTOP|wxRIGHT" />
+              borders="wxTOP|wxRIGHT|wxLEFT" />
             <node
               class="wxDataViewCtrl"
               var_name="m_data_view_ctrl"
               minimum_size="200,50d"
-              borders="wxTOP|wxBOTTOM|wxRIGHT"
               flags="wxEXPAND"
               proportion="1" />
           </node>
@@ -362,15 +397,16 @@
               class_access="none"
               label="&amp;Add..."
               var_name="btn"
-              borders="wxTOP"
-              wxEVT_BUTTON="onAddClicked"
-              wxEVT_UPDATE_UI="onAddUpdateUI" />
+              minimum_size="48,-1d"
+              borders="wxTOP|wxRIGHT|wxLEFT"
+              wxEVT_BUTTON="onAddClicked" />
             <node
               class="wxButton"
               class_access="none"
               label="&amp;Edit..."
               var_name="btn3"
-              borders=""
+              minimum_size="48,-1d"
+              borders="wxRIGHT|wxLEFT"
               wxEVT_BUTTON="onEditClicked"
               wxEVT_UPDATE_UI="onEditUpdateUI" />
             <node
@@ -378,21 +414,17 @@
               class_access="none"
               label="&amp;Delete..."
               var_name="btn2"
-              borders=""
+              minimum_size="48,-1d"
+              borders="wxRIGHT|wxLEFT"
               wxEVT_BUTTON="onDeleteClicked"
               wxEVT_UPDATE_UI="onDeleteUpdateUI" />
           </node>
         </node>
-        <node
-          class="wxStdDialogButtonSizer"
-          var_name="std_btn"
-          border_size="10"
-          flags="wxEXPAND" />
       </node>
     </node>
     <node
       class="wxDialog"
-      class_name="AddDataFieldBase"
+      class_name="AddDataFieldDlgBase"
       title="Add Data Field"
       base_file="AddDataFieldBase"
       derived_class_name="AddDataFieldDialog"
@@ -436,12 +468,14 @@
             var_name="box_sizer2">
             <node
               class="wxChoice"
-              var_name="m_data_source_cbo" />
+              var_name="m_data_source_cbo"
+              wxEVT_CHOICE="onDataSourceSelected" />
             <node
               class="wxListBox"
               var_name="m_field_list"
               flags="wxEXPAND"
-              proportion="1" />
+              proportion="1"
+              wxEVT_LISTBOX="onFieldSelected" />
             <node
               class="wxListBox"
               var_name="m_function_list"
@@ -451,7 +485,8 @@
         </node>
         <node
           class="wxStdDialogButtonSizer"
-          flags="wxEXPAND" />
+          flags="wxEXPAND"
+          OKButton="onOkUpdateUI" />
       </node>
     </node>
   </node>

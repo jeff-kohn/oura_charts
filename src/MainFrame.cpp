@@ -1,6 +1,14 @@
+//---------------------------------------------------------------------------------------------------------------------
+// MainFrame.cpp
+//
+// source file for the MainFrame window class
+//
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
 
 #include "MainFrame.h"
 #include "AboutDialog.h"
+#include "ChartOptionsCanvas.h"
 #include "OuraChartsApp.h"
 #include "PreferencesDialog.h"
 
@@ -21,16 +29,22 @@ namespace oura_charts
    // Disable this warning, non-virtual Create() is a pretty standard idiom since it's
    // called from ctor in most cases.
    // cppcheck-suppress duplInheritedMember
-   bool MainFrame::Create(const std::weak_ptr<wxDocManager>& doc_mgr, wxFrame* parent,
-                          const wxPoint& pos, const wxSize& size,
-                          long style, wxWindowID id, const wxString& title)
+   bool MainFrame::Create(const DocManagerPtrWk& doc_mgr,
+                          wxFrame* parent,
+                          const wxPoint& pos,
+                          const wxSize& size,
+                          long style,
+                          wxWindowID id,
+                          const wxString& title)
    {
       auto doc = doc_mgr.lock();
       assert(doc);
+
       if (not wxDocParentFrame::Create(doc.get(), parent, id, title, pos, size, style))
          return false;
 
       initControls();
+      m_canvas = new ChartOptionsCanvas(this);
 
       return true;
    }
@@ -158,9 +172,6 @@ namespace oura_charts
       // NOLINTBEGIN(*)  generated code copy pasted from derived class, so don't lint
       // (we can get rid of this when code generation bug in wxUiDesigner is fixed).
 
-      m_toolbar = CreateToolBar();
-      m_toolbar->Realize();
-
       auto* menubar = new wxMenuBar();
 
       auto* m_file_menu = new wxMenu();
@@ -193,6 +204,9 @@ namespace oura_charts
       m_file_menu->Append(menu_item);
       menubar->Append(m_file_menu, wxGetStockLabel(wxID_FILE));
 
+      m_edit_menu = new wxMenu();
+      menubar->Append(m_edit_menu, wxGetStockLabel(wxID_EDIT));
+
       auto* m_menu = new wxMenu();
       auto* menu_item4 = new wxMenuItem(m_menu, wxID_ANY, "wx&Widgets Info");
       m_menu->Append(menu_item4);
@@ -203,13 +217,6 @@ namespace oura_charts
       SetMenuBar(menubar);
 
       m_statusBar = CreateStatusBar();
-
-      m_sizer_horiz = new wxBoxSizer(wxHORIZONTAL);
-
-      m_sizer_vert = new wxBoxSizer(wxVERTICAL);
-
-      m_sizer_horiz->Add(m_sizer_vert, wxSizerFlags(1).Expand().Border(wxALL));
-      SetSizerAndFit(m_sizer_horiz);
 
       Centre(wxBOTH);
       // NOLINTEND(*)

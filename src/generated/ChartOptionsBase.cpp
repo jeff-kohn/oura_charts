@@ -15,7 +15,7 @@
 
 using namespace oura_charts;
 
-bool ChartOptionsCanvas::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size,
+bool ChartOptionsBase::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size,
     long style, const wxString& name)
 {
 
@@ -23,6 +23,10 @@ bool ChartOptionsCanvas::Create(wxWindow* parent, wxWindowID id, const wxPoint& 
         return false;
 
     auto* box_sizer = new wxBoxSizer(wxVERTICAL);
+
+    auto* box_sizer2 = new wxBoxSizer(wxHORIZONTAL);
+
+    auto* box_sizer7 = new wxBoxSizer(wxVERTICAL);
 
     auto* static_box = new wxStaticBoxSizer(wxHORIZONTAL, this, "Date Range");
 
@@ -44,19 +48,33 @@ bool ChartOptionsCanvas::Create(wxWindow* parent, wxWindowID id, const wxPoint& 
 
     static_box->AddSpacer(5);
 
-    box_sizer->Add(static_box, wxSizerFlags().TripleBorder(wxALL));
+    box_sizer7->Add(static_box, wxSizerFlags().DoubleBorder(wxALL));
+
+    box_sizer2->Add(box_sizer7, wxSizerFlags().Border(wxALL));
+
+    auto* box_sizer5 = new wxBoxSizer(wxVERTICAL);
+
+    box_sizer5->AddSpacer(18 + wxSizerFlags::GetDefaultBorder());
+
+    auto* btn4 = new wxButton(this, wxID_ANY, "&Run Query");
+    btn4->SetMinSize(ConvertDialogToPixels(wxSize(48, -1)));
+    box_sizer5->Add(btn4, wxSizerFlags().Center().Border(wxRIGHT|wxTOP|wxBOTTOM, 15));
+
+    box_sizer2->Add(box_sizer5, wxSizerFlags());
+
+    box_sizer->Add(box_sizer2, wxSizerFlags().Expand().Border(wxALL));
 
     auto* box_sizer3 = new wxBoxSizer(wxHORIZONTAL);
 
     auto* box_sizer6 = new wxBoxSizer(wxVERTICAL);
 
     m_static_text = new wxStaticText(this, wxID_ANY, "Data Fields:");
-    box_sizer6->Add(m_static_text, wxSizerFlags().Border(wxRIGHT|wxTOP, wxSizerFlags::GetDefaultBorder()));
+    box_sizer6->Add(m_static_text,
+        wxSizerFlags().Border(wxLEFT|wxRIGHT|wxTOP, wxSizerFlags::GetDefaultBorder()));
 
     m_data_view_ctrl = new wxDataViewCtrl(this, wxID_ANY);
     m_data_view_ctrl->SetMinSize(ConvertDialogToPixels(wxSize(200, 50)));
-    box_sizer6->Add(m_data_view_ctrl,
-        wxSizerFlags(1).Expand().Border(wxRIGHT|wxTOP|wxBOTTOM, wxSizerFlags::GetDefaultBorder()));
+    box_sizer6->Add(m_data_view_ctrl, wxSizerFlags(1).Expand().Border(wxALL));
 
     box_sizer3->Add(box_sizer6, wxSizerFlags().Border(wxALL));
 
@@ -65,34 +83,33 @@ bool ChartOptionsCanvas::Create(wxWindow* parent, wxWindowID id, const wxPoint& 
     box_sizer4->AddSpacer(25);
 
     auto* btn = new wxButton(this, wxID_ANY, "&Add...");
-    box_sizer4->Add(btn, wxSizerFlags().Border(wxTOP, wxSizerFlags::GetDefaultBorder()));
+    btn->SetMinSize(ConvertDialogToPixels(wxSize(48, -1)));
+    box_sizer4->Add(btn, wxSizerFlags().Border(wxLEFT|wxRIGHT|wxTOP, wxSizerFlags::GetDefaultBorder()));
 
     auto* btn3 = new wxButton(this, wxID_ANY, "&Edit...");
-    box_sizer4->Add(btn3, wxSizerFlags());
+    btn3->SetMinSize(ConvertDialogToPixels(wxSize(48, -1)));
+    box_sizer4->Add(btn3, wxSizerFlags().Border(wxLEFT|wxRIGHT, wxSizerFlags::GetDefaultBorder()));
 
     auto* btn2 = new wxButton(this, wxID_ANY, "&Delete...");
-    box_sizer4->Add(btn2, wxSizerFlags());
+    btn2->SetMinSize(ConvertDialogToPixels(wxSize(48, -1)));
+    box_sizer4->Add(btn2, wxSizerFlags().Border(wxLEFT|wxRIGHT, wxSizerFlags::GetDefaultBorder()));
 
     box_sizer3->Add(box_sizer4, wxSizerFlags());
 
-    box_sizer->Add(box_sizer3, wxSizerFlags(1).Expand().DoubleBorder(wxALL));
-
-    auto* std_btn = new wxStdDialogButtonSizer();
-    std_btn->AddButton(new wxButton(this, wxID_OK));
-    std_btn->AddButton(new wxButton(this, wxID_CANCEL));
-    std_btn->GetAffirmativeButton()->SetDefault();
-    std_btn->Realize();
-    box_sizer->Add(std_btn, wxSizerFlags().Expand().DoubleBorder(wxALL));
+    box_sizer->Add(box_sizer3, wxSizerFlags(1).Expand().Border(wxLEFT|wxRIGHT|wxBOTTOM, 10));
 
     SetSizerAndFit(box_sizer);
 
     // Event handlers
-    btn->Bind(wxEVT_BUTTON, &ChartOptionsCanvas::onAddClicked, this);
-    btn2->Bind(wxEVT_BUTTON, &ChartOptionsCanvas::onDeleteClicked, this);
-    btn3->Bind(wxEVT_BUTTON, &ChartOptionsCanvas::onEditClicked, this);
-    btn->Bind(wxEVT_UPDATE_UI, &ChartOptionsCanvas::onAddUpdateUI, this);
-    btn2->Bind(wxEVT_UPDATE_UI, &ChartOptionsCanvas::onDeleteUpdateUI, this);
-    btn3->Bind(wxEVT_UPDATE_UI, &ChartOptionsCanvas::onEditUpdateUI, this);
+    btn->Bind(wxEVT_BUTTON, &ChartOptionsBase::onAddClicked, this);
+    btn2->Bind(wxEVT_BUTTON, &ChartOptionsBase::onDeleteClicked, this);
+    btn3->Bind(wxEVT_BUTTON, &ChartOptionsBase::onEditClicked, this);
+    btn4->Bind(wxEVT_BUTTON, &ChartOptionsBase::onRunQuery, this);
+    m_end_date->Bind(wxEVT_DATE_CHANGED, &ChartOptionsBase::onEndDateSelected, this);
+    m_start_date->Bind(wxEVT_DATE_CHANGED, &ChartOptionsBase::onStartDateSelected, this);
+    btn2->Bind(wxEVT_UPDATE_UI, &ChartOptionsBase::onDeleteUpdateUI, this);
+    btn3->Bind(wxEVT_UPDATE_UI, &ChartOptionsBase::onEditUpdateUI, this);
+    btn4->Bind(wxEVT_UPDATE_UI, &ChartOptionsBase::onRunQueryUpdateUI, this);
 
     return true;
 }

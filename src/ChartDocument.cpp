@@ -1,4 +1,13 @@
+//---------------------------------------------------------------------------------------------------------------------
+// ChartDocument.cpp
+//
+// source file for the ChartDocument class
+//
+// Copyright (c) 2024 Jeff Kohn. All Right Reserved.
+//---------------------------------------------------------------------------------------------------------------------
+
 #include "ChartDocument.h"
+
 
 namespace oura_charts
 {

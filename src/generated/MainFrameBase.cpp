@@ -11,7 +11,6 @@
 #include <wx/bitmap.h>
 #include <wx/icon.h>
 #include <wx/image.h>
-#include <wx/menu.h>
 
 #include "MainFrameBase.h"
 
@@ -23,9 +22,6 @@ bool MainFrameBase::Create(wxWindow* parent, wxWindowID id, const wxString& titl
 
     if (!wxFrame::Create(parent, id, title, pos, size, style, name))
         return false;
-
-    m_toolbar = CreateToolBar();
-    m_toolbar->Realize();
 
     auto* menubar = new wxMenuBar();
 
@@ -58,6 +54,9 @@ bool MainFrameBase::Create(wxWindow* parent, wxWindowID id, const wxString& titl
 
     m_file_menu->Append(menu_item);
     menubar->Append(m_file_menu, wxGetStockLabel(wxID_FILE));
+
+    m_edit_menu = new wxMenu();
+    menubar->Append(m_edit_menu, wxGetStockLabel(wxID_EDIT));
 
     auto* m_menu = new wxMenu();
     auto* menu_item4 = new wxMenuItem(m_menu, wxID_ANY, "wx&Widgets Info");
