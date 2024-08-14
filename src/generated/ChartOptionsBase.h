@@ -25,23 +25,26 @@ namespace oura_charts
         static const int form_id = wxID_ANY;
         static const int form_style = wxTAB_TRAVERSAL;
         static const wxPoint form_pos() { return wxDefaultPosition; }
-        static const wxSize form_size() { return  wxDefaultSize; }
+        static const wxSize form_size() { return  wxSize(400, 230); }
 
         ChartOptionsBase() {}
         ChartOptionsBase(wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition,
-            const wxSize& size = wxDefaultSize, long style = wxTAB_TRAVERSAL, const wxString &name = wxPanelNameStr)
+            const wxSize& size = wxSize(400, 230), long style = wxTAB_TRAVERSAL,
+            const wxString &name = wxPanelNameStr)
         {
             Create(parent, id, pos, size, style, name);
         }
 
         bool Create(wxWindow *parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition,
-            const wxSize& size = wxDefaultSize, long style = wxTAB_TRAVERSAL, const wxString &name = wxPanelNameStr);
+            const wxSize& size = wxSize(400, 230), long style = wxTAB_TRAVERSAL, const wxString &name =
+            wxPanelNameStr);
 
     protected:
 
         // Virtual event handlers -- override them in your derived class
 
         virtual void onAddClicked(wxCommandEvent& event) { event.Skip(); }
+        virtual void onClearAllClicked(wxCommandEvent& event) { event.Skip(); }
         virtual void onDeleteClicked(wxCommandEvent& event) { event.Skip(); }
         virtual void onDeleteUpdateUI(wxUpdateUIEvent& event) { event.Skip(); }
         virtual void onEditClicked(wxCommandEvent& event) { event.Skip(); }

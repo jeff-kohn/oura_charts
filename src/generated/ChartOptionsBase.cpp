@@ -22,11 +22,10 @@ bool ChartOptionsBase::Create(wxWindow* parent, wxWindowID id, const wxPoint& po
     if (!wxPanel::Create(parent, id, pos, size, style, name))
         return false;
 
-    auto* box_sizer = new wxBoxSizer(wxVERTICAL);
+    SetMinSize(wxSize(120, 120));
+    auto* top_horiz_sizer = new wxBoxSizer(wxHORIZONTAL);
 
-    auto* box_sizer2 = new wxBoxSizer(wxHORIZONTAL);
-
-    auto* box_sizer7 = new wxBoxSizer(wxVERTICAL);
+    auto* left_col_sizer = new wxBoxSizer(wxVERTICAL);
 
     auto* static_box = new wxStaticBoxSizer(wxHORIZONTAL, this, "Date Range");
 
@@ -48,66 +47,63 @@ bool ChartOptionsBase::Create(wxWindow* parent, wxWindowID id, const wxPoint& po
 
     static_box->AddSpacer(5);
 
-    box_sizer7->Add(static_box, wxSizerFlags().DoubleBorder(wxALL));
+    left_col_sizer->Add(static_box, wxSizerFlags().DoubleBorder(wxALL));
 
-    box_sizer2->Add(box_sizer7, wxSizerFlags().Border(wxALL));
-
-    auto* box_sizer5 = new wxBoxSizer(wxVERTICAL);
-
-    box_sizer5->AddSpacer(18 + wxSizerFlags::GetDefaultBorder());
-
-    auto* btn4 = new wxButton(this, wxID_ANY, "&Run Query");
-    btn4->SetMinSize(ConvertDialogToPixels(wxSize(48, -1)));
-    box_sizer5->Add(btn4, wxSizerFlags().Center().Border(wxRIGHT|wxTOP|wxBOTTOM, 15));
-
-    box_sizer2->Add(box_sizer5, wxSizerFlags());
-
-    box_sizer->Add(box_sizer2, wxSizerFlags().Expand().Border(wxALL));
-
-    auto* box_sizer3 = new wxBoxSizer(wxHORIZONTAL);
-
-    auto* box_sizer6 = new wxBoxSizer(wxVERTICAL);
+    left_col_sizer->AddSpacer(0);
 
     m_static_text = new wxStaticText(this, wxID_ANY, "Data Fields:");
-    box_sizer6->Add(m_static_text,
+    left_col_sizer->Add(m_static_text,
         wxSizerFlags().Border(wxLEFT|wxRIGHT|wxTOP, wxSizerFlags::GetDefaultBorder()));
 
     m_data_view_ctrl = new wxDataViewCtrl(this, wxID_ANY);
-    m_data_view_ctrl->SetMinSize(ConvertDialogToPixels(wxSize(200, 50)));
-    box_sizer6->Add(m_data_view_ctrl, wxSizerFlags(1).Expand().Border(wxALL));
+    m_data_view_ctrl->SetMinSize(ConvertDialogToPixels(wxSize(200, 52)));
+    left_col_sizer->Add(m_data_view_ctrl, wxSizerFlags(1).Expand().Border(wxALL));
 
-    box_sizer3->Add(box_sizer6, wxSizerFlags().Border(wxALL));
+    top_horiz_sizer->Add(left_col_sizer, wxSizerFlags(4).Border(wxALL));
 
-    auto* box_sizer4 = new wxBoxSizer(wxVERTICAL);
+    auto* right_col_sizer = new wxBoxSizer(wxVERTICAL);
 
-    box_sizer4->AddSpacer(25);
+    right_col_sizer->AddSpacer(44);
+
+    auto* btn4 = new wxButton(this, wxID_ANY, "&Run Query");
+    btn4->SetMinSize(ConvertDialogToPixels(wxSize(48, -1)));
+    right_col_sizer->Add(btn4, wxSizerFlags().Border(wxALL, FromDIP(wxSize(3, -1)).x));
+
+    right_col_sizer->AddSpacer(30);
 
     auto* btn = new wxButton(this, wxID_ANY, "&Add...");
     btn->SetMinSize(ConvertDialogToPixels(wxSize(48, -1)));
-    box_sizer4->Add(btn, wxSizerFlags().Border(wxLEFT|wxRIGHT|wxTOP, wxSizerFlags::GetDefaultBorder()));
+    right_col_sizer->Add(btn, wxSizerFlags().Border(wxLEFT|wxRIGHT|wxTOP, FromDIP(wxSize(3, -1)).x));
 
     auto* btn3 = new wxButton(this, wxID_ANY, "&Edit...");
     btn3->SetMinSize(ConvertDialogToPixels(wxSize(48, -1)));
-    box_sizer4->Add(btn3, wxSizerFlags().Border(wxLEFT|wxRIGHT, wxSizerFlags::GetDefaultBorder()));
+    right_col_sizer->Add(btn3, wxSizerFlags().Border(wxLEFT|wxRIGHT|wxTOP, FromDIP(wxSize(3, -1)).x));
 
     auto* btn2 = new wxButton(this, wxID_ANY, "&Delete...");
     btn2->SetMinSize(ConvertDialogToPixels(wxSize(48, -1)));
-    box_sizer4->Add(btn2, wxSizerFlags().Border(wxLEFT|wxRIGHT, wxSizerFlags::GetDefaultBorder()));
+    right_col_sizer->Add(btn2, wxSizerFlags().Border(wxLEFT|wxRIGHT|wxTOP, FromDIP(wxSize(3, -1)).x));
 
-    box_sizer3->Add(box_sizer4, wxSizerFlags());
+    auto* btn5 = new wxButton(this, wxID_ANY, "&Clear All");
+    btn5->SetMinSize(ConvertDialogToPixels(wxSize(48, -1)));
+    right_col_sizer->Add(btn5, wxSizerFlags().Border(wxLEFT|wxRIGHT|wxTOP, FromDIP(wxSize(3, -1)).x));
 
-    box_sizer->Add(box_sizer3, wxSizerFlags(1).Expand().Border(wxLEFT|wxRIGHT|wxBOTTOM, 10));
+    top_horiz_sizer->Add(right_col_sizer, wxSizerFlags(1));
 
-    SetSizerAndFit(box_sizer);
+    top_horiz_sizer->AddSpacer(5);
+
+    SetSizer(top_horiz_sizer);
+    SetSize(ConvertDialogToPixels(wxSize(120, 120)));
 
     // Event handlers
     btn->Bind(wxEVT_BUTTON, &ChartOptionsBase::onAddClicked, this);
+    btn5->Bind(wxEVT_BUTTON, &ChartOptionsBase::onClearAllClicked, this);
     btn2->Bind(wxEVT_BUTTON, &ChartOptionsBase::onDeleteClicked, this);
     btn3->Bind(wxEVT_BUTTON, &ChartOptionsBase::onEditClicked, this);
     btn4->Bind(wxEVT_BUTTON, &ChartOptionsBase::onRunQuery, this);
     m_end_date->Bind(wxEVT_DATE_CHANGED, &ChartOptionsBase::onEndDateSelected, this);
     m_start_date->Bind(wxEVT_DATE_CHANGED, &ChartOptionsBase::onStartDateSelected, this);
     btn2->Bind(wxEVT_UPDATE_UI, &ChartOptionsBase::onDeleteUpdateUI, this);
+    btn5->Bind(wxEVT_UPDATE_UI, &ChartOptionsBase::onDeleteUpdateUI, this);
     btn3->Bind(wxEVT_UPDATE_UI, &ChartOptionsBase::onEditUpdateUI, this);
     btn4->Bind(wxEVT_UPDATE_UI, &ChartOptionsBase::onRunQueryUpdateUI, this);
 

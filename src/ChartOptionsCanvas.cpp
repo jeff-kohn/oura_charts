@@ -8,12 +8,14 @@
 
 #include "ChartOptionsCanvas.h"  
 #include "ChartOptionsView.h"
-
+#include "MainFrame.h"
 
 namespace oura_charts
 {
+   ChartOptionsCanvas::ChartOptionsCanvas(MainFrame* parent) : ChartOptionsBase(parent), m_parent_frame(parent)
+   {
+   }
 
-   // Define the repainting behavior
    void ChartOptionsCanvas::OnDraw(wxDC& dc)
    {
       if (m_view)

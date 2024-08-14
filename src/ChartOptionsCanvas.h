@@ -22,7 +22,7 @@ namespace oura_charts
    class ChartOptionsCanvas : public ChartOptionsBase
    {
    public:
-      explicit ChartOptionsCanvas(wxWindow* parent) : ChartOptionsBase(parent) {}
+      explicit ChartOptionsCanvas(MainFrame* parent);
 
       /// <summary>
       ///   set the active view. since this is an SDI app, we always use the same
@@ -58,6 +58,7 @@ namespace oura_charts
 
    private:
       ChartOptionsView* m_view{};
+      MainFrame* m_parent_frame{};
    };
 
 }
