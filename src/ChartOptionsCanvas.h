@@ -10,7 +10,7 @@
 
 #include "doc_view_fwd.h"
 #include "generated/ChartOptionsBase.h"
-
+#include "oura_charts/SchemaManager.h"
 
 namespace oura_charts
 {
@@ -22,7 +22,7 @@ namespace oura_charts
    class ChartOptionsCanvas : public ChartOptionsBase
    {
    public:
-      explicit ChartOptionsCanvas(MainFrame* parent);
+      explicit ChartOptionsCanvas(MainFrame* parent, schema::SchemaManager mgr);
 
       /// <summary>
       ///   set the active view. since this is an SDI app, we always use the same
@@ -46,17 +46,18 @@ namespace oura_charts
       void OnDraw(wxDC& dc);
 
    protected:
-      void onAddClicked(wxCommandEvent& event) override { event.Skip(); }
-      void onDeleteClicked(wxCommandEvent& event) override { event.Skip(); }
-      void onDeleteUpdateUI(wxUpdateUIEvent& event) override { event.Skip(); }
-      void onEditClicked(wxCommandEvent& event) override { event.Skip(); }
-      void onEditUpdateUI(wxUpdateUIEvent& event) override { event.Skip(); }
-      void onEndDateSelected(wxDateEvent& event) override { event.Skip(); }
-      void onRunQuery(wxCommandEvent& event) override { event.Skip(); }
-      void onRunQueryUpdateUI(wxUpdateUIEvent& event) override { event.Skip(); }
-      void onStartDateSelected(wxDateEvent& event) override { event.Skip(); }
+      void onAddClicked(wxCommandEvent& event) override;
+      void onDeleteClicked(wxCommandEvent& event) override;
+      void onDeleteUpdateUI(wxUpdateUIEvent& event) override;
+      void onEditClicked(wxCommandEvent& event) override;
+      void onEditUpdateUI(wxUpdateUIEvent& event) override;
+      void onEndDateSelected(wxDateEvent& event) override;
+      void onRunQuery(wxCommandEvent& event) override;
+      void onRunQueryUpdateUI(wxUpdateUIEvent& event) override;
+      void onStartDateSelected(wxDateEvent& event) override;
 
    private:
+      const schema::SchemaManager m_schema{};
       ChartOptionsView* m_view{};
       MainFrame* m_parent_frame{};
    };

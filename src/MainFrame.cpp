@@ -15,6 +15,7 @@
 #include "oura_charts/chrono_helpers.h"
 #include "oura_charts/DailySleepScore.h"
 #include "oura_charts/RestDataProvider.h"
+#include "oura_charts/SchemaManager.h"
 #include "oura_charts/UserProfile.h"
 
 #include <wx/artprov.h>
@@ -37,16 +38,28 @@ namespace oura_charts
                           wxWindowID id,
                           const wxString& title)
    {
-      auto doc = doc_mgr.lock();
-      assert(doc);
+      try
+      {
+         auto doc = doc_mgr.lock();
+         assert(doc);
 
-      if (not wxDocParentFrame::Create(doc.get(), parent, id, title, pos, size, style))
+         if (not wxDocParentFrame::Create(doc.get(), parent, id, title, pos, size, style))
+            return false;
+
+         initControls();
+
+         schema::SchemaManager mgr{};
+         mgr.loadSchema(wxGetApp().getSchemaFolder());
+         m_canvas = new ChartOptionsCanvas(this, std::move(mgr));
+
+         SetClientSize(ConvertDialogToPixels(m_canvas->form_size()));
+         return true;
+      }
+      catch (std::exception& e)
+      {
+         wxLogError(e.what());
          return false;
-
-      initControls();
-      m_canvas = new ChartOptionsCanvas(this);
-      SetClientSize(ConvertDialogToPixels(m_canvas->form_size()));
-      return true;
+      }
    }
 
 

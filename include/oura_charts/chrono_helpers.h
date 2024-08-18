@@ -30,30 +30,32 @@ namespace oura_charts
    namespace chrono = std::chrono;
    using clock = chrono::system_clock;
 
-   using chrono::sys_time;
-   using chrono::sys_seconds;
-   using chrono::sys_days;
-  
-   using chrono::local_time;
-   using chrono::local_seconds;
-   using chrono::local_days;
+   template <typename DurationT>
+   using sys_time = chrono::sys_time<DurationT>;
+   using sys_seconds = chrono::sys_seconds;
+   using sys_days = chrono::sys_days;
 
-   using chrono::seconds;
-   using chrono::minutes;
-   using chrono::hours;
-   using chrono::days;
-   using chrono::weeks;
-   using chrono::months;
-   using chrono::years;
+   template <typename DurationT>
+   using local_time = chrono::local_time<DurationT>;
+   using local_seconds = chrono::local_seconds;
+   using local_days = chrono::local_days;
+          
+   using seconds = std::chrono::seconds;
+   using minutes = chrono::minutes;
+   using hours = chrono::hours;
+   using days = chrono::days;
+   using weeks = chrono::weeks;
+   using months = chrono::months;
+   using years = chrono::years;
+          
+   using year_month_day = chrono::year_month_day;
+   using year_month = chrono::year_month;
+   using month = chrono::month;
+   using year = chrono::year;
+   using weekday = chrono::weekday;
 
-   using chrono::year_month_day;
-   using chrono::year_month;
-   using chrono::month;
-   using chrono::year;
-   using chrono::weekday;
-   using chrono::hh_mm_ss;
- 
-   using chrono::time_point_cast;
+   template <typename DurationT>
+   using hh_mm_ss = chrono::hh_mm_ss<DurationT>;
 
 
    namespace detail

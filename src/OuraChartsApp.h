@@ -17,10 +17,11 @@
 #include <wx/docview.h>
 
 #include <memory>
-
+#include <filesystem>
 
 namespace oura_charts
 {
+   namespace fs = std::filesystem;
 
    /// <summary>
    ///   app object for the OuraCharts applicatin.
@@ -59,6 +60,13 @@ namespace oura_charts
       ///   Get the document manager for the application.
       /// </summary>
       DocManagerPtrWk getDocManager();
+
+
+      /// <summary>
+      ///   Get location of where our schema files are located.
+      /// </summary>
+      /// <returns></returns>
+      fs::path getSchemaFolder() const;
 
    private:
       DocManagerPtr m_doc_mgr{};

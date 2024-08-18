@@ -418,7 +418,9 @@
     <node
       class="wxDialog"
       class_name="AddDataFieldDlgBase"
+      style="wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER"
       title="Add Data Field"
+      maximum_size="640,640d"
       base_file="AddDataFieldBase"
       derived_class_name="AddDataFieldDialog"
       derived_file="AddDataFieldDialog">
@@ -428,11 +430,14 @@
         var_name="dlg_sizer"
         flags="wxEXPAND">
         <node
-          class="wxBoxSizer">
+          class="wxBoxSizer"
+          flags="wxEXPAND"
+          proportion="1">
           <node
             class="wxBoxSizer"
             orientation="wxVERTICAL"
-            var_name="box_sizer3">
+            var_name="box_sizer3"
+            flags="wxEXPAND">
             <node
               class="wxStaticText"
               class_access="none"
@@ -445,23 +450,28 @@
               class="wxStaticText"
               class_access="none"
               label="Field:"
-              var_name="static_text2" />
-            <node
-              class="spacer"
-              height="33" />
+              var_name="static_text2"
+              flags="wxEXPAND"
+              proportion="1" />
             <node
               class="wxStaticText"
               class_access="none"
               label="Function:"
-              var_name="static_text3" />
+              var_name="static_text3"
+              flags="wxEXPAND"
+              proportion="1" />
           </node>
           <node
             class="wxBoxSizer"
             orientation="wxVERTICAL"
-            var_name="box_sizer2">
+            var_name="box_sizer2"
+            minimum_size="200,-1d"
+            flags="wxEXPAND"
+            proportion="1">
             <node
               class="wxChoice"
               var_name="m_data_source_cbo"
+              flags="wxEXPAND"
               wxEVT_CHOICE="onDataSourceSelected" />
             <node
               class="wxListBox"

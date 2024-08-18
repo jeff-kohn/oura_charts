@@ -30,9 +30,7 @@ namespace oura_charts
       ///   or if you want to use any non-default values.
       /// </summary>
       // cppcheck-suppress duplInheritedMember
-      bool Create(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = constants::DLG_TITLE_ADD_DATA_FIELD,
-                  const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
-                  long style = wxDEFAULT_DIALOG_STYLE, const wxString& name = wxDialogNameStr);
+      bool Create(wxWindow* parent, const wxString& title = constants::DLG_TITLE_ADD_DATA_FIELD);
 
    private:
       const schema::SchemaManager& m_schema_mgr;

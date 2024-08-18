@@ -12,7 +12,6 @@
 #include <wx/event.h>
 #include <wx/frame.h>
 #include <wx/gdicmn.h>
-#include <wx/menu.h>
 #include <wx/statusbr.h>
 
 #include <wx/stockitem.h>
@@ -25,19 +24,19 @@ namespace oura_charts
         static const int form_id = wxID_ANY;
         static const int form_style = wxDEFAULT_FRAME_STYLE;
         static const wxPoint form_pos() { return wxDefaultPosition; }
-        static const wxSize form_size() { return  wxDefaultSize; }
+        static const wxSize form_size() { return  wxSize(400, 250); }
         static const wxString form_title() { return wxEmptyString; }
 
         MainFrameBase() {}
         MainFrameBase(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString,
-            const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
+            const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(400, 250),
             long style = wxDEFAULT_FRAME_STYLE, const wxString &name = wxFrameNameStr)
         {
             Create(parent, id, title, pos, size, style, name);
         }
 
         bool Create(wxWindow *parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString,
-            const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
+            const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(400, 250),
             long style = wxDEFAULT_FRAME_STYLE, const wxString &name = wxFrameNameStr);
 
     protected:
@@ -52,7 +51,6 @@ namespace oura_charts
 
         // Class member variables
 
-        wxMenu* m_edit_menu;
         wxStatusBar* m_statusBar;
     };
 } // namespace oura_charts

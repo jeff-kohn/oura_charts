@@ -31,10 +31,9 @@ namespace oura_charts
 
 
    // cppcheck-suppress duplInheritedMember
-   bool AddDataFieldDialog::Create(wxWindow* parent, wxWindowID id, const wxString& title,
-                                   const wxPoint& pos, const wxSize& size, long style, const wxString& name)
+   bool AddDataFieldDialog::Create(wxWindow* parent, const wxString& title)
    {
-      if (!AddDataFieldDlgBase::Create(parent, id, title, pos, size, style, name))
+      if (!AddDataFieldDlgBase::Create(parent, wxID_ANY, title))
          return false;
 
       // populate combo box with list of data source classes.

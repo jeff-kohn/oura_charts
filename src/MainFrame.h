@@ -33,7 +33,6 @@ namespace oura_charts
    public:
       static const wxSize form_size() { return  wxSize(400, 250); }
 
-      // If you use default constructor, you must call Create(parent*)
       MainFrame(const DocManagerPtrWk& doc_mgr, wxFrame* parent,
                 const wxPoint& pos = wxDefaultPosition,
                 const wxSize& size = wxDefaultSize,

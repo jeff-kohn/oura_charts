@@ -22,7 +22,7 @@ bool ChartOptionsBase::Create(wxWindow* parent, wxWindowID id, const wxPoint& po
     if (!wxPanel::Create(parent, id, pos, size, style, name))
         return false;
 
-    SetMinSize(wxSize(120, 120));
+    SetMinSize(ConvertDialogToPixels(wxSize(400, 230)));
     auto* top_horiz_sizer = new wxBoxSizer(wxHORIZONTAL);
 
     auto* left_col_sizer = new wxBoxSizer(wxVERTICAL);
@@ -92,7 +92,7 @@ bool ChartOptionsBase::Create(wxWindow* parent, wxWindowID id, const wxPoint& po
     top_horiz_sizer->AddSpacer(5);
 
     SetSizer(top_horiz_sizer);
-    SetSize(ConvertDialogToPixels(wxSize(120, 120)));
+    SetSize(ConvertDialogToPixels(wxSize(400, 230)));
 
     // Event handlers
     btn->Bind(wxEVT_BUTTON, &ChartOptionsBase::onAddClicked, this);

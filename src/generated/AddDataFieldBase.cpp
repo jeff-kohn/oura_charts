@@ -33,19 +33,18 @@ bool AddDataFieldDlgBase::Create(wxWindow* parent, wxWindowID id, const wxString
     box_sizer3->AddSpacer(6);
 
     auto* static_text2 = new wxStaticText(this, wxID_ANY, "Field:");
-    box_sizer3->Add(static_text2, wxSizerFlags().Border(wxALL));
-
-    box_sizer3->AddSpacer(33);
+    box_sizer3->Add(static_text2, wxSizerFlags(1).Expand().Border(wxALL));
 
     auto* static_text3 = new wxStaticText(this, wxID_ANY, "Function:");
-    box_sizer3->Add(static_text3, wxSizerFlags().Border(wxALL));
+    box_sizer3->Add(static_text3, wxSizerFlags(1).Expand().Border(wxALL));
 
-    box_sizer->Add(box_sizer3, wxSizerFlags().Border(wxALL));
+    box_sizer->Add(box_sizer3, wxSizerFlags().Expand().Border(wxALL));
 
     auto* box_sizer2 = new wxBoxSizer(wxVERTICAL);
+    box_sizer2->SetMinSize(200, -1);
 
     m_data_source_cbo = new wxChoice(this, wxID_ANY);
-    box_sizer2->Add(m_data_source_cbo, wxSizerFlags().Border(wxALL));
+    box_sizer2->Add(m_data_source_cbo, wxSizerFlags().Expand().Border(wxALL));
 
     m_field_list = new wxListBox(this, wxID_ANY);
     box_sizer2->Add(m_field_list, wxSizerFlags(1).Expand().Border(wxALL));
@@ -53,14 +52,16 @@ bool AddDataFieldDlgBase::Create(wxWindow* parent, wxWindowID id, const wxString
     m_function_list = new wxListBox(this, wxID_ANY);
     box_sizer2->Add(m_function_list, wxSizerFlags(1).Expand().Border(wxALL));
 
-    box_sizer->Add(box_sizer2, wxSizerFlags().Border(wxALL));
+    box_sizer->Add(box_sizer2, wxSizerFlags(1).Expand().Border(wxALL));
 
-    dlg_sizer->Add(box_sizer, wxSizerFlags().Border(wxALL));
+    dlg_sizer->Add(box_sizer, wxSizerFlags(1).Expand().Border(wxALL));
 
     auto* stdBtn = CreateStdDialogButtonSizer(wxOK|wxCANCEL);
     dlg_sizer->Add(CreateSeparatedSizer(stdBtn), wxSizerFlags().Expand().Border(wxALL));
 
-    SetSizerAndFit(dlg_sizer);
+    SetSizer(dlg_sizer);
+    SetMaxSize(ConvertDialogToPixels(wxSize(640, 640)));
+    Fit();
     Centre(wxBOTH);
 
     // Event handlers

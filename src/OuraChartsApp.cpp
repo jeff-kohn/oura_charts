@@ -131,6 +131,11 @@ namespace oura_charts
       return m_doc_mgr;
    }
 
+   fs::path OuraChartsApp::getSchemaFolder() const
+   {
+      return fs::path{ wxStandardPaths::Get().GetExecutablePath() }.parent_path() / constants::APP_SCHEMA_FOLDER;
+   }
+
 
 }  // namespace oura_charts
 

@@ -30,4 +30,7 @@ namespace oura_charts::constants
 
 
    inline constexpr const char* DLG_TITLE_ADD_DATA_FIELD = "Add Data Field";
+
+   inline constexpr const char* APP_SCHEMA_FOLDER = "Schema";
+
 } // namespace oura_charts
