@@ -41,6 +41,7 @@ namespace oura_charts
       void onFieldSelected(wxCommandEvent& event) override;
       void onOkUpdateUI(wxUpdateUIEvent& event) override;
 
+      const schema::ClassSchema& getSelectedSchemaClass() const;
    };
 
 

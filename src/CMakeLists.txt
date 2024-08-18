@@ -28,7 +28,7 @@ add_executable(${THIS_TARGET} WIN32
 	"PreferencesDialog.h"
    "utf8.manifest"
    ${wx_generated_files}
-)
+ "adapters.h")
 
 set_target_properties(${THIS_TARGET}
 	PROPERTIES

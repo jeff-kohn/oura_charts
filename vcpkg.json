@@ -4,6 +4,7 @@
   "version": "1.0.0",
    "dependencies": [
       "boost-algorithm",
+      "boost-lambda2",
       "catch2",
       "cpr",
       "cxxopts",
