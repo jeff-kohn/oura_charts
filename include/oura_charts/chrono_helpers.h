@@ -30,13 +30,13 @@ namespace oura_charts
    namespace chrono = std::chrono;
    using clock = chrono::system_clock;
 
-   template <typename DurationT>
-   using sys_time = chrono::sys_time<DurationT>;
+   using chrono::sys_time;
+   using chrono::local_time;
+   using chrono::hh_mm_ss;
+
    using sys_seconds = chrono::sys_seconds;
    using sys_days = chrono::sys_days;
 
-   template <typename DurationT>
-   using local_time = chrono::local_time<DurationT>;
    using local_seconds = chrono::local_seconds;
    using local_days = chrono::local_days;
           
@@ -54,8 +54,6 @@ namespace oura_charts
    using year = chrono::year;
    using weekday = chrono::weekday;
 
-   template <typename DurationT>
-   using hh_mm_ss = chrono::hh_mm_ss<DurationT>;
 
 
    namespace detail

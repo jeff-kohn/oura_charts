@@ -20,8 +20,8 @@ namespace oura_charts
    class AddDataFieldDialog : public oura_charts::AddDataFieldDlgBase
    {
    public:
-      explicit AddDataFieldDialog(const schema::SchemaManager& schema_mgr);
-      AddDataFieldDialog(wxWindow* parent, const schema::SchemaManager& schema_mgr);
+      explicit AddDataFieldDialog(const detail::SchemaManager& schema_mgr);
+      AddDataFieldDialog(wxWindow* parent, const detail::SchemaManager& schema_mgr);
 
       /// <summary>
       ///   Create a wxWidgets window object and associate it with this dialog class.
@@ -33,13 +33,13 @@ namespace oura_charts
       bool Create(wxWindow* parent, const wxString& title = constants::DLG_TITLE_ADD_DATA_FIELD);
 
    private:
-      const schema::SchemaManager& m_schema_mgr;
+      const detail::SchemaManager& m_schema_mgr;
 
       void onDataSourceSelected(wxCommandEvent& event) override;
       void onFieldSelected(wxCommandEvent& event) override;
       void onOkUpdateUI(wxUpdateUIEvent& event) override;
 
-      const schema::ClassSchema& getSelectedSchemaClass() const;
+      const detail::ClassSchema& getSelectedSchemaClass() const;
    };
 
 

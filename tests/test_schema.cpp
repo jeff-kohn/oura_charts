@@ -12,7 +12,7 @@ namespace oura_charts::test
 
    TEST_CASE("test_schema_heart_rate", "[parsing][schema]")
    {
-      using namespace schema;
+      using namespace detail;
 
       SchemaManager mgr{};
       mgr.loadSchema("./schema");
@@ -67,7 +67,7 @@ namespace oura_charts::test
 
    TEST_CASE("test_schema_daily_sleep_score", "[parsing][schema]")
    {
-      using namespace schema;
+      using namespace detail;
 
       fs::path cwd = std::filesystem::current_path();
       SchemaManager mgr{};

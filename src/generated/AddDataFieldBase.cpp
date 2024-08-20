@@ -43,14 +43,16 @@ bool AddDataFieldDlgBase::Create(wxWindow* parent, wxWindowID id, const wxString
     auto* box_sizer2 = new wxBoxSizer(wxVERTICAL);
     box_sizer2->SetMinSize(200, -1);
 
-    m_data_source_cbo = new wxChoice(this, wxID_ANY);
-    box_sizer2->Add(m_data_source_cbo, wxSizerFlags().Expand().Border(wxALL));
+    m_data_source_cbo = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, nullptr, wxCB_SORT);
+    box_sizer2->Add(m_data_source_cbo, wxSizerFlags().Border(wxALL));
 
-    m_field_list = new wxListBox(this, wxID_ANY);
-    box_sizer2->Add(m_field_list, wxSizerFlags(1).Expand().Border(wxALL));
+    m_field_list = new wxListBox(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, nullptr, wxLB_SINGLE|
+        wxLB_ALWAYS_SB);
+    box_sizer2->Add(m_field_list, wxSizerFlags(1).Expand().FixedMinSize().Border(wxALL));
 
-    m_function_list = new wxListBox(this, wxID_ANY);
-    box_sizer2->Add(m_function_list, wxSizerFlags(1).Expand().Border(wxALL));
+    m_function_list = new wxListBox(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, nullptr, wxLB_SINGLE|
+        wxLB_ALWAYS_SB);
+    box_sizer2->Add(m_function_list, wxSizerFlags(1).Expand().FixedMinSize().Border(wxALL));
 
     box_sizer->Add(box_sizer2, wxSizerFlags(1).Expand().Border(wxALL));
 
@@ -62,6 +64,8 @@ bool AddDataFieldDlgBase::Create(wxWindow* parent, wxWindowID id, const wxString
     SetSizer(dlg_sizer);
     SetMaxSize(ConvertDialogToPixels(wxSize(640, 640)));
     Fit();
+    m_data_source_cbo->SetFocus();
+
     Centre(wxBOTH);
 
     // Event handlers

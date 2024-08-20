@@ -470,19 +470,22 @@
             proportion="1">
             <node
               class="wxChoice"
+              focus="1"
+              style="wxCB_SORT"
               var_name="m_data_source_cbo"
-              flags="wxEXPAND"
               wxEVT_CHOICE="onDataSourceSelected" />
             <node
               class="wxListBox"
+              style="wxLB_ALWAYS_SB"
               var_name="m_field_list"
-              flags="wxEXPAND"
+              flags="wxEXPAND|wxFIXED_MINSIZE"
               proportion="1"
               wxEVT_LISTBOX="onFieldSelected" />
             <node
               class="wxListBox"
+              style="wxLB_ALWAYS_SB"
               var_name="m_function_list"
-              flags="wxEXPAND"
+              flags="wxEXPAND|wxFIXED_MINSIZE"
               proportion="1" />
           </node>
         </node>

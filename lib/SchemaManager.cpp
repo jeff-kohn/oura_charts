@@ -3,7 +3,7 @@
 #include <glaze/glaze.hpp>
 #include <boost/algorithm/string.hpp>
 
-namespace oura_charts::schema
+namespace oura_charts::detail
 {
 
    void SchemaManager::loadSchema(const fs::path& schema_path)

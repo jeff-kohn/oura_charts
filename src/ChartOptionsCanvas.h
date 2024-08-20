@@ -22,7 +22,7 @@ namespace oura_charts
    class ChartOptionsCanvas : public ChartOptionsBase
    {
    public:
-      explicit ChartOptionsCanvas(MainFrame* parent, schema::SchemaManager mgr);
+      explicit ChartOptionsCanvas(MainFrame* parent, detail::SchemaManager mgr);
 
       /// <summary>
       ///   set the active view. since this is an SDI app, we always use the same
@@ -57,7 +57,7 @@ namespace oura_charts
       void onStartDateSelected(wxDateEvent& event) override;
 
    private:
-      const schema::SchemaManager m_schema{};
+      const detail::SchemaManager m_schema{};
       ChartOptionsView* m_view{};
       MainFrame* m_parent_frame{};
    };

@@ -48,7 +48,7 @@ namespace oura_charts
 
          initControls();
 
-         schema::SchemaManager mgr{};
+         detail::SchemaManager mgr{};
          mgr.loadSchema(wxGetApp().getSchemaFolder());
          m_canvas = new ChartOptionsCanvas(this, std::move(mgr));
 

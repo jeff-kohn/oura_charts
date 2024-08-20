@@ -132,6 +132,82 @@ namespace oura_charts
          return score.timestamp();
       }
    }
+
+
+   enum class AggregateFunc
+   {
+      Min,
+      Max,
+      Count,
+      Sum,
+      Avg
+   };
+
+
+   enum class DateGrouping
+   {
+      Day,
+      Weekday,
+      Month,
+      Year,
+      YearMonth
+   };
+
+   template <SleepScoreMap MapT>
+   class SleepScoreQuery
+   {
+   public:
+      enum class Members
+      {
+         score,
+         date,
+         contrib_deep_sleep,
+         contrib_efficiency,
+         contrib_latency,
+         contrib_rem,
+         contrib_restfulness,
+         contrib_sleep_timing,
+         contrib_total_sleep
+      };
+
+      class QueryField
+      {
+         Members member{ Members::score };
+         AggregateFunc func{};
+         std::string title{};
+      };
+
+
+      SleepScoreQuery& setGroupBy(DateGrouping group_by)
+      {
+         m_group_by = group_by;
+         return *this;
+      }
+
+      DateGrouping getGroupBy() const
+      {
+         return m_group_by;
+      }
+
+      SleepScoreQuery& addField(QueryField fld)
+      {
+         m_query_fields.push_back(std::move(fld));
+         return *this;
+      }
+
+      SleepScoreQuery& addField(Members member, AggregateFunc func, std::string_view title)
+      {
+         return addField({ member, func, title });
+      }
+
+   private:
+      DateGrouping            m_group_by{};
+      std::vector<QueryField> m_query_fields{};
+   };
+
+
+
+
 }
 
 /// <summary>

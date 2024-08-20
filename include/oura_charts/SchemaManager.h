@@ -5,8 +5,10 @@
 #include <filesystem>
 #include <map>
 #include <string>
+#include <string_view>
 #include <vector>
-#include <ranges>
+#include <ranges> 
+
 
 //namespace oura_charts::constants
 //{
@@ -22,12 +24,14 @@
 //} // oura_charts::constants
 
 
-namespace oura_charts::schema
+namespace oura_charts::detail
 {
    using std::vector;
    using std::string;
    using std::map;
    namespace fs = std::filesystem;
+
+  
 
    /// <summary>
    ///   class to encapsulate schema information for a single member/field in a data object.
@@ -44,7 +48,7 @@ namespace oura_charts::schema
    /// <summary>
    ///   encapsulates schema for group-by capabilities of a data object.
    /// </summary>
-   struct GroupingSchema
+   struct GroupBySchema
    {
       string field{};
       string data_type{};
@@ -57,10 +61,16 @@ namespace oura_charts::schema
    /// </summary>
    struct ClassSchema
    {
-      string                 class_name{};
+      string                  class_name{};
       vector<FieldSchema>    fields{};
-      vector<GroupingSchema> supported_groupings{};
+      vector<GroupBySchema> supported_groupings{};
    };
+
+
+
+
+
+
 
 
    class SchemaManager

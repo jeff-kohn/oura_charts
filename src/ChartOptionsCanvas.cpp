@@ -14,7 +14,7 @@
 
 namespace oura_charts
 {
-   ChartOptionsCanvas::ChartOptionsCanvas(MainFrame* parent, schema::SchemaManager mgr) : m_schema(std::move(mgr)),
+   ChartOptionsCanvas::ChartOptionsCanvas(MainFrame* parent, detail::SchemaManager mgr) : m_schema(std::move(mgr)),
                                                                                           m_parent_frame(parent),
                                                                                           ChartOptionsBase(parent)
    {

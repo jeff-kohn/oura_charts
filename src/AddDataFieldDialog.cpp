@@ -13,7 +13,7 @@
 
 namespace oura_charts
 {
-   using namespace schema;
+   using namespace detail;
    namespace vw = rg::views;
 
 
@@ -50,14 +50,12 @@ namespace oura_charts
    {
       try
       {
-         const auto& field_names = getSelectedSchemaClass().fields | vw::transform([] (const FieldSchema& fs)
-                                                                          {
-                                                                             return fs.long_display_name;
-                                                                          });
-
+         auto&& field_names = vw::transform(getSelectedSchemaClass().fields, [] (const FieldSchema& fs) -> wxString
+                                             {
+                                                return wxString::FromUTF8(fs.long_display_name);
+                                             });
          m_field_list->Clear();
-         m_field_list->InsertItems(wxToArrayString(field_names), 0);
-
+         m_field_list->Append(rg::to<vector>(vw::as_rvalue(field_names)));
       }
       catch (std::exception& e)
       {
@@ -90,7 +88,7 @@ namespace oura_charts
    }
 
 
-   const schema::ClassSchema& AddDataFieldDialog::getSelectedSchemaClass() const
+   const detail::ClassSchema& AddDataFieldDialog::getSelectedSchemaClass() const
    {
       std::string data_class = m_data_source_cbo->GetStringSelection().ToStdString();
       return m_schema_mgr.getClassSchema(data_class);
