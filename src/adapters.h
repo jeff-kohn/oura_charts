@@ -12,7 +12,7 @@ namespace oura_charts
    template <rg::input_range Rg> requires StringViewCompatible<rg::range_value_t<Rg> >
    wxArrayString wxToArrayString(Rg&& strings)
    {
-      overload overloaded{ [](std::string&& str) 
+      Overloaded overloaded{ [](std::string&& str)
                          {
                             return wxString{std::move(str)};
                          },

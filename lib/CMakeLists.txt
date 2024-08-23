@@ -14,6 +14,7 @@ add_library(${THIS_TARGET} STATIC
    "../include/oura_charts/chrono_helpers.h"
    "../include/oura_charts/DataSeries.h"
    "../include/oura_charts/DailySleepScore.h"
+   "../include/oura_charts/DailySleepScoreQuery.h"
    "../include/oura_charts/functors.h"
    "../include/oura_charts/HeartRate.h"
    "../include/oura_charts/oura_charts.h"
@@ -25,9 +26,10 @@ add_library(${THIS_TARGET} STATIC
    "../include/oura_charts/SchemaManager.h"
    "../include/oura_charts/schema/heart_rate_schema.json"
    "../include/oura_charts/schema/daily_sleep_score_schema.json"
-   "utility.cpp"
+   "DailySleepScoreQuery.cpp"
    "logging.cpp"
    "SchemaManager.cpp"
+   "utility.cpp"
 )
 
 set_target_properties(${THIS_TARGET}

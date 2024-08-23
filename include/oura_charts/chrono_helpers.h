@@ -55,7 +55,6 @@ namespace oura_charts
    using weekday = chrono::weekday;
 
 
-
    namespace detail
    {
       using chrono::duration;
@@ -75,13 +74,13 @@ namespace oura_charts
       template <class RepT, class PeriodT>
       struct is_duration<const volatile duration<RepT, PeriodT> > : std::true_type  {};
 
-      /// <summary>
-      ///   Concept requiring a type to be a chrono::duration
-      /// </summary>
-      template <typename T>
-      concept ChronoDuration = is_duration<T>::value;
-
    } // namespace detail
+
+   /// <summary>
+   ///   Concept requiring a type to be a chrono::duration
+   /// </summary>
+   template <typename T>
+   concept ChronoDuration = detail::is_duration<T>::value;
 
 
    /// <summary>
@@ -256,7 +255,19 @@ namespace oura_charts
       }
    };
 
- 
+
+#if __cpp_lib_chrono < 	202306L
+
+   struct weekday_hash
+   {
+      auto operator()(const weekday& wd) const noexcept
+      {
+         return std::hash<unsigned int>{}(wd.c_encoding());
+      }
+   };
+
+#endif
+
    /// <summary>
    ///   small helper to generate a sorted array containing the days of the week
    /// </summary>
@@ -359,7 +370,7 @@ namespace oura_charts
    ///   this functor is move-only, you need to use std::ref() with algorithms that accept their
    ///   functor by-value.
    /// </summary>
-   template<detail::ChronoDuration DurationT>
+   template<ChronoDuration DurationT>
    class AvgCalc<DurationT, double>
    {
    public:

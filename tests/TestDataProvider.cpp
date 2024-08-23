@@ -80,8 +80,8 @@ namespace oura_charts::test
          return unexpected{ oura_exception{ErrorCategory::Parse, "JSON data not found for path '{}'", path } };
 
       // either return the string, or if we got a path load the file's contents and return that.
-      auto visitor = overload{ [](auto&& json) -> JsonResult                     {  return std::string{ json };      },
-                               [this] (const fs::path& json_path) -> JsonResult  {  return getJsonFile(json_path);   }
+      auto visitor = Overloaded{ [](auto&& json) -> JsonResult                     {  return std::string{ json };      },
+                                 [this] (const fs::path& json_path) -> JsonResult  {  return getJsonFile(json_path);   }
       };
       return std::visit(visitor, it->second);
    }

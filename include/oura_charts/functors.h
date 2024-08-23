@@ -60,11 +60,11 @@ namespace oura_charts
    ///   useful for creating creating visitors from lambdas when working with variants, etc.
    /// </remarks>
    template < typename... Ts >
-   struct overload : Ts...
+   struct Overloaded : Ts...
    {
       using Ts:: operator()...;
    };
-   template < typename... Ts > overload(Ts...) -> overload < Ts... >;
+   template <typename... Ts> Overloaded(Ts...) -> Overloaded < Ts... >;
 
 
    /// <summary>
@@ -78,6 +78,8 @@ namespace oura_charts
          return true;
       }
    };
+
+
 
 
    /// <summary>

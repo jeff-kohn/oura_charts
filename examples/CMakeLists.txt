@@ -65,6 +65,7 @@ target_include_directories( ${THIS_TARGET}
 		${Boost_INCLUDE_DIRS}
 )
 
+find_package(nanobench CONFIG REQUIRED)
 target_link_libraries(${THIS_TARGET}
    PUBLIC
       oura_lib
@@ -105,6 +106,7 @@ target_include_directories( ${THIS_TARGET}
 target_link_libraries(${THIS_TARGET}
    PUBLIC
       oura_lib
+      nanobench::nanobench
 )
 
 target_compile_features(${THIS_TARGET} PUBLIC ${OURACHARTS_CXX_STANDARD})
