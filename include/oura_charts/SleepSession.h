@@ -32,8 +32,8 @@ namespace oura_charts
 
       static inline constexpr std::string_view REST_PATH = constants::REST_PATH_SLEEP_SESSION;
 
-      const std::string& sleepId() const           {  return m_data.id;                   }
-      SleepType sleepType() const                  {  return m_data.type;                 }
+      const std::string& sleepId() const                  {  return m_data.id;                   }
+      SleepType sleepType() const                         {  return m_data.type;                 }
       const chrono::year_month_day& sessionDate() const   {  return m_data.day;                  }
       const local_seconds& bedtimeStart() const           {  return m_data.bedtime_start;        }
       const local_seconds& bedtimeEnd() const             {  return m_data.bedtime_end;          }

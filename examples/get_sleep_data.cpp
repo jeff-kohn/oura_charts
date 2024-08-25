@@ -20,6 +20,7 @@
 #include <tabulate/table.hpp>
 #include <algorithm>
 #include <chrono>
+#include <functional>
 #include <iostream>
 #include <map>
 #include <print>
@@ -274,6 +275,41 @@ void testLinearWithMap(oura_charts::SleepSessionSeries sleep_data, oura_charts::
    }
 }
 
+void testSinglePassMap(oura_charts::SleepSessionSeries sleep_data, oura_charts::DailySleepScoreSeries score_data, int iterations = 1000)
+{
+   using namespace oura_charts;
+   using namespace oura_charts::chrono;
+   using namespace std::chrono_literals;
+   using std::array;
+   using std::optional;
+
+   // calculate various averages by day of week.
+   constexpr auto weekdays = getWeekdays();
+
+   while (0 < iterations--)
+   {
+      std::map<weekday, AvgCalc<double>, weekday_compare_less> avg_hrvs{};
+      std::map<weekday, AvgCalc<uint32_t>, weekday_compare_less> avg_resting_heart_rates{};
+      std::map<weekday, AvgCalc<seconds>, weekday_compare_less> avg_total_sleep{};
+      std::map<weekday, AvgCalc<int, double>, weekday_compare_less> avg_scores{};
+
+      sleep_data.removeIf(std::not_fn(long_sleep_filter));
+
+      rg::for_each(sleep_data, [&avg_hrvs, &avg_resting_heart_rates, &avg_total_sleep] (const SleepSession& data)
+                   {
+                      auto wd = sessionWeekday(data);
+                      avg_hrvs[wd](data.avgHRV());
+                      avg_resting_heart_rates[wd](data.restingHeartRate());
+                      avg_total_sleep[wd](data.sleepTimeTotal());
+                   });
+
+      rg::for_each(score_data, [&avg_scores] (const DailySleepScore& data)
+                   {
+                      auto wd = sleepScoreWeekday(data);
+                      avg_scores[wd](data.score());
+                   });
+   }
+}
 
 // This example retrieves heart-rate data from the REST API
 int main(int argc, char* argv[])
@@ -310,8 +346,8 @@ int main(int argc, char* argv[])
       auto score_data = getDataSeries<DailySleepScore>(rest_server, getCalendarDate(last_week), getCalendarDate(today));
 
 
-      ankerl::nanobench::Bench().minEpochIterations(100).run("pre-grouped (10)", [&] {
-         testPreGroup(sleep_data, score_data, 10);
+      ankerl::nanobench::Bench().minEpochIterations(100).run("single-pass map (10)", [&] {
+         testSinglePassMap(sleep_data, score_data, 10);
       });
       ankerl::nanobench::Bench().minEpochIterations(100).run("linear single(10)", [&] {
          testLinearSinglePass(sleep_data, score_data, 10);
@@ -322,8 +358,8 @@ int main(int argc, char* argv[])
       ankerl::nanobench::Bench().minEpochIterations(100).run("linear map(10)", [&] {
          testLinearWithMap(sleep_data, score_data, 10);
       });
-      ankerl::nanobench::Bench().minEpochIterations(100).run("pre-grouped (100)", [&] {
-         testPreGroup(sleep_data, score_data, 100);
+      ankerl::nanobench::Bench().minEpochIterations(100).run("single-pass map (100)", [&] {
+         testSinglePassMap(sleep_data, score_data, 100);
       });
       ankerl::nanobench::Bench().minEpochIterations(100).run("linear single(100)", [&] {
          testLinearSinglePass(sleep_data, score_data, 100);
@@ -334,18 +370,18 @@ int main(int argc, char* argv[])
       ankerl::nanobench::Bench().minEpochIterations(100).run("linear map(100)", [&] {
          testLinearWithMap(sleep_data, score_data, 100);
       });
-      ankerl::nanobench::Bench().minEpochIterations(100).run("pre-grouped (1000)", [&] {
-         testPreGroup(sleep_data, score_data, 1000);
-      });
-      ankerl::nanobench::Bench().minEpochIterations(100).run("linear single(1000)", [&] {
-         testLinearSinglePass(sleep_data, score_data, 1000);
-      });
-      ankerl::nanobench::Bench().minEpochIterations(100).run("linear multi(1000)", [&] {
-         testLinearMultiPass(sleep_data, score_data, 1000);
-      });
-      ankerl::nanobench::Bench().minEpochIterations(100).run("linear map(1000)", [&] {
-         testLinearWithMap(sleep_data, score_data, 1000);
-      });
+      //ankerl::nanobench::Bench().minEpochIterations(100).run("pre-grouped (1000)", [&] {
+      //   testPreGroup(sleep_data, score_data, 1000);
+      //});
+      //ankerl::nanobench::Bench().minEpochIterations(100).run("linear single(1000)", [&] {
+      //   testLinearSinglePass(sleep_data, score_data, 1000);
+      //});
+      //ankerl::nanobench::Bench().minEpochIterations(100).run("linear multi(1000)", [&] {
+      //   testLinearMultiPass(sleep_data, score_data, 1000);
+      //});
+      //ankerl::nanobench::Bench().minEpochIterations(100).run("linear map(1000)", [&] {
+      //   testLinearWithMap(sleep_data, score_data, 1000);
+      //});
 
 
 

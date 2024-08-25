@@ -10,6 +10,7 @@
       "cxxopts",
       "glaze",
       "fmt",
+      "frozen",
       {
          "name": "matplotplusplus"
       },

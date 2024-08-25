@@ -79,7 +79,15 @@ namespace oura_charts
       }
    };
 
-
+   template<typename T>
+   concept DerivedAggregate = requires (T obj,
+                                        typename T::InputType in_t,
+                                        typename T::NullableInputType null_t,
+                                        typename T::ResultType res_t)
+   {
+      res_t = obj(in_t);
+      res_t = obj(null_t);
+   };
 
 
    /// <summary>
@@ -342,4 +350,12 @@ namespace oura_charts
       size_t  m_count{0};
    };
 
+
+   template <typename InputT, typename ResultT = InputT>
+   using AggregrateFuncV = std::variant<
+                                          MinCalc<InputT>,
+                                          MaxCalc<InputT>,
+                                          SumCalc<InputT, ResultT>,
+                                          AvgCalc<InputT, ResultT>
+                                       >;
 }  // namespace oura_charts
