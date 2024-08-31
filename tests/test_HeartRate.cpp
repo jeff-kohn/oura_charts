@@ -6,9 +6,12 @@
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
 #include "oura_charts/oura_charts.h"
-#include "TestDataProvider.h"
-#include "oura_charts/HeartRate.h"
 #include "oura_charts/detail/json_structs.h"
+#include "oura_charts/detail/aggregate_functors.h"
+#include "oura_charts/HeartRate.h"
+
+#include "TestDataProvider.h"
+
 #include <catch2/catch_test_macros.hpp>
 #include <set>
 
@@ -16,8 +19,8 @@ namespace oura_charts::test
 {
    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, bugprone-unchecked-optional-access)
 
-   using namespace constants;
-   using namespace detail;
+   using namespace oura_charts::constants;
+   using namespace oura_charts::detail;
    using namespace std::literals;
 
 
@@ -132,9 +135,9 @@ namespace oura_charts::test
                       },
                       &HeartRate::beatsPerMin);
 
-         REQUIRE(avg_calc.hasResult());
-         REQUIRE(min_calc.hasResult());
-         REQUIRE(max_calc.hasResult());
+         REQUIRE(avg_calc.result().has_value());
+         REQUIRE(min_calc.result().has_value());
+         REQUIRE(max_calc.result().has_value());
          REQUIRE(avg_calc.result().value() == 65);
          REQUIRE(min_calc.result().value() == 60);
          REQUIRE(max_calc.result().value() == 70);
@@ -181,9 +184,9 @@ namespace oura_charts::test
                       },
                       &HeartRate::beatsPerMin);
 
-         REQUIRE(avg_calc.hasResult());
-         REQUIRE(min_calc.hasResult());
-         REQUIRE(max_calc.hasResult());
+         REQUIRE(avg_calc.result().has_value());
+         REQUIRE(min_calc.result().has_value());
+         REQUIRE(max_calc.result().has_value());
          REQUIRE(avg_calc.result().value() == 65);
          REQUIRE(min_calc.result().value() == 60);
          REQUIRE(max_calc.result().value() == 70);

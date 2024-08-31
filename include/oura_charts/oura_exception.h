@@ -24,6 +24,8 @@ namespace oura_charts
       Success,
       REST,
       Parse,
+      Schema,
+      Query,
       FileIO
    };
 

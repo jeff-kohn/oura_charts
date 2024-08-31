@@ -27,6 +27,7 @@
 #include <ranges>
 #include <array>
 
+#include "oura_charts/SleepScoreAggregateQuery.h"
 
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
 
@@ -106,9 +107,9 @@ void testPreGroup(oura_charts::SleepSessionSeries sleep_data, oura_charts::Daily
    {
    // calculate various averages by day of week.
       constexpr auto weekdays = getWeekdays();
-      vector<nullable_double> avg_hrv(weekdays.size());
-      vector<nullable_double> avg_resting_heart_rate(weekdays.size());
-      vector<nullable_double> avg_score(weekdays.size());
+      vector<NullableDouble> avg_hrv(weekdays.size());
+      vector<NullableDouble> avg_resting_heart_rate(weekdays.size());
+      vector<NullableDouble> avg_score(weekdays.size());
       vector<optional<seconds>> avg_total_sleep(weekdays.size());
 
       for (auto wd : weekdays)

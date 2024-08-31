@@ -12,13 +12,12 @@
 #include "oura_charts/oura_exception.h"
 #include "oura_charts/concepts.h"
 
-
 #if __cplusplus > 202002L && __cpp_concepts < 202002L // missing functionality in libc++
    #include <tl/expected.hpp>
    namespace oura_charts
    {
-      using tl::expected;
-      using tl::unexpected;
+      using expected = tl::expected;
+      using unexpected = tl::unexpected;
    }
 #else
    #include <expected>

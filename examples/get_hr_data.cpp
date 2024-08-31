@@ -5,12 +5,13 @@
 //
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
-#include "oura_charts/HeartRate.h"
 #include "helpers.h"
+#include "oura_charts/detail/logging.h"
+#include "oura_charts/detail/aggregate_functors.h"
+#include "oura_charts/HeartRate.h"
 #include "oura_charts/RestDataProvider.h"
 #include "oura_charts/TokenAuth.h"
-#include "oura_charts/detail/logging.h"
-#include "oura_charts/functors.h"
+
 #include <fmt/format.h>
 #include <map>
 #include <ranges>
@@ -22,6 +23,7 @@ int main(int argc, char* argv[])
    using std::string;
    using fmt::println;
    using namespace oura_charts;
+   using namespace oura_charts::detail;
    namespace rg = std::ranges;
 
    auto logger = logging::LogFactory::makeDefault();

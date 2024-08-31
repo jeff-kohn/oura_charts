@@ -14,44 +14,41 @@
 
 namespace oura_charts
 {
-   using detail::nullable;
-   using detail::nullable_double;
-   using detail::nullable_string;
-   using detail::nullable_int;
-   using detail::nullable_uint;
-
    /// <summary>
    ///   encapsulates data for a single sleep session from the Oura API.
    /// </summary>
    class SleepSession
    {
    public:
+      using NullableDouble = detail::NullableDouble;
+      using NullableUInt = detail::NullableUInt;
       using StorageType = detail::sleep_data;
-      using SleepType = StorageType::SleepType;
       using ReadinessContributors = StorageType::ReadinessContributors;
+      using ReadinessContributors = StorageType::ReadinessContributors;
+      using SleepType = StorageType::SleepType;
 
       static inline constexpr std::string_view REST_PATH = constants::REST_PATH_SLEEP_SESSION;
 
-      const std::string& sleepId() const                  {  return m_data.id;                   }
-      SleepType sleepType() const                         {  return m_data.type;                 }
-      const chrono::year_month_day& sessionDate() const   {  return m_data.day;                  }
-      const local_seconds& bedtimeStart() const           {  return m_data.bedtime_start;        }
-      const local_seconds& bedtimeEnd() const             {  return m_data.bedtime_end;          }
+      const std::string& sleepId() const                {  return m_data.id;                   }
+      SleepType sleepType() const                       {  return m_data.type;                 }
+      const chrono::year_month_day& sessionDate() const {  return m_data.day;                  }
+      const local_seconds& bedtimeStart() const         {  return m_data.bedtime_start;        }
+      const local_seconds& bedtimeEnd() const           {  return m_data.bedtime_end;          }
 
-      const nullable_double& avgBreathingRate() const     {  return m_data.average_breath;       }
-      const nullable_double& avgHeartRate() const         {  return m_data.average_heart_rate;   }
-      const nullable_double& avgHRV() const               {  return m_data.average_hrv;          }
-      const nullable_uint& restingHeartRate() const       {  return m_data.lowest_heart_rate;    }
+      const NullableDouble& avgBreathingRate() const    {  return m_data.average_breath;       }
+      const NullableDouble& avgHeartRate() const        {  return m_data.average_heart_rate;   }
+      const NullableDouble& avgHRV() const              {  return m_data.average_hrv;          }
+      const NullableUInt& restingHeartRate() const      {  return m_data.lowest_heart_rate;    }
 
-      const chrono::seconds& latency() const              {  return m_data.latency;              }
-      const chrono::seconds& timeAwake() const            {  return m_data.awake_time;           }
-      const chrono::seconds& sleepTimeDeep() const        {  return m_data.deep_sleep_duration;  }
-      const chrono::seconds& sleepTimeLight() const       {  return m_data.light_sleep_duration; }
-      const chrono::seconds& sleepTimeREM() const         {  return m_data.rem_sleep_duration;   }
-      const chrono::seconds& sleepTimeTotal() const       {  return m_data.total_sleep_duration; }
-      const chrono::seconds& timeInBed() const            {  return m_data.time_in_bed;          }
+      const chrono::seconds& latency() const            {  return m_data.latency;              }
+      const chrono::seconds& timeAwake() const          {  return m_data.awake_time;           }
+      const chrono::seconds& sleepTimeDeep() const      {  return m_data.deep_sleep_duration;  }
+      const chrono::seconds& sleepTimeLight() const     {  return m_data.light_sleep_duration; }
+      const chrono::seconds& sleepTimeREM() const       {  return m_data.rem_sleep_duration;   }
+      const chrono::seconds& sleepTimeTotal() const     {  return m_data.total_sleep_duration; }
+      const chrono::seconds& timeInBed() const          {  return m_data.time_in_bed;          }
                                                
-      const std::optional<uint32_t>& restlessPeriods() const       {  return m_data.restless_periods;     }
+      const NullableUInt& restlessPeriods() const       {  return m_data.restless_periods;     }
 
       /// <summary>
       ///   constructor accepts data by value, pass && to move instead of copy

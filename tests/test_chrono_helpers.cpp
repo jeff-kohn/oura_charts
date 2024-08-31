@@ -7,13 +7,15 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 
-#include "oura_charts/chrono_helpers.h"
+#include "oura_charts/detail/aggregate_functors.h"
 #include <catch2/catch_test_macros.hpp>
 
 namespace oura_charts::test
 {
    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, bugprone-unchecked-optional-access)
+
    using namespace std::literals;
+   using namespace oura_charts::detail;
 
    namespace
    {
@@ -96,7 +98,7 @@ namespace oura_charts::test
 
       AvgCalc<seconds> avg_calc{};
       rg::for_each(sec_durations, std::ref(avg_calc));
-      REQUIRE(avg_calc.hasResult());
+      REQUIRE(avg_calc.result().has_value());
       REQUIRE(avg_calc.count() == ssize(sec_durations));
       REQUIRE(avg_calc.result().value() == 35s);
    }

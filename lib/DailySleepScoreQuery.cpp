@@ -1,5 +1,6 @@
 #include "oura_charts/DailySleepScoreQuery.h"
 #include "oura_charts/functors.h"
+#include "oura_charts/SchemaManager.h"
 #include "frozen/map.h"
 #include <functional>
 #include <map>
@@ -8,32 +9,16 @@
 
 namespace oura_charts
 {
-   //using TypedAggregate = std::pair<AggregateFuncType, DataType>;
-
-   //template<typename AggrT, typename ValT>
-   //using AggregateFactory = std::function<AggrT<T>()>;
-
-   //constinit Overloaded AggregateFactory{
-   //   [](AggregateFuncType func_type, DataType member_type, DataType result_type)
-   //   {
-
-   //   }
-   //};
-
-   //template<typename T>
-   //class AggregateBase
-   //{
-   //   virtual void operator()(const DailySleepScore& score) noexcept = 0;
-   //};
-
-
-   int getContribution(const DailySleepScore& data, SleepScoreQuery::MemberFields member)
+   namespace detail
    {
-      using enum SleepScoreQuery::MemberFields;
 
-      const auto& contribs = data.contributors();
-      switch (member)
+      int getContribution(const DailySleepScore& data, SleepScoreQuery::Member member)
       {
+         using enum SleepScoreQuery::Member;
+
+         const auto& contribs = data.contributors();
+         switch (member)
+         {
          case contrib_deep_sleep:
             return contribs.deep_sleep;
          case contrib_efficiency:
@@ -50,38 +35,166 @@ namespace oura_charts
             return contribs.total_sleep;
          default:
             throw std::invalid_argument{ "Invalid member requested" };
+         }
       }
-   }
 
-   using namespace std::placeholders;
-   using MemFun = decltype((std::bind(&DailySleepScore::score, _1)));
-   using MemFunNested = decltype((std::bind(getContribution, _1)));
-
-   using MemVarT = std::variant<MemFun, MemFunNested>;
-   using MemberMap = frozen::map<SleepScoreQuery::MemberFields, MemVarT, 7>;
-   static inline constexpr MemberMap member_map
-   {
-      {SleepScoreQuery::MemberFields::score,                MemVarT{MemFun{std::bind(&DailySleepScore::score, _1)}}},
-      {SleepScoreQuery::MemberFields::contrib_deep_sleep,   MemVarT{MemFunNested{std::bind(getContribution, _1)}}},
-      {SleepScoreQuery::MemberFields::contrib_latency,      MemVarT{MemFunNested{std::bind(getContribution, _1)}}},
-      {SleepScoreQuery::MemberFields::contrib_rem,          MemVarT{MemFunNested{std::bind(getContribution, _1)}}},
-      {SleepScoreQuery::MemberFields::contrib_restfulness,  MemVarT{MemFunNested{std::bind(getContribution, _1)}}},
-      {SleepScoreQuery::MemberFields::contrib_sleep_timing, MemVarT{MemFunNested{std::bind(getContribution, _1)}}},
-      {SleepScoreQuery::MemberFields::contrib_total_sleep,  MemVarT{MemFunNested{std::bind(getContribution, _1)}}}
-   };
-
-   //inline constexpr std::map<AggregateFunc, 
-   void SleepScoreQuery::RunQuery(DailySleepScoreSeries& data_series)
-   {
-      std::vector<AggregrateFuncV<int, double>> funcs(m_query_fields.size());
-
-      for (QueryField fld : m_query_fields)
+      /// <summary>
+      ///   functor to retrieve the score from a DailySleepScore object.
+      /// </summary>
+      struct ScoreFunc
       {
-         auto vt_fn = member_map.find(fld.member);
-         assert(vt_fn != member_map.end());
+         using ResultType = int;
+         ResultType operator()(const DailySleepScore& score) const
+         {
+            return score.score();
+         }
+      };
+
+
+      /// <summary>
+      ///   functor to retrieve a member from the nested Contributors structs of a DailySleepScore
+      /// </summary>
+      struct ContribFunc
+      {
+         SleepScoreQuery::Member member{};
+
+         using ResultType = int;
+         ResultType operator()(const DailySleepScore& score) const
+         {
+            return getContribution(score, member);
+         }
+      };
+
+      /// <summary>
+      ///   Map to get a member functor from a member enum
+      /// </summary>
+      using MemberMap = frozen::map<SleepScoreQuery::Member, MemberV, 7>;
+      static inline constexpr MemberMap member_map
+      {
+         {SleepScoreQuery::Member::score,                MemberV{ScoreFunc{}}},
+         {SleepScoreQuery::Member::contrib_deep_sleep,   MemberV{ContribFunc{SleepScoreQuery::Member::contrib_deep_sleep}}},
+         {SleepScoreQuery::Member::contrib_latency,      MemberV{ContribFunc{SleepScoreQuery::Member::contrib_latency}}},
+         {SleepScoreQuery::Member::contrib_rem,          MemberV{ContribFunc{SleepScoreQuery::Member::contrib_rem}}},
+         {SleepScoreQuery::Member::contrib_restfulness,  MemberV{ContribFunc{SleepScoreQuery::Member::contrib_restfulness}}},
+         {SleepScoreQuery::Member::contrib_sleep_timing, MemberV{ContribFunc{SleepScoreQuery::Member::contrib_sleep_timing}}},
+         {SleepScoreQuery::Member::contrib_total_sleep,  MemberV{ContribFunc{SleepScoreQuery::Member::contrib_total_sleep}}}
+      };
+
+      /// <summary>
+      ///   helper function to lookup up a member functor from a member enum. Since variant<> default
+      ///   initializes to its first argument, this function returns a ScoreFunc if the requested enum
+      ///   wasn't found in the map (which shouldn't be possible and indicates a bug.
+      /// </summary>
+      MemberV getMember(SleepScoreQuery::Member member)
+      {
+         auto mem_var = member_map.find(member);
+         bool found{member_map.end() == mem_var}; assert(found);
+
+         return found ? MemberV{} : mem_var->second;
       }
 
+   } // namespace detail;
+
+   using namespace detail;
+
+
+   SleepScoreQuery::QueryField::QueryField(Member member, Aggregate aggregate) : m_member(member), m_aggregate(aggregate)
+   {
+      setMember(member);
+      setAggregate(aggregate);
    }
+
+
+   SleepScoreQuery::QueryField::QueryField(const QueryField& other) :
+      m_member{ other.m_member },
+      m_aggregate{ other.m_aggregate },
+      m_aggregate_func{ other.m_aggregate_func }
+   {
+      m_member_func = std::make_unique<MemberV>(detail::getMember(m_member));
+   }
+
+
+   SleepScoreQuery::QueryField& SleepScoreQuery::QueryField::operator=(const QueryField& other)
+   {
+      if (this == &other)
+         return *this;
+
+      QueryField copy{ other };
+      *this = std::move(other);
+      return *this;
+   }
+
+
+   SleepScoreQuery::QueryField& SleepScoreQuery::QueryField::setMember(Member member)
+   {
+      m_member = member;
+      m_member_func = std::make_unique<MemberV>(detail::getMember(m_member));
+      return *this;
+   }
+
+
+   SleepScoreQuery::QueryField& SleepScoreQuery::QueryField::setAggregate(Aggregate aggregate)
+   {
+      // we don't check for setting the same aggregate, because even if it's the same
+      // we want a new instance.
+      m_aggregate = aggregate;
+      m_aggregate_func = getAggregateFunctor<int>(m_aggregate);
+      return *this;
+   }
+
+
+   void SleepScoreQuery::QueryField::operator()(const DailySleepScore& score)
+   {
+      if(m_member_func.get())
+      {
+         std::visit([&score] (auto&& func)
+                    {
+                       func(score);
+                    },
+                    *m_member_func);
+      }
+      else
+      {  // should never happen
+         assert(false);
+         std::unreachable();
+      }
+   }
+
+
+   FieldValueVt SleepScoreQuery::QueryField::getResult() const
+   {
+      return std::visit([] (auto&& func)
+                        {
+                           auto val = func.result();
+                           return FieldValueVt(val);
+                        },
+                        m_aggregate_func);
+   }
+
+
+   void SleepScoreQuery::QueryField::clearResult()
+   {
+      // just reset the functor
+      setAggregate(m_aggregate);
+   }
+
+
+   void SleepScoreQuery::runQuery(const DailySleepScoreSeries& series)
+   {
+      auto row_func = [this](const DailySleepScore& score)
+                        {
+                           rg::for_each(m_fields, [&score](QueryField& fld){ fld(score); });
+                        };
+
+      rg::for_each(series, row_func);
+   }
+
+   void SleepScoreQuery::clearResults()
+   {
+      rg::for_each(m_fields, [](auto&& fld) { fld.clearResult(); });
+   }
+
+
 
 } // namespace oura_charts
 

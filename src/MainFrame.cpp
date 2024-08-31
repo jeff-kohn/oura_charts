@@ -12,7 +12,7 @@
 #include "OuraChartsApp.h"
 #include "PreferencesDialog.h"
 
-#include "oura_charts/chrono_helpers.h"
+#include "oura_charts/detail/aggregate_functors.h"
 #include "oura_charts/DailySleepScore.h"
 #include "oura_charts/RestDataProvider.h"
 #include "oura_charts/SchemaManager.h"
@@ -105,13 +105,13 @@ namespace oura_charts
 
          // calculate various averages by day of week.
          constexpr auto weekdays = getWeekdays();
-         vector<nullable_double> avg_score(weekdays.size());
+         vector<NullableDouble> avg_score(weekdays.size());
 
          for (auto wd : weekdays)
          {
             // get the sub range representing all the data for the current weekday. could be an empty range,
             // but that won't cause any problems we'll just get null result.
-            AvgCalc<uint32_t> calc_score{};
+            detail::AvgCalc<uint32_t> calc_score{};
             auto [score_beg, score_end] = score_by_weekday.equal_range(wd);
             rg::subrange score_range{ score_beg, score_end };
             rg::for_each(score_range | vw::values, [&] (const DailySleepScore& score)

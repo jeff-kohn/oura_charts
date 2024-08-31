@@ -10,6 +10,7 @@
 
 #include "oura_charts/oura_charts.h"
 #include "oura_charts/chrono_helpers.h"
+#include "oura_charts/detail/nullable_types.h"
 #include <glaze/glaze.hpp>
 #include <map>
 #include <optional>
@@ -18,14 +19,7 @@
 
 namespace oura_charts::detail
 {
-   // REST API may return some values as 'null', which the json parser
-   // will choke on if you try to map it directly to a string or built-in type.
-   template <typename T>
-   using nullable = std::optional<T>;
-   using nullable_string = std::optional<std::string>;
-   using nullable_double = std::optional<double>;
-   using nullable_int    = std::optional<int32_t>;
-   using nullable_uint   = std::optional<uint32_t>;
+
 
 
    /// <summary>
@@ -56,7 +50,7 @@ namespace oura_charts::detail
    {
       using value_type = T;
       std::vector<value_type> data{};
-      nullable_string next_token{};
+      NullableString next_token{};
    };
 
 
@@ -97,18 +91,18 @@ namespace oura_charts::detail
          sleep_balance
       };
 
-      struct readiness_data
+      struct ReadinessData
       {
          std::map<ReadinessContributors, int> contributors{};
          int score{};
-         nullable_double temperature_deviation{};
-         nullable_double temperature_trend_deviation{};
+         NullableDouble temperature_deviation{};
+         NullableDouble temperature_trend_deviation{};
       };
 
-      struct interval_data
+      struct IntervalData
       {
          chrono::seconds interval{};
-         std::vector<nullable_double> items;
+         std::vector<NullableDouble> items;
          local_seconds timeststamp{};
       };
 
@@ -120,19 +114,19 @@ namespace oura_charts::detail
       local_seconds bedtime_start{};
       local_seconds bedtime_end{};
 
-      nullable_double average_breath{};
+      NullableDouble average_breath{};
 
-      nullable<interval_data> heart_rate{};
-      nullable_double average_heart_rate{};
-      nullable_uint lowest_heart_rate{};
+      Nullable<IntervalData> heart_rate{};
+      NullableDouble average_heart_rate{};
+      NullableUInt lowest_heart_rate{};
 
-      nullable<interval_data> hrv{};
-      nullable_double average_hrv{};
+      Nullable<IntervalData> hrv{};
+      NullableDouble average_hrv{};
       
 
       int efficiency{};
       chrono::seconds latency{};
-      nullable_uint restless_periods{};
+      NullableUInt restless_periods{};
       std::string movement_30_sec{};
       std::string sleep_phase_5_min{};
 
@@ -143,9 +137,9 @@ namespace oura_charts::detail
       chrono::seconds deep_sleep_duration{};
       chrono::seconds rem_sleep_duration{};
 
-      readiness_data readiness{};
-      nullable_uint readiness_score_delta{};
-      nullable_uint sleep_score_delta{};
+      ReadinessData readiness{};
+      NullableUInt readiness_score_delta{};
+      NullableUInt sleep_score_delta{};
    };
 
 

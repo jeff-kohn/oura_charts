@@ -6,8 +6,11 @@
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
 
+#include "oura_charts/oura_charts.h"
+#include "oura_charts/detail/aggregate_functors.h"
+#include "oura_charts/detail/nullable_types.h"
 #include "oura_charts/functors.h"
-#include "oura_charts/chrono_helpers.h"
+
 #include <algorithm>
 #include <array>
 #include <catch2/catch_test_macros.hpp>
@@ -20,7 +23,7 @@ namespace oura_charts::test
    namespace rg = std::ranges;
    namespace vw = rg::views;
    using namespace std::literals;
-   using nullable_int = std::optional<int>;
+   using namespace oura_charts::detail;
 
    namespace
    {
@@ -40,9 +43,9 @@ namespace oura_charts::test
 
       constexpr std::array double_range = { 5.1, 6.66, 0.3, 4.01 };
 
-      constexpr std::array nullable_range = { nullable_int{}, nullable_int{5}, nullable_int{4}, nullable_int{1}, nullable_int{2}, nullable_int{3}, nullable_int{} };
+      constexpr std::array nullable_range = { NullableInt{}, NullableInt{5}, NullableInt{4}, NullableInt{1}, NullableInt{2}, NullableInt{3}, NullableInt{} };
 
-      constexpr std::array all_null = { nullable_int{},nullable_int{},nullable_int{},nullable_int{} };
+      constexpr std::array all_null = { NullableInt{},NullableInt{},NullableInt{},NullableInt{} };
 
    } // namespace
 
@@ -153,14 +156,14 @@ namespace oura_charts::test
 
       auto null_result = testFunctor(all_null, SumCalc<int>{});
       REQUIRE(null_result.has_value() == false);
-      REQUIRE(nullable_int{} == null_result);
+      REQUIRE(NullableInt{} == null_result);
 
       null_result = testFunctor(std::vector<int>{}, SumCalc<int>{});
       REQUIRE(null_result.has_value() == false);
-      REQUIRE(nullable_int{} == null_result);
+      REQUIRE(NullableInt{} == null_result);
 
       SumCalc<int, uint64_t> sum_calc{};
-      REQUIRE(not sum_calc.hasResult());
+      REQUIRE(not sum_calc.result().has_value());
       REQUIRE(sum == testFunctor(nullable_range, sum_calc));
 
       REQUIRE(avg == testFunctor(nullable_range, AvgCalc<int, double>{}));
