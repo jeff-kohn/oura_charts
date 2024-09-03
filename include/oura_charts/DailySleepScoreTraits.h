@@ -9,8 +9,8 @@
 #pragma once
 
 #include "oura_charts/oura_charts.h"
-#include "oura_charts/AggregateQuery.h"
 #include "oura_charts/DailySleepScore.h"
+#include "oura_charts/detail/aggregate_functors.h"
 
 #include "frozen/map.h"
 
@@ -23,11 +23,11 @@ namespace oura_charts
 {
 
    /// <summary>
-   ///   traits class for a DailySleepScore query, meant to be used for specializing an AggregateQuery type. This struct
+   ///   traits class for a DailySleepScore query, meant to be used for specializing an query type. This struct
    ///   contains some needed type aliases as well as functor implementations for retrieving property values from a
    ///   DailySleepScore object based on enumeration values. 
    /// </summary>
-   struct DailySleepScoreQueryTraits
+   struct DailySleepScoreTraits
    {
       enum class PropertySelection
       {
@@ -78,14 +78,14 @@ namespace oura_charts
       /// </summary>
       static inline constexpr PropertyMap s_property_map
       {
-         {DailySleepScoreQueryTraits::PropertySelection::score,                MemberFuncVt{ScoreFunc{}}},
-         {DailySleepScoreQueryTraits::PropertySelection::contrib_deep_sleep,   MemberFuncVt{ContribFunc{PropertySelection::contrib_deep_sleep}}},
-         {DailySleepScoreQueryTraits::PropertySelection::contrib_efficiency,   MemberFuncVt{ContribFunc{PropertySelection::contrib_efficiency}}},
-         {DailySleepScoreQueryTraits::PropertySelection::contrib_latency,      MemberFuncVt{ContribFunc{PropertySelection::contrib_latency}}},
-         {DailySleepScoreQueryTraits::PropertySelection::contrib_rem,          MemberFuncVt{ContribFunc{PropertySelection::contrib_rem}}},
-         {DailySleepScoreQueryTraits::PropertySelection::contrib_restfulness,  MemberFuncVt{ContribFunc{PropertySelection::contrib_restfulness}}},
-         {DailySleepScoreQueryTraits::PropertySelection::contrib_sleep_timing, MemberFuncVt{ContribFunc{PropertySelection::contrib_sleep_timing}}},
-         {DailySleepScoreQueryTraits::PropertySelection::contrib_total_sleep,  MemberFuncVt{ContribFunc{PropertySelection::contrib_total_sleep}}}
+         {DailySleepScoreTraits::PropertySelection::score,                MemberFuncVt{ScoreFunc{}}},
+         {DailySleepScoreTraits::PropertySelection::contrib_deep_sleep,   MemberFuncVt{ContribFunc{PropertySelection::contrib_deep_sleep}}},
+         {DailySleepScoreTraits::PropertySelection::contrib_efficiency,   MemberFuncVt{ContribFunc{PropertySelection::contrib_efficiency}}},
+         {DailySleepScoreTraits::PropertySelection::contrib_latency,      MemberFuncVt{ContribFunc{PropertySelection::contrib_latency}}},
+         {DailySleepScoreTraits::PropertySelection::contrib_rem,          MemberFuncVt{ContribFunc{PropertySelection::contrib_rem}}},
+         {DailySleepScoreTraits::PropertySelection::contrib_restfulness,  MemberFuncVt{ContribFunc{PropertySelection::contrib_restfulness}}},
+         {DailySleepScoreTraits::PropertySelection::contrib_sleep_timing, MemberFuncVt{ContribFunc{PropertySelection::contrib_sleep_timing}}},
+         {DailySleepScoreTraits::PropertySelection::contrib_total_sleep,  MemberFuncVt{ContribFunc{PropertySelection::contrib_total_sleep}}}
       };
 
       /// <summary>
@@ -122,7 +122,7 @@ namespace oura_charts
       ///   initializes to its first argument, this function returns a ScoreFunc if the requested enum
       ///   wasn't found in the map (which shouldn't be possible and indicates a bug.
       /// </summary>
-      MemberFuncVt getMember(PropertySelection member)
+      static MemberFuncVt getMember(PropertySelection member)
       {
          auto mem_var = s_property_map.find(member);
          bool found{ s_property_map.end() == mem_var }; assert(found);
@@ -133,9 +133,9 @@ namespace oura_charts
 
 
    /// <summary>
-   ///   template instantiation for a DailySleepScore aggregate query.
+   ///   template alias for a DailySleepScore aggregate query.
    /// </summary>
-   using SleepScoreAggegateQry = AggregateQuery<DailySleepScoreQueryTraits>;
+   //using SleepScoreAggegateQry = AggregateQuery<DailySleepScoreQueryTraits>;
 
 } // namespace oura_charts
 

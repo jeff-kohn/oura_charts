@@ -27,7 +27,7 @@
 #include <ranges>
 #include <array>
 
-#include "oura_charts/SleepScoreAggregateQuery.h"
+#include "oura_charts/DailySleepScoreTraits.h"
 
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
 

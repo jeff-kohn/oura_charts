@@ -6,14 +6,15 @@ set(THIS_TARGET "tests")
 add_executable(${THIS_TARGET}
    "TestDataProvider.h"
    "TestDataProvider.cpp"
+   "test_AggregateQuery.cpp"
    "test_chrono_helpers.cpp"
    "test_DailySleepScore.cpp"
    "test_functors.cpp"
    "test_HeartRate.cpp"
    "test_oura_exception.cpp"
+   "test_schema.cpp"
    "test_SleepSession.cpp"
    "test_UserProfile.cpp"
-   "test_schema.cpp"
 )
 
 set_target_properties(${THIS_TARGET}

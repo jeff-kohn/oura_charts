@@ -55,6 +55,7 @@ namespace oura_charts
 
       class Field
       {
+      public:
          explicit Field(PropertySelection prop, AggregateSelection aggregate = {})
          {
             setProperty(prop);
@@ -128,7 +129,7 @@ namespace oura_charts
          /// </summary>
          void clearResult()
          {
-            // just reset the functor so we get a fresh value.
+            // just reset the functor so we get a fresh object.
             setAggregate(m_aggregate);
          }
 
