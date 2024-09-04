@@ -1,6 +1,7 @@
 #include "TestDataProvider.h"
 #include "oura_charts/AggregateQuery.h"
 #include "oura_charts/DailySleepScoreTraits.h"
+#include "oura_charts/detail/nullable_types.h"
 
 #include <catch2/catch_test_macros.hpp>
 
@@ -13,17 +14,11 @@ namespace oura_charts::test
    using namespace oura_charts::detail;
    using namespace std::literals::string_view_literals;
 
-   //std::string id{};
-   //year_month_day day{};
-   //int score{};
-   //SleepScoreContributors contributors{};
-   //local_seconds timestamp{};
-
-   constexpr auto score_json = R"({
+   constexpr auto score_json = R"(
       {
         "data": [
           {
-            "id": "string",
+            "id": "1",
             "contributors": {
               "deep_sleep": 20,
               "efficiency": 30,
@@ -36,10 +31,9 @@ namespace oura_charts::test
             "day": "2024-06-03",
             "score": 90,
             "timestamp": "2024-06-03T02:37:55+00:00"
-          }
-        ],
+          },
           {
-            "id": "string",
+            "id": "2",
             "contributors": {
               "deep_sleep": 21,
               "efficiency": 31,
@@ -52,10 +46,9 @@ namespace oura_charts::test
             "day": "2024-06-03",
             "score": 91,
             "timestamp": "2024-06-03T02:37:55+00:00"
-          }
-        ],
+          },
           {
-            "id": "string",
+            "id": "3",
             "contributors": {
               "deep_sleep": 22,
               "efficiency": 32,
@@ -70,9 +63,10 @@ namespace oura_charts::test
             "timestamp": "2024-06-03T02:37:55+00:00"
           }
         ],
-        "next_token": "string"
+        "next_token": null
       }
-   })"sv;
+   )"sv;
+
 
 
    TEST_CASE("test_AggregateQuery", "[parsing][schema]")
@@ -85,10 +79,17 @@ namespace oura_charts::test
       query.m_fields.emplace_back(DailySleepScoreTraits::PropertySelection::score,
                                   detail::AggregateSelection::Avg);
 
-      auto series = getDataSeries<DailySleepScore>(provider, year_month_day{ 2024y/06/03 }, year_month_day{ 2924y/06/03 });
+      auto series = detail::getDataSeries<DailySleepScore>(provider);
       query.runQuery(series);
 
-      auto val = query.m_fields[0].getResult();
+      constexpr auto visitor = []<typename T>(const Nullable<T>&val_opt) -> double
+      {
+         return val_opt.has_value() ? static_cast<double>(val_opt.value()) : 0.0;
+      };
+
+      auto val_vt = query.m_fields[0].getResult();
+      auto val = std::visit(visitor, val_vt);
+      REQUIRE(val == 91.0);
       
    };
 

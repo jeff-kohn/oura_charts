@@ -125,7 +125,7 @@ namespace oura_charts
       static MemberFuncVt getMember(PropertySelection member)
       {
          auto mem_var = s_property_map.find(member);
-         bool found{ s_property_map.end() == mem_var }; assert(found);
+         bool found{ s_property_map.end() != mem_var }; assert(found);
 
          return found ? MemberFuncVt{} : mem_var->second;
       }

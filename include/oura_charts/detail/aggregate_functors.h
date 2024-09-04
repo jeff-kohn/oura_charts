@@ -126,7 +126,7 @@ namespace oura_charts::detail
 
       void operator()(const InputType& val) noexcept
       {
-         ++m_result;
+         ++(*m_result);
       }
 
       void operator()(const NullableInputType& val) noexcept

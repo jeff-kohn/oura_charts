@@ -49,9 +49,9 @@ namespace oura_charts
       using AggregateSelection = QueryTraitsT::AggregateSelection;  // enum specifying the aggregate function a query field is bound to
       using RecordType         = QueryTraitsT::RecordType;          // the object type this query iterates over to collect data
       using RecordSetType      = QueryTraitsT::RecordSetType;       // the object type for a collection/series of RecordType's
-      using MemberFuncVt       = QueryTraitsT::MemberFuncVt;         // variant type to hold function pointers for accessing object properties
-      using AggregateFuncVt    = QueryTraitsT::AggregateFuncVt;      // variant type to hold function pointers for computing aggregate functions
-      using FieldValueVt       = QueryTraitsT::FieldValueVt;         // variant type to hold field values for query results.
+      using MemberFuncVt       = QueryTraitsT::MemberFuncVt;        // variant type to hold function pointers for accessing object properties
+      using AggregateFuncVt    = QueryTraitsT::AggregateFuncVt;     // variant type to hold function pointers for computing aggregate functions
+      using FieldValueVt       = QueryTraitsT::FieldValueVt;        // variant type to hold field values for query results.
 
       class Field
       {
@@ -103,11 +103,19 @@ namespace oura_charts
          /// </summary>
          void operator()(const RecordType& rec)
          {
-            std::visit([&rec] (auto&& func)
+            auto prop_val = std::visit([&rec] (auto&& func)
+                             {
+                                return func(rec);
+                             },
+                             m_member_func);
+
+            // cppcheck-suppress constParameterReference
+            // since the functor is NOT const and it's a false finding
+            std::visit([&prop_val](auto& func)
                        {
-                          func(rec);
+                          func(prop_val);
                        },
-                       *m_member_func);
+                       m_aggregate_func);
          }
 
          /// <summary>
@@ -134,8 +142,8 @@ namespace oura_charts
          }
 
       private:
-         PropertySelection  m_prop{};
-         AggregateSelection m_aggregate{};
+         PropertySelection   m_prop{};
+         AggregateSelection  m_aggregate{};
          MemberFuncVt        m_member_func;
          AggregateFuncVt     m_aggregate_func{};
       };

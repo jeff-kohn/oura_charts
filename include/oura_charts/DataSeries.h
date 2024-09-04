@@ -188,8 +188,8 @@ namespace oura_charts
    {
       using SortedPropertyMap = std::map<std::string, std::string>;
 
-      template <DataSeriesElement ElementT, DataProvider ProviderT, KeyValueRange MapT>
-      [[nodiscard]] DataSeries<ElementT> getDataSeries(ProviderT& provider, MapT&& param_map = SortedPropertyMap{}) noexcept(false)
+      template <DataSeriesElement ElementT, DataProvider ProviderT, KeyValueRange MapT = SortedPropertyMap>
+      [[nodiscard]] DataSeries<ElementT> getDataSeries(ProviderT& provider, MapT&& param_map = MapT{}) noexcept(false)
       {
          using JsonCollectionT = detail::RestDataCollection<typename ElementT::StorageType>;
          using CollectionBuffer = std::deque<typename JsonCollectionT::value_type>;
