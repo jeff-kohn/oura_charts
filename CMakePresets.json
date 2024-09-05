@@ -71,12 +71,24 @@
    "buildPresets": [
       {
          "name": "win-msvc",
-         "displayName": "Windows MSVC",
-         "configurePreset": "win-msvc"
+         "displayName": "Release",
+         "configurePreset": "win-msvc",
+         "configuration": "Release"
+      },
+      {
+         "name": "win-msvc-debug",
+         "displayName": "Debug",
+         "configurePreset": "win-msvc",
+         "configuration": "Debug"
       },
       {
          "name": "linux-clang",
-         "displayName": "Linux Clang",
+         "displayName": "Release",
+         "configurePreset": "linux-clang"
+      },
+      {
+         "name": "linux-clang-debug",
+         "displayName": "Debug",
          "configurePreset": "linux-clang"
       }
    ],

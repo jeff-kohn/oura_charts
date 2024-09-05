@@ -69,7 +69,6 @@ namespace oura_charts::test
    {
       using namespace detail;
 
-      fs::path cwd = std::filesystem::current_path();
       SchemaManager mgr{};
       mgr.loadSchema("./schema");
 

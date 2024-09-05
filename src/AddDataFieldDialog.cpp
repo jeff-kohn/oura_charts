@@ -95,4 +95,4 @@ namespace oura_charts
    }
 
 
-} // namespaced oura_charts
+} // namespace oura_charts

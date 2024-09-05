@@ -7,8 +7,8 @@
 //---------------------------------------------------------------------------------------------------------------------
 #include "helpers.h"
 #include "oura_charts/chrono_helpers.h"
+#include "oura_charts/detail/aggregate_functors.h"
 #include "oura_charts/detail/logging.h"
-#include "oura_charts/concepts.h"
 #include "oura_charts/DataSeries.h"
 #include "oura_charts/DailySleepScore.h"
 #include "oura_charts/RestDataProvider.h"
@@ -21,15 +21,12 @@
 #include <algorithm>
 #include <chrono>
 #include <functional>
-#include <iostream>
 #include <map>
 #include <print>
 #include <ranges>
 #include <array>
 
-#include "oura_charts/DailySleepScoreTraits.h"
-
-// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, cppcoreguidelines-pro-bounds-constant-array-index)
 
 
 auto getWeekdayTable()
@@ -187,6 +184,7 @@ void testLinearSinglePass(oura_charts::SleepSessionSeries sleep_data, oura_chart
                    });
    }
 }
+
 
 void testLinearMultiPass(oura_charts::SleepSessionSeries sleep_data, oura_charts::DailySleepScoreSeries score_data, int iterations = 1000)
 {
@@ -428,4 +426,4 @@ int main(int argc, char* argv[])
    return 0;
 }
 
-// NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers, cppcoreguidelines-pro-bounds-constant-array-index)

@@ -20,7 +20,7 @@ namespace oura_charts::detail
          // folder was passed, so recurse all json files and load them (non-recursively)
          if (fs::is_regular_file(entry))
          {
-            auto file = entry.path();
+            auto& file = entry.path();
             if (boost::iends_with(file.generic_string(), constants::SCHEMA_FILE_SUFFIX))
                loadSchemaFile(entry.path());
          }
@@ -50,4 +50,4 @@ namespace oura_charts::detail
    }
 
 
-} // namespace oura_charts::schema
+} // namespace oura_charts::detail

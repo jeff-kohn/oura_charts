@@ -93,4 +93,5 @@ namespace oura_charts::test
       
    };
 
+  // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 } // namespace oura_charts::test

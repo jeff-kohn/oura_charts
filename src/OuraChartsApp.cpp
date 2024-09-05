@@ -24,7 +24,7 @@ namespace oura_charts
 
    namespace
    {
-      const wxSize g_default_frame_size{ 400, 600 };
+      const wxSize g_default_frame_size{ 400, 600 }; // NOLINT(cert-err58-cpp) this ctor doesn't throw it's just not marked noexcept
    }
 
 

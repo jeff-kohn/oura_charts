@@ -93,7 +93,7 @@ namespace oura_charts
          using std::string;
 
          auto today = stripTimeOfDay(localNow());
-         auto last_year = today - months{ 12 };
+         auto last_year = today - months{ 12 };   // NOLINT(cppcoreguidelines-avoid-magic-numbers) you'll never convince me that a months-per-year constant is necessary or beneficial
          auto token_res = wxGetApp().getRestToken();
          if (!token_res)
             throw oura_exception{ std::move(token_res.error()) };
