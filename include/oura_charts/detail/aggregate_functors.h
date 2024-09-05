@@ -124,9 +124,9 @@ namespace oura_charts::detail
       using ResultType = std::optional<InputType>;
 
 
-      void operator()(const InputType& val) noexcept
+      void operator()(const InputType&) noexcept
       {
-         ++(*m_result);
+         *m_result += 1;
       }
 
       void operator()(const NullableInputType& val) noexcept
@@ -431,7 +431,7 @@ namespace oura_charts::detail
    ///   Get an aggregate functor based on aggregate enum and input data type.
    /// </summary>
    template<typename InputT>
-   constexpr [[nodiscard]] AggregrateFuncV<InputT> getAggregateFunctor(AggregateSelection aggregate)
+   [[nodiscard]] constexpr  AggregrateFuncV<InputT> getAggregateFunctor(AggregateSelection aggregate)
    {
       using enum AggregateSelection;
       switch (aggregate)

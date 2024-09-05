@@ -24,7 +24,6 @@ namespace oura_charts
       using NullableUInt = detail::NullableUInt;
       using StorageType = detail::sleep_data;
       using ReadinessContributors = StorageType::ReadinessContributors;
-      using ReadinessContributors = StorageType::ReadinessContributors;
       using SleepType = StorageType::SleepType;
 
       static inline constexpr std::string_view REST_PATH = constants::REST_PATH_SLEEP_SESSION;

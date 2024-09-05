@@ -133,7 +133,7 @@ namespace oura_charts
 
    fs::path OuraChartsApp::getSchemaFolder() const
    {
-      return fs::path{ wxStandardPaths::Get().GetExecutablePath() }.parent_path() / constants::APP_SCHEMA_FOLDER;
+      return fs::path{ wxStandardPaths::Get().GetExecutablePath().ToStdString() }.parent_path() / constants::APP_SCHEMA_FOLDER;
    }
 
 

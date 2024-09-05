@@ -241,9 +241,6 @@ void testLinearWithMap(oura_charts::SleepSessionSeries sleep_data, oura_charts::
    using std::array;
    using std::optional;
 
-   // calculate various averages by day of week.
-   constexpr auto weekdays = getWeekdays();
-
    while (0 < iterations--)
    {
       std::map<weekday, AvgCalc<double>, weekday_compare_less> avg_hrvs{};
@@ -283,9 +280,6 @@ void testSinglePassMap(oura_charts::SleepSessionSeries sleep_data, oura_charts::
    using namespace std::chrono_literals;
    using std::array;
    using std::optional;
-
-   // calculate various averages by day of week.
-   constexpr auto weekdays = getWeekdays();
 
    while (0 < iterations--)
    {

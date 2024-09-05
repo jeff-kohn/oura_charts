@@ -42,6 +42,8 @@ namespace oura_charts::constants
    inline constexpr const char* ERROR_CATEGORY_REST = "REST Error";
    inline constexpr const char* ERROR_CATEGORY_PARSE = "Parsing Error";
    inline constexpr const char* ERROR_CATEGORY_FILE_IO = "File I/O Error";
+   inline constexpr const char* ERROR_CATEGORY_QUERY = "Query error";
+   inline constexpr const char* ERROR_CATEGORY_SCHEMA = "Schema error";
    inline constexpr const char* ERROR_CONTEXT_REST_RESPONSE = "REST Response";
 
    // format strings and messages for error conditions

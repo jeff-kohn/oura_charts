@@ -59,7 +59,7 @@ namespace oura_charts
    private:
       const detail::SchemaManager m_schema{};
       ChartOptionsView* m_view{};
-      MainFrame* m_parent_frame{};
+      [[maybe_unused]] MainFrame* m_parent_frame{};
    };
 
 }

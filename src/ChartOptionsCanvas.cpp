@@ -14,9 +14,10 @@
 
 namespace oura_charts
 {
-   ChartOptionsCanvas::ChartOptionsCanvas(MainFrame* parent, detail::SchemaManager mgr) : m_schema(std::move(mgr)),
-                                                                                          m_parent_frame(parent),
-                                                                                          ChartOptionsBase(parent)
+   ChartOptionsCanvas::ChartOptionsCanvas(MainFrame* parent, detail::SchemaManager mgr) : ChartOptionsBase(parent),
+                                                                                          m_schema(std::move(mgr)),
+                                                                                          m_parent_frame(parent)
+                                                                                          
    {
    }
 
@@ -26,7 +27,7 @@ namespace oura_charts
          m_view->OnDraw(&dc);
    }
 
-   void ChartOptionsCanvas::onAddClicked(wxCommandEvent& event)
+   void ChartOptionsCanvas::onAddClicked([[maybe_unused]] wxCommandEvent& event)
    {
       AddDataFieldDialog dlg(this, m_schema);
       dlg.ShowModal();

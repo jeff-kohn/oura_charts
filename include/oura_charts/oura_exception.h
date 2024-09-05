@@ -41,6 +41,10 @@ namespace oura_charts
          return constants::ERROR_CATEGORY_REST;
       case ErrorCategory::Parse:
          return constants::ERROR_CATEGORY_PARSE;
+      case ErrorCategory::Schema:
+         return constants::ERROR_CATEGORY_SCHEMA;
+      case ErrorCategory::Query:
+         return constants::ERROR_CATEGORY_QUERY;
       case ErrorCategory::FileIO:
          return constants::ERROR_CATEGORY_FILE_IO;
       }

@@ -41,7 +41,7 @@ set_target_properties(${THIS_TARGET}
 
 find_package(wxWidgets CONFIG REQUIRED)
 find_package(Matplot++ CONFIG REQUIRED)
-find_package(OpenGL REQUIRED)
+#find_package(OpenGL REQUIRED)
 
 target_link_libraries(${THIS_TARGET}
    PRIVATE

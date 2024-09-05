@@ -65,6 +65,7 @@ namespace oura_charts
          Field(Field&&) noexcept = default;
          Field& operator=(const Field&) = default;
          Field& operator=(Field&&) noexcept = default;
+         ~Field() = default;
 
 
          /// <summary>
@@ -149,7 +150,7 @@ namespace oura_charts
       };
 
       // container type we use for storing our query fields
-      using QueryFields = typename ContainerT<Field>;
+      using QueryFields = ContainerT<Field>;
 
       /// <summary>
       ///   returns reference to the fields array for this query, which can be used
