@@ -21,7 +21,7 @@ namespace oura_charts
    ///   Oura data sources.
    /// </summary>
    template<typename T>
-   concept AggregateQueryTraits = requires (T t)
+   concept AggregateQueryTraits = requires (T t, T::PropertySelection sel)
    {
       typename T::PropertySelection;
       typename T::AggregateSelection;
@@ -30,6 +30,8 @@ namespace oura_charts
       typename T::MemberFuncVt;
       typename T::AggregateFuncVt;
       typename T::FieldValueVt;
+
+      T::getMember(sel);
    };
 
 
@@ -77,8 +79,13 @@ namespace oura_charts
          }
          Field& setProperty(PropertySelection prop)
          {
+            // update member selector
             m_prop = prop;
             m_member_func = QueryTraitsT::getMember(m_prop);
+
+            // also update aggregate func, because the member type may have changed.
+            setAggregate(m_aggregate);
+
             return *this;
          }
 
@@ -93,9 +100,13 @@ namespace oura_charts
          Field& setAggregate(AggregateSelection aggregate)
          {
             // we don't check for setting the same aggregate, because even if it's the same
-            // value/type we want a new/clean instance.
+            // value/type we want a new/clean instance when getting called from clearResult().
             m_aggregate = aggregate;
-            m_aggregate_func = detail::getAggregateFunctor<int>(m_aggregate); // TODO - get rid of this int!!!
+            m_aggregate_func = std::visit([this] <typename FuncT> (FuncT& mem_fn) -> AggregateFuncVt
+                                          {
+                                             return detail::getAggregateFunctor<AggregateFuncVt, typename FuncT::MemberType>(m_aggregate);
+                                          },
+                                          m_member_func);
             return *this;
          }
 

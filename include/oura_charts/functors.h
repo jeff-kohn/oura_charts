@@ -66,6 +66,34 @@ namespace oura_charts
    };
 
 
+   /// <summary>
+   ///   template class for a simple functor object that can access an accessor function from
+   ///   a class object. While you could arguably do the same thing more generically with std::function
+   ///   and/or lambda's, this class makes the sytax for putting member functors into a compile-time
+   ///   map much easier.
+   /// </summary>
+   template<typename ClassTypeT, typename MemberTypeT>
+   class MemberSelector
+   {
+   public:
+      using ClassType = ClassTypeT;
+      using MemberType = MemberTypeT;
+
+      typedef MemberType(ClassType::* MemberPtr)(void) const;
+
+      constexpr explicit MemberSelector(MemberPtr ptr) : m_ptr{ ptr } {}
+
+      MemberType operator()(const ClassType& obj) const
+      {
+         assert(m_ptr);
+         return std::invoke(m_ptr, obj);
+      }
+
+   private:
+      MemberPtr m_ptr{ nullptr };
+   };
+
+
 
 
 }  // namespace oura_charts

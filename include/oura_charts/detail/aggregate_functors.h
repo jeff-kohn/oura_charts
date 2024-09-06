@@ -422,34 +422,35 @@ namespace oura_charts::detail
    /// <summary>
    ///   variant type to contain one of a selection of aggregate functors
    /// </summary>
-   template <typename InputT>
-   using AggregrateFuncV = std::variant< FirstCalc<InputT>, LastCalc<InputT>, CountCalc<InputT>,
-                                         MinCalc<InputT>, MaxCalc<InputT>, SumCalc<InputT>, AvgCalc<InputT> >;
+   template <typename... Types>
+   using AggregrateFuncVt = std::variant< FirstCalc<Types>..., LastCalc<Types>..., CountCalc<Types>...,
+                                          MinCalc<Types>..., MaxCalc<Types>..., SumCalc<Types>...,
+                                          AvgCalc<Types>... >;
 
 
    /// <summary>
    ///   Get an aggregate functor based on aggregate enum and input data type.
    /// </summary>
-   template<typename InputT>
-   [[nodiscard]] constexpr  AggregrateFuncV<InputT> getAggregateFunctor(AggregateSelection aggregate)
+   template<typename VariantT, typename InputT>
+   [[nodiscard]] constexpr VariantT getAggregateFunctor(AggregateSelection aggregate)
    {
       using enum AggregateSelection;
       switch (aggregate)
       {
       case First:
-         return FirstCalc<InputT>{};
+         return VariantT{ FirstCalc<InputT>{} };
       case Last:
-         return LastCalc<InputT>{};
+         return VariantT{ LastCalc<InputT>{} };
       case Min:
-         return MinCalc<InputT>{};
+         return VariantT{ MinCalc<InputT>{} };
       case Max:
-         return MaxCalc<InputT>{};
+         return VariantT{ MaxCalc<InputT>{} };
       case Count:
-         return CountCalc<InputT>{};
+         return VariantT{ CountCalc<InputT>{} };
       case Sum:
-         return SumCalc<InputT>{};
+         return VariantT{ SumCalc<InputT>{} };
       case Avg:
-         return AvgCalc<InputT>{};
+         return VariantT{ AvgCalc<InputT>{} };
       default:
          assert(false);
          std::unreachable();

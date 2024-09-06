@@ -1,7 +1,8 @@
 //---------------------------------------------------------------------------------------------------------------------
-// DailySleepScoreAggregateQuery.h
+// DailySleepScoreTraits.h
 //
-// Defines the template class 
+// Defines the template class DailySleepScoreTraits, which is used to build queries for the DailySleepScore
+// data source.
 // 
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
@@ -23,7 +24,7 @@ namespace oura_charts
 {
 
    /// <summary>
-   ///   traits class for a DailySleepScore query, meant to be used for specializing an query type. This struct
+   ///   traits class for a DailySleepScore query, meant to be used for specializing a query template. This struct
    ///   contains some needed type aliases as well as functor implementations for retrieving property values from a
    ///   DailySleepScore object based on enumeration values. 
    /// </summary>
@@ -48,9 +49,9 @@ namespace oura_charts
       /// </summary>
       struct ContribFunc
       {
-         using ResultType = int;
+         using MemberType = int;
          PropertySelection member{};
-         ResultType operator()(const DailySleepScore& score) const { return getContribution(score, member); }
+         MemberType operator()(const DailySleepScore& score) const { return getContribution(score, member); }
       };
 
       /// <summary>
@@ -58,15 +59,15 @@ namespace oura_charts
       /// </summary>
       struct ScoreFunc
       {
-         using ResultType = int;
-         ResultType operator()(const DailySleepScore& score) const
+         using MemberType = int;
+         MemberType operator()(const DailySleepScore& score) const
          {
             return score.score();
          }
       };
 
       using AggregateSelection = detail::AggregateSelection;
-      using AggregateFuncVt    = detail::AggregrateFuncV<int>;
+      using AggregateFuncVt    = detail::AggregrateFuncVt<int>;
       using FieldValueVt       = std::variant<detail::NullableInt, detail::NullableDouble>;
       using MemberFuncVt       = std::variant<ScoreFunc, ContribFunc>;
       using RecordType         = DailySleepScore;
@@ -127,7 +128,7 @@ namespace oura_charts
          auto mem_var = s_property_map.find(member);
          bool found{ s_property_map.end() != mem_var }; assert(found);
 
-         return found ? MemberFuncVt{} : mem_var->second;
+         return found ? mem_var->second : MemberFuncVt{};
       }
    };
 

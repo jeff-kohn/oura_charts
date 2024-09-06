@@ -1,6 +1,7 @@
 #include "TestDataProvider.h"
 #include "oura_charts/AggregateQuery.h"
 #include "oura_charts/DailySleepScoreTraits.h"
+#include "oura_charts/HeartRateTraits.h"
 #include "oura_charts/detail/nullable_types.h"
 
 #include <catch2/catch_test_macros.hpp>
