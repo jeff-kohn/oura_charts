@@ -16,7 +16,7 @@ add_library(${THIS_TARGET} STATIC
    "../include/oura_charts/DataSeries.h"
    "../include/oura_charts/DailySleepScore.h"
    "../include/oura_charts/DailySleepScoreTraits.h"
-   "../include/oura_charts/functors.h"
+   "../include/oura_charts/detail/functors.h"
    "../include/oura_charts/HeartRate.h"
    "../include/oura_charts/HeartRateTraits.h"
    "../include/oura_charts/oura_charts.h"

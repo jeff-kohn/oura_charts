@@ -28,8 +28,9 @@ namespace oura_charts
    ///   contains some needed type aliases as well as functor implementations for retrieving property values from a
    ///   DailySleepScore object based on enumeration values. 
    /// </summary>
-   struct DailySleepScoreTraits
+   class DailySleepScoreTraits
    {
+   public:
       enum class PropertySelection
       {
          score,
@@ -42,7 +43,6 @@ namespace oura_charts
          contrib_total_sleep,
          end
       };
-      static constexpr auto s_property_count = std::to_underlying(PropertySelection::end);
 
       /// <summary>
       ///   functor to retrieve a member from the nested Contributors structs of a DailySleepScore
@@ -54,32 +54,34 @@ namespace oura_charts
          MemberType operator()(const DailySleepScore& score) const { return getContribution(score, member); }
       };
 
-      /// <summary>
-      ///   functor to retrieve the score from a DailySleepScore object.
-      /// </summary>
-      struct ScoreFunc
-      {
-         using MemberType = int;
-         MemberType operator()(const DailySleepScore& score) const
-         {
-            return score.score();
-         }
-      };
-
       using AggregateSelection = detail::AggregateSelection;
       using AggregateFuncVt    = detail::AggregrateFuncVt<int>;
       using FieldValueVt       = std::variant<detail::NullableInt, detail::NullableDouble>;
-      using MemberFuncVt       = std::variant<ScoreFunc, ContribFunc>;
+      using MemberFuncVt       = std::variant<detail::MemberSelector<DailySleepScore, int>, ContribFunc>;
       using RecordType         = DailySleepScore;
       using RecordSetType      = DailySleepScoreSeries;
-      using PropertyMap        = frozen::map<PropertySelection, MemberFuncVt, s_property_count>;
 
       /// <summary>
-      ///   Map to get a member functor from a member enum
+      ///    helper function to lookup up a member functor from a member enum. This function
+      ///    returns a score() MemberSelector if the requested enum wasn't found in the map
+      ///    (which shouldn't be possible and indicates a bug).
       /// </summary>
+      static MemberFuncVt getMember(PropertySelection member)
+      {
+         auto mem_var = s_property_map.find(member);
+         bool found{ s_property_map.end() != mem_var }; assert(found);
+
+         return found ? mem_var->second : detail::MemberSelector{ &DailySleepScore::score };
+      }
+
+   private:
+      static constexpr auto s_property_count = std::to_underlying(PropertySelection::end);
+      using PropertyMap = frozen::map<PropertySelection, MemberFuncVt, s_property_count>;
+
+      // Map to get a member functor from a member enum
       static inline constexpr PropertyMap s_property_map
       {
-         {DailySleepScoreTraits::PropertySelection::score,                MemberFuncVt{ScoreFunc{}}},
+         {DailySleepScoreTraits::PropertySelection::score,                MemberFuncVt{detail::MemberSelector{&DailySleepScore::score}}},
          {DailySleepScoreTraits::PropertySelection::contrib_deep_sleep,   MemberFuncVt{ContribFunc{PropertySelection::contrib_deep_sleep}}},
          {DailySleepScoreTraits::PropertySelection::contrib_efficiency,   MemberFuncVt{ContribFunc{PropertySelection::contrib_efficiency}}},
          {DailySleepScoreTraits::PropertySelection::contrib_latency,      MemberFuncVt{ContribFunc{PropertySelection::contrib_latency}}},
@@ -89,9 +91,7 @@ namespace oura_charts
          {DailySleepScoreTraits::PropertySelection::contrib_total_sleep,  MemberFuncVt{ContribFunc{PropertySelection::contrib_total_sleep}}}
       };
 
-      /// <summary>
       ///   Helper function to get a property from the contributors child struct of a sleep score object.
-      /// </summary>
       static int getContribution(const DailySleepScore& data, PropertySelection member)
       {
          using enum PropertySelection;
@@ -118,25 +118,7 @@ namespace oura_charts
          }
       }
 
-      /// <summary>
-      ///   helper function to lookup up a member functor from a member enum. Since variant<> default
-      ///   initializes to its first argument, this function returns a ScoreFunc if the requested enum
-      ///   wasn't found in the map (which shouldn't be possible and indicates a bug.
-      /// </summary>
-      static MemberFuncVt getMember(PropertySelection member)
-      {
-         auto mem_var = s_property_map.find(member);
-         bool found{ s_property_map.end() != mem_var }; assert(found);
-
-         return found ? mem_var->second : MemberFuncVt{};
-      }
    };
-
-
-   /// <summary>
-   ///   template alias for a DailySleepScore aggregate query.
-   /// </summary>
-   //using SleepScoreAggegateQry = AggregateQuery<DailySleepScoreQueryTraits>;
 
 } // namespace oura_charts
 

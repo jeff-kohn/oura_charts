@@ -9,9 +9,11 @@
 #pragma once
 
 #include "oura_charts/oura_charts.h"
-#include "oura_charts/functors.h"
+#include "oura_charts/detail/functors.h"
+
 #include <fmt/format.h>
 #include <fmt/chrono.h>
+
 #include <cassert>
 #include <chrono>
 #include <functional>

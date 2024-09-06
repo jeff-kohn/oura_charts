@@ -8,8 +8,8 @@
 
 #include "oura_charts/oura_charts.h"
 #include "oura_charts/detail/aggregate_functors.h"
+#include "oura_charts/detail/functors.h"
 #include "oura_charts/detail/nullable_types.h"
-#include "oura_charts/functors.h"
 
 #include <algorithm>
 #include <array>

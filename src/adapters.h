@@ -1,8 +1,10 @@
 #pragma once
 
 #include "oura_charts/concepts.h"
-#include "oura_charts/functors.h"
+#include "oura_charts/detail/functors.h"
+
 #include <wx/arrstr.h>
+
 #include <string>
 #include <ranges>
 
@@ -12,6 +14,7 @@ namespace oura_charts
    template <rg::input_range Rg> requires StringViewCompatible<rg::range_value_t<Rg> >
    wxArrayString wxToArrayString(Rg&& strings)
    {
+      using namespace oura_charts::detail;
       Overloaded overloaded{ [](std::string&& str)
                          {
                             return wxString{std::move(str)};

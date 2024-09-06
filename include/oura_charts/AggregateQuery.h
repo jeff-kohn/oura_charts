@@ -10,6 +10,7 @@
 
 #include "oura_charts/oura_charts.h"
 #include "oura_charts/detail/aggregate_functors.h"
+#include "oura_charts/detail/nullable_types.h"
 
 #include <vector>
 
@@ -52,8 +53,8 @@ namespace oura_charts
       using RecordType         = QueryTraitsT::RecordType;          // the object type this query iterates over to collect data
       using RecordSetType      = QueryTraitsT::RecordSetType;       // the object type for a collection/series of RecordType's
       using MemberFuncVt       = QueryTraitsT::MemberFuncVt;        // variant type to hold function pointers for accessing object properties
-      using AggregateFuncVt    = QueryTraitsT::AggregateFuncVt;     // variant type to hold function pointers for computing aggregate functions
-      using FieldValueVt       = QueryTraitsT::FieldValueVt;        // variant type to hold field values for query results.
+      using AggregateFuncVt    = QueryTraitsT::AggregateFuncVt;     // default-constructible variant type to hold function pointers for computing aggregate functions
+      using FieldValueVt       = QueryTraitsT::FieldValueVt;        // default-constructible variant type to hold field values for query results.
 
       class Field
       {
@@ -99,14 +100,16 @@ namespace oura_charts
          }
          Field& setAggregate(AggregateSelection aggregate)
          {
+            assert(m_member_func.has_value());
+
             // we don't check for setting the same aggregate, because even if it's the same
             // value/type we want a new/clean instance when getting called from clearResult().
             m_aggregate = aggregate;
-            m_aggregate_func = std::visit([this] <typename FuncT> (FuncT& mem_fn) -> AggregateFuncVt
+            m_aggregate_func = std::visit([this] <typename FuncT> ([[maybe_unused]] FuncT& mem_fn) -> AggregateFuncVt
                                           {
                                              return detail::getAggregateFunctor<AggregateFuncVt, typename FuncT::MemberType>(m_aggregate);
                                           },
-                                          m_member_func);
+                                          *m_member_func);
             return *this;
          }
 
@@ -115,11 +118,13 @@ namespace oura_charts
          /// </summary>
          void operator()(const RecordType& rec)
          {
+            assert(m_member_func.has_value());
+
             auto prop_val = std::visit([&rec] (auto&& func)
                              {
                                 return func(rec);
                              },
-                             m_member_func);
+                             *m_member_func);
 
             // cppcheck-suppress constParameterReference
             // since the functor is NOT const and it's a false finding
@@ -154,10 +159,11 @@ namespace oura_charts
          }
 
       private:
-         PropertySelection   m_prop{};
-         AggregateSelection  m_aggregate{};
-         MemberFuncVt        m_member_func;
-         AggregateFuncVt     m_aggregate_func{};
+         AggregateSelection     m_aggregate{};
+         AggregateFuncVt        m_aggregate_func{};
+         PropertySelection      m_prop{};
+         detail::Nullable<MemberFuncVt> m_member_func{}; // only using optional<> because MemberSelector<> isn't default constructible. But this
+                                                         // variable will always contain a valid functor since setProperty() is called from ctor
       };
 
       // container type we use for storing our query fields

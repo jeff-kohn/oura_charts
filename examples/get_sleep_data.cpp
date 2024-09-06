@@ -8,13 +8,13 @@
 #include "helpers.h"
 #include "oura_charts/chrono_helpers.h"
 #include "oura_charts/detail/aggregate_functors.h"
+#include "oura_charts/detail/functors.h"
 #include "oura_charts/detail/logging.h"
 #include "oura_charts/DataSeries.h"
 #include "oura_charts/DailySleepScore.h"
 #include "oura_charts/RestDataProvider.h"
 #include "oura_charts/SleepSession.h"
 #include "oura_charts/TokenAuth.h"
-#include "oura_charts/functors.h"
 #include <nanobench.h>
 #include <fmt/format.h>
 #include <tabulate/table.hpp>
@@ -49,6 +49,7 @@ template <typename T>
 auto format_value(std::optional<T> value, std::string_view default_val)
 {
    using namespace oura_charts;
+   using namespace oura_charts::detail;
 
    if (value.has_value())
    {
