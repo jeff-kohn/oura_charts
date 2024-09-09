@@ -67,24 +67,29 @@ namespace oura_charts::detail
 
 
    /// <summary>
-   ///   template class for a simple functor object that can call an accessor function from
+   ///   template class for a simple functor object that can call an accessor method from
    ///   a class object. While you could arguably do the same thing more generically with std::function
-   ///   and/or lambda's, this class makes the syntax for putting the functors into a compile-time
-   ///   map much easier.
+   ///   and/or lambda's, this class makes the syntax for putting these functors into a compile-time
+   ///   map much cleaner.
    /// </summary>
    template<typename ClassTypeT, typename MemberTypeT>
    class MemberSelector
    {
    public:
-      using ClassType = ClassTypeT;
+      using ClassType  = ClassTypeT;
       using MemberType = MemberTypeT;
 
       /// <summary>
-      ///   member function typedef matching the signature we'll call to get the property
+      ///   member function typedef matching the method signature we'll call to get the property
       /// </summary>
       typedef MemberType(ClassType::* MemberPtr)(void) const;
 
-      constexpr explicit MemberSelector(MemberPtr ptr) : m_ptr{ ptr } {}
+      constexpr explicit MemberSelector(MemberPtr ptr) : m_ptr{ ptr } { assert(m_ptr);  }
+      MemberSelector(const MemberSelector &) = default;
+      MemberSelector(MemberSelector&&) = default;
+      MemberSelector& operator=(const MemberSelector&) = default;
+      MemberSelector& operator=(MemberSelector&&) = default;
+      ~MemberSelector() = default;
 
       MemberType operator()(const ClassType& obj) const
       {
@@ -96,6 +101,22 @@ namespace oura_charts::detail
       MemberPtr m_ptr{ nullptr };
    };
 
+
+   template <auto Start, auto End, auto Inc, class F>
+   constexpr void cx_for(F&& f)
+   {
+      if constexpr (Start < End)
+      {
+         f(std::integral_constant<decltype(Start), Start>());
+         constexpr_for<Start + Inc, End, Inc>(f);
+      }
+   }
+
+   template<std::invocable FuncT, typename... ArgsT>
+   constexpr void cx_for_variant(FuncT func, std::variant<ArgsT...> var)
+   {
+      
+   }
 
 
 

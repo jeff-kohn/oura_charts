@@ -115,13 +115,13 @@ namespace oura_charts::detail
    ///   the default/initial return value is an empty std::optional<> instead of 0 until you pass in
    ///   at least one non-null value.
    /// <remarks>
-   template<typename InputTypeT = size_t>
+   template<typename InputTypeT, typename ResultTypeT = int>
    class CountCalc
    {
    public:
       using InputType = InputTypeT;
       using NullableInputType = std::optional<InputType>;
-      using ResultType = std::optional<InputType>;
+      using ResultType = std::optional<ResultTypeT>;
 
 
       void operator()(const InputType&) noexcept
@@ -146,7 +146,7 @@ namespace oura_charts::detail
       }
 
    private:
-      ResultType m_result{ 0 };
+      ResultType m_result{};
    };
 
 

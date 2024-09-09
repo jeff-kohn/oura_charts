@@ -83,14 +83,19 @@ namespace oura_charts::test
       auto series = detail::getDataSeries<DailySleepScore>(provider);
       query.runQuery(series);
 
-      constexpr auto visitor = []<typename T>(const Nullable<T>&val_opt) -> double
-      {
-         return val_opt.has_value() ? static_cast<double>(val_opt.value()) : 0.0;
-      };
+      //constexpr auto visitor = []<typename T>(const Nullable<T>&val_opt) -> double
+      //{
+      //   return val_opt.has_value() ? static_cast<double>(val_opt.value()) : 0.0;
+      //};
 
-      auto val_vt = query.m_fields[0].getResult();
-      auto val = std::visit(visitor, val_vt);
-      REQUIRE(val == 91.0);
+      auto vt = query.m_fields[0].getResult();
+      auto *p = std::get_if<detail::NullableDouble>(&vt);
+      REQUIRE(nullptr != p);
+      if (p)
+      {
+         REQUIRE(p->has_value());
+         REQUIRE(*p == 91.0);
+      }
       
    };
 

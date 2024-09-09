@@ -39,10 +39,6 @@ namespace oura_charts
    /// <summary>
    ///   This class implements an aggregate query, that can iterate properties from a collection of objects
    ///   and compute aggregate functions on those properties.
-   ///
-   ///   This is CRTP base class, meant to be derived from in the concrete query class, which must satisfy
-   ///   the requirements of the DerivedAggregateQuery concept (which specifies the various types and functions
-   ///   that derived query class needs to provide).
    /// </summary>
    template <AggregateQueryTraits QueryTraitsT, template<typename> typename ContainerT = std::vector>
    class AggregateQuery
@@ -120,19 +116,22 @@ namespace oura_charts
          {
             assert(m_member_func.has_value());
 
-            auto prop_val = std::visit([&rec] (auto&& func)
-                             {
-                                return func(rec);
-                             },
-                             *m_member_func);
+            //auto prop_val = std::visit([&rec] (auto&& func)
+            //                 {
+            //                    return func(rec);
+            //                 },
+            //                 *m_member_func);
 
             // cppcheck-suppress constParameterReference
-            // since the functor is NOT const and it's a false finding
-            std::visit([&prop_val](auto& func)
-                       {
-                          func(prop_val);
-                       },
-                       m_aggregate_func);
+            //std::visit([&rec, this](auto& aggr_func) -> auto
+            //           {
+            //              aggr_func(std::visit([&rec](auto& mem_func) -> auto
+            //                                 {
+            //                                    return mem_func(rec);
+            //                                 },
+            //                                 *m_member_func));
+            //           },
+            //           m_aggregate_func);
          }
 
          /// <summary>

@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------------------------------------------7
 // SleepSession.h
 //
-// Declaration for class SleepDataSeriers, which encapsulates a series of sleep data 
+// Declaration for class SleepSession
 // 
 // Copyright (c) 2024 Jeff Kohn. All Right Reserved.
 //---------------------------------------------------------------------------------------------------------------------
@@ -23,8 +23,9 @@ namespace oura_charts
       using NullableDouble = detail::NullableDouble;
       using NullableUInt = detail::NullableUInt;
       using StorageType = detail::sleep_data;
-      using ReadinessContributors = StorageType::ReadinessContributors;
       using SleepType = StorageType::SleepType;
+      using ReadinessContributors = StorageType::ReadinessContributors;
+      using ReadinessContributorsMap = StorageType::ReadinessContributorsMap;
 
       static inline constexpr std::string_view REST_PATH = constants::REST_PATH_SLEEP_SESSION;
 
@@ -63,8 +64,6 @@ namespace oura_charts
       StorageType m_data;
    };
 
-   using SleepType = SleepSession::SleepType;
-   using ReadinessContributors = SleepSession::ReadinessContributors;
    using SleepSessionSeries = DataSeries<SleepSession>;
 
 
@@ -74,12 +73,11 @@ namespace oura_charts
    struct SleepTypeFilter
    {
       // default value of "any" will match all.
-      SleepType sleep_type{ SleepType::any };
+      SleepSession::SleepType sleep_type{ SleepSession::SleepType::any };
 
       constexpr bool operator()(const SleepSession& sess) const
       {
-         return sleep_type == SleepType::any ? true
-                                             : (sess.sleepType() == sleep_type);
+         return sleep_type == SleepSession::SleepType::any ? true : (sess.sleepType() == sleep_type);
       }
    };
 
@@ -87,7 +85,7 @@ namespace oura_charts
    /// <summary>
    ///   unary predicates to filter SleepSession objects based on sleep type
    /// </summary>
-   inline constexpr SleepTypeFilter long_sleep_filter{SleepType::long_sleep};
+   inline constexpr SleepTypeFilter long_sleep_filter{SleepSession::SleepType::long_sleep};
 
 
    //

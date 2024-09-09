@@ -34,6 +34,7 @@ namespace oura_charts
       enum class PropertySelection
       {
          score,
+         date,
          contrib_deep_sleep,
          contrib_efficiency,
          contrib_latency,
@@ -44,20 +45,10 @@ namespace oura_charts
          end
       };
 
-      /// <summary>
-      ///   functor to retrieve a member from the nested Contributors structs of a DailySleepScore
-      /// </summary>
-      struct ContribFunc
-      {
-         using MemberType = int;
-         PropertySelection member{};
-         MemberType operator()(const DailySleepScore& score) const { return getContribution(score, member); }
-      };
-
       using AggregateSelection = detail::AggregateSelection;
-      using AggregateFuncVt    = detail::AggregrateFuncVt<int>;
-      using FieldValueVt       = std::variant<detail::NullableInt, detail::NullableDouble>;
-      using MemberFuncVt       = std::variant<detail::MemberSelector<DailySleepScore, int>, ContribFunc>;
+      using AggregateFuncVt    = detail::AggregrateFuncVt<int, year_month_day>;
+      using FieldValueVt       = std::variant<detail::NullableInt, detail::NullableDouble, detail::Nullable<year_month_day>>;
+      using MemberFuncVt       = std::variant<detail::MemberSelector<DailySleepScore, int>, detail::MemberSelector<DailySleepScore, year_month_day>>;
       using RecordType         = DailySleepScore;
       using RecordSetType      = DailySleepScoreSeries;
 
@@ -82,41 +73,15 @@ namespace oura_charts
       static inline constexpr PropertyMap s_property_map
       {
          {DailySleepScoreTraits::PropertySelection::score,                MemberFuncVt{detail::MemberSelector{&DailySleepScore::score}}},
-         {DailySleepScoreTraits::PropertySelection::contrib_deep_sleep,   MemberFuncVt{ContribFunc{PropertySelection::contrib_deep_sleep}}},
-         {DailySleepScoreTraits::PropertySelection::contrib_efficiency,   MemberFuncVt{ContribFunc{PropertySelection::contrib_efficiency}}},
-         {DailySleepScoreTraits::PropertySelection::contrib_latency,      MemberFuncVt{ContribFunc{PropertySelection::contrib_latency}}},
-         {DailySleepScoreTraits::PropertySelection::contrib_rem,          MemberFuncVt{ContribFunc{PropertySelection::contrib_rem}}},
-         {DailySleepScoreTraits::PropertySelection::contrib_restfulness,  MemberFuncVt{ContribFunc{PropertySelection::contrib_restfulness}}},
-         {DailySleepScoreTraits::PropertySelection::contrib_sleep_timing, MemberFuncVt{ContribFunc{PropertySelection::contrib_sleep_timing}}},
-         {DailySleepScoreTraits::PropertySelection::contrib_total_sleep,  MemberFuncVt{ContribFunc{PropertySelection::contrib_total_sleep}}}
+         {DailySleepScoreTraits::PropertySelection::date,                 MemberFuncVt{detail::MemberSelector{&DailySleepScore::date}}},
+         {DailySleepScoreTraits::PropertySelection::contrib_deep_sleep,   MemberFuncVt{detail::MemberSelector{&DailySleepScore::contribDeepSleep}}},
+         {DailySleepScoreTraits::PropertySelection::contrib_efficiency,   MemberFuncVt{detail::MemberSelector{&DailySleepScore::contribEfficiency}}},
+         {DailySleepScoreTraits::PropertySelection::contrib_latency,      MemberFuncVt{detail::MemberSelector{&DailySleepScore::contribLatency}}},
+         {DailySleepScoreTraits::PropertySelection::contrib_rem,          MemberFuncVt{detail::MemberSelector{&DailySleepScore::contribRemSleep}}},
+         {DailySleepScoreTraits::PropertySelection::contrib_restfulness,  MemberFuncVt{detail::MemberSelector{&DailySleepScore::contribRestfulness}}},
+         {DailySleepScoreTraits::PropertySelection::contrib_sleep_timing, MemberFuncVt{detail::MemberSelector{&DailySleepScore::contribTiming}}},
+         {DailySleepScoreTraits::PropertySelection::contrib_total_sleep,  MemberFuncVt{detail::MemberSelector{&DailySleepScore::contribTotalSleep}}}
       };
-
-      ///   Helper function to get a property from the contributors child struct of a sleep score object.
-      static int getContribution(const DailySleepScore& data, PropertySelection member)
-      {
-         using enum PropertySelection;
-
-         const auto& contribs = data.contributors();
-         switch (member)
-         {
-         case contrib_deep_sleep:
-            return contribs.deep_sleep;
-         case contrib_efficiency:
-            return contribs.efficiency;
-         case contrib_latency:
-            return contribs.latency;
-         case contrib_rem:
-            return contribs.rem_sleep;
-         case contrib_restfulness:
-            return contribs.restfulness;
-         case contrib_sleep_timing:
-            return contribs.timing;
-         case contrib_total_sleep:
-            return contribs.total_sleep;
-         default:
-            throw std::invalid_argument{ "Invalid member requested" };
-         }
-      }
 
    };
 

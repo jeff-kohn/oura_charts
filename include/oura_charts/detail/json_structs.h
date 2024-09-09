@@ -91,9 +91,10 @@ namespace oura_charts::detail
          sleep_balance
       };
 
+      using ReadinessContributorsMap = std::map<ReadinessContributors, int>;
       struct ReadinessData
       {
-         std::map<ReadinessContributors, int> contributors{};
+         ReadinessContributorsMap contributors{};
          int score{};
          NullableDouble temperature_deviation{};
          NullableDouble temperature_trend_deviation{};

@@ -58,33 +58,13 @@ namespace oura_charts::test
       REQUIRE(score.id() == data.id);
       REQUIRE(score.date() == data.day);
       REQUIRE(score.score() == data.score);
-      REQUIRE(score.contributors().deep_sleep == data.contributors.deep_sleep);
-      REQUIRE(score.contributors().efficiency == data.contributors.efficiency);
-      REQUIRE(score.contributors().latency == data.contributors.latency);
-      REQUIRE(score.contributors().rem_sleep == data.contributors.rem_sleep);
-      REQUIRE(score.contributors().restfulness == data.contributors.restfulness);
-      REQUIRE(score.contributors().timing == data.contributors.timing);
-      REQUIRE(score.contributors().total_sleep == data.contributors.total_sleep);
-   }
-
-   TEST_CASE("test_DailySleepScore_bindings")
-   {
-      auto now = floor<seconds>(localNow());
-      const daily_sleep_data data{ "1", getCalendarDate(now), 75, { 10, 20, 30, 40, 50, 60, 70 },  now };
-
-      auto data_res = getSleepScore(data, now);
-      REQUIRE(data_res.has_value());
-
-      auto& parsed_data = data_res->data;
-      REQUIRE(parsed_data.size() == 1);
-
-      DailySleepScore daily_score{ parsed_data[0] };
-      auto&& [id, day, score, contribs, ts] = daily_score;
-      REQUIRE(id == daily_score.id());
-      REQUIRE(day == daily_score.date());
-      REQUIRE(score == daily_score.score());
-      REQUIRE(contribs.deep_sleep == daily_score.contributors().deep_sleep);
-      REQUIRE(ts == daily_score.timestamp());
+      REQUIRE(score.contribDeepSleep() == data.contributors.deep_sleep);
+      REQUIRE(score.contribEfficiency() == data.contributors.efficiency);
+      REQUIRE(score.contribLatency() == data.contributors.latency);
+      REQUIRE(score.contribRemSleep() == data.contributors.rem_sleep);
+      REQUIRE(score.contribRestfulness() == data.contributors.restfulness);
+      REQUIRE(score.contribTiming() == data.contributors.timing);
+      REQUIRE(score.contribTotalSleep() == data.contributors.total_sleep);
    }
 
    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, bugprone-unchecked-optional-access)
