@@ -82,7 +82,7 @@ namespace oura_charts::detail
       /// <summary>
       ///   member function typedef matching the method signature we'll call to get the property
       /// </summary>
-      typedef MemberType(ClassType::* MemberPtr)(void) const;
+      using MemberPtr = MemberType (ClassType::*)() const;
 
       constexpr explicit MemberSelector(MemberPtr ptr) : m_ptr{ ptr } { assert(m_ptr);  }
       MemberSelector(const MemberSelector &) = default;
@@ -112,11 +112,11 @@ namespace oura_charts::detail
       }
    }
 
-   template<std::invocable FuncT, typename... ArgsT>
-   constexpr void cx_for_variant(FuncT func, std::variant<ArgsT...> var)
-   {
+   // template<std::invocable FuncT, typename... ArgsT>
+   // constexpr void cx_for_variant(FuncT func, std::variant<ArgsT...> var)
+   // {
       
-   }
+   // }
 
 
 

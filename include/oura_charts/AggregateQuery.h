@@ -117,11 +117,11 @@ namespace oura_charts
          {
             assert(m_member_func.has_value());
 
-            //auto prop_val = std::visit([&rec] (auto&& func)
-            //                 {
-            //                    return func(rec);
-            //                 },
-            //                 *m_member_func);
+            auto prop_val = std::visit([&rec] (auto&& func)
+                            {
+                               return func(rec);
+                            },
+                            *m_member_func);
 
             // cppcheck-suppress constParameterReference
             //std::visit([&rec, this](auto& aggr_func) -> auto

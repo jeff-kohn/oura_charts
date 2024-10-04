@@ -122,7 +122,7 @@ namespace oura_charts
 
       auto getFiltered(const RecordsetType recordset)
       {
-         return vw::filter(recordset, [] (const RecordType& rec)
+         return vw::filter(recordset, [this] (const RecordType& rec)
                                          {
                                             return m_filters.empty() ? true
                                                                      : rg::find_if(m_filters,  [&rec] (const Filter& filt) { return filt(rec); }) != m_filters.end();

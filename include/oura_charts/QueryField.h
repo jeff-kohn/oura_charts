@@ -97,9 +97,9 @@ namespace oura_charts
       {
          assert(m_member_func.has_value());
 
-         return std::visit([] (auto&& func)
+         return std::visit([&rec] (auto&& func)
                            {
-                              return FieldValueVt(func.result());
+                              return FieldValueVt(func.result(rec));
                            },
                            *m_member_func);
       }
