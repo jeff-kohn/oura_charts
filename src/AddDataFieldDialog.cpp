@@ -52,7 +52,7 @@ namespace oura_charts
       {
          auto&& field_names = vw::transform(getSelectedSchemaClass().fields, [] (const FieldSchema& fs) -> wxString
                                              {
-                                                return wxString::FromUTF8(fs.long_display_name);
+                                                return wxString::FromUTF8(fs.class_member);
                                              });
          m_field_list->Clear();
          m_field_list->Append(rg::to<vector>(vw::as_rvalue(field_names)));

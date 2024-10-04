@@ -18,6 +18,7 @@ Checks: "*,\
   -misc-const-correctness, \
   -misc-include-cleaner, \
   -misc-non-private-member-variables-in-classes, \
+  -concurrency-mt-unsafe, \
   -performance-avoid-endl"
 WarningsAsErrors: ''
 

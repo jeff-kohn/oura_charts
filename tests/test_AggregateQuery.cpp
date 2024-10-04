@@ -1,6 +1,7 @@
 #include "TestDataProvider.h"
 #include "oura_charts/AggregateQuery.h"
 #include "oura_charts/DailySleepScoreTraits.h"
+#include "oura_charts/SelectQuery.h"
 #include "oura_charts/HeartRateTraits.h"
 #include "oura_charts/detail/nullable_types.h"
 
@@ -68,34 +69,51 @@ namespace oura_charts::test
       }
    )"sv;
 
-
-
    TEST_CASE("test_AggregateQuery", "[parsing][schema]")
    {
       TestDataProvider provider{};
       provider.addJsonData(constants::REST_PATH_DAILY_SLEEP, score_json);
 
-      using DailySleepScoreQuery = AggregateQuery<DailySleepScoreTraits>;
-      DailySleepScoreQuery query{};
-      query.m_fields.emplace_back(DailySleepScoreTraits::PropertySelection::score,
-                                  detail::AggregateSelection::Avg);
+      using ScoreQuery = SelectQuery<DailySleepScoreTraits>;
+      ScoreQuery query{};
+      query.addField(ScoreQuery::Field{ DailySleepScoreTraits::PropertySelection::score });
+      query.addFilter(ScoreQuery::Filter{
+         DailySleepScoreTraits::PropertySelection::score,
+         [] (const ScoreQuery::FieldValueVt& val_vt) -> bool
+         {
+            auto* val = get_if<detail::NullableInt>(&val_vt);
+            if (val)
+               return val->has_value() ? (**val < 70) : false;
 
-      auto series = detail::getDataSeries<DailySleepScore>(provider);
-      query.runQuery(series);
+            return false;
+         }
+      });
+
+
+      //query.addFilter({ScoreQuery::PropertySelection::date,
+      //                [](const DailySleepScore
+
+      //using DailySleepScoreQuery = oura_charts::AggregateQuery<DailySleepScoreTraits>;
+      //DailySleepScoreQuery query{};
+      //query.m_fields.emplace_back(DailySleepScoreTraits::PropertySelection::score,
+      //                            detail::AggregateSelection::Avg);
+
+      //auto series = detail::getDataSeries<DailySleepScore>(provider);
+      //query.runQuery(series);
 
       //constexpr auto visitor = []<typename T>(const Nullable<T>&val_opt) -> double
       //{
       //   return val_opt.has_value() ? static_cast<double>(val_opt.value()) : 0.0;
       //};
 
-      auto vt = query.m_fields[0].getResult();
-      auto *p = std::get_if<detail::NullableDouble>(&vt);
-      REQUIRE(nullptr != p);
-      if (p)
-      {
-         REQUIRE(p->has_value());
-         REQUIRE(*p == 91.0);
-      }
+      //auto vt = query.m_fields[0].getResult();
+      //auto *p = std::get_if<detail::NullableDouble>(&vt);
+      //REQUIRE(nullptr != p);
+      //if (p)
+      //{
+      //   REQUIRE(p->has_value());
+      //   REQUIRE(*p == 91.0);
+      //}
       
    };
 

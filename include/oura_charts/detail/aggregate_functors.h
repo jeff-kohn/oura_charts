@@ -403,6 +403,19 @@ namespace oura_charts::detail
 
 
 
+
+
+
+   /// <summary>
+   ///   variant type to contain one of a selection of aggregate functors
+   /// </summary>
+   template <typename... Types>
+   using AggregrateFuncVt = std::variant< FirstCalc<Types>..., LastCalc<Types>..., CountCalc<Types>...,
+                                          MinCalc<Types>..., MaxCalc<Types>..., SumCalc<Types>...,
+                                          AvgCalc<Types>... >;
+
+
+
    /// <summary>
    ///   Enum for specifying an aggregate functor
    /// </summary>
@@ -414,18 +427,8 @@ namespace oura_charts::detail
       Max,
       Count,
       Sum,
-      Avg
+      Avg,
    };
-
-
-
-   /// <summary>
-   ///   variant type to contain one of a selection of aggregate functors
-   /// </summary>
-   template <typename... Types>
-   using AggregrateFuncVt = std::variant< FirstCalc<Types>..., LastCalc<Types>..., CountCalc<Types>...,
-                                          MinCalc<Types>..., MaxCalc<Types>..., SumCalc<Types>...,
-                                          AvgCalc<Types>... >;
 
 
    /// <summary>
@@ -456,6 +459,4 @@ namespace oura_charts::detail
          std::unreachable();
       }
    };
-
-
 } // namespace oura_charts::detail

@@ -138,6 +138,8 @@ namespace oura_charts::detail
       chrono::seconds deep_sleep_duration{};
       chrono::seconds rem_sleep_duration{};
 
+
+
       ReadinessData readiness{};
       NullableUInt readiness_score_delta{};
       NullableUInt sleep_score_delta{};
@@ -212,13 +214,13 @@ namespace glz::detail
    namespace oc = oura_charts;
 
    template <>
-   struct from_json<oc::chrono::year_month_day>
+   struct from<JSON, oc::chrono::year_month_day>
    {
       template <auto Opts>
       static void op(oc::chrono::year_month_day& value, is_context auto&& ctx, auto&&... args)
       {
          std::string date_str{};
-         read<json>::op<Opts>(date_str, ctx, args...);
+         read<JSON>::op<Opts>(date_str, ctx, args...);
          auto ymd_res = oc::parseIsoDate(date_str);
          if (ymd_res)
             value = ymd_res.value();
@@ -228,13 +230,13 @@ namespace glz::detail
    };
 
    template <>
-   struct from_json<oc::local_seconds>
+   struct from<JSON, oc::local_seconds>
    {
       template <auto Opts>
       static void op(oc::local_seconds& value, is_context auto&& ctx, auto&&... args)
       {
          std::string date_str{};
-         read<json>::op<Opts>(date_str, ctx, args...);
+         read<JSON>::op<Opts>(date_str, ctx, args...);
          auto tp_res = oc::parseIsoDateTime(date_str);
          if (tp_res)
             value = oc::utcToLocal(tp_res.value());
@@ -244,13 +246,13 @@ namespace glz::detail
    };
 
    template <>
-   struct from_json<oc::chrono::seconds>
+   struct from<JSON, oc::chrono::seconds>
    {
       template <auto Opts>
       static void op(oc::chrono::seconds& value, is_context auto&& ctx, auto&&... args)
       {
          int32_t sec_count{};
-         read<json>::op<Opts>(sec_count, ctx, args...);
+         read<JSON>::op<Opts>(sec_count, ctx, args...);
          if (glz::error_code::none == ctx.error)
             value = oc::chrono::seconds{ sec_count };
       }

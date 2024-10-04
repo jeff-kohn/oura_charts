@@ -50,7 +50,7 @@ namespace oura_charts
       using FieldValueVt       = std::variant<detail::NullableInt, detail::NullableDouble, detail::Nullable<year_month_day>>;
       using MemberFuncVt       = std::variant<detail::MemberSelector<DailySleepScore, int>, detail::MemberSelector<DailySleepScore, year_month_day>>;
       using RecordType         = DailySleepScore;
-      using RecordSetType      = DailySleepScoreSeries;
+      using RecordsetType      = DailySleepScoreSeries;
 
       /// <summary>
       ///    helper function to lookup up a member functor from a member enum. This function
@@ -72,15 +72,15 @@ namespace oura_charts
       // Map to get a member functor from a member enum
       static inline constexpr PropertyMap s_property_map
       {
-         {DailySleepScoreTraits::PropertySelection::score,                MemberFuncVt{detail::MemberSelector{&DailySleepScore::score}}},
-         {DailySleepScoreTraits::PropertySelection::date,                 MemberFuncVt{detail::MemberSelector{&DailySleepScore::date}}},
-         {DailySleepScoreTraits::PropertySelection::contrib_deep_sleep,   MemberFuncVt{detail::MemberSelector{&DailySleepScore::contribDeepSleep}}},
-         {DailySleepScoreTraits::PropertySelection::contrib_efficiency,   MemberFuncVt{detail::MemberSelector{&DailySleepScore::contribEfficiency}}},
-         {DailySleepScoreTraits::PropertySelection::contrib_latency,      MemberFuncVt{detail::MemberSelector{&DailySleepScore::contribLatency}}},
-         {DailySleepScoreTraits::PropertySelection::contrib_rem,          MemberFuncVt{detail::MemberSelector{&DailySleepScore::contribRemSleep}}},
-         {DailySleepScoreTraits::PropertySelection::contrib_restfulness,  MemberFuncVt{detail::MemberSelector{&DailySleepScore::contribRestfulness}}},
-         {DailySleepScoreTraits::PropertySelection::contrib_sleep_timing, MemberFuncVt{detail::MemberSelector{&DailySleepScore::contribTiming}}},
-         {DailySleepScoreTraits::PropertySelection::contrib_total_sleep,  MemberFuncVt{detail::MemberSelector{&DailySleepScore::contribTotalSleep}}}
+         {PropertySelection::score,                MemberFuncVt{detail::MemberSelector{&DailySleepScore::score}}},
+         {PropertySelection::date,                 MemberFuncVt{detail::MemberSelector{&DailySleepScore::date}}},
+         {PropertySelection::contrib_deep_sleep,   MemberFuncVt{detail::MemberSelector{&DailySleepScore::contribDeepSleep}}},
+         {PropertySelection::contrib_efficiency,   MemberFuncVt{detail::MemberSelector{&DailySleepScore::contribEfficiency}}},
+         {PropertySelection::contrib_latency,      MemberFuncVt{detail::MemberSelector{&DailySleepScore::contribLatency}}},
+         {PropertySelection::contrib_rem,          MemberFuncVt{detail::MemberSelector{&DailySleepScore::contribRemSleep}}},
+         {PropertySelection::contrib_restfulness,  MemberFuncVt{detail::MemberSelector{&DailySleepScore::contribRestfulness}}},
+         {PropertySelection::contrib_sleep_timing, MemberFuncVt{detail::MemberSelector{&DailySleepScore::contribTiming}}},
+         {PropertySelection::contrib_total_sleep,  MemberFuncVt{detail::MemberSelector{&DailySleepScore::contribTotalSleep}}}
       };
 
    };

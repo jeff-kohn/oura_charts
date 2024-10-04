@@ -1,36 +1,49 @@
 {
    "class_name": "HeartRate",
-   "supported_groupings": [
-      {
-         "field": "date",
-         "data_type": "date",
-         "group_by": [ "Day", "Weekday", "Month", "Year", "YearMonth" ]
-      }
-   ],
    "fields": [
       {
          "class_member": "beatsPerMin",
-         "long_display_name": "Beats per Minute",
-         "short_display_name": "bpm",
-         "supported_aggregates": [ "Min", "Max", "Count", "Sum", "Avg" ]
+         "data_type": "Numeric",
+         "supported_filters": [
+            "Equal",
+            "NotEqual",
+            "LessThan",
+            "LessOrEqual",
+            "GreaterThan",
+            "GreaterOrEqual"
+         ]
       },
       {
          "class_member": "source",
-         "long_display_name": "Measurement Source",
-         "short_display_name": "Source",
-         "supported_aggregates": [ "Min", "Max", "Count", "Sum", "Avg" ]
+         "data_type": "String",
+         "supported_filters": [
+            "Equal",
+            "NotEqual"
+         ]
       },
       {
          "class_member": "timestamp",
-         "long_display_name": "Measurement Timestamp",
-         "short_display_name": "Timestamp",
-         "supported_aggregates": []
+         "data_type": "DateTime",
+         "supported_filters": [
+            "Equal",
+            "NotEqual",
+            "LessThan",
+            "LessOrEqual",
+            "GreaterThan",
+            "GreaterOrEqual"
+         ]
       },
       {
          "class_member": "date",
-         "long_display_name": "Measurement Date",
-         "short_display_name": "Date",
-         "supported_aggregates": []
+         "data_type": "Date",
+         "supported_filters": [
+            "Equal",
+            "NotEqual",
+            "LessThan",
+            "LessOrEqual",
+            "GreaterThan",
+            "GreaterOrEqual"
+         ]
       }
    ]
 }

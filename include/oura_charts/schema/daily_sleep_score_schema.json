@@ -1,66 +1,114 @@
 {
    "class_name": "DailySleepScore",
-   "supported_groupings": [
-      {
-         "field": "date",
-         "data_type": "date",
-         "group_by": [ "Day", "Weekday", "Month", "Year", "YearMonth" ]
-      }
-   ],
    "fields": [
       {
          "class_member": "score",
-         "long_display_name": "Sleep Score",
-         "short_display_name": "score",
-         "supported_aggregates": [ "Min", "Max", "Sum", "Avg" ]
+         "data_type": "Numeric",
+         "supported_filters": [
+            "Equal",
+            "NotEqual",
+            "LessThan",
+            "LessOrEqual",
+            "GreaterThan",
+            "GreaterOrEqual"
+         ]
+
       },
       {
          "class_member": "date",
-         "long_display_name": "Measurement Date",
-         "short_display_name": "date",
-         "supported_aggregates": []
+         "data_type": "Date",
+         "supported_filters": [
+            "Equal",
+            "NotEqual",
+            "LessThan",
+            "LessOrEqual",
+            "GreaterThan",
+            "GreaterOrEqual"
+         ]
       },
       {
          "class_member": "contributors.deep_sleep",
-         "long_display_name": "Deep Sleep Contribution",
-         "short_display_name": "deep sleep contrib.",
-         "supported_aggregates": [ "Min", "Max", "Sum", "Avg" ]
+         "data_type": "Numeric",
+         "supported_filters": [
+            "Equal",
+            "NotEqual",
+            "LessThan",
+            "LessOrEqual",
+            "GreaterThan",
+            "GreaterOrEqual"
+         ]
       },
       {
          "class_member": "contributors.efficiency",
-         "long_display_name": "Sleep Efficiency Contribution",
-         "short_display_name": "efficiency contrib.",
-         "supported_aggregates": [ "Min", "Max", "Sum", "Avg" ]
+         "data_type": "Numeric",
+         "supported_filters": [
+            "Equal",
+            "NotEqual",
+            "LessThan",
+            "LessOrEqual",
+            "GreaterThan",
+            "GreaterOrEqual"
+         ]
       },
       {
          "class_member": "contributors.latency",
-         "long_display_name": "Sleep Latency Contribution",
-         "short_display_name": "latency contrib.",
-         "supported_aggregates": [ "Min", "Max", "Sum", "Avg" ]
+         "data_type": "Numeric",
+         "supported_filters": [
+            "Equal",
+            "NotEqual",
+            "LessThan",
+            "LessOrEqual",
+            "GreaterThan",
+            "GreaterOrEqual"
+         ]
       },
       {
          "class_member": "contributors.rem_sleep",
-         "long_display_name": "REM Sleep Contribution",
-         "short_display_name": "rem sleep contrib.",
-         "supported_aggregates": [ "Min", "Max", "Sum", "Avg" ]
+         "data_type": "Numeric",
+         "supported_filters": [
+            "Equal",
+            "NotEqual",
+            "LessThan",
+            "LessOrEqual",
+            "GreaterThan",
+            "GreaterOrEqual"
+         ]
       },
       {
          "class_member": "contributors.restfulness",
-         "long_display_name": "Restfulness Contribution",
-         "short_display_name": "restfulness contrib.",
-         "supported_aggregates": [ "Min", "Max", "Sum", "Avg" ]
+         "data_type": "Numeric",
+         "supported_filters": [
+            "Equal",
+            "NotEqual",
+            "LessThan",
+            "LessOrEqual",
+            "GreaterThan",
+            "GreaterOrEqual"
+         ]
       },
       {
          "class_member": "contributors.timing",
-         "long_display_name": "Sleep Timing Contribution",
-         "short_display_name": "sleep timing contrib.",
-         "supported_aggregates": [ "Min", "Max", "Sum", "Avg" ]
+         "data_type": "Numeric",
+         "supported_filters": [
+            "Equal",
+            "NotEqual",
+            "LessThan",
+            "LessOrEqual",
+            "GreaterThan",
+            "GreaterOrEqual"
+         ]
       },
       {
          "class_member": "contributors.total_sleep",
-         "long_display_name": "Total Sleep Contribution",
-         "short_display_name": "total sleep contrib.",
-         "supported_aggregates": [ "Min", "Max", "Sum", "Avg" ]
+         "data_type": "Numeric",
+         "supported_filters": [
+            "Equal",
+            "NotEqual",
+            "LessThan",
+            "LessOrEqual",
+            "GreaterThan",
+            "GreaterOrEqual"
+         ]
       }
    ]
 }

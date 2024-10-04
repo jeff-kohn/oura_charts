@@ -22,17 +22,18 @@ namespace oura_charts
    ///   Oura data sources.
    /// </summary>
    template<typename T>
-   concept AggregateQueryTraits = requires (T t, T::PropertySelection sel)
+   concept AggregateQueryTraits = requires (T t, T::PropertySelection sel, T::MemberFuncVt mem_func, T::AggregateFuncVt a_func, T::FieldValueVt fld_val)
    {
       typename T::PropertySelection;
       typename T::AggregateSelection;
       typename T::RecordType;
-      typename T::RecordSetType;
+      typename T::RecordsetType;
       typename T::MemberFuncVt;
       typename T::AggregateFuncVt;
       typename T::FieldValueVt;
 
-      T::getMember(sel);
+      mem_func = T::getMember(sel);
+      //fld_val = func(mem_func(t));
    };
 
 
@@ -47,7 +48,7 @@ namespace oura_charts
       using PropertySelection  = QueryTraitsT::PropertySelection;   // enum specifying the object property a query field is bound to
       using AggregateSelection = QueryTraitsT::AggregateSelection;  // enum specifying the aggregate function a query field is bound to
       using RecordType         = QueryTraitsT::RecordType;          // the object type this query iterates over to collect data
-      using RecordSetType      = QueryTraitsT::RecordSetType;       // the object type for a collection/series of RecordType's
+      using RecordsetType      = QueryTraitsT::RecordsetType;       // the object type for a collection/series of RecordType's
       using MemberFuncVt       = QueryTraitsT::MemberFuncVt;        // variant type to hold function pointers for accessing object properties
       using AggregateFuncVt    = QueryTraitsT::AggregateFuncVt;     // default-constructible variant type to hold function pointers for computing aggregate functions
       using FieldValueVt       = QueryTraitsT::FieldValueVt;        // default-constructible variant type to hold field values for query results.
@@ -184,7 +185,7 @@ namespace oura_charts
       ///   If you want to re-use a query object to run a fresh query, you should call
       ///   clearResults() first.
       /// </remarks>
-      void runQuery(const RecordSetType& recordset)
+      void runQuery(const RecordsetType& recordset)
       {
          // this functor will get called for each 'record' (object)
          // in the 'recordset' (array). It loops through

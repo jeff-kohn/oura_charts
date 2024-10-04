@@ -33,7 +33,7 @@ namespace oura_charts
    {
    public:
       using RecordType    = HeartRate;
-      using RecordSetType = HeartRateSeries;
+      using RecordsetType = HeartRateSeries;
       using FieldValueVt  = std::variant< int, detail::NullableInt, std::string, detail::NullableString, local_seconds, detail::Nullable<local_seconds> >;
 
       using AggregateSelection = detail::AggregateSelection;
