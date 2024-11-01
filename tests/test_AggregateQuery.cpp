@@ -90,31 +90,6 @@ namespace oura_charts::test
       });
 
 
-      //query.addFilter({ScoreQuery::PropertySelection::date,
-      //                [](const DailySleepScore
-
-      //using DailySleepScoreQuery = oura_charts::AggregateQuery<DailySleepScoreTraits>;
-      //DailySleepScoreQuery query{};
-      //query.m_fields.emplace_back(DailySleepScoreTraits::PropertySelection::score,
-      //                            detail::AggregateSelection::Avg);
-
-      //auto series = detail::getDataSeries<DailySleepScore>(provider);
-      //query.runQuery(series);
-
-      //constexpr auto visitor = []<typename T>(const Nullable<T>&val_opt) -> double
-      //{
-      //   return val_opt.has_value() ? static_cast<double>(val_opt.value()) : 0.0;
-      //};
-
-      //auto vt = query.m_fields[0].getResult();
-      //auto *p = std::get_if<detail::NullableDouble>(&vt);
-      //REQUIRE(nullptr != p);
-      //if (p)
-      //{
-      //   REQUIRE(p->has_value());
-      //   REQUIRE(*p == 91.0);
-      //}
-      
    };
 
   // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)

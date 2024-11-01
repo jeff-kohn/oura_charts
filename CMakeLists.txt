@@ -135,6 +135,13 @@ if (TOP_LEVEL_PROJECT)
 
 endif()
 
+include(FetchContent)
+FetchContent_Declare(
+    option
+    GIT_REPOSITORY https://github.com/NUCLEAR-BOMB/option.git
+    GIT_TAG        v1.2.0
+)
+FetchContent_MakeAvailable(option)
 
 find_package(Boost REQUIRED)
 find_package(fmt CONFIG REQUIRED)

@@ -46,7 +46,7 @@ auto getWeekdayTable()
 }
 
 template <typename T>
-auto format_value(std::optional<T> value, std::string_view default_val)
+auto format_value(oura_charts::detail::Nullable<T> value, std::string_view default_val)
 {
    using namespace oura_charts;
    using namespace oura_charts::detail;

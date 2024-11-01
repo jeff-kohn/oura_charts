@@ -24,7 +24,7 @@ namespace oura_charts::detail
    /// </summary>
    /// </summary>
    ///   Since we support null input values, it's possible that the result could be null/empty; so
-   ///   the default/initial return value is an empty std::optional<> instead of 0 until you pass in
+   ///   the default/initial return value is an empty Nullable<> instead of 0 until you pass in
    ///   at least one non-null value.
    /// <remarks>
    template<typename InputTypeT>
@@ -32,8 +32,8 @@ namespace oura_charts::detail
    {
    public:
       using InputType = InputTypeT;
-      using NullableInputType = std::optional<InputType>;
-      using ResultType = std::optional<InputType>;
+      using NullableInputType = Nullable<InputType>;
+      using ResultType = Nullable<InputType>;
 
 
       void operator()(const InputType& val) noexcept
@@ -68,7 +68,7 @@ namespace oura_charts::detail
    /// </summary>
    /// </summary>
    ///   Since we support null input values, it's possible that the result could be null/empty; so
-   ///   the default/initial return value is an empty std::optional<> instead of 0 until you pass in
+   ///   the default/initial return value is an empty Nullable<> instead of 0 until you pass in
    ///   at least one non-null value.
    /// <remarks>
    template<typename InputTypeT>
@@ -76,8 +76,8 @@ namespace oura_charts::detail
    {
    public:
       using InputType = InputTypeT;
-      using NullableInputType = std::optional<InputType>;
-      using ResultType = std::optional<InputType>;
+      using NullableInputType = Nullable<InputType>;
+      using ResultType = Nullable<InputType>;
 
 
       void operator()(const InputType& val) noexcept
@@ -112,7 +112,7 @@ namespace oura_charts::detail
    /// </summary>
    /// </summary>
    ///   Since we support null input values, it's possible that the result could be null/empty; so
-   ///   the default/initial return value is an empty std::optional<> instead of 0 until you pass in
+   ///   the default/initial return value is an empty Nullable<> instead of 0 until you pass in
    ///   at least one non-null value.
    /// <remarks>
    template<typename InputTypeT, typename ResultTypeT = int>
@@ -120,8 +120,8 @@ namespace oura_charts::detail
    {
    public:
       using InputType = InputTypeT;
-      using NullableInputType = std::optional<InputType>;
-      using ResultType = std::optional<ResultTypeT>;
+      using NullableInputType = Nullable<InputType>;
+      using ResultType = Nullable<ResultTypeT>;
 
 
       void operator()(const InputType&) noexcept
@@ -156,7 +156,7 @@ namespace oura_charts::detail
    /// </summary>
    /// </summary>
    ///   Since we support null input values, it's possible that the result could be null/empty; so
-   ///   the default/initial return value is an empty std::optional<> instead of 0 until you pass in
+   ///   the default/initial return value is an empty Nullable<> instead of 0 until you pass in
    ///   at least one non-null value.
    /// <remarks>
    template <typename T>
@@ -165,8 +165,8 @@ namespace oura_charts::detail
 
    public:
       using InputType = T;
-      using NullableInputType = std::optional<InputType>;
-      using ResultType = std::optional<InputType>;
+      using NullableInputType = Nullable<InputType>;
+      using ResultType = Nullable<InputType>;
 
       void operator()(const InputType& val) noexcept
       {
@@ -195,7 +195,7 @@ namespace oura_charts::detail
    /// </summary>
    /// </summary>
    ///   Since we support null input values, it's possible that the result could be null/empty; so
-   ///   the default/initial return value is an empty std::optional<> instead of 0 until you pass in
+   ///   the default/initial return value is an empty Nullable<> instead of 0 until you pass in
    ///   at least one non-null value.
    /// <remarks>
    template <typename T>
@@ -203,8 +203,8 @@ namespace oura_charts::detail
    {
    public:
       using InputType = T;
-      using NullableInputType = std::optional<InputType>;
-      using ResultType = std::optional<InputType>;
+      using NullableInputType = Nullable<InputType>;
+      using ResultType = Nullable<InputType>;
 
 
       void operator()(const T& val) noexcept
@@ -238,7 +238,7 @@ namespace oura_charts::detail
    /// </summary>
    /// <remarks>
    ///   Since we support null input values, it's possible that the result could be null/empty; so
-   ///   the default/initial return value is an empty std::optional<> instead of 0 until you pass in
+   ///   the default/initial return value is an empty Nullable<> instead of 0 until you pass in
    ///   at least one non-null value.
    /// </remarks>
    template<typename ValueTypeT, typename ResultTypeT = ValueTypeT>
@@ -246,8 +246,8 @@ namespace oura_charts::detail
    {
    public:
       using InputType = ValueTypeT;
-      using NullableInputType = std::optional<InputType>;
-      using ResultType = std::optional<ResultTypeT>;
+      using NullableInputType = Nullable<InputType>;
+      using ResultType = Nullable<ResultTypeT>;
 
 
       void operator()(const InputType& val) noexcept
@@ -281,7 +281,7 @@ namespace oura_charts::detail
    /// </summary>
    /// </summary>
    ///   Since we support null input values, it's possible that the result could be null/empty; so
-   ///   the default/initial return value is an empty std::optional<> instead of 0 until you pass in
+   ///   the default/initial return value is an empty Nullable<> instead of 0 until you pass in
    ///   at least one non-null value.
    /// <remarks>
    template<typename InputTypeT, typename ResultTypeT = double>
@@ -289,8 +289,8 @@ namespace oura_charts::detail
    {
    public:
       using InputType = InputTypeT;
-      using NullableInputType = std::optional<InputType>;
-      using ResultType = std::optional<ResultTypeT>;
+      using NullableInputType = Nullable<InputType>;
+      using ResultType = Nullable<ResultTypeT>;
 
 
       void operator()(const InputType& val) noexcept
@@ -353,8 +353,8 @@ namespace oura_charts::detail
    public:
       using Rep = DurationT::rep;
       using InputType = DurationT;
-      using NullableInputType = std::optional<InputType>;
-      using ResultType = std::optional<InputType>;
+      using NullableInputType = Nullable<InputType>;
+      using ResultType = Nullable<InputType>;
 
       void operator()(const InputType& val) noexcept
       {

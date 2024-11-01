@@ -42,7 +42,8 @@ namespace oura_charts
 
       using MemberFuncVt = std::variant< detail::MemberSelector<HeartRate, int>,
                                          detail::MemberSelector<HeartRate, const std::string&>,
-                                         detail::MemberSelector<HeartRate, const local_seconds&> >;
+                                         detail::MemberSelector<HeartRate, const local_seconds&>,
+                                         detail::MemberSelector<HeartRate, year_month_day> >;
 
       // Map member property enum values to functors that can retrieve those values.
       enum class PropertySelection
@@ -50,6 +51,7 @@ namespace oura_charts
          bpm,
          source,
          timestamp,
+         date,
          end
       };
 
@@ -74,7 +76,8 @@ namespace oura_charts
       static inline constexpr auto s_property_map = PropertyMap{
          {PropertySelection::bpm,       MemberFuncVt{detail::MemberSelector{&HeartRate::beatsPerMin}}},
          {PropertySelection::source,    MemberFuncVt{detail::MemberSelector{&HeartRate::source}}},
-         {PropertySelection::timestamp, MemberFuncVt{detail::MemberSelector{&HeartRate::timestamp}}}
+         {PropertySelection::timestamp, MemberFuncVt{detail::MemberSelector{&HeartRate::timestamp}}},
+         {PropertySelection::date,      MemberFuncVt{detail::MemberSelector{&HeartRate::date}}}
       };
    };
 

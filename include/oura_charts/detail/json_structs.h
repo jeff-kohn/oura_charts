@@ -13,7 +13,6 @@
 #include "oura_charts/detail/nullable_types.h"
 #include <glaze/glaze.hpp>
 #include <map>
-#include <optional>
 #include <string>
 #include <vector>
 

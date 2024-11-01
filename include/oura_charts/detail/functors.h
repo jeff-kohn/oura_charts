@@ -12,7 +12,6 @@
 #include <algorithm>
 #include <cassert>
 #include <concepts>
-#include <optional>
 #include <variant>
 
 namespace oura_charts::detail

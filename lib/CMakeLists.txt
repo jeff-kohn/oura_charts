@@ -60,11 +60,12 @@ target_link_libraries(${THIS_TARGET}
       cpr::cpr
       fmt::fmt
       glaze::glaze
+      option
 )
 
 # Need this for now due to incomplete libstdc++
 if (LINUX)
-   target_link_libraries(${THIS_TARGET} PRIVATE tl::expected)
+   target_link_libraries(${THIS_TARGET} PRIVATE tl::expected option)
 endif()
 
 target_compile_features(${THIS_TARGET} PUBLIC ${OURACHARTS_CXX_STANDARD})

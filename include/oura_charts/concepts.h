@@ -8,10 +8,10 @@
 
 #pragma once
 
+#include "oura_charts/detail/nullable_types.h"
 #include <fmt/format.h>
 #include <concepts>
 #include <functional>
-#include <optional>
 #include <ranges>
 #include <string_view>
 
@@ -105,14 +105,14 @@ namespace oura_charts
 
 
    /// <summary>
-   ///   concept for type that can represent a null value (in other worsds, std::optional<>) 
+   ///   concept for type that can represent a null value (in other words, opt::option<>) 
    /// </summary>
    template <typename T>
    concept NullableType = std::same_as<T, std::optional<typename T::value_type>>;
 
 
    /// <summary>
-   ///   concept for type that can represent a null value (in other worsds, std::optional<>) 
+   ///   concept for type that can represent a null value (in other words, opt::option<>) 
    /// </summary>
    template <typename T>
    concept NullableNumeric = NullableType<T>

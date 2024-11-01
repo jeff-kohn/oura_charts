@@ -94,6 +94,11 @@ namespace oura_charts
          clearResults();
       }
 
+      /// <summary>
+      ///   const access to filters collection.
+      /// </summary>
+      /// <returns></returns>
+      const Filters& filters() const { return m_filters; }
 
       /// <summary>
       ///   Run a query by processing the passed-in dataset and retrieving the selected

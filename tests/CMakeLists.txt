@@ -15,7 +15,7 @@ add_executable(${THIS_TARGET}
    "test_schema.cpp"
    "test_SleepSession.cpp"
    "test_UserProfile.cpp"
-)
+ "test_SelectQuery.cpp")
 
 set_target_properties(${THIS_TARGET}
 	PROPERTIES
