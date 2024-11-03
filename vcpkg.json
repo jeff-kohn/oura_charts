@@ -2,31 +2,31 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "oura-charts",
   "version": "1.0.0",
-   "dependencies": [
-      "boost-algorithm",
-      "catch2",
-      "cpr",
-      "cxxopts",
-      "glaze",
-      "fmt",
-      {
-         "name": "matplotplusplus"
-      },
-      "spdlog",
-      "tabulate",
-      {
-         "name": "wxwidgets",
-         "features": [
-            "fonts",
-            "media",
-            "secretstore",
-            "example"
-         ]
-      },
-      {
-         "name": "tl-expected",
-         "platform": "linux"
-      }
-   ],
-  "builtin-baseline": "7a57b42f959ad138a5283477fe2e6c97a7cb852f"
+  "dependencies": [
+    "boost-algorithm",
+    "catch2",
+    "cpr",
+    "cxxopts",
+    "glaze",
+    "fmt",
+    {
+      "name": "matplotplusplus"
+    },
+    "spdlog",
+    "tabulate",
+    {
+      "name": "wxwidgets",
+      "features": [
+        "fonts",
+        "media",
+        "secretstore",
+        "example"
+      ]
+    },
+    {
+      "name": "tl-expected",
+      "platform": "linux"
+    }
+  ],
+  "builtin-baseline": "4f746bc66438fce2b900c3ba6094a483b871b045"
 }

@@ -30,6 +30,8 @@ jobs:
       BUILD_CONFIG: "Release"
       BUILD_DIR: "${{ github.workspace }}/builds"
       SARIF_DIR: "${{ github.workspace }}/sarif-results"
+      CC: "/usr/bin/clang"
+      CXX: "/usr/bin/clang++"
 
     permissions:
       security-events: write

@@ -75,7 +75,9 @@ jobs:
       BUILD_PRESET: "linux-clang"
       BUILD_CONFIG: "Release"
       BUILD_DIR: "builds"
-
+      CC: "/usr/bin/clang"
+      CXX: "/usr/bin/clang++"
+      
     steps:
       - uses: actions/checkout@v4
         with:
